@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#231819" id="themeColorMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -33,14 +33,19 @@ try{
   var alsApp = (window.matchMedia && matchMedia("(display-mode: standalone)").matches)
                || navigator.standalone === true;
   if(!alsApp) return;
+  /* In de vangfase: een handler die eerder aan de beurt is en de gebeurtenis
+     tegenhoudt, zou ons anders overslaan en de link alsnog in Safari openen. */
   document.addEventListener("click", function(e){
     var a = e.target && e.target.closest && e.target.closest("a[href]");
     if(!a || a.target === "_blank" || a.hasAttribute("download")) return;
-    var u; try{ u = new URL(a.getAttribute("href"), location.href); }catch(_){ return; }
+    var h = a.getAttribute("href") || "";
+    if(!h || h.charAt(0) === "#") return;
+    var u; try{ u = new URL(h, location.href); }catch(_){ return; }
     if(u.origin !== location.origin) return;
     e.preventDefault();
+    e.stopPropagation();
     location.assign(u.href);
-  });
+  }, true);
 })();
 </script>
 <title>ClueBoard</title>
@@ -126,7 +131,7 @@ html[data-thema="licht"]{
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-html{touch-action:manipulation}
+html{touch-action:manipulation;background:var(--grond)}
 html,body{height:100%;overflow:hidden}
 body{
   color:var(--inkt);font-family:var(--font-ui);
@@ -212,7 +217,7 @@ main{
    woordmerk-regel, klein en gespatieerd: zo leest hij als onderdeel van de
    naam en niet als een zin. De Nederlandse regel eronder is de stem van
    het spel zelf en staat duidelijk apart, groter en in schuine inkt. */
-.titelblok{flex:0 0 auto;text-align:center;padding:10px 0 20px}
+.titelblok{flex:0 0 auto;text-align:center;padding:2px 0 30px}
 .beeldmerk{width:38px;height:38px;display:block;margin:0 auto 8px;object-fit:contain}
 /* De oude .woordmerk-tekstregel staat verderop en zet zelf een display; deze
    selectors wegen zwaarder zodat er altijd precies één woordmerk staat. */
@@ -350,6 +355,14 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
   font:800 9.5px var(--font-ui);letter-spacing:.13em;text-transform:uppercase;
   color:var(--accent);
 }
+/* Uitgespeeld: een vinkje met je snelste tijd, in de accentkleur. */
+.klaar-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  font:800 10px var(--font-ui);letter-spacing:.06em;color:var(--accent);
+  font-variant-numeric:tabular-nums;
+}
+.klaar-tag svg{width:11px;height:11px;flex:0 0 auto}
+.level-rij.voltooid .zaak-nr{border-color:var(--accent);color:var(--accent)}
 .zaak-nr{
   flex:0 0 auto;width:40px;height:40px;border-radius:11px;
   display:flex;align-items:center;justify-content:center;
@@ -935,6 +948,24 @@ let alleLevels=[];       /* gesorteerd; index+1 = vast zaaknummer */
 let actieveFilter=0;
 let sorteer="nr";        /* "nr" (zaaknummer) of "titel" (A–Z) */
 
+/* Wat je van een zaak hebt afgerond staat in de browser van deze telefoon,
+   onder dezelfde sleutel die de player schrijft. Alleen een uitgespeelde
+   zaak komt erin, met de snelste tijd. */
+const VOLTOOID_KEY="cb_voltooid";
+function levelSleutel(raw){
+  if(raw && typeof raw.levelId==="string" && raw.levelId) return raw.levelId;
+  return (raw && raw.content && raw.content.title) || "level";
+}
+function voltooidVan(raw){
+  try{
+    const alles=JSON.parse(localStorage.getItem(VOLTOOID_KEY)||"{}");
+    return alles[levelSleutel(raw)]||null;
+  }catch(e){ return null; }
+}
+function tijdTekst(ms){
+  const s=Math.max(0,Math.floor(ms/1000));
+  return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+}
 function levelHref(source){
   return PLAYER_URL+"?level="+encodeURIComponent(source.replace(/\.json$/i,""));
 }
@@ -973,6 +1004,16 @@ function maakLevelRij(entry){
     const tag=document.createElement("span"); tag.className="demo-tag";
     tag.textContent=GRAAD_WOORD[g.graad]||("Niveau "+g.graad);
     onder.appendChild(tag);
+  }
+  /* Afgerond? Dan een vinkje met je tijd achter het niveau. */
+  const vt=voltooidVan(raw);
+  if(vt){
+    a.classList.add("voltooid");
+    const kl=document.createElement("span"); kl.className="klaar-tag";
+    kl.title="Uitgespeeld in "+tijdTekst(vt.tijd);
+    kl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.6 4.5L19 7.5"/></svg>'
+      +'<span>'+tijdTekst(vt.tijd)+'</span>';
+    onder.appendChild(kl);
   }
   if(onder.children.length) midden.appendChild(onder);
   /* Geen introtekst op de kaart: elke zaak toont hier alleen zijn titel,

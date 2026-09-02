@@ -24,14 +24,19 @@
   var alsApp = (window.matchMedia && matchMedia("(display-mode: standalone)").matches)
                || navigator.standalone === true;
   if(!alsApp) return;
+  /* In de vangfase: een handler die eerder aan de beurt is en de gebeurtenis
+     tegenhoudt, zou ons anders overslaan en de link alsnog in Safari openen. */
   document.addEventListener("click", function(e){
     var a = e.target && e.target.closest && e.target.closest("a[href]");
     if(!a || a.target === "_blank" || a.hasAttribute("download")) return;
-    var u; try{ u = new URL(a.getAttribute("href"), location.href); }catch(_){ return; }
+    var h = a.getAttribute("href") || "";
+    if(!h || h.charAt(0) === "#") return;
+    var u; try{ u = new URL(h, location.href); }catch(_){ return; }
     if(u.origin !== location.origin) return;
     e.preventDefault();
+    e.stopPropagation();
     location.assign(u.href);
-  });
+  }, true);
 })();
 </script>
 <title>Clueboard Builder 11.0</title>

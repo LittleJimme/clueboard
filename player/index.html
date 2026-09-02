@@ -38,14 +38,19 @@ try{ var _t=localStorage.getItem("clueboard:menuThema");
   var alsApp = (window.matchMedia && matchMedia("(display-mode: standalone)").matches)
                || navigator.standalone === true;
   if(!alsApp) return;
+  /* In de vangfase: een handler die eerder aan de beurt is en de gebeurtenis
+     tegenhoudt, zou ons anders overslaan en de link alsnog in Safari openen. */
   document.addEventListener("click", function(e){
     var a = e.target && e.target.closest && e.target.closest("a[href]");
     if(!a || a.target === "_blank" || a.hasAttribute("download")) return;
-    var u; try{ u = new URL(a.getAttribute("href"), location.href); }catch(_){ return; }
+    var h = a.getAttribute("href") || "";
+    if(!h || h.charAt(0) === "#") return;
+    var u; try{ u = new URL(h, location.href); }catch(_){ return; }
     if(u.origin !== location.origin) return;
     e.preventDefault();
+    e.stopPropagation();
     location.assign(u.href);
-  });
+  }, true);
 })();
 </script>
 <title>ClueBoard Player</title>
@@ -2227,7 +2232,9 @@ body.in-end #screen-end{padding:0;justify-content:flex-start;overflow:hidden;dis
 .uitslag-voet .btn{width:100%}
 @keyframes uitslagIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .uitslag-beeld{position:relative;width:128px;height:128px;margin:22px auto 14px}
-.uitslag-beeld svg{width:100%;height:100%;transform:rotate(-90deg)}
+/* Alleen de ring draait een kwartslag (zodat hij bovenaan begint); het
+   vinkje in .ring-icoon is een ander svg en moet rechtop blijven staan. */
+.uitslag-beeld>svg{width:100%;height:100%;transform:rotate(-90deg)}
 .uitslag-beeld .ring-achter{fill:none;stroke:var(--lijn);stroke-width:8}
 .uitslag-beeld .ring-voor{fill:none;stroke:var(--goud);stroke-width:8;stroke-linecap:round;
   transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.3,1) .25s}
@@ -2382,7 +2389,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       </div>
       <div class="uitslag-lijst" id="endDetails"></div>
     </div>
-    <div class="uitslag-voet"><button class="btn" id="btnEndBack">Verder spelen</button></div>
+    <div class="uitslag-voet"><button class="btn" id="btnEndBack">Terug naar het menu</button></div>
   </section>
 </div>
 
@@ -5257,6 +5264,23 @@ function onCheckClick(){
   else checkSolution();
 }
 
+/* Wat je hebt uitgespeeld onthoudt de browser van deze telefoon; het menu
+   leest dezelfde sleutel en zet je tijd bij de zaak. Alleen een volledig
+   goede oplossing telt, en alleen je snelste tijd blijft staan. */
+const VOLTOOID_KEY="cb_voltooid";
+function levelSleutel(raw){
+  if(raw && typeof raw.levelId==="string" && raw.levelId) return raw.levelId;
+  return (raw && raw.content && raw.content.title) || "level";
+}
+function bewaarVoltooid(raw,ms){
+  try{
+    const alles=JSON.parse(localStorage.getItem(VOLTOOID_KEY)||"{}");
+    const k=levelSleutel(raw), oud=alles[k];
+    if(!oud || typeof oud.tijd!=="number" || ms<oud.tijd)
+      alles[k]={tijd:ms, op:new Date().toISOString()};
+    localStorage.setItem(VOLTOOID_KEY,JSON.stringify(alles));
+  }catch(e){}
+}
 function checkSolution(){
   elapsed=Date.now()-startTime; stopTimer();
   let correct=0; const details=[];
@@ -5267,6 +5291,7 @@ function checkSolution(){
     details.push({p,mine,ok});
   });
   const total=M.people.length, perfect=(correct===total);
+  if(perfect) bewaarVoltooid(currentRaw,elapsed);
   const card=document.querySelector("#screen-end .uitslag");
   if(card){ card.classList.toggle("win",perfect); card.classList.toggle("lose",!perfect); }
   haptic(perfect?[16,60,26,60,40]:[46,70,46]);
@@ -5425,7 +5450,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.23";
+const PLAYER_APP_VERSION="0.9.24";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6222,7 +6247,9 @@ $("#btnAccuseConfirm").addEventListener("click",e=>{
   checkSolution();
 });
 
-$("#btnEndBack").addEventListener("click",()=>{ showScreen("game"); if(!revealed) startTimer(); });
+/* De zaak is gesloten: verder klikken in hetzelfde bord heeft geen doel
+   meer, dus je gaat terug naar de lijst. */
+$("#btnEndBack").addEventListener("click",toMenu);
 
 $("#radialBackdrop").addEventListener("click",closeRadial);
 document.addEventListener("click",e=>{
