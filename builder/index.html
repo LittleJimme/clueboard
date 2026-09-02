@@ -314,7 +314,22 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .opl-sluit:hover{background:var(--tint-2);color:var(--ink)}
 .opl-sluit svg{width:13px;height:13px}
 .opl-body{flex:1;overflow-y:auto;margin-bottom:18px;min-height:80px}
-.opl-bezig{font:600 13px var(--read);color:var(--muted);margin:0;padding:24px 0;text-align:center}
+.opl-bezig{font:600 13px var(--read);color:var(--muted);margin:0;padding:24px 0 0;text-align:center}
+/* Twee CSS-animaties, allebei op eigenschappen die buiten de hoofddraad om
+   getekend worden: daardoor blijft het balkje lopen terwijl de zoeker rekent
+   en de rest van de bouwer stilstaat. */
+.opl-balk{
+  max-width:260px;height:4px;margin:16px auto 26px;border-radius:999px;
+  background:var(--tint);overflow:hidden;opacity:0;
+  animation:oplBalkOp .35s ease 1s forwards;
+}
+.opl-balk i{
+  display:block;height:100%;border-radius:999px;background:var(--accent);
+  transform:scaleX(0);transform-origin:left center;
+  animation:oplBalkVul var(--budget,60000ms) linear 1s forwards;
+}
+@keyframes oplBalkOp{to{opacity:1}}
+@keyframes oplBalkVul{to{transform:scaleX(1)}}
 .opl-verdict{
   display:flex;align-items:center;gap:8px;font:800 15px var(--ui);
   padding:11px 13px;border-radius:12px;border:1.5px solid var(--edge);
@@ -1764,7 +1779,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v11</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v12</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -3525,11 +3540,19 @@ function doeOplossingCheck(){
 
   const reken = () => {
     const body = scrim.querySelector('.opl-body');
-    body.innerHTML = '<p class="opl-bezig">Bezig met zoeken\u2026</p>';
-    setTimeout(() => {
+    body.innerHTML = zoekBezigHtml();
+    /* Eerst laten tekenen, dan pas rekenen: het zoeken houdt de draad bezet,
+       dus wat op dat moment nog niet op het scherm staat verschijnt ook niet
+       meer. Twee frames, want na het eerste is de opmaak pas berekend. */
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       initContent();
       let r = null;
-      try { r = zoekOplossingen(); }
+      /* Ruim de tijd nemen. Het standaardbudget (2 s, en 200 ms zodra er meer
+         dan tien personen zijn) brak zware borden af met "Onbepaald", terwijl
+         de zoeker met wat meer lucht gewoon uitkomt. Alleen hier verhoogd:
+         bepaalGraad() en doExport() gebruiken dezelfde zoeker en moeten juist
+         snel blijven. */
+      try { r = zoekOplossingen({ ms: ZOEK_BUDGET_MS }); }
       catch (err){ toast('Het zoeken liep vast: ' + err.message, 'bad'); }
       LAATSTE_CHECK = r ? r.status : '';
       const oplossingen = (r && r.oplossingen) || [];
@@ -3606,7 +3629,7 @@ function doeOplossingCheck(){
       const uitK = body.querySelector('[data-override-uit]');
       if (uitK) uitK.onclick = () => { wisOplossingOverride(); reken(); };
       renderSidebar();
-    }, 24);
+    }));
   };
   scrim.querySelector('[data-opnieuw]').onclick = reken;
 
@@ -3838,6 +3861,20 @@ function clueBenodigden(clue){
     });
   }));
   return { clue, nodig:[...nodig], iedereen };
+}
+
+/* Hoe lang de zoeker achter de knop Oplossingen mag doorrekenen. Het zoeken
+   is een gewone lus op de hoofddraad, dus zolang hij loopt reageert de bouwer
+   niet; het balkje hieronder loopt wel door, want dat is een CSS-animatie op
+   transform en die draait buiten de hoofddraad om. */
+const ZOEK_BUDGET_MS = 60000;
+
+/* Het wachtscherm. Het balkje verschijnt pas na een seconde -- korte zoekopdrachten
+   hoeven er niet mee te knipperen -- en loopt daarna in precies het budget vol,
+   zodat je ziet hoeveel tijd er nog is. */
+function zoekBezigHtml(){
+  return '<p class="opl-bezig">Bezig met zoeken…</p>'
+       + '<div class="opl-balk" style="--budget:' + ZOEK_BUDGET_MS + 'ms"><i></i></div>';
 }
 
 /* ── Het zoeken zelf ─────────────────────────────────── */
