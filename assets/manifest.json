@@ -2470,7 +2470,7 @@
       "name": "warning"
     }
   ],
-  "version": 21,
+  "version": 22,
   "floorArt": {
     "note": "Hoeveel tekeningen er per vloersoort klaarstaan in art/backgrounds/<thema>/. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.",
     "variants": {
@@ -2657,12 +2657,6 @@
       "id": "ponytail",
       "label": "Paardenstaart",
       "gender": "female"
-    },
-    {
-      "id": "braid",
-      "label": "Vlecht",
-      "gender": "female",
-      "available": false
     },
     {
       "id": "half-up",

@@ -323,7 +323,7 @@ html[data-thema="licht"] .titelblok h1 em::after{
   position:relative;overflow:hidden;
   display:flex;align-items:center;gap:13px;text-decoration:none;
   background:var(--kaart);border:1px solid var(--lijn);border-radius:15px;
-  padding:13px 15px;box-shadow:var(--sch1);
+  padding:15px 16px;box-shadow:var(--sch1);
   transition:transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .18s,border-color .18s;
 }
 /* het thema als klein wapenschild in de hoek, op een zacht vlakje —
@@ -356,27 +356,23 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
   font:800 9.5px var(--font-ui);letter-spacing:.13em;text-transform:uppercase;
   color:var(--accent);
 }
-/* Afgerond: een gevulde tag naast het formaat, met het woord en je snelste
-   tijd eronder. Gevuld en niet alleen een vinkje, zodat het echt als status
-   leest en niet als nog een label. */
-/* Afgerond en formaat onder elkaar, rechts uitgelijnd naast de pijl. */
+/* Het formaat staat rechts naast de pijl. */
 .rij-tags{flex:0 0 auto;display:flex;flex-direction:column;align-items:stretch;gap:5px}
 .rij-tags .grid-tag{text-align:center}
-/* Afgerond: een gevuld label, zodat het als status leest en niet als nog
-   een grijs kaartje. */
-.klaar-tag{
-  display:flex;align-items:center;justify-content:center;gap:5px;
-  background:var(--accent-vlak,var(--accent));color:var(--accent-op,#231819);
-  border:1px solid var(--accent-diep,var(--accent));border-radius:8px;
-  padding:4px 8px;white-space:nowrap;
-}
-.klaar-tag svg{width:12px;height:12px;flex:0 0 auto}
-.klaar-tag b{font:800 8.5px var(--font-ui);letter-spacing:.09em;text-transform:uppercase}
-.klaar-tag span{font:700 11.5px var(--font-ui);font-variant-numeric:tabular-nums}
-.level-rij.voltooid .zaak-nr{border-color:var(--accent);color:var(--accent)}
+/* Afgerond: het woord staat op de plek van de bolletjes, met je tijd erachter,
+   en de kaart zelf zakt een toon terug. Zo komen de open zaken naar voren en
+   hoeft er rechts niets meer bij. */
+.afgerond{display:inline-flex;align-items:center;gap:7px;color:var(--accent)}
+.afgerond svg{width:13px;height:13px;flex:0 0 auto}
+.afgerond b{font:800 10px var(--font-ui);letter-spacing:.14em;text-transform:uppercase}
+.afgerond span{font:700 12px var(--font-ui);font-variant-numeric:tabular-nums;color:var(--inkt-2)}
+.level-rij.voltooid{background:color-mix(in srgb,var(--kaart) 50%,var(--grond) 50%);box-shadow:none}
+.level-rij.voltooid h3{color:var(--inkt-2)}
+.level-rij.voltooid .zaak-nr{background:transparent;border-color:var(--accent);color:var(--accent)}
+.level-rij.voltooid .grid-tag{background:transparent}
+.zaak-nr{border-color:var(--accent);color:var(--accent)}
 /* Op een smal scherm is het vinkje met de tijd genoeg; het woord zou de
    titel te veel ruimte kosten. */
-@media (max-width:420px){ .klaar-tag b{display:none} }
 .zaak-nr{
   flex:0 0 auto;width:40px;height:40px;border-radius:11px;
   display:flex;align-items:center;justify-content:center;
@@ -386,7 +382,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 }
 .level-rij .midden{flex:1;min-width:0}
 .level-rij h3{font-size:18px;font-weight:600;color:var(--inkt);line-height:1.25;overflow-wrap:anywhere}
-.level-rij .onder{margin-top:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.level-rij .onder{margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .niveau-rij{display:flex;align-items:center;gap:3px}
 .niveau-rij i{width:6px;height:6px;border-radius:50%;background:var(--lijn);font-style:normal}
 .niveau-rij i.aan{background:var(--accent)}
@@ -1011,7 +1007,17 @@ function maakLevelRij(entry){
   midden.appendChild(h);
   const onder=document.createElement("div"); onder.className="onder";
   const g=levelGraad(raw);
-  if(g){
+  const vt=voltooidVan(raw);
+  if(vt){
+    /* Afgerond: het woord en je snelste tijd op de plek van de zwaarte. Hoe
+       zwaar hij was doet er niet meer toe; dat je hem hebt opgelost wel. */
+    a.classList.add("voltooid");
+    const af=document.createElement("span"); af.className="afgerond";
+    af.title="Afgerond in "+tijdTekst(vt.tijd);
+    af.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.6 4.5L19 7.5"/></svg>'
+      +'<b>Afgerond</b><span>'+tijdTekst(vt.tijd)+'</span>';
+    onder.appendChild(af);
+  } else if(g){
     const nv=document.createElement("span"); nv.className="niveau-rij"; nv.title=g.uitleg||("Niveau "+g.graad);
     nv.innerHTML=[1,2,3,4,5].map(n=>'<i class="'+(n<=g.graad?"aan":"")+'"></i>').join("");
     onder.appendChild(nv);
@@ -1034,19 +1040,7 @@ function maakLevelRij(entry){
     a.appendChild(hoek);
   }
 
-  /* De tags staan onder elkaar in één kolom: naast elkaar hielden ze op een
-     telefoon te weinig over voor de titel, die dan middenin een woord afbrak.
-     Afgerond staat bovenaan, het formaat eronder. */
   const tags=document.createElement("span"); tags.className="rij-tags";
-  const vt=voltooidVan(raw);
-  if(vt){
-    a.classList.add("voltooid");
-    const kl=document.createElement("span"); kl.className="klaar-tag";
-    kl.title="Afgerond in "+tijdTekst(vt.tijd);
-    kl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.6 4.5L19 7.5"/></svg>'
-      +'<b>Afgerond</b><span>'+tijdTekst(vt.tijd)+'</span>';
-    tags.appendChild(kl);
-  }
 
   const grid=raw.puzzle.grid;
   const tag=document.createElement("span"); tag.className="grid-tag";
