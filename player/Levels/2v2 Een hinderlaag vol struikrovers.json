@@ -1,11 +1,11 @@
 {
   "levelNumber": 2,
-  "levelVersion": 1,
+  "levelVersion": 2,
   "levelId": "lvl-1a05ef262400984c",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-08-31T20:01:01.479Z",
+  "exportedAt": "2026-09-02T19:48:09.000Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -1401,49 +1401,84 @@
         "role": "knight",
         "description": "",
         "gender": "male",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "crew-cut",
+        "hairColor": "soft-black",
+        "skinTone": "light",
+        "hairAuto": true,
+        "attributes": {}
       },
       "p2": {
         "name": "Baldwin",
         "role": "villager",
         "description": "",
         "gender": "male",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "short-curls",
+        "hairColor": "warm-brown",
+        "skinTone": "medium",
+        "hairAuto": true,
+        "attributes": {}
       },
       "p3": {
         "name": "Cyriel",
         "role": "villager",
         "description": "",
         "gender": "male",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "undercut",
+        "hairColor": "dark-blond",
+        "skinTone": "medium",
+        "hairAuto": true,
+        "attributes": {}
       },
       "p4": {
         "name": "Dorothy",
         "role": "knight",
         "description": "",
         "gender": "male",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "wavy-crop",
+        "hairColor": "warm-brown",
+        "skinTone": "medium",
+        "hairAuto": true,
+        "attributes": {}
       },
       "p5": {
         "name": "Eleanor",
         "role": "noble",
         "description": "",
         "gender": "male",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "buzz-cut",
+        "hairColor": "deep-brown",
+        "skinTone": "tan",
+        "hairAuto": true,
+        "attributes": {}
       },
       "p6": {
         "name": "Fulbert",
         "role": "noble",
         "description": "",
         "gender": "male",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "wavy-crop",
+        "hairColor": "auburn",
+        "skinTone": "medium",
+        "hairAuto": true,
+        "attributes": {}
       },
       "p7": {
         "name": "Vladimir",
         "role": "knight",
         "description": "",
         "gender": "male",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "buzz-cut",
+        "hairColor": "silver",
+        "skinTone": "light",
+        "hairAuto": true,
+        "attributes": {}
       }
     },
     "rooms": {

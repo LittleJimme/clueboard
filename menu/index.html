@@ -317,8 +317,15 @@ html[data-thema="licht"] .titelblok h1 em::after{
 .level-list{
   flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
-  display:flex;flex-direction:column;gap:8px;padding-bottom:4px;
+  display:flex;flex-direction:column;gap:8px;
+  /* Geen balk; de randen van het venster zijn een verloop, zodat een kaart
+     onderaan opkomt en bovenaan oplost in plaats van afgesneden te worden. */
+  scrollbar-width:none;
+  padding:30px 0 44px;margin-top:-30px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 44px),transparent 100%);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 44px),transparent 100%);
 }
+.level-list::-webkit-scrollbar{display:none}
 .level-rij{
   position:relative;overflow:hidden;
   display:flex;align-items:center;gap:13px;text-decoration:none;
@@ -433,6 +440,9 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
   text-transform:uppercase;color:var(--dof);margin-bottom:8px;
 }
 #stapKop{flex:0 0 auto}
+/* Titelkaart: alleen de kop, groot in het midden. */
+#modalUitleg .vel.titelkaart #stapKop{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;margin:0;padding:0;font-size:44px;line-height:1.1}
+#modalUitleg .vel.titelkaart .stap-teller,#modalUitleg .vel.titelkaart .stap-beeld,#modalUitleg .vel.titelkaart .stap-tekst{display:none}
 .stap-beeld{
   flex:0 0 214px;display:flex;align-items:center;justify-content:center;
   background:var(--kaart-2);border:1px solid var(--lijn-zacht);border-radius:16px;
@@ -486,6 +496,16 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
   animation:hbDruk 2.2s ease-in-out infinite}
 @keyframes hbDruk{0%{opacity:.15;transform:scale(.86)}55%{opacity:1;transform:scale(1)}75%,100%{opacity:0;transform:scale(1)}}
 .hb-c .kruis.komt{animation:hbKruis 2.2s ease-out infinite both}
+/* Een kring die opent: alleen de bolletjes, zonder inhoud. */
+.hb-ring{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;z-index:3}
+.hb-ring i{position:absolute;left:-8px;top:-8px;width:16px;height:16px;border-radius:50%;background:var(--kaart);border:2px solid var(--accent);box-shadow:0 2px 5px rgba(0,0,0,.3);
+  transform:rotate(var(--a)) translate(34px) scale(0);animation:hbRing 3s ease-out infinite}
+@keyframes hbRing{0%{transform:rotate(var(--a)) translate(34px) scale(0);opacity:0}18%{transform:rotate(var(--a)) translate(34px) scale(1);opacity:1}72%{transform:rotate(var(--a)) translate(34px) scale(1);opacity:1}86%,100%{transform:rotate(var(--a)) translate(34px) scale(0);opacity:0}}
+/* Notitie of plaats: kleine letter in de hoek en grote pion om de beurt. */
+.hb-c.wissel u.hoek{position:absolute;left:4px;top:2px;font-size:11px;animation:hbKlein 4s ease-in-out infinite}
+.hb-c.wissel i{animation:hbGroot 4s ease-in-out infinite}
+@keyframes hbKlein{0%,42%{opacity:.95;transform:scale(1)}50%,92%{opacity:0;transform:scale(.6)}100%{opacity:.95;transform:scale(1)}}
+@keyframes hbGroot{0%,42%{opacity:0;transform:scale(.5)}50%,92%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.5)}}
 @keyframes hbKruis{0%,8%{opacity:0;transform:scale(.4)}22%{opacity:1;transform:scale(1)}88%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1)}}
 .hb-c.gebied.g-nw{box-shadow:inset 3px 3px 0 #2A2118,inset 0 0 0 1px rgba(28,33,64,.13)}
 .hb-c.gebied.g-no{box-shadow:inset -3px 3px 0 #2A2118,inset 0 0 0 1px rgba(28,33,64,.13)}
@@ -585,7 +605,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
     <div class="drop" id="filterDrop">
       <button class="mini-knop" id="filterKnop" type="button" aria-haspopup="true" aria-expanded="false" title="Filter op niveau">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75L12 16.9l-5.2 2.7 1-5.75-4.2-4.1 5.8-.85z"/></svg>
-        <span id="filterLabel">Niveau</span>
+        <span id="filterLabel">Filter</span>
       </button>
       <div class="drop-menu" id="filterMenu"></div>
     </div>
@@ -728,8 +748,10 @@ function helpBord(regels, opt){
       const licht=(o.licht||[]).some(p=>p[0]===x&&p[1]===y);
       const geb=(o.gebied||[]).find(p=>p[0]===x&&p[1]===y);
       const tik=(o.tik||[]).some(p=>p[0]===x&&p[1]===y);
+      const ring=(o.ring||[]).some(p=>p[0]===x&&p[1]===y);
+      const wissel=(o.wissel||[]).find(p=>p[0]===x&&p[1]===y);
       const druk=(o.druk||[]).some(p=>p[0]===x&&p[1]===y);
-      let cls="hb-c"+(licht?" licht":"")+(geb?" gebied "+geb[2]:"")+(tik?" tik":"")+(druk?" druk":"");
+      let cls="hb-c"+(licht?" licht":"")+(geb?" gebied "+geb[2]:"")+(tik?" tik":"")+(druk?" druk":"")+(ring?" ring":"")+(wissel?" wissel":"");
       let inner="";
       if(c==="#") cls+=" blok";
       else if(c==="_") cls+=" leeg";
@@ -744,6 +766,10 @@ function helpBord(regels, opt){
         const k=HB_KLEUREN[c.toUpperCase()]||"#8A93A6";
         inner='<u style="color:'+k+'">'+c.toUpperCase()+'</u>';
       }
+      /* Een kring die opent, alleen de bolletjes; en de wissel tussen de
+         kleine letter in de hoek (notitie) en de grote pion (plaats). */
+      if(ring) inner+='<span class="hb-ring">'+[0,1,2,3,4,5].map(i=>'<i style="--a:'+(i*60-90)+'deg;animation-delay:'+(i*70)+'ms"></i>').join("")+'</span>';
+      if(wissel){ const km=/background:(#[0-9a-fA-F]{6})/.exec(inner); inner+='<u class="hoek"'+(km?' style="color:'+km[1]+'"':'')+'>'+wissel[2]+'</u>'; }
       h+='<span class="'+cls+'">'+inner+'</span>';
     });
   });
@@ -836,11 +862,11 @@ const UITLEG_SETS = {
       +"edelen staan altijd daar, dorpelingen nooit, en ridders mogen overal.")
   ],
   spelen: [
-    R(helpBord(["....",".A..","....","...."],{tik:[[1,1]]}),
+    R(helpBord(["....","....","....","...."],{tik:[[1,1]],ring:[[1,1]]}),
       "Tik een vak aan",
       "Tik op een vak van het bord. Er opent een kring met alle personen.",
       "Kies daarin wie je op dat vak wilt zetten."),
-    R(helpBord(["....",".a..","....","...."],{licht:[[1,1]]}),
+    R(helpBord(["....",".A..","....","...."],{wissel:[[1,1,"A"]]}),
       "Notitie of plaats",
       "Onderin staat de schuif <b>Notitie</b> en <b>Plaats</b>.",
       "In <b>Notitie</b> zet je alleen de letter van iemand neer: een mogelijkheid die je nog niet zeker weet.",
@@ -860,25 +886,35 @@ const UITLEG_SETS = {
   ]
 };
 let uitlegSet="regels";
-let UITLEG_STAPPEN=UITLEG_SETS.regels;
+/* Eén doorlopende reeks: een titelkaart, de spelregels, een titelkaart, en
+   hoe je speelt. De keuze bovenin springt naar de titelkaart van dat deel;
+   de knop onderaan loopt er gewoon doorheen en sluit aan het eind. */
+const UITLEG_STAPPEN=[{titel:"De Spelregels",set:"regels"}]
+  .concat(UITLEG_SETS.regels.map(s=>Object.assign({set:"regels"},s)))
+  .concat([{titel:"Zo speel je",set:"spelen"}])
+  .concat(UITLEG_SETS.spelen.map(s=>Object.assign({set:"spelen"},s)));
 
 let uitlegStap=0;
 function tekenUitleg(){
+  uitlegStap=Math.max(0,Math.min(UITLEG_STAPPEN.length-1,uitlegStap));
   const s=UITLEG_STAPPEN[uitlegStap];
-  $("#stapTeller").textContent="Stap "+(uitlegStap+1)+" van "+UITLEG_STAPPEN.length;
-  $("#stapKop").textContent=s.kop;
-  $("#stapBeeld").innerHTML=s.beeld;      /* eigen vaste inhoud, geen levelinvoer */
-  $("#stapTekst").innerHTML=s.tekst;      /* idem */
-  $("#stapBolletjes").innerHTML=UITLEG_STAPPEN.map((_,i)=>'<i class="'+(i===uitlegStap?"aan":"")+'"></i>').join("");
+  uitlegSet=s.set;
+  document.querySelectorAll("#uitlegKeuze button").forEach(b=>b.classList.toggle("aan",b.dataset.set===s.set));
+  $("#modalUitleg .vel").classList.toggle("titelkaart",!!s.titel);
+  const deel=UITLEG_STAPPEN.filter(x=>x.set===s.set&&!x.titel), i=deel.indexOf(s);
+  $("#stapTeller").textContent=s.titel?"":"Stap "+(i+1)+" van "+deel.length;
+  $("#stapKop").textContent=s.titel||s.kop;
+  $("#stapBeeld").innerHTML=s.titel?"":s.beeld;      /* eigen vaste inhoud, geen levelinvoer */
+  $("#stapTekst").innerHTML=s.titel?"":s.tekst;      /* idem */
+  $("#stapBolletjes").innerHTML=s.titel?"":deel.map((_,j)=>'<i class="'+(j===i?"aan":"")+'"></i>').join("");
   $("#stapTerug").disabled=uitlegStap===0;
-  const laatste=uitlegStap===UITLEG_STAPPEN.length-1;
-  $("#stapVerder").textContent="Volgende →";
-  $("#stapVerder").disabled=laatste;
+  const volgende=UITLEG_STAPPEN[uitlegStap+1];
+  $("#stapVerder").textContent=!volgende ? "Sluiten" : volgende.titel ? volgende.titel+" →" : "Volgende →";
+  $("#stapVerder").disabled=false;
 }
 function zetUitlegSet(k){
   if(!UITLEG_SETS[k]) return;
-  uitlegSet=k; UITLEG_STAPPEN=UITLEG_SETS[k]; uitlegStap=0;
-  document.querySelectorAll("#uitlegKeuze button").forEach(b=>b.classList.toggle("aan",b.dataset.set===k));
+  uitlegSet=k; uitlegStap=Math.max(0,UITLEG_STAPPEN.findIndex(s=>s.titel&&s.set===k));
   tekenUitleg();
 }
 $("#uitlegKeuze").addEventListener("click",e=>{
@@ -889,11 +925,16 @@ $("#btnUitleg").addEventListener("click",()=>{ zetUitlegSet("regels"); openModal
 $("#stapTerug").addEventListener("click",()=>{ if(uitlegStap>0){ uitlegStap--; tekenUitleg(); } });
 $("#stapVerder").addEventListener("click",()=>{
   if(uitlegStap<UITLEG_STAPPEN.length-1){ uitlegStap++; tekenUitleg(); }
+  else sluitModal($("#modalUitleg"));
 });
 $("#stapBolletjes").addEventListener("click",e=>{
   const alle=[...$("#stapBolletjes").children];
   const i=alle.indexOf(e.target);
-  if(i>=0){ uitlegStap=i; tekenUitleg(); }
+  if(i>=0){
+    const s=UITLEG_STAPPEN[uitlegStap], deel=UITLEG_STAPPEN.filter(x=>x.set===s.set&&!x.titel);
+    if(deel[i]) uitlegStap=UITLEG_STAPPEN.indexOf(deel[i]);
+    tekenUitleg();
+  }
 });
 
 /* ============================================================
@@ -1104,7 +1145,7 @@ function tekenFilter(){
   });
   knop.classList.toggle("aan", !!actieveFilter || alleenOpen);
   label.textContent = actieveFilter ? ("Niveau "+actieveFilter)
-                    : alleenOpen ? "Open" : "Niveau";
+                    : alleenOpen ? "Open" : "Filter";
 }
 $("#filterKnop").addEventListener("click",e=>{
   e.stopPropagation();

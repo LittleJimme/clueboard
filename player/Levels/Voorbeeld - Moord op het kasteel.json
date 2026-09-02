@@ -1,10 +1,10 @@
 {
-  "levelVersion": 2,
+  "levelVersion": 3,
   "levelId": "lvl-demo-kasteel",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-08-31T21:22:44.912Z",
+  "exportedAt": "2026-09-02T19:48:09.000Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -531,7 +531,12 @@
         "gender": "female",
         "description": "",
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "long-curls",
+        "hairColor": "dark-blond",
+        "skinTone": "light",
+        "hairAuto": true,
+        "attributes": {}
       },
       "p2": {
         "name": "Beatrix",
@@ -539,7 +544,12 @@
         "gender": "female",
         "description": "",
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "long-curls",
+        "hairColor": "silver",
+        "skinTone": "medium",
+        "hairAuto": true,
+        "attributes": {}
       },
       "p3": {
         "name": "Constantijn",
@@ -547,7 +557,12 @@
         "gender": "male",
         "description": "",
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "swept-back",
+        "hairColor": "auburn",
+        "skinTone": "medium",
+        "hairAuto": true,
+        "attributes": {}
       },
       "p4": {
         "name": "Valentijn",
@@ -555,7 +570,12 @@
         "gender": "male",
         "description": "",
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "side-part",
+        "hairColor": "warm-brown",
+        "skinTone": "light",
+        "hairAuto": true,
+        "attributes": {}
       }
     },
     "rooms": {

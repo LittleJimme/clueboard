@@ -2470,7 +2470,7 @@
       "name": "warning"
     }
   ],
-  "version": 22,
+  "version": 23,
   "floorArt": {
     "note": "Hoeveel tekeningen er per vloersoort klaarstaan in art/backgrounds/<thema>/. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.",
     "variants": {
@@ -2596,37 +2596,37 @@
     {
       "id": "buzz-cut",
       "label": "Stekeltjes",
-      "gender": "any"
+      "gender": "male"
     },
     {
       "id": "crew-cut",
       "label": "Kortgeknipt",
-      "gender": "any"
+      "gender": "male"
     },
     {
       "id": "short-crop",
       "label": "Kort",
-      "gender": "any"
+      "gender": "male"
     },
     {
       "id": "side-part",
       "label": "Zijscheiding",
-      "gender": "any"
+      "gender": "male"
     },
     {
       "id": "swept-back",
       "label": "Achterover",
-      "gender": "any"
+      "gender": "male"
     },
     {
       "id": "undercut",
       "label": "Opgeschoren",
-      "gender": "any"
+      "gender": "male"
     },
     {
       "id": "wavy-crop",
       "label": "Kort golvend",
-      "gender": "any"
+      "gender": "male"
     },
     {
       "id": "short-curls",
@@ -2636,7 +2636,7 @@
     {
       "id": "bob",
       "label": "Bob",
-      "gender": "any"
+      "gender": "female"
     },
     {
       "id": "shoulder-straight",
@@ -2696,5 +2696,36 @@
       "hex": "#A7A9AC"
     }
   ],
-  "characterNote": "Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ (512px, zelfde canvas). Van achter naar voor: hoofd, shirt, haar, en alleen bij het slachtoffer de kruisogen; de lagen liggen 1:1 op elkaar, niets schuift. Shirt en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden."
+  "characterNote": "Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ (512px, zelfde canvas). Van achter naar voor: hoofd, shirt, haar, en alleen bij het slachtoffer de kruisogen; de lagen liggen 1:1 op elkaar, niets schuift. Shirt en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden. skinTones: vier huidtinten; light is de tint van de tekening zelf (base) en wordt niet omgekleurd; avoidHair zegt welke haarkleuren de bouwer bij die tint niet vanzelf toekent.",
+  "skinTones": [
+    {
+      "id": "light",
+      "label": "Licht",
+      "hex": "#FACD9E",
+      "base": true
+    },
+    {
+      "id": "medium",
+      "label": "Getint",
+      "hex": "#E2AC7C"
+    },
+    {
+      "id": "tan",
+      "label": "Bruin",
+      "hex": "#B77A50",
+      "avoidHair": [
+        "dark-blond",
+        "auburn"
+      ]
+    },
+    {
+      "id": "deep",
+      "label": "Donker",
+      "hex": "#6E4530",
+      "avoidHair": [
+        "dark-blond",
+        "auburn"
+      ]
+    }
+  ]
 }
