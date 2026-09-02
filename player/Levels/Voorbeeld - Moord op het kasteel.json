@@ -1,10 +1,10 @@
 {
-  "levelVersion": 4,
+  "levelVersion": 5,
   "levelId": "lvl-demo-kasteel",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-02T20:56:39.000Z",
+  "exportedAt": "2026-09-02T22:37:24.000Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -532,10 +532,10 @@
         "description": "",
         "nameLetter": "A",
         "genderAuto": true,
-        "hairStyle": "long-curls",
-        "hairColor": "dark-blond",
+        "hairStyle": "long-wavy",
+        "hairColor": "soft-black",
         "skinTone": "light",
-        "hairAuto": true,
+        "hairAuto": false,
         "attributes": {}
       },
       "p2": {
@@ -545,10 +545,10 @@
         "description": "",
         "nameLetter": "B",
         "genderAuto": true,
-        "hairStyle": "long-curls",
-        "hairColor": "silver",
+        "hairStyle": "shoulder-straight",
+        "hairColor": "warm-brown",
         "skinTone": "medium",
-        "hairAuto": true,
+        "hairAuto": false,
         "attributes": {}
       },
       "p3": {
