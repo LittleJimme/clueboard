@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 128" fill="none">
+  <!-- Tapijt over 3 tegels breed, 1 tegel hoog. Canvas 384x128 = 3x1 tegels.
+       Dit is de grootste maat; groter mag een tapijt niet worden. -->
+  <g stroke="#14162E" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="16" y="34" width="352" height="60" rx="6" fill="#B45B3E"/>
+    <rect x="30" y="48" width="324" height="32" rx="4" stroke="#E7B63B" stroke-width="4"/>
+    <path d="M128 64 140 52 152 64 140 76Z" fill="#EFE3C8" stroke-width="3.5"/>
+    <path d="M180 64 192 52 204 64 192 76Z" fill="#EFE3C8" stroke-width="3.5"/>
+    <path d="M232 64 244 52 256 64 244 76Z" fill="#EFE3C8" stroke-width="3.5"/>
+  </g>
+</svg>

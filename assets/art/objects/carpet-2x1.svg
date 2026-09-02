@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 128" fill="none">
+  <!-- Tapijt over 2 tegels breed, 1 tegel hoog. Canvas 256x128 = 2x1 tegels. -->
+  <g stroke="#14162E" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="16" y="34" width="224" height="60" rx="6" fill="#B45B3E"/>
+    <rect x="30" y="48" width="196" height="32" rx="4" stroke="#E7B63B" stroke-width="4"/>
+    <path d="M96 64 108 52 120 64 108 76Z" fill="#EFE3C8" stroke-width="3.5"/>
+    <path d="M136 64 148 52 160 64 148 76Z" fill="#EFE3C8" stroke-width="3.5"/>
+  </g>
+</svg>

@@ -128,6 +128,24 @@
     },
     {
       "art": [
+        "carpet-3x1.svg",
+        "carpet-2x1.svg",
+        "carpet.svg"
+      ],
+      "article": "het",
+      "category": "decor",
+      "group": "Meubilair",
+      "icon": "icons/objects/carpet.svg",
+      "kind": "Carpet",
+      "label": "Tapijt",
+      "labelPlural": "tapijten",
+      "maxTiles": null,
+      "slug": "carpet",
+      "themes": null,
+      "type": "occupiable"
+    },
+    {
+      "art": [
         "catapult.svg"
       ],
       "article": "de",
@@ -331,6 +349,26 @@
       "slug": "plant",
       "themes": null,
       "type": "blocked"
+    },
+    {
+      "art": [
+        "puddle.svg"
+      ],
+      "article": "de",
+      "category": "nature",
+      "group": "Natuur",
+      "icon": "icons/objects/puddle.svg",
+      "kind": "Puddle",
+      "label": "Modderplas",
+      "labelPlural": "modderplassen",
+      "maxTiles": 1,
+      "slug": "puddle",
+      "themes": null,
+      "type": "occupiable",
+      "pose": {
+        "ww": "stond",
+        "vz": "in"
+      }
     },
     {
       "art": [
@@ -2425,7 +2463,7 @@
       "name": "warning"
     }
   ],
-  "version": 18,
+  "version": 19,
   "floorArt": {
     "note": "Hoeveel tekeningen er per vloersoort klaarstaan in art/backgrounds/<thema>/. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.",
     "variants": {

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 256" fill="none">
+  <!-- Tapijt over 1 tegel breed, 2 tegels hoog. Canvas 128x256 = 1x2 tegels.
+       De player kiest een variant op naam (slug-BxH), dus staand en liggend
+       hebben allebei hun eigen tekening. -->
+  <g stroke="#14162E" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="34" y="16" width="60" height="224" rx="6" fill="#B45B3E"/>
+    <rect x="48" y="30" width="32" height="196" rx="4" stroke="#E7B63B" stroke-width="4"/>
+    <path d="M64 96 76 108 64 120 52 108Z" fill="#EFE3C8" stroke-width="3.5"/>
+    <path d="M64 136 76 148 64 160 52 148Z" fill="#EFE3C8" stroke-width="3.5"/>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Tapijt op 1 tegel. Je kunt erop staan, dus de tekening blijft laag bij
+       de grond en houdt het midden rustig voor de pion die er straks op komt. -->
+  <g stroke="#14162E" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="9" y="19" width="46" height="26" rx="3" fill="#B45B3E"/>
+    <rect x="15" y="25" width="34" height="14" rx="2" stroke="#E7B63B" stroke-width="2.4"/>
+    <path d="M32 27.5 36.5 32 32 36.5 27.5 32Z" fill="#EFE3C8" stroke-width="2"/>
+  </g>
+</svg>
