@@ -412,11 +412,10 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .stap-beeld .hb{max-height:100%}
 .help-rollen{display:flex;gap:26px;justify-content:center;align-items:center}
 .help-rollen .hr{display:flex;flex-direction:column;align-items:center;gap:8px}
-.help-rollen .hr-p{position:relative;width:64px;height:64px;display:block}
-.help-rollen .hr-v{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;height:100%}
+.help-rollen .hr-p{position:relative;width:52px;height:74px;display:block}
+.help-rollen .hr-v{position:absolute;inset:0}
 .help-rollen .hr-v svg{width:100%;height:100%;display:block}
-.help-rollen .hr-c{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);
-  width:56%;height:56%;border-radius:50%;background:#F4EFE2;box-shadow:0 0 0 2px #2A2118}
+.help-rollen .hr-c{position:absolute;left:9.8%;top:19.4%;width:80.4%;height:56.25%;border-radius:50%;background:#F3F0FA;border:2px solid #2A2118}
 .help-rollen b{font:700 12px var(--font-ui);color:var(--inkt-2)}
 .stap-tekst{
   flex:1;min-height:0;overflow:auto;
@@ -683,7 +682,10 @@ document.addEventListener("keydown", e=>{
 /* ============================================================
    Hoe speel je? — korte, simpele stappen, van zaak tot ontknoping.
    ============================================================ */
-const HB_KLEUREN = { A:"#3896C5", B:"#511731", C:"#E7B63B", D:"#FF7BAC", V:"#EF6F3C" };
+/* Dezelfde letterkleuren als in de assetbank (V4-palet): A C01, B C02, C C03,
+   D C04, en het slachtoffer C13. Het menu is zelfstandig, dus ze staan hier
+   uitgeschreven; wijzig ze samen met manifest.personColors. */
+const HB_KLEUREN = { A:"#C79A3A", B:"#3E8DB5", C:"#694875", D:"#E07A9A", V:"#B6544A" };
 function letterInkt(hex){
   const h=hex.replace("#","");
   const lum=0.2126*parseInt(h.slice(0,2),16)+0.7152*parseInt(h.slice(2,4),16)+0.0722*parseInt(h.slice(4,6),16);
@@ -730,29 +732,23 @@ function meng(hex,f){
   const k=v=>Math.max(0,Math.min(255,Math.round(v*f)));
   return "#"+[k(n>>16&255),k(n>>8&255),k(n&255)].map(v=>v.toString(16).padStart(2,"0")).join("");
 }
-function rolVorm(soort,kleur){
+/* De compacte rolcontainer uit de goedgekeurde referentie: banier voor de
+   edele, schild voor de ridder. Zelfde vorm als in de player; de kleur is
+   die van de rol en erft nooit een persoonskleur. */
+function rolVorm(soort){
   const ink="#2A2118", uid="rv"+(rolVorm._n=(rolVorm._n||0)+1);
-  const defs='<defs><linearGradient id="'+uid+'" x1="0" y1="0" x2="0" y2="1">'
-    +'<stop offset="0" stop-color="'+meng(kleur,1.3)+'"/><stop offset=".5" stop-color="'+kleur+'"/>'
-    +'<stop offset="1" stop-color="'+meng(kleur,.62)+'"/></linearGradient></defs>';
-  const F='fill="url(#'+uid+')"';
-  const bies='stroke="'+meng(kleur,1.45)+'" stroke-width="1.6" opacity=".8"';
-  const glim='fill="rgba(255,255,255,.20)" stroke="none"';
-  const wrap=i=>'<svg viewBox="0 0 100 100" fill="none" stroke="'+ink+'" stroke-width="2.4" '
-    +'stroke-linejoin="round" stroke-linecap="round">'+defs+i+'</svg>';
-  if(soort==="edele") return wrap('<path '+F+' d="M14 13 H86 V90 L50 71 L14 90 Z"/>'
-    +'<path '+bies+' d="M18 17 H82 V83 L50 66.5 L18 83 Z"/>'
-    +'<path '+glim+' d="M18 17h64l-3 9H21Z"/>'
-    +'<path stroke="'+ink+'" stroke-width="5.2" d="M7 13H93"/>'
-    +'<path stroke="#C9A227" stroke-width="2.6" d="M8.5 13h83"/>');
-  return wrap('<path '+F+' d="M50 8.5 L86 21.5 V50 c0 22.8-16.2 36.1-36 43.7C30 86 14 72.8 14 50V21.5Z"/>'
-    +'<path '+bies+' d="M50 14.5 L80.5 25.5 V49.5 c0 19.5-13.5 30.8-30.5 37.7C33 80.3 19.5 69 19.5 49.5V25.5Z"/>'
-    +'<path '+glim+' d="M50 8.5 86 21.5v6.5C74 22 60 19 47 20c4-5 3-8 3-11.5Z"/>');
+  const grad=(a,b)=>'<defs><linearGradient id="'+uid+'" x1="0" y1="0" x2="0" y2="1">'
+    +'<stop offset="0" stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient></defs>';
+  if(soort==="edele")
+    return '<svg viewBox="0 0 112 160" fill="none" aria-hidden="true">'+grad("#D9B75E","#B88920")
+      +'<path d="M3 3h106v152l-53-28L3 155Z" fill="url(#'+uid+')" stroke="'+ink+'" stroke-width="5" stroke-linejoin="round"/></svg>';
+  return '<svg viewBox="0 0 112 161" fill="none" aria-hidden="true">'+grad("#A8B1BF","#6E7A8B")
+    +'<path d="M56 3 109 23v65c0 36-24 58-53 69C27 146 3 124 3 88V23Z" fill="url(#'+uid+')" stroke="'+ink+'" stroke-width="5" stroke-linejoin="round"/></svg>';
 }
 function helpRollen(){
-  const rollen=[["Edele","edele","#C9A227"],["Ridder","ridder","#7E8894"]];
-  return '<div class="help-rollen">'+rollen.map(([naam,soort,kleur])=>
-    '<span class="hr"><span class="hr-p"><span class="hr-v">'+rolVorm(soort,kleur)+'</span>'
+  const rollen=[["Edele","edele"],["Ridder","ridder"]];
+  return '<div class="help-rollen">'+rollen.map(([naam,soort])=>
+    '<span class="hr"><span class="hr-p"><span class="hr-v">'+rolVorm(soort)+'</span>'
     +'<span class="hr-c"></span></span><b>'+naam+'</b></span>'
   ).join("")+'</div>';
 }

@@ -622,19 +622,26 @@
     }
   ],
   "personColors": {
-    "A": "#3896C5",
-    "B": "#511731",
-    "C": "#E7B63B",
-    "D": "#FF7BAC",
-    "E": "#1C3F30",
-    "F": "#737117",
-    "G": "#95B3B8",
-    "H": "#7C6F9B",
-    "I": "#83B566",
-    "J": "#BEB4D7",
-    "K": "#6C4D21",
-    "L": "#CAD7BB",
-    "victim": "#EF6F3C"
+    "A": "#C79A3A",
+    "B": "#3E8DB5",
+    "C": "#694875",
+    "D": "#E07A9A",
+    "E": "#285C49",
+    "F": "#7B7A32",
+    "G": "#79A8B0",
+    "H": "#75639A",
+    "I": "#79A85A",
+    "J": "#AAA0C8",
+    "K": "#84562B",
+    "L": "#AFC79E",
+    "M": "#2E777C",
+    "N": "#4D5F96",
+    "O": "#A85F36",
+    "P": "#8C4F86",
+    "Q": "#D08332",
+    "R": "#477A66",
+    "S": "#5B6672",
+    "victim": "#B6544A"
   },
   "personNames": {
     "A": [
@@ -2463,7 +2470,7 @@
       "name": "warning"
     }
   ],
-  "version": 19,
+  "version": 20,
   "floorArt": {
     "note": "Hoeveel tekeningen er per vloersoort klaarstaan in art/backgrounds/<thema>/. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.",
     "variants": {
@@ -2477,5 +2484,222 @@
       "tile": 1,
       "concrete": 1
     }
-  }
+  },
+  "identityColors": [
+    {
+      "id": "C01",
+      "hex": "#C79A3A",
+      "victimOnly": false
+    },
+    {
+      "id": "C02",
+      "hex": "#3E8DB5",
+      "victimOnly": false
+    },
+    {
+      "id": "C03",
+      "hex": "#694875",
+      "victimOnly": false
+    },
+    {
+      "id": "C04",
+      "hex": "#E07A9A",
+      "victimOnly": false
+    },
+    {
+      "id": "C05",
+      "hex": "#285C49",
+      "victimOnly": false
+    },
+    {
+      "id": "C06",
+      "hex": "#7B7A32",
+      "victimOnly": false
+    },
+    {
+      "id": "C07",
+      "hex": "#79A8B0",
+      "victimOnly": false
+    },
+    {
+      "id": "C08",
+      "hex": "#75639A",
+      "victimOnly": false
+    },
+    {
+      "id": "C09",
+      "hex": "#79A85A",
+      "victimOnly": false
+    },
+    {
+      "id": "C10",
+      "hex": "#AAA0C8",
+      "victimOnly": false
+    },
+    {
+      "id": "C11",
+      "hex": "#84562B",
+      "victimOnly": false
+    },
+    {
+      "id": "C12",
+      "hex": "#AFC79E",
+      "victimOnly": false
+    },
+    {
+      "id": "C13",
+      "hex": "#B6544A",
+      "victimOnly": true
+    },
+    {
+      "id": "C14",
+      "hex": "#2E777C",
+      "victimOnly": false
+    },
+    {
+      "id": "C15",
+      "hex": "#4D5F96",
+      "victimOnly": false
+    },
+    {
+      "id": "C16",
+      "hex": "#A85F36",
+      "victimOnly": false
+    },
+    {
+      "id": "C17",
+      "hex": "#8C4F86",
+      "victimOnly": false
+    },
+    {
+      "id": "C18",
+      "hex": "#D08332",
+      "victimOnly": false
+    },
+    {
+      "id": "C19",
+      "hex": "#477A66",
+      "victimOnly": false
+    },
+    {
+      "id": "C20",
+      "hex": "#5B6672",
+      "victimOnly": false
+    }
+  ],
+  "hairStyles": [
+    {
+      "id": "bald",
+      "label": "Kaal",
+      "gender": "any"
+    },
+    {
+      "id": "buzz-cut",
+      "label": "Stekeltjes",
+      "gender": "any"
+    },
+    {
+      "id": "crew-cut",
+      "label": "Kortgeknipt",
+      "gender": "any"
+    },
+    {
+      "id": "short-crop",
+      "label": "Kort",
+      "gender": "any"
+    },
+    {
+      "id": "side-part",
+      "label": "Zijscheiding",
+      "gender": "any"
+    },
+    {
+      "id": "swept-back",
+      "label": "Achterover",
+      "gender": "any"
+    },
+    {
+      "id": "undercut",
+      "label": "Opgeschoren",
+      "gender": "any"
+    },
+    {
+      "id": "wavy-crop",
+      "label": "Kort golvend",
+      "gender": "any"
+    },
+    {
+      "id": "short-curls",
+      "label": "Korte krullen",
+      "gender": "any"
+    },
+    {
+      "id": "bob",
+      "label": "Bob",
+      "gender": "any"
+    },
+    {
+      "id": "shoulder-straight",
+      "label": "Steil tot de schouders",
+      "gender": "female"
+    },
+    {
+      "id": "long-wavy",
+      "label": "Lang golvend",
+      "gender": "female"
+    },
+    {
+      "id": "long-curls",
+      "label": "Lange krullen",
+      "gender": "female"
+    },
+    {
+      "id": "ponytail",
+      "label": "Paardenstaart",
+      "gender": "female"
+    },
+    {
+      "id": "braid",
+      "label": "Vlecht",
+      "gender": "female"
+    },
+    {
+      "id": "half-up",
+      "label": "Half opgestoken",
+      "gender": "female"
+    }
+  ],
+  "hairColors": [
+    {
+      "id": "soft-black",
+      "label": "Zwart",
+      "hex": "#2B2622"
+    },
+    {
+      "id": "deep-brown",
+      "label": "Donkerbruin",
+      "hex": "#4A3226"
+    },
+    {
+      "id": "warm-brown",
+      "label": "Warm bruin",
+      "hex": "#7A4E2D"
+    },
+    {
+      "id": "auburn",
+      "label": "Kastanje",
+      "hex": "#9B4A2C"
+    },
+    {
+      "id": "dark-blond",
+      "label": "Donkerblond",
+      "hex": "#B48A4A"
+    },
+    {
+      "id": "silver",
+      "label": "Zilvergrijs",
+      "hex": "#A7A9AC"
+    }
+  ],
+  "characterNote": "Characters volgen de V4-master: rond portret, zachte ID-tint, verticale licht/donker-splitsing, geen ogen/neus/mond behalve twee kruisogen bij het slachtoffer. Per persoon staan hairStyle en hairColor in content.people; ontbreken ze, dan kiezen speler en bouwer dezelfde vaste terugval uit naam+geslacht. De laatste zes kapsels zijn alleen voor vrouwen. attributes is gereserveerd voor latere uitbreidingen."
 }
