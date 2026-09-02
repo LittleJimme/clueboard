@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90">
+<defs>
+<radialGradient id="lak" cx=".35" cy=".3" r=".9">
+<stop offset="0" stop-color="#E06A5C"/><stop offset=".45" stop-color="#B03A2E"/><stop offset="1" stop-color="#7E1F16"/>
+</radialGradient>
+</defs>
+<path d="M45 6c12-2 24 3 31 12c7 9 9 20 5 30c5 8 3 18-4 24c-8 7-18 9-27 12c-10 3-21 1-28-6C15 71 10 62 12 52C8 43 10 32 17 25C24 17 34 8 45 6Z"
+  fill="url(#lak)" stroke="#5E140D" stroke-width="3"/>
+<path d="M30 55v-13l7 5 8-9 8 9 7-5v13c0 2-2 4-4 4H34c-2 0-4-2-4-4Z"
+  fill="none" stroke="#F3D9CE" stroke-width="3.4" stroke-linejoin="round" opacity=".85"/>
+<path d="M24 22c6-6 14-9 21-9" stroke="rgba(255,255,255,.5)" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>

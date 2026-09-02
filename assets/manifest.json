@@ -1,0 +1,2443 @@
+{
+  "artTile": 128,
+  "format": "clueboard-assets",
+  "gebiedsklassen": [
+    {
+      "id": "adellijk",
+      "label": "Voor edelen",
+      "rol": "noble",
+      "themes": [
+        "medieval"
+      ]
+    }
+  ],
+  "iconViewBox": "0 0 24 24",
+  "ink": "#1D2036",
+  "note": "Bron van waarheid voor iconen, tekeningen, objectkennis, ruimtes, rollen, spelerskleuren en namen. Builder en player lezen hier allebei uit; niets hardcoderen. De kleur van een persoon hangt aan de beginletter van zijn naam (A t/m L, plus victim); de letter erop is donker of wit, afhankelijk van wat het beste leest. Rollen met available:false staan nog niet in de buildermenu's. Bij elke naam staat het geslacht, zodat de bouwer dat niet hoeft te raden voor de namen die hij zelf uitdeelt.",
+  "objects": [
+    {
+      "art": [
+        "barrel.svg"
+      ],
+      "article": "het",
+      "category": "furniture",
+      "group": "Opslag",
+      "icon": "icons/objects/barrel.svg",
+      "kind": "Barrel",
+      "label": "Vat",
+      "labelPlural": "vaten",
+      "maxTiles": 1,
+      "slug": "barrel",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "bed.svg"
+      ],
+      "article": "het",
+      "category": "furniture",
+      "group": "Zitten",
+      "icon": "icons/objects/bed.svg",
+      "kind": "Bed",
+      "label": "Bed",
+      "labelPlural": "bedden",
+      "maxTiles": 2,
+      "slug": "bed",
+      "themes": null,
+      "type": "occupiable",
+      "pose": {
+        "ww": "lag",
+        "vz": "op"
+      }
+    },
+    {
+      "art": [
+        "bench-2x1.svg",
+        "bench.svg"
+      ],
+      "article": "de",
+      "category": "furniture",
+      "group": "Zitten",
+      "icon": "icons/objects/bench.svg",
+      "kind": "Bench",
+      "label": "Bank",
+      "labelPlural": "banken",
+      "maxTiles": 2,
+      "slug": "bench",
+      "themes": null,
+      "type": "occupiable",
+      "pose": {
+        "ww": "zat",
+        "vz": "op"
+      }
+    },
+    {
+      "art": [
+        "boar.svg"
+      ],
+      "article": "het",
+      "category": "animal",
+      "group": "Dieren",
+      "icon": "icons/objects/boar.svg",
+      "kind": "Boar",
+      "label": "Everzwijn",
+      "labelPlural": "everzwijnen",
+      "maxTiles": 1,
+      "slug": "boar",
+      "themes": [
+        "medieval"
+      ],
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "boat.svg"
+      ],
+      "article": "de",
+      "category": "vehicle",
+      "group": "Voertuigen",
+      "icon": "icons/objects/boat.svg",
+      "kind": "Boat",
+      "label": "Boot",
+      "labelPlural": "boten",
+      "maxTiles": 2,
+      "slug": "boat",
+      "themes": null,
+      "type": "occupiable",
+      "pose": {
+        "ww": "zat",
+        "vz": "in"
+      }
+    },
+    {
+      "art": [
+        "box.svg"
+      ],
+      "article": "de",
+      "category": "furniture",
+      "group": "Opslag",
+      "icon": "icons/objects/box.svg",
+      "kind": "Box",
+      "label": "Doos",
+      "labelPlural": "dozen",
+      "maxTiles": 1,
+      "slug": "box",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "catapult.svg"
+      ],
+      "article": "de",
+      "category": "decor",
+      "group": "Obstakels",
+      "icon": "icons/objects/catapult.svg",
+      "kind": "Catapult",
+      "label": "Katapult",
+      "labelPlural": "katapulten",
+      "maxTiles": 2,
+      "slug": "catapult",
+      "themes": [
+        "medieval"
+      ],
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "chair.svg"
+      ],
+      "article": "de",
+      "category": "furniture",
+      "group": "Zitten",
+      "icon": "icons/objects/chair.svg",
+      "kind": "Chair",
+      "label": "Stoel",
+      "labelPlural": "stoelen",
+      "maxTiles": 1,
+      "slug": "chair",
+      "themes": null,
+      "type": "occupiable",
+      "pose": {
+        "ww": "zat",
+        "vz": "op"
+      }
+    },
+    {
+      "art": [
+        "cow.svg"
+      ],
+      "article": "de",
+      "category": "animal",
+      "group": "Dieren",
+      "icon": "icons/objects/cow.svg",
+      "kind": "Cow",
+      "label": "Koe",
+      "labelPlural": "koeien",
+      "maxTiles": 1,
+      "slug": "cow",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "crate.svg"
+      ],
+      "article": "het",
+      "category": "furniture",
+      "group": "Opslag",
+      "icon": "icons/objects/crate.svg",
+      "kind": "Crate",
+      "label": "Krat",
+      "labelPlural": "kratten",
+      "maxTiles": 1,
+      "slug": "crate",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "door.svg"
+      ],
+      "article": "de",
+      "category": "wall",
+      "group": "Muren",
+      "icon": "icons/objects/door.svg",
+      "kind": "Door",
+      "label": "Deur",
+      "labelPlural": "deuren",
+      "maxTiles": null,
+      "slug": "door",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "easel.svg"
+      ],
+      "article": "de",
+      "category": "furniture",
+      "group": "Meubilair",
+      "icon": "icons/objects/easel.svg",
+      "kind": "Easel",
+      "label": "Schildersezel",
+      "labelPlural": "schildersezels",
+      "maxTiles": 1,
+      "slug": "easel",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "gate.svg"
+      ],
+      "article": "de",
+      "category": "wall",
+      "group": "Muren",
+      "icon": "icons/objects/gate.svg",
+      "kind": "Gate",
+      "label": "Poort",
+      "labelPlural": "poorten",
+      "maxTiles": null,
+      "slug": "gate",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "horse.svg"
+      ],
+      "article": "het",
+      "category": "animal",
+      "group": "Dieren",
+      "icon": "icons/objects/horse.svg",
+      "kind": "Horse",
+      "label": "Paard",
+      "labelPlural": "paarden",
+      "maxTiles": 1,
+      "slug": "horse",
+      "themes": [
+        "medieval"
+      ],
+      "type": "occupiable",
+      "pose": {
+        "ww": "zat",
+        "vz": "op"
+      }
+    },
+    {
+      "art": [
+        "house.svg"
+      ],
+      "article": "het",
+      "category": "decor",
+      "group": "Structuur",
+      "icon": "icons/objects/house.svg",
+      "kind": "House",
+      "label": "Huisje",
+      "labelPlural": "huisjes",
+      "maxTiles": 1,
+      "slug": "house",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "loom.svg"
+      ],
+      "article": "het",
+      "category": "furniture",
+      "group": "Meubilair",
+      "icon": "icons/objects/loom.svg",
+      "kind": "Loom",
+      "label": "Weefgetouw",
+      "labelPlural": "weefgetouwen",
+      "maxTiles": 1,
+      "slug": "loom",
+      "themes": [
+        "medieval"
+      ],
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "pig.svg"
+      ],
+      "article": "het",
+      "category": "animal",
+      "group": "Dieren",
+      "icon": "icons/objects/pig.svg",
+      "kind": "Pig",
+      "label": "Varken",
+      "labelPlural": "varkens",
+      "maxTiles": 1,
+      "slug": "pig",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "plant.svg"
+      ],
+      "article": "de",
+      "category": "nature",
+      "group": "Natuur",
+      "icon": "icons/objects/plant.svg",
+      "kind": "Plant",
+      "label": "Plant",
+      "labelPlural": "planten",
+      "maxTiles": 1,
+      "slug": "plant",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "rubble.svg"
+      ],
+      "article": "het",
+      "category": "decor",
+      "group": "Obstakels",
+      "icon": "icons/objects/rubble.svg",
+      "kind": "Rubble",
+      "label": "Puin",
+      "labelPlural": "puinhopen",
+      "maxTiles": 1,
+      "slug": "rubble",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "sack.svg"
+      ],
+      "article": "de",
+      "category": "furniture",
+      "group": "Opslag",
+      "icon": "icons/objects/sack.svg",
+      "kind": "Sack",
+      "label": "Zak",
+      "labelPlural": "zakken",
+      "maxTiles": 1,
+      "slug": "sack",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "shelf.svg"
+      ],
+      "article": "de",
+      "category": "furniture",
+      "group": "Opslag",
+      "icon": "icons/objects/shelf.svg",
+      "kind": "Shelf",
+      "label": "Boekenkast",
+      "labelPlural": "boekenkasten",
+      "maxTiles": 1,
+      "slug": "shelf",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "shrub.svg"
+      ],
+      "article": "de",
+      "available": false,
+      "category": "nature",
+      "group": "Natuur",
+      "icon": "icons/objects/shrub.svg",
+      "kind": "Shrub",
+      "label": "Struik",
+      "labelPlural": "struiken",
+      "maxTiles": 1,
+      "slug": "shrub",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "statue.svg"
+      ],
+      "article": "het",
+      "category": "decor",
+      "group": "Structuur",
+      "icon": "icons/objects/statue.svg",
+      "kind": "Statue",
+      "label": "Standbeeld",
+      "labelPlural": "standbeelden",
+      "maxTiles": 1,
+      "slug": "statue",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "stones.svg"
+      ],
+      "article": "de",
+      "category": "nature",
+      "group": "Natuur",
+      "icon": "icons/objects/stones.svg",
+      "kind": "Stones",
+      "label": "Stenen",
+      "labelPlural": "stenen",
+      "maxTiles": null,
+      "slug": "stones",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "table-2x1.svg",
+        "table.svg"
+      ],
+      "article": "de",
+      "category": "furniture",
+      "group": "Meubilair",
+      "icon": "icons/objects/table.svg",
+      "kind": "Table",
+      "label": "Tafel",
+      "labelPlural": "tafels",
+      "maxTiles": null,
+      "slug": "table",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "treasure.svg"
+      ],
+      "article": "de",
+      "category": "decor",
+      "group": "Opslag",
+      "icon": "icons/objects/treasure.svg",
+      "kind": "Treasure",
+      "label": "Schat",
+      "labelPlural": "schatten",
+      "maxTiles": 1,
+      "slug": "treasure",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "tree.svg"
+      ],
+      "article": "de",
+      "category": "nature",
+      "group": "Natuur",
+      "icon": "icons/objects/tree.svg",
+      "kind": "Tree",
+      "label": "Boom",
+      "labelPlural": "bomen",
+      "maxTiles": 1,
+      "slug": "tree",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "vase.svg"
+      ],
+      "article": "de",
+      "category": "decor",
+      "group": "Structuur",
+      "icon": "icons/objects/vase.svg",
+      "kind": "Vase",
+      "label": "Vaas",
+      "labelPlural": "vazen",
+      "maxTiles": 1,
+      "slug": "vase",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "watermill-2x1.svg",
+        "watermill.svg"
+      ],
+      "article": "de",
+      "category": "decor",
+      "group": "Structuur",
+      "icon": "icons/objects/watermill.svg",
+      "kind": "Watermill",
+      "label": "Watermolen",
+      "labelPlural": "watermolens",
+      "maxTiles": 2,
+      "slug": "watermill",
+      "themes": [
+        "medieval"
+      ],
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "weapon-chest.svg"
+      ],
+      "article": "de",
+      "category": "furniture",
+      "group": "Opslag",
+      "icon": "icons/objects/weapon-chest.svg",
+      "kind": "Weapon Chest",
+      "label": "Wapenkist",
+      "labelPlural": "wapenkisten",
+      "maxTiles": 1,
+      "slug": "weapon-chest",
+      "themes": [
+        "medieval"
+      ],
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "well-2x2.svg",
+        "well.svg"
+      ],
+      "article": "de",
+      "category": "decor",
+      "group": "Structuur",
+      "icon": "icons/objects/well.svg",
+      "kind": "Well",
+      "label": "Waterput",
+      "labelPlural": "waterputten",
+      "maxTiles": 4,
+      "slug": "well",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "window.svg"
+      ],
+      "article": "het",
+      "category": "wall",
+      "group": "Muren",
+      "icon": "icons/objects/window.svg",
+      "kind": "Window",
+      "label": "Raam",
+      "labelPlural": "ramen",
+      "maxTiles": null,
+      "slug": "window",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
+        "wolf.svg"
+      ],
+      "article": "de",
+      "category": "animal",
+      "group": "Dieren",
+      "icon": "icons/objects/wolf.svg",
+      "kind": "Wolf",
+      "label": "Wolf",
+      "labelPlural": "wolven",
+      "maxTiles": 1,
+      "slug": "wolf",
+      "themes": [
+        "medieval"
+      ],
+      "type": "blocked"
+    }
+  ],
+  "personColors": {
+    "A": "#3896C5",
+    "B": "#511731",
+    "C": "#E7B63B",
+    "D": "#FF7BAC",
+    "E": "#1C3F30",
+    "F": "#737117",
+    "G": "#95B3B8",
+    "H": "#7C6F9B",
+    "I": "#83B566",
+    "J": "#BEB4D7",
+    "K": "#6C4D21",
+    "L": "#CAD7BB",
+    "victim": "#EF6F3C"
+  },
+  "personNames": {
+    "A": [
+      {
+        "gender": "male",
+        "name": "Adelbert"
+      },
+      {
+        "gender": "female",
+        "name": "Agnes"
+      },
+      {
+        "gender": "male",
+        "name": "Alard"
+      },
+      {
+        "gender": "female",
+        "name": "Aleid"
+      },
+      {
+        "gender": "male",
+        "name": "Anselm"
+      },
+      {
+        "gender": "male",
+        "name": "Arnout"
+      },
+      {
+        "gender": "female",
+        "name": "Aveline"
+      },
+      {
+        "gender": "male",
+        "name": "Alwin"
+      },
+      {
+        "gender": "female",
+        "name": "Amelie"
+      },
+      {
+        "gender": "male",
+        "name": "Aldric"
+      }
+    ],
+    "B": [
+      {
+        "gender": "male",
+        "name": "Baldwin"
+      },
+      {
+        "gender": "female",
+        "name": "Beatrix"
+      },
+      {
+        "gender": "male",
+        "name": "Bertram"
+      },
+      {
+        "gender": "male",
+        "name": "Bavo"
+      },
+      {
+        "gender": "female",
+        "name": "Brechtje"
+      },
+      {
+        "gender": "male",
+        "name": "Boudewijn"
+      },
+      {
+        "gender": "male",
+        "name": "Berthold"
+      },
+      {
+        "gender": "female",
+        "name": "Bela"
+      },
+      {
+        "gender": "male",
+        "name": "Brand"
+      },
+      {
+        "gender": "female",
+        "name": "Bertrada"
+      }
+    ],
+    "C": [
+      {
+        "gender": "male",
+        "name": "Casimir"
+      },
+      {
+        "gender": "female",
+        "name": "Clementia"
+      },
+      {
+        "gender": "male",
+        "name": "Coenraad"
+      },
+      {
+        "gender": "male",
+        "name": "Christiaen"
+      },
+      {
+        "gender": "female",
+        "name": "Cunera"
+      },
+      {
+        "gender": "male",
+        "name": "Constantijn"
+      },
+      {
+        "gender": "female",
+        "name": "Cathelijne"
+      },
+      {
+        "gender": "male",
+        "name": "Cyriel"
+      },
+      {
+        "gender": "male",
+        "name": "Colijn"
+      },
+      {
+        "gender": "female",
+        "name": "Clara"
+      }
+    ],
+    "D": [
+      {
+        "gender": "male",
+        "name": "Diederik"
+      },
+      {
+        "gender": "female",
+        "name": "Dorothea"
+      },
+      {
+        "gender": "male",
+        "name": "Duncan"
+      },
+      {
+        "gender": "male",
+        "name": "Dagobert"
+      },
+      {
+        "gender": "female",
+        "name": "Dieuwertje"
+      },
+      {
+        "gender": "male",
+        "name": "Dirk"
+      },
+      {
+        "gender": "male",
+        "name": "Doede"
+      },
+      {
+        "gender": "male",
+        "name": "Damiaan"
+      },
+      {
+        "gender": "female",
+        "name": "Dina"
+      },
+      {
+        "gender": "male",
+        "name": "Doriaan"
+      }
+    ],
+    "E": [
+      {
+        "gender": "female",
+        "name": "Eleonora"
+      },
+      {
+        "gender": "male",
+        "name": "Everhard"
+      },
+      {
+        "gender": "male",
+        "name": "Edzard"
+      },
+      {
+        "gender": "male",
+        "name": "Eelke"
+      },
+      {
+        "gender": "male",
+        "name": "Emmerik"
+      },
+      {
+        "gender": "female",
+        "name": "Elsbeth"
+      },
+      {
+        "gender": "male",
+        "name": "Egbert"
+      },
+      {
+        "gender": "female",
+        "name": "Ermgard"
+      },
+      {
+        "gender": "male",
+        "name": "Eduard"
+      },
+      {
+        "gender": "female",
+        "name": "Elske"
+      }
+    ],
+    "F": [
+      {
+        "gender": "male",
+        "name": "Fulbert"
+      },
+      {
+        "gender": "female",
+        "name": "Femke"
+      },
+      {
+        "gender": "male",
+        "name": "Floris"
+      },
+      {
+        "gender": "male",
+        "name": "Frederik"
+      },
+      {
+        "gender": "female",
+        "name": "Fenna"
+      },
+      {
+        "gender": "male",
+        "name": "Ferdinand"
+      },
+      {
+        "gender": "male",
+        "name": "Filips"
+      },
+      {
+        "gender": "male",
+        "name": "Folkert"
+      },
+      {
+        "gender": "female",
+        "name": "Francina"
+      },
+      {
+        "gender": "male",
+        "name": "Frans"
+      }
+    ],
+    "G": [
+      {
+        "gender": "male",
+        "name": "Godfried"
+      },
+      {
+        "gender": "female",
+        "name": "Geertruide"
+      },
+      {
+        "gender": "male",
+        "name": "Gerlach"
+      },
+      {
+        "gender": "male",
+        "name": "Gijsbert"
+      },
+      {
+        "gender": "female",
+        "name": "Griet"
+      },
+      {
+        "gender": "male",
+        "name": "Gerbrand"
+      },
+      {
+        "gender": "male",
+        "name": "Guido"
+      },
+      {
+        "gender": "female",
+        "name": "Godelieve"
+      },
+      {
+        "gender": "male",
+        "name": "Govert"
+      },
+      {
+        "gender": "female",
+        "name": "Gerarda"
+      }
+    ],
+    "H": [
+      {
+        "gender": "male",
+        "name": "Hendrik"
+      },
+      {
+        "gender": "female",
+        "name": "Hildegard"
+      },
+      {
+        "gender": "male",
+        "name": "Herbert"
+      },
+      {
+        "gender": "female",
+        "name": "Hadewych"
+      },
+      {
+        "gender": "male",
+        "name": "Huibert"
+      },
+      {
+        "gender": "male",
+        "name": "Hugo"
+      },
+      {
+        "gender": "female",
+        "name": "Helwig"
+      },
+      {
+        "gender": "male",
+        "name": "Harmen"
+      },
+      {
+        "gender": "female",
+        "name": "Hilde"
+      },
+      {
+        "gender": "female",
+        "name": "Hendrina"
+      }
+    ],
+    "I": [
+      {
+        "gender": "male",
+        "name": "Ingelbert"
+      },
+      {
+        "gender": "female",
+        "name": "Ida"
+      },
+      {
+        "gender": "female",
+        "name": "Isolde"
+      },
+      {
+        "gender": "male",
+        "name": "Ivo"
+      },
+      {
+        "gender": "female",
+        "name": "Irmgard"
+      },
+      {
+        "gender": "female",
+        "name": "Imme"
+      },
+      {
+        "gender": "male",
+        "name": "Isebrand"
+      },
+      {
+        "gender": "female",
+        "name": "Iselinde"
+      },
+      {
+        "gender": "male",
+        "name": "Immanuel"
+      },
+      {
+        "gender": "female",
+        "name": "Ilse"
+      }
+    ],
+    "J": [
+      {
+        "gender": "female",
+        "name": "Jacoba"
+      },
+      {
+        "gender": "male",
+        "name": "Joris"
+      },
+      {
+        "gender": "male",
+        "name": "Judocus"
+      },
+      {
+        "gender": "female",
+        "name": "Jutte"
+      },
+      {
+        "gender": "male",
+        "name": "Johan"
+      },
+      {
+        "gender": "female",
+        "name": "Jolente"
+      },
+      {
+        "gender": "male",
+        "name": "Joost"
+      },
+      {
+        "gender": "male",
+        "name": "Jorden"
+      },
+      {
+        "gender": "female",
+        "name": "Josina"
+      },
+      {
+        "gender": "female",
+        "name": "Jannetje"
+      }
+    ],
+    "K": [
+      {
+        "gender": "male",
+        "name": "Karel"
+      },
+      {
+        "gender": "female",
+        "name": "Katelijne"
+      },
+      {
+        "gender": "male",
+        "name": "Koenraad"
+      },
+      {
+        "gender": "female",
+        "name": "Kunigonde"
+      },
+      {
+        "gender": "male",
+        "name": "Klaas"
+      },
+      {
+        "gender": "male",
+        "name": "Kerstiaen"
+      },
+      {
+        "gender": "female",
+        "name": "Katrijn"
+      },
+      {
+        "gender": "male",
+        "name": "Kobe"
+      },
+      {
+        "gender": "female",
+        "name": "Klaasje"
+      },
+      {
+        "gender": "male",
+        "name": "Koert"
+      }
+    ],
+    "L": [
+      {
+        "gender": "male",
+        "name": "Lodewijk"
+      },
+      {
+        "gender": "female",
+        "name": "Liesbeth"
+      },
+      {
+        "gender": "male",
+        "name": "Lambert"
+      },
+      {
+        "gender": "male",
+        "name": "Ludolf"
+      },
+      {
+        "gender": "female",
+        "name": "Lijsbeth"
+      },
+      {
+        "gender": "male",
+        "name": "Laurens"
+      },
+      {
+        "gender": "female",
+        "name": "Lutgarde"
+      },
+      {
+        "gender": "male",
+        "name": "Lieven"
+      },
+      {
+        "gender": "male",
+        "name": "Lammert"
+      },
+      {
+        "gender": "female",
+        "name": "Lena"
+      }
+    ],
+    "V": [
+      {
+        "gender": "male",
+        "name": "Vladimir"
+      },
+      {
+        "gender": "male",
+        "name": "Vincent"
+      },
+      {
+        "gender": "male",
+        "name": "Volkert"
+      },
+      {
+        "gender": "female",
+        "name": "Verena"
+      },
+      {
+        "gender": "male",
+        "name": "Victor"
+      },
+      {
+        "gender": "male",
+        "name": "Vrederik"
+      },
+      {
+        "gender": "female",
+        "name": "Veronica"
+      },
+      {
+        "gender": "male",
+        "name": "Vastrad"
+      },
+      {
+        "gender": "male",
+        "name": "Valentijn"
+      },
+      {
+        "gender": "female",
+        "name": "Vibeke"
+      }
+    ]
+  },
+  "roles": [
+    {
+      "available": true,
+      "baseline": false,
+      "color": "#C9A227",
+      "gebieden": [
+        "adellijk"
+      ],
+      "icon": "icons/roles/noble.svg",
+      "label": "Edele",
+      "labelPlural": "edelen",
+      "standing": "noble",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "available": true,
+      "baseline": true,
+      "color": "#6E8C4A",
+      "gebieden": [
+        "gewoon"
+      ],
+      "icon": "icons/roles/villager.svg",
+      "label": "Dorpeling",
+      "labelPlural": "dorpelingen",
+      "standing": "villager",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "available": true,
+      "baseline": false,
+      "color": "#7E8894",
+      "gebieden": [
+        "*"
+      ],
+      "icon": "icons/roles/knight.svg",
+      "label": "Ridder",
+      "labelPlural": "ridders",
+      "standing": "knight",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "available": false,
+      "baseline": false,
+      "color": "#8A6A45",
+      "gebieden": [
+        "gewoon"
+      ],
+      "icon": "icons/roles/guard.svg",
+      "label": "Wacht",
+      "labelPlural": "wachten",
+      "standing": "guard",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "available": false,
+      "baseline": false,
+      "color": "#7B6597",
+      "gebieden": [
+        "gewoon"
+      ],
+      "icon": "icons/roles/monk.svg",
+      "label": "Monnik",
+      "labelPlural": "monniken",
+      "standing": "monk",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "available": false,
+      "baseline": false,
+      "color": "#B5715A",
+      "gebieden": [
+        "gewoon"
+      ],
+      "icon": "icons/roles/servant.svg",
+      "label": "Bediende",
+      "labelPlural": "bedienden",
+      "standing": "servant",
+      "themes": [
+        "medieval"
+      ]
+    }
+  ],
+  "roomAliases": {
+    "great-hall": {
+      "kind": "hall",
+      "qualifier": "Grote"
+    },
+    "smithy": {
+      "kind": "forge"
+    }
+  },
+  "roomQualifiers": [
+    {
+      "group": "Kwalificatie",
+      "items": [
+        {
+          "de": "Koninklijke",
+          "het": "Koninklijk",
+          "id": "royal"
+        },
+        {
+          "de": "Grote",
+          "het": "Groot",
+          "id": "big"
+        },
+        {
+          "de": "Kleine",
+          "het": "Klein",
+          "id": "small"
+        },
+        {
+          "de": "Oude",
+          "het": "Oud",
+          "id": "old"
+        },
+        {
+          "de": "Nieuwe",
+          "het": "Nieuw",
+          "id": "new"
+        },
+        {
+          "de": "Verlaten",
+          "het": "Verlaten",
+          "id": "abandoned"
+        },
+        {
+          "de": "Verborgen",
+          "het": "Verborgen",
+          "id": "hidden"
+        },
+        {
+          "de": "Hoge",
+          "het": "Hoog",
+          "id": "high"
+        },
+        {
+          "de": "Lage",
+          "het": "Laag",
+          "id": "low"
+        }
+      ]
+    },
+    {
+      "group": "Ligging",
+      "items": [
+        {
+          "de": "Noordelijke",
+          "het": "Noordelijk",
+          "id": "north"
+        },
+        {
+          "de": "Oostelijke",
+          "het": "Oostelijk",
+          "id": "east"
+        },
+        {
+          "de": "Zuidelijke",
+          "het": "Zuidelijk",
+          "id": "south"
+        },
+        {
+          "de": "Westelijke",
+          "het": "Westelijk",
+          "id": "west"
+        },
+        {
+          "de": "Bovenste",
+          "het": "Bovenste",
+          "id": "upper"
+        },
+        {
+          "de": "Onderste",
+          "het": "Onderste",
+          "id": "lower"
+        },
+        {
+          "de": "Voorste",
+          "het": "Voorste",
+          "id": "front"
+        },
+        {
+          "de": "Achterste",
+          "het": "Achterste",
+          "id": "back"
+        }
+      ]
+    }
+  ],
+  "rooms": [
+    {
+      "article": "de",
+      "floor": "marble",
+      "group": "Kasteel",
+      "id": "throne-room",
+      "label": "Troonzaal",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "hall",
+      "label": "Hal",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Kasteel",
+      "id": "royal-chamber",
+      "label": "Koningskamer",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "treasury",
+      "label": "Schatkamer",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "armoury",
+      "label": "Wapenkamer",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "guard-room",
+      "label": "Wachtkamer",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "barracks",
+      "label": "Soldatenverblijf",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "dungeon",
+      "label": "Kerker",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "cell",
+      "label": "Cel",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "tower",
+      "label": "Toren",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "keep",
+      "label": "Donjon",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "watchtower",
+      "label": "Wachttoren",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "gatehouse",
+      "label": "Poorthuis",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "city-walls",
+      "label": "Stadswallen",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "gravel",
+      "group": "Kasteel",
+      "id": "courtyard",
+      "label": "Binnenplaats",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "marble",
+      "group": "Kasteel",
+      "id": "ballroom",
+      "label": "Balzaal",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "wood",
+      "group": "Woning",
+      "id": "house",
+      "label": "Huis",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "wood",
+      "group": "Woning",
+      "id": "manor",
+      "label": "Landhuis",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "grass",
+      "group": "Woning",
+      "id": "estate",
+      "label": "Landgoed",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "dirt",
+      "group": "Woning",
+      "id": "hut",
+      "label": "Hut",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Woning",
+      "id": "room",
+      "label": "Kamer",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Woning",
+      "id": "bedroom",
+      "label": "Slaapkamer",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Woning",
+      "id": "dining-room",
+      "label": "Eetkamer",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "tile",
+      "group": "Woning",
+      "id": "kitchen",
+      "label": "Keuken",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Woning",
+      "id": "living-room",
+      "label": "Woonkamer",
+      "themes": [
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Woning",
+      "id": "library",
+      "label": "Bibliotheek",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Woning",
+      "id": "study",
+      "label": "Studeerkamer",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "carpet",
+      "group": "Woning",
+      "id": "office",
+      "label": "Kantoor",
+      "themes": [
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "tile",
+      "group": "Woning",
+      "id": "bathroom",
+      "label": "Badkamer",
+      "themes": [
+        "modern"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "wood",
+      "group": "Woning",
+      "id": "balcony",
+      "label": "Balkon",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Woning",
+      "id": "corridor",
+      "label": "Gang",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Woning",
+      "id": "cellar",
+      "label": "Kelder",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Woning",
+      "id": "wine-cellar",
+      "label": "Wijnkelder",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Woning",
+      "id": "attic",
+      "label": "Zolder",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Woning",
+      "id": "storage",
+      "label": "Berging",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "tile",
+      "group": "Woning",
+      "id": "conservatory",
+      "label": "Serre",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Woning",
+      "id": "music-room",
+      "label": "Muziekkamer",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "carpet",
+      "group": "Woning",
+      "id": "billiard-room",
+      "label": "Biljartkamer",
+      "themes": [
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "concrete",
+      "group": "Woning",
+      "id": "garage",
+      "label": "Garage",
+      "themes": [
+        "modern"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "gravel",
+      "group": "Dorp",
+      "id": "village-square",
+      "label": "Dorpsplein",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "stone",
+      "group": "Dorp",
+      "id": "alley",
+      "label": "Steegje",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Dorp",
+      "id": "tavern",
+      "label": "Taverne",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Dorp",
+      "id": "forge",
+      "label": "Smederij",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Dorp",
+      "id": "workshop",
+      "label": "Werkplaats",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Dorp",
+      "id": "apothecary",
+      "label": "Apothekerswoning",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Dorp",
+      "id": "watermill",
+      "label": "Watermolen",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "dirt",
+      "group": "Dorp",
+      "id": "stable",
+      "label": "Stallen",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "gravel",
+      "group": "Markt",
+      "id": "stall-jewels",
+      "label": "Juwelen",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "gravel",
+      "group": "Markt",
+      "id": "stall-clothes",
+      "label": "Kleding",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "gravel",
+      "group": "Markt",
+      "id": "stall-weapons",
+      "label": "Wapens",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "dirt",
+      "group": "Markt",
+      "id": "stall-livestock",
+      "label": "Vee",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "gravel",
+      "group": "Markt",
+      "id": "stall-fruit",
+      "label": "Fruit",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "gravel",
+      "group": "Markt",
+      "id": "stall-fish",
+      "label": "Vis",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "gravel",
+      "group": "Markt",
+      "id": "pottery",
+      "label": "Keramiek",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Klooster en kerk",
+      "id": "church",
+      "label": "Kerk",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Klooster en kerk",
+      "id": "chapel",
+      "label": "Kapel",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "marble",
+      "group": "Klooster en kerk",
+      "id": "altar",
+      "label": "Altaar",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Klooster en kerk",
+      "id": "dormitory",
+      "label": "Slaapzaal",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "stone",
+      "group": "Klooster en kerk",
+      "id": "monk-cell",
+      "label": "Kloostercel",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "marble",
+      "group": "Klooster en kerk",
+      "id": "statue-garden",
+      "label": "Beelden",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "grass",
+      "group": "Buiten",
+      "id": "field",
+      "label": "Veld",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "grass",
+      "group": "Buiten",
+      "id": "wheat-field",
+      "label": "Tarweveld",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "grass",
+      "group": "Buiten",
+      "id": "hill",
+      "label": "Heuvel",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "grass",
+      "group": "Buiten",
+      "id": "woods",
+      "label": "Bossen",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "dirt",
+      "group": "Buiten",
+      "id": "clearing",
+      "label": "Open Plek",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "grass",
+      "group": "Buiten",
+      "id": "garden",
+      "label": "Tuin",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "stone",
+      "group": "Buiten",
+      "id": "terrace",
+      "label": "Terras",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "dirt",
+      "group": "Buiten",
+      "id": "road",
+      "label": "Weg",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "wood",
+      "group": "Buiten",
+      "id": "bridge",
+      "label": "Brug",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "water",
+      "group": "Buiten",
+      "id": "river",
+      "label": "Rivier",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "water",
+      "group": "Buiten",
+      "id": "brook",
+      "label": "Beek",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "water",
+      "group": "Buiten",
+      "id": "pond",
+      "label": "Vijver",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "stone",
+      "group": "Kamp en strijd",
+      "id": "fort",
+      "label": "Fort",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "sand",
+      "group": "Kamp en strijd",
+      "id": "arena",
+      "label": "Arena",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "dirt",
+      "group": "Kamp en strijd",
+      "id": "tent",
+      "label": "Tent",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "dirt",
+      "group": "Kamp en strijd",
+      "id": "supply-tent",
+      "label": "Voorraadtent",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "dirt",
+      "group": "Kamp en strijd",
+      "id": "command-tent",
+      "label": "Commandotent",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "wood",
+      "group": "Onderweg",
+      "id": "carriage",
+      "label": "Rijtuig",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "wood",
+      "group": "Onderweg",
+      "id": "ship",
+      "label": "Schip",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    },
+    {
+      "article": "het",
+      "floor": "wood",
+      "group": "Onderweg",
+      "id": "aisle",
+      "label": "Gangpad",
+      "themes": [
+        "medieval",
+        "modern"
+      ]
+    }
+  ],
+  "spareIcons": [
+    {
+      "icon": "icons/objects/mirror.svg",
+      "keywords": [
+        "mirror",
+        "spiegel"
+      ],
+      "slug": "mirror"
+    },
+    {
+      "icon": "icons/objects/paint.svg",
+      "keywords": [
+        "paint",
+        "schilderij",
+        "portret"
+      ],
+      "slug": "paint"
+    },
+    {
+      "icon": "icons/objects/candle.svg",
+      "keywords": [
+        "candle",
+        "kaars"
+      ],
+      "slug": "candle"
+    },
+    {
+      "icon": "icons/objects/lamp.svg",
+      "keywords": [
+        "lamp",
+        "lantaarn",
+        "torch",
+        "fakkel"
+      ],
+      "slug": "lamp"
+    },
+    {
+      "icon": "icons/objects/fire.svg",
+      "keywords": [
+        "fire",
+        "haard",
+        "hearth",
+        "oven",
+        "forge"
+      ],
+      "slug": "fire"
+    },
+    {
+      "icon": "icons/objects/anvil.svg",
+      "keywords": [
+        "anvil",
+        "aambeeld",
+        "sword",
+        "zwaard",
+        "armour",
+        "wapen"
+      ],
+      "slug": "anvil"
+    },
+    {
+      "icon": "icons/objects/hay.svg",
+      "keywords": [
+        "hay",
+        "hooi",
+        "sack",
+        "zak",
+        "grain"
+      ],
+      "slug": "hay"
+    }
+  ],
+  "ui": [
+    {
+      "icon": "icons/ui/back.svg",
+      "name": "back"
+    },
+    {
+      "icon": "icons/ui/badge.svg",
+      "name": "badge"
+    },
+    {
+      "icon": "icons/ui/blocked.svg",
+      "name": "blocked"
+    },
+    {
+      "icon": "icons/ui/box.svg",
+      "name": "box"
+    },
+    {
+      "icon": "icons/ui/check.svg",
+      "name": "check"
+    },
+    {
+      "icon": "icons/ui/chevron.svg",
+      "name": "chevron"
+    },
+    {
+      "icon": "icons/ui/clipboard.svg",
+      "name": "clipboard"
+    },
+    {
+      "icon": "icons/ui/clock.svg",
+      "name": "clock"
+    },
+    {
+      "icon": "icons/ui/compass.svg",
+      "name": "compass"
+    },
+    {
+      "icon": "icons/ui/cross.svg",
+      "name": "cross"
+    },
+    {
+      "icon": "icons/ui/culprit.svg",
+      "name": "culprit"
+    },
+    {
+      "icon": "icons/ui/dagger.svg",
+      "name": "dagger"
+    },
+    {
+      "icon": "icons/ui/dossier.svg",
+      "name": "dossier"
+    },
+    {
+      "icon": "icons/ui/download.svg",
+      "name": "download"
+    },
+    {
+      "icon": "icons/ui/droplet.svg",
+      "name": "droplet"
+    },
+    {
+      "icon": "icons/ui/eye.svg",
+      "name": "eye"
+    },
+    {
+      "icon": "icons/ui/eye-off.svg",
+      "name": "eye-off"
+    },
+    {
+      "icon": "icons/ui/file.svg",
+      "name": "file"
+    },
+    {
+      "icon": "icons/ui/globe.svg",
+      "name": "globe"
+    },
+    {
+      "icon": "icons/ui/grid.svg",
+      "name": "grid"
+    },
+    {
+      "icon": "icons/ui/help.svg",
+      "name": "help"
+    },
+    {
+      "icon": "icons/ui/home.svg",
+      "name": "home"
+    },
+    {
+      "icon": "icons/ui/list.svg",
+      "name": "list"
+    },
+    {
+      "icon": "icons/ui/lock.svg",
+      "name": "lock"
+    },
+    {
+      "icon": "icons/ui/moon.svg",
+      "name": "moon"
+    },
+    {
+      "icon": "icons/ui/note.svg",
+      "name": "note"
+    },
+    {
+      "icon": "icons/ui/pawn.svg",
+      "name": "pawn"
+    },
+    {
+      "icon": "icons/ui/pencil.svg",
+      "name": "pencil"
+    },
+    {
+      "icon": "icons/ui/people.svg",
+      "name": "people"
+    },
+    {
+      "icon": "icons/ui/person.svg",
+      "name": "person"
+    },
+    {
+      "icon": "icons/ui/pin.svg",
+      "name": "pin"
+    },
+    {
+      "icon": "icons/ui/play.svg",
+      "name": "play"
+    },
+    {
+      "icon": "icons/ui/plus.svg",
+      "name": "plus"
+    },
+    {
+      "icon": "icons/ui/scissors.svg",
+      "name": "scissors"
+    },
+    {
+      "icon": "icons/ui/settings.svg",
+      "name": "settings"
+    },
+    {
+      "icon": "icons/ui/skull.svg",
+      "name": "skull"
+    },
+    {
+      "icon": "icons/ui/sparkle.svg",
+      "name": "sparkle"
+    },
+    {
+      "icon": "icons/ui/sun.svg",
+      "name": "sun"
+    },
+    {
+      "icon": "icons/ui/swap.svg",
+      "name": "swap"
+    },
+    {
+      "icon": "icons/ui/trash.svg",
+      "name": "trash"
+    },
+    {
+      "icon": "icons/ui/undo.svg",
+      "name": "undo"
+    },
+    {
+      "icon": "icons/ui/upload.svg",
+      "name": "upload"
+    },
+    {
+      "icon": "icons/ui/warning.svg",
+      "name": "warning"
+    }
+  ],
+  "version": 18,
+  "floorArt": {
+    "note": "Hoeveel tekeningen er per vloersoort klaarstaan in art/backgrounds/<thema>/. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.",
+    "variants": {
+      "grass": 6,
+      "stone": 4,
+      "wood": 4,
+      "sand": 2,
+      "water": 1,
+      "dirt": 1,
+      "gravel": 1,
+      "tile": 1,
+      "concrete": 1
+    }
+  }
+}

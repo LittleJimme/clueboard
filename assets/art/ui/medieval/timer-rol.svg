@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 100">
+<defs>
+<linearGradient id="rolvel" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#F9F0DA"/><stop offset=".55" stop-color="#F3E7CC"/><stop offset="1" stop-color="#E2D0A6"/>
+</linearGradient>
+<linearGradient id="rolcyl" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0" stop-color="#CBB98E"/><stop offset=".45" stop-color="#F1E5C6"/><stop offset="1" stop-color="#A8925F"/>
+</linearGradient>
+</defs>
+<ellipse cx="125" cy="90" rx="100" ry="7" fill="rgba(20,12,4,.35)"/>
+<path d="M28 22c30-5 164-5 194 0v56c-30 5-164 5-194 0Z" fill="url(#rolvel)" stroke="#2A1B0C" stroke-width="4.5"/>
+<path d="M34 30c28-4 154-4 182 0" stroke="#C9AE7E" stroke-width="2" fill="none" opacity=".8"/>
+<path d="M34 70c28 4 154 4 182 0" stroke="#C9AE7E" stroke-width="2" fill="none" opacity=".8"/>
+<rect x="12" y="12" width="20" height="76" rx="10" fill="url(#rolcyl)" stroke="#2A1B0C" stroke-width="4"/>
+<rect x="218" y="12" width="20" height="76" rx="10" fill="url(#rolcyl)" stroke="#2A1B0C" stroke-width="4"/>
+<path d="M22 18v64M228 18v64" stroke="rgba(90,64,28,.35)" stroke-width="2"/>
+</svg>

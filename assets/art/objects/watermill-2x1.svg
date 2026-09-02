@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 128" fill="none">
+  <!-- Watermolen over 2 tegels: het rad met zijn as, half in de beek. -->
+  <g stroke="#14162E" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M64 34v58M192 34v58" stroke-width="6"/>
+    <path d="M64 44h128" stroke-width="5"/>
+    <circle cx="128" cy="60" r="44" fill="#C89A63"/>
+    <circle cx="128" cy="60" r="14" fill="#EFE3C8"/>
+    <path d="M128 16v88M84 60h88M97 29l62 62M159 29 97 91" stroke-width="4"/>
+    <path d="M20 92c14-6 28 6 42 0s28 6 42 0 28 6 42 0 28 6 42 0 28 6 42 0v24H20Z" fill="#7FB3C9" stroke-width="4"/>
+  </g>
+</svg>

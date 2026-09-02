@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 76">
+<defs>
+<linearGradient id="tabperk" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#F9F0DA"/><stop offset=".6" stop-color="#F3E7CC"/><stop offset="1" stop-color="#E4D3AC"/>
+</linearGradient>
+</defs>
+<path d="M14 70V26c0-9 7-16 16-16h180c9 0 16 7 16 16v44Z" fill="url(#tabperk)" stroke="#2A1B0C" stroke-width="5"/>
+<path d="M22 68V28c0-6 4-10 10-10h176c6 0 10 4 10 10v40" fill="none" stroke="#C9AE7E" stroke-width="2.5" opacity=".9"/>
+<path d="M30 24h180" stroke="rgba(255,255,255,.6)" stroke-width="3" stroke-linecap="round"/>
+</svg>

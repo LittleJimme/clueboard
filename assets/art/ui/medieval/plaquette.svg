@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120">
+<defs>
+<linearGradient id="plaq" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#41639B"/><stop offset=".55" stop-color="#2E4A78"/><stop offset="1" stop-color="#1F3557"/>
+</linearGradient>
+<linearGradient id="plaqgoud" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#E4C25C"/><stop offset=".5" stop-color="#C9A227"/><stop offset="1" stop-color="#8F7115"/>
+</linearGradient>
+</defs>
+<ellipse cx="240" cy="110" rx="212" ry="8" fill="rgba(20,12,4,.38)"/>
+<rect x="10" y="8" width="460" height="98" rx="18" fill="url(#plaqgoud)" stroke="#2A1B0C" stroke-width="5"/>
+<rect x="20" y="18" width="440" height="78" rx="12" fill="url(#plaq)" stroke="#2A1B0C" stroke-width="3.5"/>
+<path d="M30 30c60-8 150-10 210-6c-70 2-150 8-196 20c-8-4-12-9-14-14Z" fill="rgba(255,255,255,.14)"/>
+<g fill="#F0D77A" stroke="#2A1B0C" stroke-width="2">
+<circle cx="34" cy="32" r="3.2"/><circle cx="446" cy="32" r="3.2"/>
+<circle cx="34" cy="82" r="3.2"/><circle cx="446" cy="82" r="3.2"/>
+</g>
+</svg>

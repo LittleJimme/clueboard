@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 76">
+<defs>
+<linearGradient id="tabhout" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#7A5228"/><stop offset=".6" stop-color="#5E4020"/><stop offset="1" stop-color="#462F16"/>
+</linearGradient>
+</defs>
+<path d="M14 70V26c0-9 7-16 16-16h180c9 0 16 7 16 16v44Z" fill="url(#tabhout)" stroke="#2A1B0C" stroke-width="5"/>
+<path d="M22 68V28c0-6 4-10 10-10h176c6 0 10 4 10 10v40" fill="none" stroke="#8A6134" stroke-width="2.5" opacity=".7"/>
+<path d="M30 26h180" stroke="rgba(255,255,255,.14)" stroke-width="3" stroke-linecap="round"/>
+</svg>

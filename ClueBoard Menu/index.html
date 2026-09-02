@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#231819" id="themeColorMeta">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<script>
+/* iOS leest de statusbalk-stijl één keer, bij het laden. Vandaar hier
+   en niet bij zetThema(): een lichte pagina met witte statusbalktekst
+   is onleesbaar, dus schakelen we om vóórdat de pagina verschijnt. */
+try{
+  if(localStorage.getItem("clueboard:menuThema")==="licht"){
+    document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').content="default";
+    document.getElementById("themeColorMeta").content="#F1EFE8";
+    document.documentElement.dataset.thema="licht";
+  }
+}catch(e){}
+</script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>ClueBoard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* ============================================================
+   ClueBoard — Menu. Elk level is een zaak: dossiernummers, een
+   speurdersverhaal bovenaan, warm papier met een klein terracotta-
+   accent. Zoeken en filteren bovenin; alles wat je zelf maakt zit
+   achter één knop in de balk.
+   ============================================================ */
+:root{
+  /* ── DONKER (standaard): wijnrood met goud ──
+     Eén warme kleurfamilie: de grond is rood-bruin ontzadigd, kaarten en
+     lijnen liggen daar dicht tegenaan, en het goud is de enige heldere
+     kleur. Het rood van "vermoord" staat er als enige naast. ── */
+  --grond:#231819;
+  --grond-2:#1B1213;
+  --kaart:#2E2122;
+  --kaart-2:#291D1E;
+  --lijn:#43302F;
+  --lijn-zacht:#3A2A29;
+
+  --inkt:#F0E8E2;
+  --inkt-2:#CBBBB4;
+  --dof:#96837E;
+
+  /* Eén goud, twee rollen. In het donker mag dezelfde kleur beide doen:
+     als tekst haalt hij 5.7:1 op de kaart, als vlak draagt hij donkere
+     tekst op 6.3:1. */
+  --accent:#C9932F;
+  --accent-vlak:#C9932F;
+  --accent-op:#231819;
+  --accent-diep:#A97A22;
+  --accent-zacht:rgba(201,147,47,.14);
+  --accent-lijn:rgba(201,147,47,.42);
+
+  --zaak-rood:#E0705A;
+  --fout:#E58472;
+
+  --sch1:0 1px 2px rgba(0,0,0,.22);
+  --sch2:0 2px 6px rgba(0,0,0,.26),0 12px 30px rgba(0,0,0,.28);
+
+  --font-ui:"Manrope","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --font-display:"Fraunces",Georgia,"Times New Roman",serif;
+
+  --korrel:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23g)' opacity='0.5'/></svg>");
+}
+/* ── LICHT: hetzelfde papier, maar omgekeerd. Het goud wordt hier oker:
+   helder goud haalt op wit maar 2:1 contrast, deze diepte haalt 4.8:1 en
+   blijft dus leesbaar. Dezelfde kleur als de lichte skin van de bouwer. */
+html[data-thema="licht"]{
+  --grond:#F1EFE8;
+  --grond-2:#EAE7DE;
+  --kaart:#FBFAF6;
+  --kaart-2:#F4F2EA;
+  --lijn:#E2DED1;
+  --lijn-zacht:#EBE8DE;
+
+  --inkt:#262419;
+  --inkt-2:#4C493D;
+  --dof:#71695A;
+
+  /* Tekstgoud: 4.7:1 op de pagina. Iets geler en verzadigder dan het
+     oude #8F6310, zodat het minder als bruin leest bij dezelfde diepte. */
+  --accent:#916008;
+  /* Vlakgoud: precies hetzelfde goud als in het donker, met donkere
+     tekst erop (5.9:1). Zo voelt de lichte modus goud in plaats van
+     brons, en delen beide thema's één herkenbare kleur. */
+  --accent-vlak:#C9932F;
+  --accent-op:#2A1F06;
+  --accent-diep:#A87B18;
+  --accent-zacht:rgba(145,96,8,.10);
+  --accent-lijn:rgba(145,96,8,.32);
+
+  --zaak-rood:#A3402F;
+  --fout:#A3402F;
+
+  --sch1:0 1px 2px rgba(48,44,32,.05);
+  --sch2:0 2px 6px rgba(48,44,32,.06),0 10px 26px rgba(48,44,32,.05);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+html{touch-action:manipulation}
+html,body{height:100%;overflow:hidden}
+body{
+  color:var(--inkt);font-family:var(--font-ui);
+  font-size:15px;line-height:1.55;font-weight:500;
+  display:flex;flex-direction:column;
+  background:linear-gradient(180deg,var(--grond) 0%,var(--grond-2) 100%);
+  background-attachment:fixed;
+  /* De statusbalk van de telefoon valt over de pagina heen; die ruimte
+     vullen de balk en de voet zelf op, zodat alles dezelfde donkere
+     ondergrond deelt. */
+}
+/* een vleugje papierkorrel over alles */
+body::after{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:var(--korrel);background-size:170px 170px;opacity:.045;
+}
+/* het lichte bord als groot accentbeeld: linksonder, loopt van het scherm
+   af en schemert achter de lijst door */
+body::before{
+  content:"";position:fixed;left:-120px;bottom:-140px;width:520px;height:520px;
+  z-index:0;opacity:.05;transform:rotate(-6deg);pointer-events:none;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='none' stroke='%23F0E8E2' stroke-width='1.6'><rect x='4' y='4' width='27' height='27' rx='7'/><rect x='37' y='4' width='27' height='27' rx='7'/><rect x='70' y='4' width='27' height='27' rx='7'/><rect x='4' y='37' width='27' height='27' rx='7'/><rect x='70' y='37' width='27' height='27' rx='7'/><rect x='4' y='70' width='27' height='27' rx='7'/><rect x='37' y='70' width='27' height='27' rx='7'/><rect x='70' y='70' width='27' height='27' rx='7'/></g><rect x='37' y='37' width='27' height='27' rx='7' fill='%23C9932F'/></svg>") center/contain no-repeat;
+}
+html[data-thema="licht"] body::before{
+  opacity:.07;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='none' stroke='%23262419' stroke-width='1.6'><rect x='4' y='4' width='27' height='27' rx='7'/><rect x='37' y='4' width='27' height='27' rx='7'/><rect x='70' y='4' width='27' height='27' rx='7'/><rect x='4' y='37' width='27' height='27' rx='7'/><rect x='70' y='37' width='27' height='27' rx='7'/><rect x='4' y='70' width='27' height='27' rx='7'/><rect x='37' y='70' width='27' height='27' rx='7'/><rect x='70' y='70' width='27' height='27' rx='7'/></g><rect x='37' y='37' width='27' height='27' rx='7' fill='%23916008'/></svg>");
+}
+/* op een telefoon is dat bord veel te groot: kleiner en verder uit beeld */
+@media (max-width:620px){
+  body::before{width:300px;height:300px;left:-90px;bottom:-80px;opacity:.045}
+}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;letter-spacing:0;margin:0}
+p{margin:0}
+a{color:inherit;touch-action:manipulation}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+main,.balk{position:relative;z-index:1}
+
+/* ---------- vaste bovenbalk ---------- */
+.balk{
+  flex:0 0 auto;z-index:40;padding-top:env(safe-area-inset-top);
+}
+/* het merkteken volgt het thema */
+.beeldmerk .vak-accent{fill:var(--accent-vlak)}
+.beeldmerk .lijn{stroke:var(--inkt)}
+.balk-in{
+  max-width:640px;margin:0 auto;padding:12px 20px;
+  display:flex;align-items:center;gap:11px;min-height:58px;
+}
+.balk-rechts{margin-left:auto;display:flex;gap:8px}
+.knop{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  border:1px solid var(--lijn);border-radius:999px;background:var(--kaart);
+  padding:9px 15px;font:700 13px var(--font-ui);color:var(--inkt);
+  box-shadow:var(--sch1);text-decoration:none;white-space:nowrap;
+  transition:border-color .15s,background .15s,transform .12s;
+}
+.knop:hover{border-color:var(--accent-lijn)}
+.knop:active{transform:translateY(1px)}
+.knop svg{width:15px;height:15px}
+.knop.vol{background:var(--inkt);border-color:var(--inkt);color:var(--grond)}
+.knop.vol:hover{filter:brightness(1.15)}
+@media (max-width:430px){ .knop .lbl-weg{display:none} .knop{padding:9px 12px} }
+/* De uitleg zit achter één vraagteken, gezet als het woord "vermoord":
+   schuine schreefletter in dezelfde rode inkt. */
+.vraag-knop{
+  width:38px;height:38px;padding:0;border-radius:999px;
+  border:1px solid var(--lijn);background:var(--kaart);box-shadow:var(--sch1);
+  font-family:var(--font-display);font-style:italic;font-weight:600;font-size:21px;
+  line-height:1;color:var(--inkt);
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:border-color .15s,transform .12s,color .15s;
+}
+.vraag-knop:hover{border-color:var(--accent-lijn)}
+.vraag-knop:active{transform:translateY(1px)}
+
+main{
+  flex:1;min-height:0;width:100%;max-width:640px;margin:0 auto;padding:0 20px;
+  display:flex;flex-direction:column;
+}
+
+/* ---------- titelblok: het merk, de payoff en de zaakregel ----------
+   De Engelse payoff hoort bij het merk en staat daarom vlak onder de
+   woordmerk-regel, klein en gespatieerd: zo leest hij als onderdeel van de
+   naam en niet als een zin. De Nederlandse regel eronder is de stem van
+   het spel zelf en staat duidelijk apart, groter en in schuine inkt. */
+.titelblok{flex:0 0 auto;text-align:center;padding:10px 0 20px}
+.beeldmerk{width:38px;height:38px;display:block;margin:0 auto 8px}
+.woordmerk{
+  font-family:var(--font-display);font-weight:600;font-size:30px;
+  letter-spacing:-.02em;line-height:1;color:var(--inkt);
+}
+.woordmerk .w1{color:var(--accent)}
+/* haarlijntje dat het merkblok van de zaakregel scheidt */
+.titelblok .scheiding{
+  width:56px;height:1px;margin:11px auto 12px;
+  background:linear-gradient(90deg,rgba(0,0,0,0),var(--accent),rgba(0,0,0,0));
+  opacity:.7;
+}
+.titelblok h1{
+  font-size:25px;font-weight:600;line-height:1.2;letter-spacing:-.01em;
+}
+.titelblok h1 em{
+  font-style:italic;color:var(--zaak-rood);position:relative;white-space:nowrap;
+  display:inline-block;transform:rotate(-2deg);transform-origin:50% 70%;
+}
+/* Geen gelijkmatige lijn maar een penstreek: een gevuld vlak dat dik begint
+   en naar rechts uitloopt, met een lichte golf. Dat leest als inkt in
+   plaats van als een onderstreping uit een tekstverwerker. */
+.titelblok h1 em::after{
+  content:"";position:absolute;left:-11px;right:-13px;bottom:-1px;height:9px;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'><path d='M1.5 7.8 C 16 5.6, 40 4.2, 66 3.9 C 86 3.65, 104 4.0, 118.5 4.8 C 118.9 5.3, 118.7 5.9, 118 6.2 C 103 5.9, 86 5.9, 68 6.2 C 46 6.55, 24 7.5, 3.2 9.1 C 2.1 9.0, 1.4 8.5, 1.5 7.8 Z' fill='%23E0705A' opacity='.78'/></svg>") center/100% 100% no-repeat;
+}
+html[data-thema="licht"] .titelblok h1 em::after{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'><path d='M1.5 7.8 C 16 5.6, 40 4.2, 66 3.9 C 86 3.65, 104 4.0, 118.5 4.8 C 118.9 5.3, 118.7 5.9, 118 6.2 C 103 5.9, 86 5.9, 68 6.2 C 46 6.55, 24 7.5, 3.2 9.1 C 2.1 9.0, 1.4 8.5, 1.5 7.8 Z' fill='%23A3402F' opacity='.7'/></svg>");
+}
+@media (max-height:720px){
+  .titelblok{padding:6px 0 14px}
+  .beeldmerk{width:32px;height:32px;margin-bottom:6px}
+  .woordmerk{font-size:26px}
+  .titelblok .scheiding{margin:9px auto 9px}
+  .titelblok h1{font-size:22px}
+}
+/* het accentbeeld staat paginabreed linksonder (zie body::before) */
+
+/* ---------- filterregel boven de lijst ---------- */
+.filter-plak{
+  flex:0 0 auto;padding:2px 0 12px;display:flex;align-items:center;gap:9px;
+}
+.lijst-teller{flex:1;min-width:0;color:var(--dof);font:800 11px var(--font-ui);
+  letter-spacing:.14em;text-transform:uppercase}
+
+/* klein sorteerknopje: op zaaknummer of op titel */
+.sorteer{
+  flex:0 0 auto;display:flex;background:var(--kaart);border:1px solid var(--lijn);
+  border-radius:999px;padding:3px;box-shadow:var(--sch1);
+}
+.sorteer button{
+  border:none;background:none;border-radius:999px;padding:5px 11px;
+  font:700 11.5px var(--font-ui);color:var(--dof);transition:all .15s;white-space:nowrap;
+}
+.sorteer button.aan{background:var(--inkt);color:var(--grond)}
+
+/* niveaufilter: één sterknopje met een kleine uitklaplijst eronder */
+.drop{position:relative;flex:0 0 auto}
+.mini-knop{
+  display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 11px;
+  border:1px solid var(--lijn);border-radius:999px;background:var(--kaart);
+  color:var(--dof);font:700 11.5px var(--font-ui);box-shadow:var(--sch1);
+  transition:all .15s;
+}
+.mini-knop svg{width:13px;height:13px}
+.mini-knop:hover{border-color:var(--accent-lijn);color:var(--inkt-2)}
+.mini-knop.aan{background:var(--inkt);border-color:var(--inkt);color:var(--grond)}
+.drop-menu{
+  position:absolute;top:calc(100% + 7px);right:0;z-index:50;min-width:158px;
+  background:var(--kaart);border:1px solid var(--lijn);border-radius:13px;
+  padding:5px;box-shadow:var(--sch2);display:none;
+}
+.drop.open .drop-menu{display:block;animation:dropIn .16s ease both}
+@keyframes dropIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.drop-menu button{
+  display:flex;align-items:center;gap:8px;width:100%;text-align:left;
+  border:none;background:none;border-radius:9px;padding:8px 10px;
+  font:700 12.5px var(--font-ui);color:var(--inkt-2);
+}
+.drop-menu button:hover{background:var(--kaart-2);color:var(--inkt)}
+.drop-menu button.aan{color:var(--inkt)}
+.drop-menu button .stipjes{display:flex;gap:3px;margin-left:auto}
+.drop-menu button .stipjes i{width:5px;height:5px;border-radius:50%;background:var(--lijn);font-style:normal}
+.drop-menu button .stipjes i.aan{background:var(--accent)}
+.drop-menu button .vink{width:13px;flex:0 0 auto;color:var(--accent);opacity:0}
+.drop-menu button.aan .vink{opacity:1}
+
+
+/* ---------- zaken: genummerde dossierrijen ---------- */
+.level-list{
+  flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  display:flex;flex-direction:column;gap:8px;padding-bottom:4px;
+}
+.level-rij{
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:13px;text-decoration:none;
+  background:var(--kaart);border:1px solid var(--lijn);border-radius:15px;
+  padding:13px 15px;box-shadow:var(--sch1);
+  transition:transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .18s,border-color .18s;
+}
+/* het thema als klein wapenschild in de hoek, op een zacht vlakje —
+   geen vouwlijn, die liep als een streep over de hele kaart */
+.thema-hoek{
+  position:absolute;top:0;right:0;width:44px;height:44px;pointer-events:none;
+}
+.thema-hoek::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(225deg,var(--accent-zacht) 0 30px,transparent 30px);
+  border-bottom-left-radius:12px;
+}
+.thema-hoek svg{
+  position:absolute;top:7px;right:8px;width:16px;height:16px;color:var(--accent);
+  opacity:.92;
+}
+.level-rij:hover{border-color:var(--accent-lijn);box-shadow:var(--sch2);transform:translateY(-1px)}
+.level-rij:active{transform:none;box-shadow:var(--sch1)}
+/* de voorbeeldzaak: lichter vlak, zodat hij er meteen uitspringt */
+.level-rij.demo{
+  background:color-mix(in srgb, var(--kaart) 76%, var(--inkt) 24%);
+  border-color:var(--accent-lijn);
+}
+html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
+.level-rij.demo h3{color:var(--inkt)}
+.level-rij.demo .zaak-nr{background:var(--accent-vlak);border-color:var(--accent-diep);color:var(--accent-op)}
+.zaak-nr.demo-teken svg{width:21px;height:21px;display:block}
+.level-rij.demo .grid-tag{background:transparent}
+.demo-tag{
+  font:800 9.5px var(--font-ui);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--accent);
+}
+.zaak-nr{
+  flex:0 0 auto;width:40px;height:40px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:600;font-size:15px;color:var(--accent);
+  background:var(--accent-zacht);border:1px solid var(--accent-lijn);
+  font-variant-numeric:tabular-nums;
+}
+.level-rij .midden{flex:1;min-width:0}
+.level-rij h3{font-size:18px;font-weight:600;color:var(--inkt);line-height:1.25;overflow-wrap:anywhere}
+.level-rij .onder{margin-top:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.niveau-rij{display:flex;align-items:center;gap:3px}
+.niveau-rij i{width:6px;height:6px;border-radius:50%;background:var(--lijn);font-style:normal}
+.niveau-rij i.aan{background:var(--accent)}
+.grid-tag{
+  flex:0 0 auto;font:700 12px var(--font-ui);letter-spacing:.02em;color:var(--inkt-2);
+  background:var(--kaart-2);border:1px solid var(--lijn);border-radius:8px;padding:5px 9px;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.level-rij .pijl{flex:0 0 auto;color:var(--dof);display:flex}
+.level-rij .pijl svg{width:15px;height:15px}
+.level-rij:hover .pijl{color:var(--accent)}
+.leeg-melding{color:var(--dof);font-size:13.5px;text-align:center;padding:26px 10px;
+  background:var(--kaart-2);border:1px dashed var(--lijn);border-radius:15px;margin-top:14px}
+
+/* ---------- modals ---------- */
+.modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:18px}
+.modal.open{display:flex}
+.modal .sluier{position:absolute;inset:0;background:rgba(10,12,8,.6);backdrop-filter:blur(3px)}
+.vel{
+  position:relative;width:100%;max-width:430px;max-height:86vh;overflow:auto;
+  background:var(--kaart);border:1px solid var(--lijn);border-radius:20px;
+  padding:22px;box-shadow:0 24px 60px rgba(38,36,25,.28);
+  animation:velIn .3s cubic-bezier(.2,1.05,.3,1) both;
+}
+@keyframes velIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.vel .sluit{
+  position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:10px;
+  border:1px solid var(--lijn);background:var(--kaart-2);
+  display:flex;align-items:center;justify-content:center;font:600 15px/1 var(--font-ui);color:var(--dof);
+}
+.vel .sluit:hover{color:var(--inkt)}
+.vel-kop{font-family:var(--font-display);font-weight:600;font-size:29px;line-height:1.15;margin-bottom:12px;padding-right:40px}
+
+/* ---------- uitleg-stappen ---------- */
+/* Het uitlegvenster houdt één vast formaat, ongeacht de stap: het beeldvak
+   en de voet liggen vast, alleen de tekst mag binnen zijn eigen ruimte
+   schuiven. Anders springt het venster bij elke klik van maat. */
+#modalUitleg .vel{
+  height:min(650px,90vh);display:flex;flex-direction:column;
+}
+.uitleg-keuze{flex:0 0 auto;display:flex;gap:4px;padding:3px;margin:0 40px 12px 0;border-radius:999px;
+  background:var(--kaart-2);border:1px solid var(--lijn)}
+.uitleg-keuze button{flex:1;height:32px;border-radius:999px;background:none;border:0;color:var(--dof);
+  font:700 12px var(--font-ui);letter-spacing:.04em;white-space:nowrap;cursor:pointer}
+.uitleg-keuze button.aan{background:var(--inkt);color:var(--grond)}
+.stap-teller{
+  flex:0 0 auto;font-size:10.5px;font-weight:800;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dof);margin-bottom:8px;
+}
+#stapKop{flex:0 0 auto}
+.stap-beeld{
+  flex:0 0 214px;display:flex;align-items:center;justify-content:center;
+  background:var(--kaart-2);border:1px solid var(--lijn-zacht);border-radius:16px;
+  padding:16px;margin-bottom:14px;overflow:hidden;
+}
+.stap-beeld .hb{max-height:100%}
+.help-rollen{display:flex;gap:26px;justify-content:center;align-items:center}
+.help-rollen .hr{display:flex;flex-direction:column;align-items:center;gap:8px}
+.help-rollen .hr-p{position:relative;width:64px;height:64px;display:block}
+.help-rollen .hr-v{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;height:100%}
+.help-rollen .hr-v svg{width:100%;height:100%;display:block}
+.help-rollen .hr-c{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);
+  width:56%;height:56%;border-radius:50%;background:#F4EFE2;box-shadow:0 0 0 2px #2A2118}
+.help-rollen b{font:700 12px var(--font-ui);color:var(--inkt-2)}
+.stap-tekst{
+  flex:1;min-height:0;overflow:auto;
+  color:var(--inkt-2);font-size:14.5px;line-height:1.6;
+}
+.stap-tekst p{margin:0 0 9px}
+.stap-tekst p:last-child{margin-bottom:0}
+.stap-tekst b{color:var(--inkt)}
+.stap-voet{flex:0 0 auto;display:flex;align-items:center;gap:10px;margin-top:16px}
+.stap-bolletjes{display:flex;flex-wrap:wrap;gap:4px;flex:1;justify-content:center;min-width:0;padding:0 4px}
+.stap-bolletjes i{width:6px;height:6px;border-radius:50%;background:var(--lijn);font-style:normal;transition:background .2s;cursor:pointer}
+.stap-bolletjes i.aan{background:var(--accent)}
+.stap-voet .knop{padding:9px 13px;white-space:nowrap;flex:0 0 auto}
+.stap-voet .knop[disabled]{opacity:.35;cursor:default;border-color:var(--lijn)}
+
+/* het voorbeeldbordje — bewust koel, zo ziet het spelbord er ook uit */
+.hb{display:grid;gap:3px;width:150px}
+.hb-c{
+  position:relative;aspect-ratio:1;border-radius:5px;background:#E7E0D2;
+  box-shadow:inset 0 0 0 1px rgba(90,70,40,.18);
+  display:flex;align-items:center;justify-content:center;
+}
+.hb-c.blok{background:#6B5B45;box-shadow:inset 0 0 0 1px rgba(40,28,14,.35)}
+.hb-c.leeg{background:none;box-shadow:none}
+.hb-c.licht{box-shadow:0 0 0 2px var(--accent)}
+.hb-c.gebied{background:#DCCFAE}
+.hb-c i{
+  width:82%;height:82%;border-radius:50%;font-style:normal;
+  display:flex;align-items:center;justify-content:center;
+  font:800 13px var(--font-ui);box-shadow:0 0 0 1.3px #1D2036;
+}
+.hb-c u{text-decoration:none;font:800 13px var(--font-ui);opacity:.9}
+.hb-c .kruis{color:#B3413D;font:800 22px/1 var(--font-ui);text-shadow:0 0 2px rgba(255,250,240,.6)}
+/* Kleine bewegingen die laten zien wat je doet. */
+.hb-c.tik::after{content:"";position:absolute;inset:-3px;border-radius:8px;border:2px solid var(--accent-vlak);
+  animation:hbTik 1.8s ease-out infinite}
+@keyframes hbTik{0%{opacity:0;transform:scale(.7)}25%{opacity:1;transform:scale(1)}60%,100%{opacity:0;transform:scale(1.25)}}
+.hb-c.druk::after{content:"";position:absolute;inset:-3px;border-radius:8px;border:2px solid var(--accent-vlak);
+  animation:hbDruk 2.2s ease-in-out infinite}
+@keyframes hbDruk{0%{opacity:.15;transform:scale(.86)}55%{opacity:1;transform:scale(1)}75%,100%{opacity:0;transform:scale(1)}}
+.hb-c .kruis.komt{animation:hbKruis 2.2s ease-out infinite both}
+@keyframes hbKruis{0%,8%{opacity:0;transform:scale(.4)}22%{opacity:1;transform:scale(1)}88%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1)}}
+.hb-c.gebied.g-nw{box-shadow:inset 3px 3px 0 #2A2118,inset 0 0 0 1px rgba(28,33,64,.13)}
+.hb-c.gebied.g-no{box-shadow:inset -3px 3px 0 #2A2118,inset 0 0 0 1px rgba(28,33,64,.13)}
+.hb-c.gebied.g-zw{box-shadow:inset 3px -3px 0 #2A2118,inset 0 0 0 1px rgba(28,33,64,.13)}
+.hb-c.gebied.g-zo{box-shadow:inset -3px -3px 0 #2A2118,inset 0 0 0 1px rgba(28,33,64,.13)}
+.hb-c.gebied.goud.g-nw{box-shadow:inset 3px 3px 0 #C9A227,inset 0 0 0 1px rgba(28,33,64,.13)}
+.hb-c.gebied.goud.g-no{box-shadow:inset -3px 3px 0 #C9A227,inset 0 0 0 1px rgba(28,33,64,.13)}
+.hb-c.gebied.goud.g-zw{box-shadow:inset 3px -3px 0 #C9A227,inset 0 0 0 1px rgba(28,33,64,.13)}
+.hb-c.gebied.goud.g-zo{box-shadow:inset -3px -3px 0 #C9A227,inset 0 0 0 1px rgba(28,33,64,.13)}
+
+.help-rollen{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.help-rollen .hr{
+  display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;
+  background:var(--kaart);border:1px solid var(--lijn);
+  font:700 13px var(--font-ui);color:var(--inkt);
+}
+.help-rollen .stip{width:12px;height:12px;border-radius:4px;box-shadow:0 0 0 1.3px rgba(236,234,224,.4)}
+
+/* ---------- zelf maken: één knop, vast onderaan het scherm ------ */
+.zelf-voet{
+  position:relative;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  padding:14px 0 calc(14px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--lijn-zacht);margin-top:2px;
+}
+/* De kleurschakelaar staat links in dezelfde voet: hij hoort bij de app,
+   niet bij het kiezen van een zaak. */
+.thema-knop{
+  position:absolute;left:0;top:14px;
+  width:34px;height:34px;padding:0;border-radius:999px;
+  border:1px solid var(--lijn);background:var(--kaart);box-shadow:var(--sch1);
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:border-color .15s;
+}
+.thema-knop:hover{border-color:var(--accent-lijn)}
+.thema-knop i{
+  width:15px;height:15px;border-radius:50%;display:block;
+  background:linear-gradient(135deg,var(--accent-vlak) 50%, var(--inkt) 50%);
+}
+.zelf-voet .knop{color:var(--inkt-2)}
+.zelf-voet .knop svg{color:var(--accent)}
+
+/* ---------- upload en bouwrij (in het venster) ---------- */
+.upload-zone{
+  display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;
+  border:1.5px dashed var(--accent-lijn);border-radius:16px;padding:26px 20px;
+  background:var(--accent-zacht);cursor:pointer;transition:background .15s,border-color .15s;
+}
+.upload-zone:hover,.upload-zone.slepen{background:rgba(193,95,60,.16);border-color:var(--accent)}
+.upload-zone svg{width:26px;height:26px;color:var(--accent)}
+.upload-zone b{font-size:14px;color:var(--inkt)}
+.upload-zone span{font-size:12.5px;color:var(--dof)}
+.upload-zone input{display:none}
+.upload-fout{margin-top:12px;color:var(--fout);font-size:12.5px;font-weight:700;text-align:center}
+.of-lijn{
+  display:flex;align-items:center;gap:12px;margin:16px 0;
+  color:var(--dof);font:800 11px var(--font-ui);letter-spacing:.14em;text-transform:uppercase;
+}
+.of-lijn::before,.of-lijn::after{content:"";flex:1;height:1px;background:var(--lijn-zacht)}
+.bouw-rij{
+  display:flex;align-items:center;gap:12px;width:100%;text-decoration:none;
+  background:var(--kaart-2);border:1px solid var(--lijn);border-radius:14px;padding:13px 14px;
+  transition:border-color .15s;
+}
+.bouw-rij:hover{border-color:var(--accent-lijn)}
+.bouw-rij .ic{flex:0 0 auto;width:36px;height:36px;border-radius:10px;
+  background:var(--kaart);border:1px solid var(--lijn);
+  display:flex;align-items:center;justify-content:center;color:var(--inkt-2)}
+.bouw-rij .ic svg{width:17px;height:17px}
+.bouw-rij .tekst{flex:1;min-width:0}
+.bouw-rij b{display:block;font-size:13.5px;color:var(--inkt)}
+.bouw-rij span{display:block;font-size:12px;color:var(--dof);line-height:1.45}
+.bouw-rij .pijl{color:var(--dof);display:flex}
+.bouw-rij .pijl svg{width:14px;height:14px}
+</style>
+</head>
+<body>
+
+<div class="balk">
+  <div class="balk-in">
+    <div class="balk-rechts">
+      <button class="vraag-knop" id="btnUitleg" title="Hoe speel je?" aria-label="Hoe speel je?">?</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <header class="titelblok">
+    <svg class="beeldmerk" viewBox="0 0 64 64" aria-hidden="true">
+      <rect class="vak-accent" x="10" y="10" width="17" height="17" rx="5"/>
+      <rect class="lijn" x="37" y="10" width="17" height="17" rx="5" fill="none" stroke-width="3"/>
+      <rect class="lijn" x="10" y="37" width="17" height="17" rx="5" fill="none" stroke-width="3"/>
+      <circle class="lijn" cx="45" cy="45" r="10" fill="none" stroke-width="3.2"/>
+      <path class="lijn" d="M52.4 52.4l6 6" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+    <div class="woordmerk"><span class="w1">Clue</span>Board</div>
+    <div class="scheiding"></div>
+    <h1>Er is iemand <em>vermoord</em></h1>
+  </header>
+
+  <div class="filter-plak">
+    <div class="lijst-teller" id="levelTeller"></div>
+    <div class="drop" id="filterDrop">
+      <button class="mini-knop" id="filterKnop" type="button" aria-haspopup="true" aria-expanded="false" title="Filter op niveau">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75L12 16.9l-5.2 2.7 1-5.75-4.2-4.1 5.8-.85z"/></svg>
+        <span id="filterLabel">Niveau</span>
+      </button>
+      <div class="drop-menu" id="filterMenu"></div>
+    </div>
+    <div class="sorteer" id="sorteerRij" title="Sorteer de lijst">
+      <button type="button" class="aan" data-s="nr">Nr</button>
+      <button type="button" data-s="titel">A–Z</button>
+    </div>
+  </div>
+
+  <div class="level-list" id="levelList"><p class="leeg-melding">Zaken laden…</p></div>
+
+  <!-- Zelf spelen of bouwen is voor de meeste bezoekers niet de eerste
+       stap: één rustige knop aan het eind van de lijst, de rest in een
+       venster. -->
+  <div class="zelf-voet">
+    <button class="thema-knop" id="btnThema" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
+    <button class="knop" id="btnZelf" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      Eigen level spelen of bouwen
+    </button>
+  </div>
+</main>
+
+<!-- ============ Uitleg in stappen ============ -->
+<div class="modal" id="modalUitleg">
+  <div class="sluier" data-sluit></div>
+  <div class="vel">
+    <button class="sluit" data-sluit aria-label="Sluiten">✕</button>
+    <div class="uitleg-keuze" id="uitlegKeuze">
+      <button type="button" data-set="regels" class="aan">Spelregels</button>
+      <button type="button" data-set="spelen">Zo speel je</button>
+    </div>
+    <div class="stap-teller" id="stapTeller"></div>
+    <div class="vel-kop" id="stapKop"></div>
+    <div class="stap-beeld" id="stapBeeld"></div>
+    <div class="stap-tekst" id="stapTekst"></div>
+    <div class="stap-voet">
+      <button class="knop" id="stapTerug">← Vorige</button>
+      <div class="stap-bolletjes" id="stapBolletjes"></div>
+      <button class="knop vol" id="stapVerder">Volgende →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Zelf maken: upload + builder ============ -->
+<div class="modal" id="modalZelf">
+  <div class="sluier" data-sluit></div>
+  <div class="vel">
+    <button class="sluit" data-sluit aria-label="Sluiten">✕</button>
+    <div class="vel-kop">Zelf aan de slag</div>
+    <label class="upload-zone" id="uploadZone" for="uploadInput">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 16V4M12 4l-4.5 4.5M12 4l4.5 4.5"/><path d="M4 16v2.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V16"/>
+      </svg>
+      <b>Speel een eigen level</b>
+      <span>Sleep een JSON-bestand hierheen, of klik om te kiezen</span>
+      <input type="file" id="uploadInput" accept=".json,application/json">
+    </label>
+    <div class="upload-fout" id="uploadFout" hidden></div>
+    <div class="of-lijn">of</div>
+    <a class="bouw-rij" href="../ClueBoard Builder/clueboard-builder.html">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 20h16"/><path d="M6.5 16.5 15.7 7.3a2.1 2.1 0 0 1 3 3l-9.2 9.2L5 20z"/>
+      </svg></span>
+      <span class="tekst"><b>Bouw een level</b><span>Teken een bord, schrijf aanwijzingen en exporteer je eigen zaak.</span></span>
+      <span class="pijl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.6l6.4 6.4L9 18.4"/></svg></span>
+    </a>
+  </div>
+</div>
+
+<script>
+const LEVELS_DIR = "../ClueBoard Player/Levels/";
+const PLAYER_URL = "../ClueBoard Player/Build/index.html";
+const UPLOAD_HANDOFF_KEY = "clueboard:uploadLevel";
+const UPLOAD_MAX_BYTES = 512 * 1024;
+const THEMA_LABELS = { medieval: "Middeleeuwen" };
+
+function $(sel){ return document.querySelector(sel); }
+
+/* ============================================================
+   Kleurthema: donker (wijnrood met goud) of licht (papier met oker).
+   De keuze blijft op dit apparaat bewaard; de titelbalk van de
+   geïnstalleerde webapp kleurt mee via de theme-color meta.
+   ============================================================ */
+const THEMA_KLEUR = { donker:"#231819", licht:"#F1EFE8" };
+const THEMA_STANDAARD = "donker";
+const THEMA_SLEUTEL = "clueboard:menuThema";
+function zetThema(naam){
+  const t = THEMA_KLEUR[naam] ? naam : THEMA_STANDAARD;
+  /* Donker is de basis en staat al in :root; alleen licht zet een
+     data-attribuut, zodat er niets omslaat voordat de stijl er is. */
+  if (t === "licht") document.documentElement.dataset.thema = "licht";
+  else document.documentElement.removeAttribute("data-thema");
+  const meta = $("#themeColorMeta");
+  if(meta) meta.setAttribute("content", THEMA_KLEUR[t]);
+  try{ localStorage.setItem(THEMA_SLEUTEL, t); }catch(e){}
+}
+(function initThema(){
+  let t = THEMA_STANDAARD;
+  try{ t = localStorage.getItem(THEMA_SLEUTEL) || THEMA_STANDAARD; }catch(e){}
+  zetThema(t);
+})();
+$("#btnThema").addEventListener("click",()=>{
+  zetThema(document.documentElement.dataset.thema === "licht" ? "donker" : "licht");
+});
+
+/* ---------- modals ---------- */
+function openModal(id){ $(id).classList.add("open"); }
+function sluitModal(el){ el.closest(".modal").classList.remove("open"); }
+document.addEventListener("click", e=>{
+  const s=e.target.closest("[data-sluit]");
+  if(s) sluitModal(s);
+});
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape") document.querySelectorAll(".modal.open").forEach(m=>m.classList.remove("open"));
+});
+
+/* ============================================================
+   Hoe speel je? — korte, simpele stappen, van zaak tot ontknoping.
+   ============================================================ */
+const HB_KLEUREN = { A:"#3896C5", B:"#511731", C:"#E7B63B", D:"#FF7BAC", V:"#EF6F3C" };
+function letterInkt(hex){
+  const h=hex.replace("#","");
+  const lum=0.2126*parseInt(h.slice(0,2),16)+0.7152*parseInt(h.slice(2,4),16)+0.0722*parseInt(h.slice(4,6),16);
+  return lum>140 ? "#1D2036" : "#FFFFFF";
+}
+function helpBord(regels, opt){
+  const o=opt||{};
+  /* Het beeldvak in de uitleg heeft een vaste hoogte; een bord met meer
+     rijen krijgt dus kleinere vakjes in plaats van een hoger venster. */
+  const rijen=regels.length, kolommen=regels[0].length, kier=3;
+  const cel=Math.min(42, Math.floor((186-(rijen-1)*kier)/rijen));
+  const breedte=kolommen*cel+(kolommen-1)*kier;
+  let h='<div class="hb" style="width:'+breedte+'px;grid-template-columns:repeat('+kolommen+',1fr)">';
+  regels.forEach((rij,y)=>{
+    [...rij].forEach((c,x)=>{
+      const licht=(o.licht||[]).some(p=>p[0]===x&&p[1]===y);
+      const geb=(o.gebied||[]).find(p=>p[0]===x&&p[1]===y);
+      const tik=(o.tik||[]).some(p=>p[0]===x&&p[1]===y);
+      const druk=(o.druk||[]).some(p=>p[0]===x&&p[1]===y);
+      let cls="hb-c"+(licht?" licht":"")+(geb?" gebied "+geb[2]:"")+(tik?" tik":"")+(druk?" druk":"");
+      let inner="";
+      if(c==="#") cls+=" blok";
+      else if(c==="_") cls+=" leeg";
+      else if(c==="x"||c==="X"){
+        const vertraag=(o.golf?x*150:0);
+        inner='<b class="kruis'+(c==="X"?" komt":"")+'"'+(vertraag?' style="animation-delay:'+vertraag+'ms"':"")+'>×</b>';
+      }
+      else if(/[A-Z]/.test(c)){
+        const k=HB_KLEUREN[c]||"#8A93A6";
+        inner='<i style="background:'+k+';color:'+letterInkt(k)+'">'+c+'</i>';
+      } else if(/[a-z]/.test(c)){
+        const k=HB_KLEUREN[c.toUpperCase()]||"#8A93A6";
+        inner='<u style="color:'+k+'">'+c.toUpperCase()+'</u>';
+      }
+      h+='<span class="'+cls+'">'+inner+'</span>';
+    });
+  });
+  return h+"</div>";
+}
+/* Dezelfde banier en hetzelfde schild als in het spel, zodat je de vorm
+   later op het bord meteen herkent. */
+function meng(hex,f){
+  const n=parseInt(hex.replace("#",""),16);
+  const k=v=>Math.max(0,Math.min(255,Math.round(v*f)));
+  return "#"+[k(n>>16&255),k(n>>8&255),k(n&255)].map(v=>v.toString(16).padStart(2,"0")).join("");
+}
+function rolVorm(soort,kleur){
+  const ink="#2A2118", uid="rv"+(rolVorm._n=(rolVorm._n||0)+1);
+  const defs='<defs><linearGradient id="'+uid+'" x1="0" y1="0" x2="0" y2="1">'
+    +'<stop offset="0" stop-color="'+meng(kleur,1.3)+'"/><stop offset=".5" stop-color="'+kleur+'"/>'
+    +'<stop offset="1" stop-color="'+meng(kleur,.62)+'"/></linearGradient></defs>';
+  const F='fill="url(#'+uid+')"';
+  const bies='stroke="'+meng(kleur,1.45)+'" stroke-width="1.6" opacity=".8"';
+  const glim='fill="rgba(255,255,255,.20)" stroke="none"';
+  const wrap=i=>'<svg viewBox="0 0 100 100" fill="none" stroke="'+ink+'" stroke-width="2.4" '
+    +'stroke-linejoin="round" stroke-linecap="round">'+defs+i+'</svg>';
+  if(soort==="edele") return wrap('<path '+F+' d="M14 13 H86 V90 L50 71 L14 90 Z"/>'
+    +'<path '+bies+' d="M18 17 H82 V83 L50 66.5 L18 83 Z"/>'
+    +'<path '+glim+' d="M18 17h64l-3 9H21Z"/>'
+    +'<path stroke="'+ink+'" stroke-width="5.2" d="M7 13H93"/>'
+    +'<path stroke="#C9A227" stroke-width="2.6" d="M8.5 13h83"/>');
+  return wrap('<path '+F+' d="M50 8.5 L86 21.5 V50 c0 22.8-16.2 36.1-36 43.7C30 86 14 72.8 14 50V21.5Z"/>'
+    +'<path '+bies+' d="M50 14.5 L80.5 25.5 V49.5 c0 19.5-13.5 30.8-30.5 37.7C33 80.3 19.5 69 19.5 49.5V25.5Z"/>'
+    +'<path '+glim+' d="M50 8.5 86 21.5v6.5C74 22 60 19 47 20c4-5 3-8 3-11.5Z"/>');
+}
+function helpRollen(){
+  const rollen=[["Edele","edele","#C9A227"],["Ridder","ridder","#7E8894"]];
+  return '<div class="help-rollen">'+rollen.map(([naam,soort,kleur])=>
+    '<span class="hr"><span class="hr-p"><span class="hr-v">'+rolVorm(soort,kleur)+'</span>'
+    +'<span class="hr-c"></span></span><b>'+naam+'</b></span>'
+  ).join("")+'</div>';
+}
+
+/* Volgorde: de zaak → het bord → de aanwijzingen → je gereedschap → de
+   ontknoping. Korte zinnen, één ding per stap. */
+const GEB_LB=[[0,0,"g-nw"],[1,0,"g-no"],[0,1,"g-zw"],[1,1,"g-zo"]];
+const R=(beeld,kop,...regels)=>({beeld,kop,tekst:regels.map(t=>"<p>"+t+"</p>").join("")});
+const UITLEG_SETS = {
+  regels: [
+    R(helpBord(["A...","....",".V..","...B"]),
+      "Er is iemand vermoord",
+      "Het slachtoffer ligt op het bord en de verdachten waren erbij.",
+      "<b>Vind de moordenaar</b>: dat is degene die in hetzelfde gebied stond als het slachtoffer. "
+      +"Daarvoor zoek je met de aanwijzingen uit waar iedereen stond."),
+    R(helpBord(["A...",".B..","..C.","...D"]),
+      "Eén per rij en kolom",
+      "Elke persoon staat in een <b>andere rij</b> en een <b>andere kolom</b>.",
+      "Staat iemand ergens, dan is zijn hele rij en zijn hele kolom voor de rest verboden."),
+    R(helpBord(["#...",".A..","..#.","...."]),
+      "Waar je kunt staan",
+      "Op een <b>bed</b>, een <b>stoel</b> of een <b>tapijt</b> kan iemand staan.",
+      "Andere objecten, zoals bomen, struiken, tafels en kasten, vullen hun vak: daar staat nooit iemand."),
+    R(helpBord(["....","....","....","...."],{gebied:GEB_LB}),
+      "Gebieden",
+      "Elk benoemd deel van het bord met een rand eromheen is een <b>gebied</b>: een kamer, een tuin, een stal.",
+      "Veel aanwijzingen gaan over zo\u2019n gebied."),
+    R(helpBord(["VB..","....","...A","..C."],{gebied:GEB_LB}),
+      "Het slachtoffer en de dader",
+      "Het <b>slachtoffer</b> staat in het vak dat als laatste overblijft.",
+      "Wie in <b>hetzelfde gebied</b> staat als het slachtoffer, is de moordenaar. Hier is dat B."),
+    R(helpBord(["...",".B.","..."],{licht:[[1,0],[0,1],[2,1],[1,2]]}),
+      "Naast",
+      "<b>Naast</b> betekent direct boven, onder, links of rechts, en in hetzelfde gebied.",
+      "Schuin telt niet als naast."),
+    R(helpBord(["AB..","....","...C","...."],{gebied:GEB_LB}),
+      "Alleen, samen met, alleen met",
+      "<b>Alleen</b>: er was niemand anders in het gebied, ook het slachtoffer niet.",
+      "<b>Samen met</b>: allebei in hetzelfde gebied, er mogen anderen bij staan.",
+      "<b>Alleen met</b>: precies deze twee in het gebied, verder niemand."),
+    R(helpBord(["...","...","_._"],{licht:[[0,0],[2,0],[1,2]]}),
+      "Een hoek",
+      "Een <b>hoek</b> is een vak waar twee randen van een gebied samenkomen.",
+      "Een gebied met een grillige vorm heeft dus meer hoeken dan vier."),
+    R(helpBord(["A..",".B.","..C"],{licht:[[0,0],[1,1],[2,2]]}),
+      "Richtingen",
+      "<b>Op dezelfde diagonale lijn</b>: schuin op één lijn, zoals A, B en C hier.",
+      "<b>Boven</b>, <b>ten oosten van</b> (rechts) en <b>rechtsonder ten opzichte van</b> bekijk je "
+      +"altijd vanuit de genoemde persoon.",
+      "<b>Tweede rij</b> tel je van boven af, <b>eerste kolom</b> van links af."),
+    R(helpBord(["#...","A#..","....","...."]),
+      "De enige",
+      "<b>De enige op een stoel</b> betekent: niemand anders zat op een stoel, ook het slachtoffer niet.",
+      "Hetzelfde geldt voor de enige op een tapijt, de enige naast een tafel, enzovoort."),
+    R(helpRollen(),
+      "Rollen",
+      "Sommige personen hebben een <b>rol</b>. Die zie je aan de vorm achter hun portret.",
+      "In de middeleeuwse zaken zijn dat de <b>edele</b>, de <b>ridder</b> en de <b>dorpeling</b>. "
+      +"Andere thema\u2019s krijgen hun eigen rollen.",
+      "Een rol bepaalt waar iemand mag staan. Een gebied met een gouden rand is voor edelen: "
+      +"edelen staan altijd daar, dorpelingen nooit, en ridders mogen overal.")
+  ],
+  spelen: [
+    R(helpBord(["....",".A..","....","...."],{tik:[[1,1]]}),
+      "Tik een vak aan",
+      "Tik op een vak van het bord. Er opent een kring met alle personen.",
+      "Kies daarin wie je op dat vak wilt zetten."),
+    R(helpBord(["....",".a..","....","...."],{licht:[[1,1]]}),
+      "Notitie of plaats",
+      "Onderin staat de schuif <b>Notitie</b> en <b>Plaats</b>.",
+      "In <b>Notitie</b> zet je alleen de letter van iemand neer: een mogelijkheid die je nog niet zeker weet.",
+      "In <b>Plaats</b> zet je zijn pion echt neer. Dat doe je als je het zeker weet."),
+    R(helpBord(["....",".x..","....","...."],{druk:[[1,1]]}),
+      "Houd vast voor een kruisje",
+      "Houd een vak even ingedrukt en er komt een <b>kruisje</b>: hier staat niemand.",
+      "Nog een keer vasthouden haalt het kruisje weer weg."),
+    R(helpBord(["....","XXXX","....","...."],{druk:[[0,1]],golf:true}),
+      "Sleep voor een hele lijn",
+      "Houd een vak vast en veeg door naar links of rechts: de hele <b>rij</b> gaat dicht.",
+      "Veeg je omhoog of omlaag, dan gaat de hele <b>kolom</b> dicht. De kant waarheen je veegt maakt niet uit."),
+    R(helpBord(["A...",".B..","..C.","...V"]),
+      "Controleer je oplossing",
+      "Staat iedereen op zijn plek? Druk bovenin op <b>Controleer</b>.",
+      "Klopt alles, dan wijs je daarna de dader aan en is de zaak gesloten.")
+  ]
+};
+let uitlegSet="regels";
+let UITLEG_STAPPEN=UITLEG_SETS.regels;
+
+let uitlegStap=0;
+function tekenUitleg(){
+  const s=UITLEG_STAPPEN[uitlegStap];
+  $("#stapTeller").textContent="Stap "+(uitlegStap+1)+" van "+UITLEG_STAPPEN.length;
+  $("#stapKop").textContent=s.kop;
+  $("#stapBeeld").innerHTML=s.beeld;      /* eigen vaste inhoud, geen levelinvoer */
+  $("#stapTekst").innerHTML=s.tekst;      /* idem */
+  $("#stapBolletjes").innerHTML=UITLEG_STAPPEN.map((_,i)=>'<i class="'+(i===uitlegStap?"aan":"")+'"></i>').join("");
+  $("#stapTerug").disabled=uitlegStap===0;
+  const laatste=uitlegStap===UITLEG_STAPPEN.length-1;
+  $("#stapVerder").textContent="Volgende →";
+  $("#stapVerder").disabled=laatste;
+}
+function zetUitlegSet(k){
+  if(!UITLEG_SETS[k]) return;
+  uitlegSet=k; UITLEG_STAPPEN=UITLEG_SETS[k]; uitlegStap=0;
+  document.querySelectorAll("#uitlegKeuze button").forEach(b=>b.classList.toggle("aan",b.dataset.set===k));
+  tekenUitleg();
+}
+$("#uitlegKeuze").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-set]");
+  if(b) zetUitlegSet(b.dataset.set);
+});
+$("#btnUitleg").addEventListener("click",()=>{ zetUitlegSet("regels"); openModal("#modalUitleg"); });
+$("#stapTerug").addEventListener("click",()=>{ if(uitlegStap>0){ uitlegStap--; tekenUitleg(); } });
+$("#stapVerder").addEventListener("click",()=>{
+  if(uitlegStap<UITLEG_STAPPEN.length-1){ uitlegStap++; tekenUitleg(); }
+});
+$("#stapBolletjes").addEventListener("click",e=>{
+  const alle=[...$("#stapBolletjes").children];
+  const i=alle.indexOf(e.target);
+  if(i>=0){ uitlegStap=i; tekenUitleg(); }
+});
+
+/* ============================================================
+   Zaken: dezelfde controle, ontdekking en versielogica als de player.
+   ============================================================ */
+function validateLevel(raw){
+  if(!raw || typeof raw!=="object") return "Geen geldig JSON-object.";
+  if(raw.format && raw.format!=="clueboard-level") return "Onbekend format: "+raw.format+".";
+  const p=raw.puzzle;
+  if(!p) return "Veld 'puzzle' ontbreekt.";
+  if(!p.grid || !p.grid.columns || !p.grid.rows) return "Veld 'puzzle.grid' is onvolledig.";
+  if(!Array.isArray(p.tiles) || !p.tiles.length) return "Veld 'puzzle.tiles' ontbreekt of is leeg.";
+  if(!p.people || !Array.isArray(p.people.placements) || !p.people.placements.length)
+    return "Veld 'puzzle.people.placements' ontbreekt.";
+  if(!raw.solution || !Array.isArray(raw.solution.placements) || !raw.solution.placements.length)
+    return "Veld 'solution.placements' ontbreekt — dit level is niet compleet.";
+  return null;
+}
+const GRAAD_WOORD={1:"Instap",2:"Licht",3:"Gemiddeld",4:"Pittig",5:"Zwaar"};
+function levelGraad(raw){
+  const d=raw&&raw.difficulty;
+  return (d && d.graad>=1 && d.graad<=5) ? d : null;
+}
+async function discoverLevelFiles(){
+  const names=new Set();
+  const add=n=>{
+    const f=String(n||"").split("?")[0].split("#")[0].replace(/^.*[\\\/]/,"");
+    if(f && /\.json$/i.test(f) && f.toLowerCase()!=="index.json") names.add(f);
+  };
+  try{
+    const r=await fetch(LEVELS_DIR+"index.json",{cache:"no-store"});
+    if(r.ok){
+      const j=await r.json();
+      (Array.isArray(j)?j:((j&&j.levels)||[])).forEach(e=>add(typeof e==="string"?e:(e&&e.file)));
+    }
+  }catch(e){}
+  try{
+    const r=await fetch(LEVELS_DIR,{cache:"no-store"});
+    if(r.ok && /html/i.test(r.headers.get("content-type")||"")){
+      const html=await r.text();
+      const re=/href\s*=\s*["']([^"']+)["']/gi;
+      let m; while((m=re.exec(html))) add(decodeURIComponent(m[1]));
+    }
+  }catch(e){}
+  return Array.from(names).sort((a,b)=>a.localeCompare(b,"nl"));
+}
+/* Van elk level (herkenbaar aan zijn verborgen levelId) alleen de nieuwste
+   versie tonen; oudere exportbestanden blijven gewoon in de map staan. */
+function nieuwsteVersies(items){
+  const groepen=new Map();
+  items.forEach(e=>{
+    const id=(e.raw&&typeof e.raw.levelId==="string"&&e.raw.levelId)?e.raw.levelId:null;
+    const sleutel=id?("id:"+id):("naam:"+e.source);
+    const versie=(e.raw&&typeof e.raw.levelVersion==="number")?e.raw.levelVersion:0;
+    const huidig=groepen.get(sleutel);
+    if(!huidig||versie>huidig.versie) groepen.set(sleutel,{entry:e,versie});
+  });
+  return Array.from(groepen.values()).map(x=>x.entry);
+}
+
+let alleLevels=[];       /* gesorteerd; index+1 = vast zaaknummer */
+let actieveFilter=0;
+let sorteer="nr";        /* "nr" (zaaknummer) of "titel" (A–Z) */
+
+function levelHref(source){
+  return PLAYER_URL+"?level="+encodeURIComponent(source.replace(/\.json$/i,""));
+}
+function maakLevelRij(entry){
+  const raw=entry.raw, c=raw.content||{};
+  const demo=raw.demo===true;
+  const a=document.createElement("a");
+  a.className="level-rij"+(demo?" demo":"");
+  a.href=levelHref(entry.source);
+
+  const nr=document.createElement("span"); nr.className="zaak-nr";
+  if(demo){
+    /* De voorbeeldzaak heeft geen nummer: een speelteken op de plek ervan. */
+    nr.classList.add("demo-teken"); nr.title="Voorbeeldzaak";
+    /* Een opengeslagen boek: dit is de zaak waarin je het spel leert. */
+    nr.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+      +'<path d="M12 6.6c-2.3-1.6-5-1.9-8.2-.9v12.6c3.2-1 5.9-.7 8.2.9 2.3-1.6 5-1.9 8.2-.9V5.7c-3.2-1-5.9-.7-8.2.9z"/>'
+      +'<path d="M12 6.6v12.6"/></svg>';
+  } else {
+    /* Twee cijfers voor de gewone gevallen; een groter nummer krijgt gewoon
+       de ruimte die het nodig heeft. */
+    nr.textContent=String(entry.nummer).padStart(2,"0");
+  }
+  a.appendChild(nr);
+
+  const midden=document.createElement("div"); midden.className="midden";
+  const h=document.createElement("h3"); h.textContent=c.title||"Naamloos niveau";
+  midden.appendChild(h);
+  const onder=document.createElement("div"); onder.className="onder";
+  const g=levelGraad(raw);
+  if(g){
+    const nv=document.createElement("span"); nv.className="niveau-rij"; nv.title=g.uitleg||("Niveau "+g.graad);
+    nv.innerHTML=[1,2,3,4,5].map(n=>'<i class="'+(n<=g.graad?"aan":"")+'"></i>').join("");
+    onder.appendChild(nv);
+    /* Na de bolletjes in woorden hoe zwaar de zaak is. */
+    const tag=document.createElement("span"); tag.className="demo-tag";
+    tag.textContent=GRAAD_WOORD[g.graad]||("Niveau "+g.graad);
+    onder.appendChild(tag);
+  }
+  if(onder.children.length) midden.appendChild(onder);
+  /* Geen introtekst op de kaart: elke zaak toont hier alleen zijn titel,
+     zodat de lijst één ritme houdt. Het verhaal begint in de player. */
+  a.appendChild(midden);
+
+  /* het thema als gevouwen hoekje met een teken, niet als tekst */
+  const th=raw.puzzle && raw.puzzle.theme;
+  if(THEMA_LABELS[th]){
+    const hoek=document.createElement("span"); hoek.className="thema-hoek";
+    hoek.title=raw.puzzle.themeLabel||THEMA_LABELS[th];
+    hoek.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round"><path d="M12 3.2l7 2.6v5.4c0 4.5-2.9 7.3-7 9-4.1-1.7-7-4.5-7-9V5.8z"/></svg>';
+    a.appendChild(hoek);
+  }
+
+  const grid=raw.puzzle.grid;
+  const tag=document.createElement("span"); tag.className="grid-tag";
+  tag.textContent=grid.columns+"×"+grid.rows;
+  a.appendChild(tag);
+
+  const pijl=document.createElement("span"); pijl.className="pijl";
+  pijl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.6l6.4 6.4L9 18.4"/></svg>';
+  a.appendChild(pijl);
+  return a;
+}
+/* Het niveaufilter zit achter één sterknopje; de lijst eronder toont
+   alleen de niveaus die er echt zijn. */
+function tekenFilter(){
+  const menu=$("#filterMenu"), knop=$("#filterKnop"), label=$("#filterLabel");
+  const aanwezig=[1,2,3,4,5].filter(n=>
+    alleLevels.some(e=>{ const g=levelGraad(e.raw); return g && g.graad===n; }));
+  if(aanwezig.length<=1){ $("#filterDrop").style.display="none"; return; }
+  $("#filterDrop").style.display="";
+  menu.innerHTML="";
+  [{n:0,l:"Alle niveaus"}].concat(aanwezig.map(n=>({n,l:"Niveau "+n}))).forEach(c=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className=(actieveFilter===c.n?"aan":"");
+    const vink=document.createElement("span"); vink.className="vink";
+    vink.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+    const tekst=document.createElement("span"); tekst.textContent=c.l;
+    b.appendChild(vink); b.appendChild(tekst);
+    if(c.n){
+      const st=document.createElement("span"); st.className="stipjes";
+      st.innerHTML=[1,2,3,4,5].map(x=>'<i class="'+(x<=c.n?"aan":"")+'"></i>').join("");
+      b.appendChild(st);
+    }
+    b.onclick=()=>{
+      actieveFilter=c.n;
+      $("#filterDrop").classList.remove("open");
+      knop.setAttribute("aria-expanded","false");
+      tekenFilter(); tekenLijst();
+    };
+    menu.appendChild(b);
+  });
+  knop.classList.toggle("aan", !!actieveFilter);
+  label.textContent = actieveFilter ? ("Niveau "+actieveFilter) : "Niveau";
+}
+$("#filterKnop").addEventListener("click",e=>{
+  e.stopPropagation();
+  const drop=$("#filterDrop");
+  const open=drop.classList.toggle("open");
+  $("#filterKnop").setAttribute("aria-expanded", open?"true":"false");
+});
+document.addEventListener("click",e=>{
+  if(!e.target.closest("#filterDrop")){
+    $("#filterDrop").classList.remove("open");
+    $("#filterKnop").setAttribute("aria-expanded","false");
+  }
+});
+function tekenLijst(){
+  const lijst=$("#levelList");
+  const zichtbaar=alleLevels.filter(e=>{
+    if(!actieveFilter) return true;
+    const g=levelGraad(e.raw);
+    return g && g.graad===actieveFilter;
+  });
+  /* Sorteren: op vast zaaknummer, of op titel. */
+  zichtbaar.sort((a,b)=>{
+    /* De voorbeeldzaak staat altijd bovenaan, hoe je ook sorteert. */
+    const da=a.raw.demo===true, db=b.raw.demo===true;
+    if(da!==db) return da?-1:1;
+    if(sorteer==="titel"){
+      const ta=(((a.raw.content||{}).title)||"").toLowerCase();
+      const tb=(((b.raw.content||{}).title)||"").toLowerCase();
+      return ta.localeCompare(tb,"nl");
+    }
+    return a.nummer-b.nummer;
+  });
+  lijst.innerHTML="";
+  if(!zichtbaar.length){
+    const p=document.createElement("p"); p.className="leeg-melding";
+    p.textContent="Geen zaken bij dit niveau.";
+    lijst.appendChild(p);
+  } else {
+    zichtbaar.forEach(e=>lijst.appendChild(maakLevelRij(e)));
+  }
+  const n=zichtbaar.length, tot=alleLevels.length;
+  /* Zonder filter draagt deze regel de belofte van het spel; zodra je
+     filtert wordt hij functioneel en telt hij wat je overhoudt. */
+  /* Geen slogan meer boven de lijst; alleen als je filtert telt hij mee. */
+  $("#levelTeller").textContent = (!tot || n===tot) ? "" : n+" van "+tot+" zaken";
+}
+async function laadLevels(){
+  const lijst=$("#levelList");
+  let files=[], gebroken=0, geladen=[];
+  try{ files=await discoverLevelFiles(); }catch(e){ files=[]; }
+  for(const naam of files){
+    try{
+      const r=await fetch(LEVELS_DIR+naam,{cache:"no-store"});
+      if(!r.ok) continue;
+      const raw=await r.json();
+      if(validateLevel(raw)){ gebroken++; continue; }
+      geladen.push({raw, source:naam});
+    }catch(e){ gebroken++; }
+  }
+  /* Volgorde: de voorbeeldzaak altijd eerst, daarna op niveau en titel.
+     Het NUMMER komt uit het level zelf (levelNumber uit de bouwer) en hoort
+     dus bij de zaak, niet bij zijn plek in de lijst — zet er een level bij en
+     de rest houdt zijn dossiernummer. Levels van vóór dat veld vallen terug
+     op hun plek in de lijst. */
+  alleLevels=nieuwsteVersies(geladen).sort((a,b)=>{
+    const da=a.raw.demo===true, db=b.raw.demo===true;
+    if(da!==db) return da?-1:1;
+    const ga=(levelGraad(a.raw)||{}).graad||99, gb=(levelGraad(b.raw)||{}).graad||99;
+    if(ga!==gb) return ga-gb;
+    const ta=(((a.raw.content||{}).title)||"").toLowerCase();
+    const tb=(((b.raw.content||{}).title)||"").toLowerCase();
+    return ta.localeCompare(tb,"nl");
+  });
+  /* De voorbeeldzaak telt niet mee in de nummering. */
+  let teller=0;
+  alleLevels.forEach((e)=>{
+    const n = e.raw && e.raw.levelNumber;
+    if(e.raw && e.raw.demo===true){ e.nummer=0; return; }
+    teller++;
+    e.nummer = (typeof n === "number" && n > 0) ? Math.floor(n) : teller;
+  });
+  if(!alleLevels.length){
+    lijst.innerHTML="";
+    const p=document.createElement("p"); p.className="leeg-melding";
+    p.textContent = gebroken
+      ? "Er staan wel bestanden in de map Levels, maar geen daarvan is een geldig level."
+      : "Nog geen zaken. Bouw een level, of zet een geëxporteerd bestand in de map Levels.";
+    lijst.appendChild(p);
+    $("#levelTeller").textContent="";
+    $("#filterDrop").style.display="none";
+    $("#sorteerRij").style.display="none";
+    return;
+  }
+  tekenFilter();
+  tekenLijst();
+}
+
+/* sorteren: Nr of A–Z */
+$("#sorteerRij").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-s]");
+  if(!b) return;
+  sorteer=b.dataset.s;
+  [...$("#sorteerRij").children].forEach(x=>x.classList.toggle("aan", x===b));
+  tekenLijst();
+});
+
+/* ============================================================
+   Zelf maken: upload + builder achter de knop in de balk.
+   ============================================================ */
+function toonUploadFout(msg){
+  const el=$("#uploadFout");
+  el.textContent=msg; el.hidden=false;
+}
+function verwerkBestand(file){
+  $("#uploadFout").hidden=true;
+  if(!file) return;
+  if(!/\.json$/i.test(file.name) && file.type!=="application/json"){
+    toonUploadFout("Dit is geen JSON-bestand."); return;
+  }
+  if(file.size > UPLOAD_MAX_BYTES){
+    toonUploadFout("Dit bestand is te groot (meer dan 512 kB) — dat kan geen geldig level zijn.");
+    return;
+  }
+  const lezer=new FileReader();
+  lezer.onload=()=>{
+    let raw;
+    try{ raw=JSON.parse(lezer.result); }
+    catch(e){ toonUploadFout("Kon het bestand niet lezen: geen geldige JSON."); return; }
+    const fout=validateLevel(raw);
+    if(fout){ toonUploadFout("Ongeldig level: "+fout); return; }
+    try{ localStorage.setItem(UPLOAD_HANDOFF_KEY, JSON.stringify(raw)); }
+    catch(e){ toonUploadFout("Kon het level niet klaarzetten in de browser."); return; }
+    location.href = PLAYER_URL + "?upload=1";
+  };
+  lezer.onerror=()=>toonUploadFout("Bestand kon niet gelezen worden.");
+  lezer.readAsText(file);
+}
+function initZelf(){
+  const zone=$("#uploadZone"), input=$("#uploadInput");
+  $("#btnZelf").addEventListener("click",()=>{ $("#uploadFout").hidden=true; openModal("#modalZelf"); });
+  input.addEventListener("change",()=>{
+    const f=input.files && input.files[0];
+    verwerkBestand(f);
+    input.value="";
+  });
+  ["dragenter","dragover"].forEach(ev=>zone.addEventListener(ev,e=>{
+    e.preventDefault(); zone.classList.add("slepen");
+  }));
+  ["dragleave","dragend","drop"].forEach(ev=>zone.addEventListener(ev,e=>{
+    e.preventDefault(); zone.classList.remove("slepen");
+  }));
+  zone.addEventListener("drop",e=>{
+    const f=e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if(f) verwerkBestand(f);
+  });
+}
+
+initZelf();
+laadLevels();
+</script>
+</body>
+</html>

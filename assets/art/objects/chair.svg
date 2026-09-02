@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <!-- Stoel, 1x1 tegel. Canvas 128x128 = 1 tegel. Houd ~8px lucht aan de rand. -->
+  <g stroke="#14162E" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <!-- rugleuning -->
+    <rect x="26" y="16" width="20" height="62" rx="6" fill="#B9873F"/>
+    <!-- zitting -->
+    <rect x="26" y="62" width="76" height="22" rx="7" fill="#D8A96E"/>
+    <!-- poten -->
+    <path d="M36 84v26M92 84v26"/>
+  </g>
+</svg>

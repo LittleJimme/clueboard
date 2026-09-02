@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 128" fill="none">
+  <!-- Bank over 2 tegels breed, 1 tegel hoog. Canvas 256x128 = 2x1 tegels. -->
+  <g stroke="#14162E" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="14" y="56" width="228" height="20" rx="8" fill="#C89A63"/>
+    <path d="M30 76v34M128 76v34M226 76v34M30 92h196"/>
+  </g>
+</svg>

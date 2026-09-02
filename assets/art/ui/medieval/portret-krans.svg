@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 160">
+<defs>
+<linearGradient id="krgoud" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#E4C25C"/><stop offset=".5" stop-color="#C9A227"/><stop offset="1" stop-color="#8F7115"/>
+</linearGradient>
+</defs>
+<circle cx="75" cy="90" r="58" fill="none" stroke="#2A1B0C" stroke-width="18"/>
+<circle cx="75" cy="90" r="58" fill="none" stroke="url(#krgoud)" stroke-width="12"/>
+<g fill="url(#krgoud)" stroke="#2A1B0C" stroke-width="2.6" stroke-linejoin="round">
+<path d="M20 68c8-2 13 2 14 8c-7 2-13-2-14-8ZM14 92c8 0 12 5 12 11c-8 0-12-5-12-11ZM18 116c8 1 11 7 10 13c-8-1-11-7-10-13ZM32 138c7 3 9 9 6 15c-7-3-9-9-6-15Z"/>
+<path d="M130 68c-8-2-13 2-14 8c7 2 13-2 14-8ZM136 92c-8 0-12 5-12 11c8 0 12-5 12-11ZM132 116c-8 1-11 7-10 13c8-1 11-7 10-13ZM118 138c-7 3-9 9-6 15c7-3 9-9 6-15Z"/>
+</g>
+<path d="M52 34v-15l9 7 14-13 14 13 9-7v15c0 4-3 7-7 7H59c-4 0-7-3-7-7Z"
+  fill="url(#krgoud)" stroke="#2A1B0C" stroke-width="4" stroke-linejoin="round"/>
+<circle cx="61" cy="17" r="3.2" fill="#E4C25C" stroke="#2A1B0C" stroke-width="2.2"/>
+<circle cx="75" cy="11" r="3.2" fill="#E4C25C" stroke="#2A1B0C" stroke-width="2.2"/>
+<circle cx="89" cy="17" r="3.2" fill="#E4C25C" stroke="#2A1B0C" stroke-width="2.2"/>
+</svg>

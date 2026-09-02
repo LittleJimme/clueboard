@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 124">
+<defs>
+<linearGradient id="walnoot" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#6A4A28"/><stop offset=".5" stop-color="#523719"/><stop offset="1" stop-color="#3A2712"/>
+</linearGradient>
+</defs>
+<ellipse cx="60" cy="114" rx="42" ry="7" fill="rgba(20,12,4,.4)"/>
+<path d="M60 8c17 0 29 4 36 8v40c0 25-16 43-36 50c-20-7-36-25-36-50V16c7-4 19-8 36-8Z"
+  fill="url(#walnoot)" stroke="#2A1B0C" stroke-width="5"/>
+<path d="M60 15c14 0 25 3 30 6v36c0 21-13 37-30 43c-17-6-30-22-30-43V21c5-3 16-6 30-6Z"
+  fill="none" stroke="#7E5A32" stroke-width="2.5" opacity=".8"/>
+<path d="M34 22c8-4 16-6 26-6c4 0 9 0 13 1c-16 3-28 9-34 16V22Z" fill="rgba(255,255,255,.10)"/>
+<g fill="#8E96A5" stroke="#2A1B0C" stroke-width="2">
+<circle cx="60" cy="14" r="3"/><circle cx="30" cy="26" r="3"/><circle cx="90" cy="26" r="3"/>
+<circle cx="60" cy="99" r="3"/>
+</g>
+</svg>

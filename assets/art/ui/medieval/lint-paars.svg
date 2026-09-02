@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 72">
+<defs>
+<linearGradient id="lintband" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#7E5FA5"/><stop offset=".55" stop-color="#6B4E8E"/><stop offset="1" stop-color="#4C3568"/>
+</linearGradient>
+</defs>
+<path d="M30 46l-20 16 4-24-4-24 20 16Z" fill="#4C3568" stroke="#2A1B0C" stroke-width="4" stroke-linejoin="round"/>
+<path d="M262 60c6-9 6-33 0-44l12 6v34Z" fill="#4C3568" stroke="#2A1B0C" stroke-width="4" stroke-linejoin="round"/>
+<path d="M26 12h230c8 0 12 5 12 11v26c0 6-4 11-12 11H26c-6-10-6-38 0-48Z"
+  fill="url(#lintband)" stroke="#2A1B0C" stroke-width="4.5"/>
+<path d="M34 20h216M34 52h216" stroke="#C9A227" stroke-width="2" opacity=".85" stroke-dasharray="1 5" stroke-linecap="round"/>
+<path d="M34 17c60-3 160-3 216 0" stroke="rgba(255,255,255,.28)" stroke-width="2.5" fill="none"/>
+</svg>

@@ -1,0 +1,17 @@
+# Werkmateriaal dat niet gepubliceerd hoeft te worden
+_archief/
+Design Department/
+
+# Oude versies van de apps: staan lokaal, horen niet op de site
+backups/
+*/backups/
+*/*/backups/
+
+# Lokale tooling
+.claude/
+.codex/
+
+# Windows / macOS rommel
+Thumbs.db
+desktop.ini
+.DS_Store

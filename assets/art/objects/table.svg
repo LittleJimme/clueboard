@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <!-- Tafel, 1x1 tegel. Canvas 128x128 = 1 tegel. -->
+  <g stroke="#14162E" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <!-- blad -->
+    <rect x="12" y="40" width="104" height="24" rx="8" fill="#C89A63"/>
+    <!-- poten -->
+    <path d="M28 64v48M100 64v48"/>
+  </g>
+</svg>
