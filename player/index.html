@@ -3,17 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#EDF1F8" id="themeColorMeta">
+<meta name="theme-color" content="#231819" id="themeColorMeta">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../menu/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="../menu/icon-192.png">
 <script>
 /* Het chroom van het spel volgt de keuze uit het hoofdmenu (zelfde sleutel).
    Hier al gezet, vóór de eerste tekening, zodat wie licht koos geen donkere
-   flits ziet. */
+   flits ziet.
+
+   iOS leest de statusbalk-stijl één keer, bij het laden, dus die moet hier
+   om — niet in zetThema(). "black-translucent" laat de pagina onder de
+   statusbalk doorlopen, waardoor de balk altijd de eigen achtergrond toont;
+   in het lichte thema zou witte balktekst onleesbaar zijn, dus dan terug
+   naar "default". Zelfde constructie als in het menu. */
 try{ var _t=localStorage.getItem("clueboard:menuThema");
-     if(_t==="licht"||_t==="donker") document.documentElement.dataset.thema=_t; }catch(e){}
+     if(_t==="licht"||_t==="donker") document.documentElement.dataset.thema=_t;
+     if(_t==="licht"){
+       document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').content="default";
+       document.getElementById("themeColorMeta").content="#F1EFE8";
+     }
+}catch(e){}
+
+/* iOS opent een gewone <a href> in Safari zodra de site als webapp draait: je
+   verliest het volledige scherm en krijgt de adresbalk terug. De scope in het
+   manifest houdt menu, player en builder bij elkaar, maar oudere iOS-versies
+   negeren scope. Vandaar dit vangnet: links binnen dezelfde site navigeren we
+   zelf, in hetzelfde venster. Staat identiek in alle drie de apps (bewust
+   gedupliceerd, dit project heeft geen bouwstap). */
+(function(){
+  var alsApp = (window.matchMedia && matchMedia("(display-mode: standalone)").matches)
+               || navigator.standalone === true;
+  if(!alsApp) return;
+  document.addEventListener("click", function(e){
+    var a = e.target && e.target.closest && e.target.closest("a[href]");
+    if(!a || a.target === "_blank" || a.hasAttribute("download")) return;
+    var u; try{ u = new URL(a.getAttribute("href"), location.href); }catch(_){ return; }
+    if(u.origin !== location.origin) return;
+    e.preventDefault();
+    location.assign(u.href);
+  });
+})();
 </script>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="mobile-web-app-capable" content="yes">
 <title>ClueBoard Player</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -114,17 +148,17 @@ body[data-skin="medieval"]{
      zetten. */
   /* Echte, uitgeknipte sprites uit de stijlbladen; de getekende standins
      blijven in assets/art/ui/medieval als terugval bewaard. */
-  --ui-titelbord:url("../../assets/themes/medieval/ui/nameplate.png");
-  --ui-schild-breed:url("../../assets/themes/medieval/ui/shield-crown.png");
-  --ui-knopje:url("../../assets/themes/medieval/ui/shield-small.png");
-  --ui-tab:url("../../assets/themes/medieval/ui/plank.png");
-  --ui-tab-actief:url("../../assets/themes/medieval/ui/paper.png");
-  --ui-timer:url("../../assets/themes/medieval/ui/scroll.png");
-  --ui-lint-blauw:url("../../assets/themes/medieval/ui/ribbon-tassel.png");
-  --ui-lint-groen:url("../../assets/themes/medieval/ui/ribbon-tassel-groen.png");
-  --ui-lint-paars:url("../../assets/themes/medieval/ui/ribbon-tassel-paars.png");
-  --ui-plaquette:url("../../assets/themes/medieval/ui/plaque.png");
-  --ui-zegel:url("../../assets/themes/medieval/ui/seal.png");
+  --ui-titelbord:url("../assets/themes/medieval/ui/nameplate.png");
+  --ui-schild-breed:url("../assets/themes/medieval/ui/shield-crown.png");
+  --ui-knopje:url("../assets/themes/medieval/ui/shield-small.png");
+  --ui-tab:url("../assets/themes/medieval/ui/plank.png");
+  --ui-tab-actief:url("../assets/themes/medieval/ui/paper.png");
+  --ui-timer:url("../assets/themes/medieval/ui/scroll.png");
+  --ui-lint-blauw:url("../assets/themes/medieval/ui/ribbon-tassel.png");
+  --ui-lint-groen:url("../assets/themes/medieval/ui/ribbon-tassel-groen.png");
+  --ui-lint-paars:url("../assets/themes/medieval/ui/ribbon-tassel-paars.png");
+  --ui-plaquette:url("../assets/themes/medieval/ui/plaque.png");
+  --ui-zegel:url("../assets/themes/medieval/ui/seal.png");
 
   --mv-perk:#F3E7CC;          /* perkament */
   --mv-perk-2:#EADCBB;
@@ -543,10 +577,10 @@ body[data-skin="medieval"]{background:#1B2A21}
 body[data-skin="medieval"] .portret[data-standing="noble"] .vorm svg,
 body[data-skin="medieval"] .portret[data-standing="knight"] .vorm svg{display:none}
 body[data-skin="medieval"] .portret[data-standing="noble"] .vorm{
-  background:url("../../assets/themes/medieval/ui/banner-gold.png") center 38%/86% auto no-repeat;
+  background:url("../assets/themes/medieval/ui/banner-gold.png") center 38%/86% auto no-repeat;
 }
 body[data-skin="medieval"] .portret[data-standing="knight"] .vorm{
-  background:url("../../assets/themes/medieval/ui/shield-silver.png") center 42%/92% auto no-repeat;
+  background:url("../assets/themes/medieval/ui/shield-silver.png") center 42%/92% auto no-repeat;
 }
 
 /* Introscherm: het merk als rustpunt, de uploader klein in de hoek. */
@@ -1600,6 +1634,11 @@ body.in-game .hint-knop{
 }
 body.in-game .hint-knop .ic,body.in-game .hint-knop svg{width:23px;height:23px}
 body.in-game .hint-knop:active{transform:scale(.94);box-shadow:0 3px 10px rgba(0,0,0,.26)}
+/* setEasyMode() zet hidden op de knop, maar de regel hierboven weegt zwaarder
+   dan het [hidden] van de browser: zonder deze regel bleef het hintknopje ook
+   buiten easy mode staan. Elke display-regel op een element dat hidden kan
+   worden, hoort zo'n tegenhanger te hebben. */
+body.in-game .hint-knop[hidden]{display:none}
 @keyframes hintOp{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
 /* Vaste kolommen: op het regelstabblad verdwijnt de schakelaar, en dan mag
    de wisselknop niet in het midden schuiven en uitrekken. */
@@ -1983,7 +2022,7 @@ body.in-game #modalIntro{top:0;bottom:0}
 body.in-game #modalIntro .backdrop{background:rgba(0,0,0,.5)}
 body.in-game #modalIntro .sheet{
   height:100%;max-height:none;border-radius:0;padding:calc(10px + env(safe-area-inset-top)) 20px calc(14px + env(safe-area-inset-bottom));
-  display:flex;flex-direction:column;will-change:transform;box-shadow:none}
+  display:flex;flex-direction:column;will-change:transform;box-shadow:none;position:relative}
 body.in-game #modalIntro .intro-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;text-align:center;padding:2px 0 6px}
 .intro-zaak{font:800 11px var(--font-ui);letter-spacing:.18em;text-transform:uppercase;color:var(--goud);margin-bottom:8px;min-height:13px}
 .intro-titel{margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(28px,7.5vw,40px);line-height:1.08;letter-spacing:-.01em;color:var(--inkt);text-wrap:balance}
@@ -2028,8 +2067,28 @@ html[data-thema="licht"] .bordregel{background:rgba(145,96,8,.13);border-color:r
 .deelnemer .rol{font:800 9px var(--font-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--dof);min-height:11px}
 .deelnemer.slachtoffer .rol{color:#E58472}
 .intro-klein{margin-top:12px;font:600 11px var(--font-ui);color:var(--dof);letter-spacing:.04em}
-body.in-game #modalIntro .rij-knoppen{flex:0 0 auto;display:flex;margin-top:10px}
+/* De knop hangt niet meer vast onder het vel maar staat onderaan IN de
+   schuifkolom: je leest eerst het dossier en pakt de zaak daarna op. */
+body.in-game #modalIntro .rij-knoppen{display:flex;margin:24px 0 6px}
 body.in-game #modalIntro .btn{width:100%;height:50px;font-size:18px}
+/* Het duwtje om verder te lezen. Zweeft boven de kolom, dus buiten de
+   scrollstroom; [hidden] moet expliciet winnen van de display:flex hierboven. */
+.scroll-wenk{
+  position:absolute;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:38px;height:38px;border-radius:999px;padding:0;z-index:3;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--goud);color:var(--goud-op);border:1px solid var(--goud-diep);
+  box-shadow:0 4px 14px rgba(0,0,0,.3);
+  animation:wenkOp .3s ease both, wenkWip 1.7s ease-in-out .3s infinite;
+}
+.scroll-wenk[hidden]{display:none}
+.scroll-wenk .ic,.scroll-wenk svg{width:19px;height:19px}
+@keyframes wenkOp{from{opacity:0}to{opacity:1}}
+@keyframes wenkWip{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,5px)}}
+@media (prefers-reduced-motion:reduce){
+  .scroll-wenk{animation:wenkOp .3s ease both}
+}
 
 /* ── Eindscherm als slide ── */
 body.in-end #screen-end{padding:0;justify-content:flex-start;overflow:hidden;display:flex;flex-direction:column}
@@ -2315,24 +2374,29 @@ body.in-game .clue-card.done::before{background:var(--goud)}
 </div>
 
 <!-- Het intro van een zaak: een vel dat over het bord heen komt, zodat je
-     het level er al klein achter ziet. Tikken naast het vel of het omlaag
-     slepen begint de zaak. -->
+     het level er al klein achter ziet. Je leest eerst het dossier en scrollt
+     naar beneden om de zaak op te pakken — vandaar dat "Begin de zaak"
+     onderaan in de schuifkolom staat en niet vastgeprikt onder het vel. -->
 <div class="modal sheet-modal" id="modalIntro">
   <div class="backdrop" data-close></div>
   <div class="sheet intro-vel" id="introVel">
-    <div class="sheet-greep"></div>
-    <div class="intro-scroll">
+    <div class="intro-scroll" id="introScroll">
       <div class="intro-zaak" id="introZaak"></div>
       <h2 class="intro-titel" id="introTitel">—</h2>
       <div class="intro-graad" id="introGraad"></div>
       <div class="intro-scheiding"></div>
       <p class="intro-tekst" id="introTekst"></p>
-      <div class="intro-kaart" id="introKaart"></div>
       <div class="intro-bordregels" id="introBordregels"></div>
       <div class="deelnemers" id="introDeelnemers"></div>
+      <div class="intro-kaart" id="introKaart"></div>
       <div class="intro-klein" id="introBuild"></div>
+      <div class="rij-knoppen"><button class="btn" id="btnBeginLevel">Begin de zaak</button></div>
     </div>
-    <div class="rij-knoppen"><button class="btn" id="btnBeginLevel">Begin de zaak</button></div>
+    <!-- Duwtje om verder te lezen: verschijnt pas als je een paar tellen niet
+         scrolt terwijl er wél meer onder staat, en verdwijnt zodra je begint. -->
+    <button class="scroll-wenk" id="introWenk" type="button" hidden aria-label="Verder lezen">
+      <span class="ic" data-icon="chevron"></span>
+    </button>
   </div>
 </div>
 
@@ -2365,8 +2429,8 @@ const ASSET_ICON_BODIES = {"icons/objects/anvil.svg":"<path d=\"M12 3.2l2.2 9h-4
 function assetBust(v){
   return (location.protocol === 'file:') ? '' : ('?v=' + (v || 1));
 }
-const ART_DIR = "../../assets/art/objects/";
-const THEME_DIR = "../../assets/themes/";
+const ART_DIR = "../assets/art/objects/";
+const THEME_DIR = "../assets/themes/";
 
 /* ══════════════════════════════════════════════════════
    Skins
@@ -3318,7 +3382,7 @@ function joinSides(el,c,r,objectId){
    pictogram gewoon staan; er verschijnt geen foutmelding. Zie assets/README.md
    voor de bestandsnamen en het formaat.
    ============================================================ */
-const ASSET_DIR="../../assets/art/";
+const ASSET_DIR="../assets/art/";
 const ASSET_EXT="svg";
 /* Het versienummer van de bank hangt achter elke tekening-URL, zodat een
    bijgewerkte tekening niet uit de cache van de browser blijft komen. Bump
@@ -5134,7 +5198,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.12";
+const PLAYER_APP_VERSION="0.9.13";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -5460,6 +5524,9 @@ function showLevelDetail(levelIndex){
 
   introOpen=true;
   openModal("#modalIntro");
+  /* Vel begint altijd bovenaan, ook als je hetzelfde level opnieuw opent. */
+  const sc=$("#introScroll"); if(sc) sc.scrollTop=0;
+  introWenkStart();
 }
 /* Dezelfde markering als op het bord: schijf in de kleur van de persoon,
    contour van het bord, de letter erin en het rolteken rechtsonder. */
@@ -5489,10 +5556,38 @@ function bordFiche(pe){
     +'</span>';
 }
 let introOpen=false;
-/* Het vel weg en spelen: via de knop, een tik ernaast of een haal omlaag. */
+/* Een duwtje om verder te lezen. Het verschijnt pas als je een paar tellen
+   stil blijft staan terwijl er wél meer onder de vouw staat: zo blijft het
+   dossier de hoofdzaak en is de knop onderaan toch geen verstopte deur. */
+let wenkTimer=null;
+function introWenkStop(){
+  const w=$("#introWenk"); if(w) w.hidden=true;
+  if(wenkTimer){ clearTimeout(wenkTimer); wenkTimer=null; }
+}
+/* De maatstaf is niet "valt er te scrollen" maar "zie je de knop al": bij een
+   kort dossier steekt die er soms maar een paar pixels onderuit, en dan zou de
+   wenk er bovenop komen te liggen. */
+function knopInBeeld(){
+  const sc=$("#introScroll"), b=$("#btnBeginLevel");
+  if(!sc||!b) return true;
+  /* Al zichtbaar zodra de bovenkant van de knop binnen het venster valt: dan
+     zie je hem staan en heb je geen duwtje nodig. */
+  return b.getBoundingClientRect().top < sc.getBoundingClientRect().bottom - 8;
+}
+function introWenkStart(){
+  introWenkStop();
+  const sc=$("#introScroll"), w=$("#introWenk");
+  if(!sc||!w) return;
+  wenkTimer=setTimeout(()=>{
+    wenkTimer=null;
+    if(!knopInBeeld() && sc.scrollTop<8) w.hidden=false;
+  },2200);
+}
+/* Het vel weg en spelen: via de knop onderaan of een tik ernaast. */
 function sluitIntro(){
   if(!introOpen) return;
   introOpen=false;
+  introWenkStop();
   closeModal($("#modalIntro"));
   if(!revealed) startTimer();
   setTimeout(fitBoard,0);
@@ -5776,33 +5871,30 @@ $("#helpBolletjes").addEventListener("click",e=>{
 })();
 $("#btnBeginLevel").addEventListener("click",sluitIntro);
 $("#modalIntro .backdrop").addEventListener("click",sluitIntro);
-/* Omlaag slepen sluit het vel: het schuift mee met je vinger en valt weg
-   zodra je ver genoeg bent. */
+/* Het omlaag slepen om het vel te sluiten is vervallen. Het hoorde bij de
+   greep bovenaan, en die is weg nu het vel het hele scherm vult; bovendien
+   sloeg het gebaar het dossier over, terwijl je dat juist eerst hoort te
+   lezen. De weg naar binnen is de knop onderaan. */
 (function(){
-  const vel=$("#introVel"); if(!vel) return;
-  let sy=0, dy=0, bezig=false, richting=null;
-  vel.addEventListener("pointerdown",e=>{
-    const scroller=$("#modalIntro .intro-scroll");
-    /* Alleen slepen als de tekst niet zelf nog omhoog te scrollen valt. */
-    if(scroller && scroller.scrollTop>0 && !e.target.closest(".sheet-greep")) return;
-    sy=e.clientY; dy=0; bezig=true; richting=null;
+  const sc=$("#introScroll"), w=$("#introWenk");
+  if(!sc||!w) return;
+  sc.addEventListener("scroll",()=>{
+    /* Zodra je zelf begint te lezen is het duwtje overbodig. */
+    if(!w.hidden) w.hidden=true;
+    if(wenkTimer && sc.scrollTop>8){ clearTimeout(wenkTimer); wenkTimer=null; }
+  },{passive:true});
+  /* Draait het scherm of klapt het toetsenbord weg, dan kan de knop alsnog in
+     beeld komen; laat de wenk dan niet blijven hangen. */
+  window.addEventListener("resize",()=>{ if(!w.hidden && knopInBeeld()) w.hidden=true; });
+  w.addEventListener("click",()=>{
+    introWenkStop();
+    const doel=sc.scrollHeight-sc.clientHeight;
+    try{ sc.scrollTo({top:doel,behavior:"smooth"}); }catch(_){}
+    /* Niet elke browser voert smooth scrollen op een container daadwerkelijk
+       uit. Kwam je niet in beweging, spring er dan gewoon heen: bij de knop
+       uitkomen is belangrijker dan de animatie. */
+    setTimeout(()=>{ if(sc.scrollTop<doel-4) sc.scrollTop=doel; },420);
   });
-  vel.addEventListener("pointermove",e=>{
-    if(!bezig) return;
-    const my=e.clientY-sy;
-    if(!richting){ if(Math.abs(my)<8) return; richting=my>0?"omlaag":"omhoog"; if(richting==="omlaag"){ try{ vel.setPointerCapture(e.pointerId); }catch(x){} } }
-    if(richting!=="omlaag") return;
-    dy=Math.max(0,my);
-    vel.style.transition="none"; vel.style.transform="translateY("+dy+"px)";
-  });
-  const klaar=()=>{
-    if(!bezig) return; bezig=false;
-    const weg=dy>90;
-    vel.style.transition=""; vel.style.transform="";
-    if(weg) sluitIntro();
-  };
-  vel.addEventListener("pointerup",klaar);
-  vel.addEventListener("pointercancel",klaar);
 })();
 
 $("#btnGameBack").addEventListener("click",toMenu);

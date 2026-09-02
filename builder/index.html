@@ -2,7 +2,38 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Op een telefoon toont de bouwer alleen de desktoppoort, en die is
+     donker bordeaux (#231819) net als het menu. Daarom vast die kleur:
+     de statusbalk loopt dan door in de poort in plaats van wit te blijven. -->
+<meta name="theme-color" content="#231819" id="themeColorMeta">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" href="../menu/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="../menu/icon-192.png">
+<script>
+/* iOS opent een gewone <a href> in Safari zodra de site als webapp draait: je
+   verliest het volledige scherm en krijgt de adresbalk terug. De scope in het
+   manifest houdt menu, player en builder bij elkaar, maar oudere iOS-versies
+   negeren scope. Vandaar dit vangnet: links binnen dezelfde site navigeren we
+   zelf, in hetzelfde venster. Staat identiek in alle drie de apps (bewust
+   gedupliceerd, dit project heeft geen bouwstap). */
+(function(){
+  var alsApp = (window.matchMedia && matchMedia("(display-mode: standalone)").matches)
+               || navigator.standalone === true;
+  if(!alsApp) return;
+  document.addEventListener("click", function(e){
+    var a = e.target && e.target.closest && e.target.closest("a[href]");
+    if(!a || a.target === "_blank" || a.hasAttribute("download")) return;
+    var u; try{ u = new URL(a.getAttribute("href"), location.href); }catch(_){ return; }
+    if(u.origin !== location.origin) return;
+    e.preventDefault();
+    location.assign(u.href);
+  });
+})();
+</script>
 <title>Clueboard Builder 11.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
