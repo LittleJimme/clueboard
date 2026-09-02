@@ -1770,6 +1770,9 @@ body.in-game .radial-obj{
   box-shadow:var(--sch2);white-space:nowrap;max-width:92vw;
   animation:objIn .22s cubic-bezier(.2,.8,.3,1) both}
 @keyframes objIn{from{opacity:0;transform:translate(-50%,-42%)}to{opacity:1;transform:translate(-50%,-50%)}}
+/* Zonder deze regel wint de display hierboven van [hidden] en blijft het
+   label van het vorige object staan bij een tegel zonder object. */
+body.in-game .radial-obj[hidden]{display:none}
 body.in-game .radial-obj .ic{width:26px;height:26px;color:var(--inkt-2)}
 body.in-game .radial-obj .ic svg{width:100%;height:100%}
 body.in-game .radial-obj .wat{display:flex;flex-direction:column;line-height:1.12;min-width:0}
@@ -2003,10 +2006,13 @@ body.in-end::after{opacity:.045}
 
 /* ── Het introvel over het bord ── */
 body.in-game #modalIntro{top:0;bottom:0}
-body.in-game #modalIntro .backdrop{background:rgba(0,0,0,.5)}
+body.in-game #modalIntro .backdrop{background:var(--grond)}
 body.in-game #modalIntro .sheet{
   height:100%;max-height:none;border-radius:0;padding:calc(10px + env(safe-area-inset-top)) 20px calc(14px + env(safe-area-inset-bottom));
-  display:flex;flex-direction:column;will-change:transform;box-shadow:none;position:relative}
+  display:flex;flex-direction:column;will-change:transform;box-shadow:none;position:relative;
+  /* Dezelfde ondergrond als het spel: zo is er op een breed scherm geen
+     kolom met een andere tint te zien. */
+  background:var(--grond);border:0}
 body.in-game #modalIntro .intro-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;text-align:center;padding:2px 0 6px;
   /* De schuifbalk zou dwars door de cover lopen; het duwtje onderin zegt al
      dat er meer is. */
@@ -2049,7 +2055,7 @@ body.in-game #modalIntro .intro-terug{
   /* Exact de plek en maat van btnGameBack in de spelkop (14 / 17, 40x40),
      zodat de knop niet verspringt zodra het introvel sluit. Deze knop hangt
      aan #modalIntro zelf, dat het hele scherm beslaat. */
-  left:14px;top:calc(17px + env(safe-area-inset-top));
+  left:calc(max(0px,(100vw - 560px)/2) + 14px);top:calc(17px + env(safe-area-inset-top));
   width:40px;height:40px;border-radius:999px;padding:0;
   display:flex;align-items:center;justify-content:center;
   background:var(--kaart-2);color:var(--inkt);border:1px solid var(--lijn);
@@ -2075,17 +2081,20 @@ body.in-game #modalIntro .intro-scroll{position:relative;z-index:1}
      .op    een object waar je juist wél op kunt staan, een tikje lichter
    En daarbuiten .leeg: alleen de omtrek, zodat het raster doorloopt maar de
    vorm van het level het enige is dat vult. */
-.wm-c{aspect-ratio:1;border-radius:4px;background:rgba(240,232,226,.05)}
-.wm-c.op{background:rgba(240,232,226,.11)}
-.wm-c.blok{background:rgba(0,0,0,.2)}
-.wm-c.leeg{background:none;box-shadow:inset 0 0 0 1px rgba(240,232,226,.05)}
-html[data-thema="licht"] .wm-c{background:rgba(38,36,29,.038)}
-html[data-thema="licht"] .wm-c.op{background:rgba(38,36,29,.075)}
-html[data-thema="licht"] .wm-c.blok{background:rgba(38,36,29,.14)}
+/* Vier soorten: vrije vloer (basis) alleen een omtrek, een object waar je op
+   kunt staan (.op) licht gevuld, niet bezetbaar (.blok) donkerder, en vakjes
+   die in de bouwer zijn weggehaald (.leeg) helemaal niet. */
+.wm-c{aspect-ratio:1;border-radius:4px;background:none;box-shadow:inset 0 0 0 1px rgba(240,232,226,.14)}
+.wm-c.op{background:rgba(240,232,226,.12);box-shadow:none}
+.wm-c.blok{background:rgba(0,0,0,.24);box-shadow:none}
+.wm-c.leeg{background:none;box-shadow:none;visibility:hidden}
+html[data-thema="licht"] .wm-c{background:none;box-shadow:inset 0 0 0 1px rgba(38,36,29,.13)}
+html[data-thema="licht"] .wm-c.op{background:rgba(38,36,29,.07);box-shadow:none}
+html[data-thema="licht"] .wm-c.blok{background:rgba(38,36,29,.16);box-shadow:none}
 /* Moet mee in het thema: html[data-thema] .wm-c weegt zwaarder dan .wm-c.leeg,
    dus zonder deze regel kleurden de vakjes buiten het bord alsnog en verloor
    de plattegrond zijn vorm. */
-html[data-thema="licht"] .wm-c.leeg{background:none;box-shadow:inset 0 0 0 1px rgba(38,36,29,.04)}
+html[data-thema="licht"] .wm-c.leeg{background:none;box-shadow:none;visibility:hidden}
 .intro-zaak{font:800 12px var(--font-ui);letter-spacing:.28em;text-transform:uppercase;color:var(--goud);margin-bottom:14px;min-height:14px}
 .intro-titel{margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(34px,10vw,54px);line-height:1.04;letter-spacing:-.015em;color:var(--inkt);text-wrap:balance}
 .intro-graad{display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:18px}
@@ -2114,7 +2123,7 @@ body.in-game #modalIntro .intro-dossier{
   position:relative;
   /* Doorzichtig aan de bovenkant, daaronder de kaartkleur: de plattegrond
      vervaagt zo onder het dossier in plaats van langs een rand te stoppen. */
-  background:linear-gradient(to bottom,transparent 0,var(--kaart) 96px);
+  background:linear-gradient(to bottom,transparent 0,var(--grond) 96px);
 }
 /* De overgang naar het dossier: één haarlijn die aan beide kanten wegvalt,
    zodat hij scheidt zonder een streep door de bladzijde te trekken. */
@@ -2148,9 +2157,19 @@ html[data-thema="licht"] .bordregel{background:rgba(145,96,8,.13);border-color:r
 /* Rijen van drie en twee om en om. Een doorlopend raster van drie hield bij
    acht of negen personen een losse staart over; zo staat elke rij gecentreerd
    en oogt het blok rustiger. */
-.deelnemers{display:flex;flex-direction:column;gap:20px;padding:36px 0 4px}
-.deelnemer-rij{display:flex;justify-content:center;gap:8px}
-.deelnemer{display:flex;flex-direction:column;align-items:center;gap:5px;width:76px;text-align:center}
+.deelnemers{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px;padding:34px 0 4px;text-align:left}
+.deelnemer{display:flex;align-items:center;gap:10px;min-width:0}
+.deelnemer .portret{flex:0 0 auto}
+.dl-tekst{display:flex;flex-direction:column;gap:2px;min-width:0}
+.dl-tekst .naam{font-family:var(--font-display);font-weight:600;font-size:15px;line-height:1.1;color:var(--inkt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dl-tekst .rol{font:800 9.5px var(--font-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--dof)}
+/* Rolnaam in de kleur van de rol, zoals op de V3-sheet. */
+.dl-tekst .rol.noble,body.in-game .badge.tag.noble{color:#D9B75E}
+.dl-tekst .rol.knight,body.in-game .badge.tag.knight{color:#A8B1BF}
+.dl-tekst .rol.victim{color:#E58472}
+html[data-thema="licht"] .dl-tekst .rol.noble,html[data-thema="licht"] body.in-game .badge.tag.noble{color:#8A6A12}
+html[data-thema="licht"] .dl-tekst .rol.knight,html[data-thema="licht"] body.in-game .badge.tag.knight{color:#4C5A73}
+@media (max-width:360px){ .deelnemers{grid-template-columns:1fr} }
 .bord-fiche{
   position:relative;width:46px;height:46px;border-radius:999px;flex:0 0 auto;
   display:flex;align-items:center;justify-content:center;background:var(--pc);
@@ -2163,10 +2182,6 @@ html[data-thema="licht"] .bordregel{background:rgba(145,96,8,.13);border-color:r
 .bord-fiche .role-badge{position:absolute;right:-15%;bottom:-13%;width:15px;height:21.5px;
   display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 1px 2px rgba(21,26,51,.35))}
 .bord-fiche .role-badge svg{width:100%;height:100%;display:block;overflow:visible}
-.deelnemer.slachtoffer .bord-fiche{transform:rotate(-6deg)}
-.deelnemer .naam{font-family:var(--font-display);font-weight:600;font-size:13.5px;line-height:1.1;color:var(--inkt)}
-.deelnemer .rol{font:800 9px var(--font-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--dof);min-height:11px}
-.deelnemer.slachtoffer .rol{color:#E58472}
 /* De knop hangt niet meer vast onder het vel maar staat onderaan IN de
    schuifkolom: je leest eerst het dossier en pakt de zaak daarna op. */
 /* Onderaan doorgescrold hoort de knop niet tegen de rand te plakken: deze
@@ -2183,7 +2198,7 @@ body.in-game #modalIntro .btn{width:100%;height:50px;font-size:18px}
   background:var(--goud);color:var(--goud-op);border:1px solid var(--goud-diep);
   /* De ring in de kaartkleur zet de knop vrij van wat er toevallig achter
      ligt; op een laag scherm belandt hij anders zo op een portret. */
-  box-shadow:0 4px 14px rgba(0,0,0,.3),0 0 0 7px var(--kaart);
+  box-shadow:0 4px 14px rgba(0,0,0,.3),0 0 0 7px var(--grond);
   animation:wenkOp .3s ease both, wenkWip 1.7s ease-in-out .3s infinite;
 }
 .scroll-wenk[hidden]{display:none}
@@ -5401,7 +5416,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.21";
+const PLAYER_APP_VERSION="0.9.22";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -5719,19 +5734,23 @@ function showLevelDetail(levelIndex){
   /* Wie erbij was, precies zoals ze straks op het bord staan: dezelfde
      schijf, dezelfde letter, hetzelfde rolteken. */
   const allen=(M.victimId?[M.peopleById.get(M.victimId)]:[]).concat(M.people.filter(p=>p.id!==M.victimId)).filter(Boolean);
-  /* Om en om drie en twee op een rij. Een blijvend raster van drie liet bij
-     acht of negen personen een losse staart achter; zo is elke rij op zich
-     gecentreerd. Een rij die niet vol raakt staat dus ook netjes midden. */
-  const rijen=[]; { let i=0, maat=3;
-    while(i<allen.length){ rijen.push(allen.slice(i,i+maat)); i+=maat; maat = maat===3?2:3; } }
-  const fiche=pe=>{
+  /* Compacte rolportretten, zoals in de regellijst: portret links (rond,
+     banier of schild), naam en rol in de tekstkolom rechts. Het fiche met
+     de letter hoort op het bord; hier lees je wie iemand is. */
+  const host=$("#introDeelnemers"); host.innerHTML="";
+  allen.forEach(pe=>{
     const isV=pe.id===M.victimId;
-    return '<div class="deelnemer'+(isV?' slachtoffer':'')+'">'+bordFiche(pe)
-      +'<div class="naam">'+esc(pe.name)+'</div>'
-      +'<div class="rol">'+(isV?'Slachtoffer':esc(pe.standingLabel||''))+'</div></div>';
-  };
-  $("#introDeelnemers").innerHTML=rijen
-    .map(rij=>'<div class="deelnemer-rij">'+rij.map(fiche).join("")+'</div>').join("");
+    const rij=document.createElement("div");
+    rij.className="deelnemer"+(isV?" slachtoffer":"");
+    rij.appendChild(personPortrait(pe,{size:52}));
+    const tekst=document.createElement("div");
+    tekst.className="dl-tekst";
+    tekst.innerHTML='<b class="naam">'+esc(pe.name)+'</b>'
+      +(isV?'<span class="rol victim">Slachtoffer</span>':'')
+      +(pe.standingLabel?'<span class="rol '+esc(pe.standing||"")+'">'+esc(pe.standingLabel)+'</span>':'');
+    rij.appendChild(tekst);
+    host.appendChild(rij);
+  });
   /* Level- en spelerversie horen bij het foutspoor, niet in het dossier: ze
      staan daarom vast linksonder in #versieVoet en scrollen niet meer mee. */
   { const vv=$("#versieVoet");

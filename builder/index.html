@@ -84,7 +84,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 :focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:8px}
 
 /* ── Chrome ─────────────────────────────────────────── */
-.logomark{width:32px;height:32px;flex:0 0 auto;display:block}
+.logomark{width:32px;height:32px;flex:0 0 auto;display:block;object-fit:contain}
 .logomark .vak-accent{fill:var(--accent)}
 .logomark .lijn{stroke:var(--ink)}
 
@@ -1242,14 +1242,18 @@ textarea.inp{min-height:58px;resize:vertical}
 .pawn.forbidden{filter:drop-shadow(0 0 6px rgba(220,66,58,.95))}
 .pawn.forbidden .body{stroke:var(--crimson);stroke-width:7}
 /* Uiterlijk in de inspector: rond portret links, keuzes rechts. */
-.uiterlijk{display:flex;gap:12px;align-items:flex-start;margin:2px 0 4px}
-.uiterlijk-portret{flex:0 0 auto;width:64px;height:64px;border-radius:50%;overflow:hidden;
-  border:2.5px solid var(--pc,var(--edge));box-shadow:0 2px 6px rgba(21,26,51,.18)}
+.uiterlijk{display:flex;flex-direction:column;align-items:center;gap:10px;margin:4px 0 4px}
+.uiterlijk-portret{width:104px;height:104px;border-radius:50%;overflow:hidden;
+  border:3px solid var(--pc,var(--edge));box-shadow:0 3px 10px rgba(21,26,51,.2)}
 .uiterlijk-portret svg{width:100%;height:100%;display:block}
-.uiterlijk-keuzes{flex:1;min-width:0}
-.uiterlijk .check-row{margin:0 0 6px}
-.uiterlijk .check-chip{padding:5px 8px;font-size:11px}
-.haar-kleuren{display:flex;gap:6px;flex-wrap:wrap}
+/* Eén rij per kenmerk: pijl, waarde, pijl. Een volgend kenmerk krijgt
+   dezelfde rij eronder. */
+.uiterlijk-rij{display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.uiterlijk-pijl{width:30px;height:30px;border-radius:999px;border:1.5px solid var(--edge);background:var(--tint);
+  color:var(--ink);font:700 18px/1 var(--ui);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0 0 2px}
+.uiterlijk-pijl:hover{background:var(--tint-2)}
+.uiterlijk-waarde{min-width:150px;text-align:center;font:700 12.5px var(--ui);color:var(--ink)}
+.haar-kleuren{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
 .haar-swatch{width:22px;height:22px;border-radius:50%;border:2px solid var(--edge);cursor:pointer;padding:0;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
 .haar-swatch.on{border-color:var(--accent-diep);box-shadow:0 0 0 2px var(--accent-vlak)}
@@ -1755,7 +1759,7 @@ body[data-skin="donker"] .stage{background:transparent}
 <!-- Desktoppoort: verschijnt alleen op een smal of aanraakscherm. -->
 <div id="desktopPoort" role="dialog" aria-modal="true" aria-labelledby="poortKop">
   <div class="kaart">
-    <svg class="logomark" viewBox="0 0 64 64" aria-hidden="true"><rect class="vak-accent" x="10" y="10" width="17" height="17" rx="5"/><rect class="lijn" x="37" y="10" width="17" height="17" rx="5" fill="none" stroke-width="3"/><rect class="lijn" x="10" y="37" width="17" height="17" rx="5" fill="none" stroke-width="3"/><circle class="lijn" cx="45" cy="45" r="10" fill="none" stroke-width="3.2"/><path class="lijn" d="M52.4 52.4l6 6" stroke-width="4" stroke-linecap="round"/></svg>
+    <img class="logomark" src="../assets/brand/icon.png" alt="">
     <h1 id="poortKop">De bouwer werkt op de desktop</h1>
     <p>ClueBoard-levels bouw je op een groot scherm: het bord, de regels en
        de details staan naast elkaar en dat vraagt ruimte en een muis.</p>
@@ -1773,7 +1777,7 @@ body[data-skin="donker"] .stage{background:transparent}
   <a class="terug-menu" href="../menu/index.html" title="Terug naar het menu" aria-label="Terug naar het menu">
     <span data-ui-icon="back"></span>
   </a>
-  <svg class="logomark" viewBox="0 0 64 64" aria-hidden="true"><rect class="vak-accent" x="10" y="10" width="17" height="17" rx="5"/><rect class="lijn" x="37" y="10" width="17" height="17" rx="5" fill="none" stroke-width="3"/><rect class="lijn" x="10" y="37" width="17" height="17" rx="5" fill="none" stroke-width="3"/><circle class="lijn" cx="45" cy="45" r="10" fill="none" stroke-width="3.2"/><path class="lijn" d="M52.4 52.4l6 6" stroke-width="4" stroke-linecap="round"/></svg>
+  <img class="logomark" src="../assets/brand/icon.png" alt="">
   <button id="levelBtn" class="board-title" title="Naam en introtekst van dit level">
     <span id="boardTitleText">Naamloos level</span><span id="levelVersieBadge" class="level-versie" title="Hoeveelste export van dit level"></span><span class="pen" data-ui-icon="pencil"></span>
   </button>
@@ -1791,7 +1795,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v13</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v14</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -8882,18 +8886,19 @@ function renderInspector(){
           const voorbeeld = characterSvg({ name:c.name, gender:c.gender, color:personColor(p),
                                            hairStyle:kap.hairStyle, hairColor:kap.hairColor },
                                          { dood: role === 'victim' });
+          const stijlen = haarStijlenVoor(c.gender);
+          const huidige = stijlen.find(h => h.id === kap.hairStyle) || stijlen[0];
           html += '<label class="field">Uiterlijk</label>'+
             '<div class="uiterlijk">'+
               '<div class="uiterlijk-portret" style="--pc:'+e(personColor(p))+'">'+voorbeeld+'</div>'+
-              '<div class="uiterlijk-keuzes">'+
-                '<div class="check-row kapsels">'+
-                  haarStijlenVoor(c.gender).map(h =>
-                    '<button class="check-chip'+(kap.hairStyle===h.id?' on':'')+'" data-hair-style="'+e(h.id)+'">'+e(h.label)+'</button>').join('')+
-                '</div>'+
-                '<div class="haar-kleuren">'+
-                  haarKleuren().map(k =>
-                    '<button class="haar-swatch'+(kap.hairColor===k.id?' on':'')+'" data-hair-color="'+e(k.id)+'" title="'+e(k.label)+'" style="background:'+e(k.hex)+'"></button>').join('')+
-                '</div>'+
+              '<div class="uiterlijk-rij">'+
+                '<button class="uiterlijk-pijl" data-hair-prev title="Vorig kapsel">&#8249;</button>'+
+                '<span class="uiterlijk-waarde">'+e(huidige ? huidige.label : '')+'</span>'+
+                '<button class="uiterlijk-pijl" data-hair-next title="Volgend kapsel">&#8250;</button>'+
+              '</div>'+
+              '<div class="haar-kleuren">'+
+                haarKleuren().map(k =>
+                  '<button class="haar-swatch'+(kap.hairColor===k.id?' on':'')+'" data-hair-color="'+e(k.id)+'" title="'+e(k.label)+'" style="background:'+e(k.hex)+'"></button>').join('')+
               '</div>'+
             '</div>'+
             '<p class="field-note">'+(c.hairAuto === false
@@ -8948,14 +8953,21 @@ function wireInspector(box){
     renderUI();
   });
 
-  box.querySelectorAll('[data-hair-style]').forEach(b => b.onclick = () => {
+  const stapKapsel = richting => {
     if (!selectedEntity) return;
     snapshot();
     initContent();
     const c = S.content.people[selectedEntity.id];
-    c.hairStyle = b.dataset.hairStyle; c.hairAuto = false;
+    const lijst = haarStijlenVoor(c.gender);
+    if (!lijst.length) return;
+    const kap = persoonKapsel(c);
+    let i = lijst.findIndex(h => h.id === kap.hairStyle);
+    i = (i + richting + lijst.length) % lijst.length;
+    c.hairStyle = lijst[i].id; c.hairAuto = false;
     renderUI();
-  });
+  };
+  box.querySelectorAll('[data-hair-prev]').forEach(b => b.onclick = () => stapKapsel(-1));
+  box.querySelectorAll('[data-hair-next]').forEach(b => b.onclick = () => stapKapsel(+1));
   box.querySelectorAll('[data-hair-color]').forEach(b => b.onclick = () => {
     if (!selectedEntity) return;
     snapshot();

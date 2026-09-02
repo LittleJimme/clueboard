@@ -1,11 +1,11 @@
 {
   "levelNumber": 5,
-  "levelVersion": 6,
+  "levelVersion": 7,
   "levelId": "lvl-mtk57guwn6i9e",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-02T15:24:50.394Z",
+  "exportedAt": "2026-09-02T16:11:33.400Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -14,7 +14,8 @@
     "objects": "Een object is een aaneengesloten groep tegels met dezelfde status. type occupiable betekent dat er iemand op kan staan, zoals een stoel of een auto over twee tegels; type blocked is een object waar niemand op kan, zoals een tafel of een kast. Twee losse stoelen naast elkaar blijven twee objecten van één tegel.",
     "names": "name bevat de naam uit de builder, of null als die nog niet is ingevuld. content bevat dezelfde namen plus notities.",
     "intro": "content.intro is een korte sfeer-/introtekst voor de speler, geen puzzellogica. Leeg als die nog niet is ingevuld.",
-    "gender": "gender bij een persoon is \"male\" of \"female\", of null als dat nog niet is gekozen. Puur voor de speler (bv. voornaamwoorden), geen puzzellogica."
+    "gender": "gender bij een persoon is \"male\" of \"female\", of null als dat nog niet is gekozen. Puur voor de speler (bv. voornaamwoorden), geen puzzellogica.",
+    "appearance": "content.people[id].hairStyle en hairColor zijn ids uit de assetbank (hairStyles, hairColors); hairAuto false betekent zelf gekozen. attributes is een gereserveerd object voor latere kenmerken. Ontbreken de velden, dan kiezen speler en bouwer dezelfde vaste terugval uit naam en geslacht. Puur uiterlijk, geen puzzellogica."
   },
   "rules": {
     "onePersonPerRow": true,
@@ -1461,7 +1462,10 @@
         "gender": "female",
         "description": "",
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "crew-cut",
+        "hairColor": "auburn",
+        "hairAuto": true
       },
       "p2": {
         "name": "Benedict",
@@ -1470,7 +1474,10 @@
         "description": "",
         "nameLetter": "B",
         "genderAuto": true,
-        "nameAuto": false
+        "nameAuto": false,
+        "hairStyle": "bob",
+        "hairColor": "soft-black",
+        "hairAuto": true
       },
       "p3": {
         "name": "Colijn",
@@ -1478,7 +1485,10 @@
         "gender": "male",
         "description": "",
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "side-part",
+        "hairColor": "warm-brown",
+        "hairAuto": true
       },
       "p4": {
         "name": "Dina",
@@ -1486,7 +1496,10 @@
         "gender": "female",
         "description": "",
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "bald",
+        "hairColor": "soft-black",
+        "hairAuto": true
       },
       "p5": {
         "name": "Eleonora",
@@ -1494,7 +1507,10 @@
         "gender": "female",
         "description": "",
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "bob",
+        "hairColor": "soft-black",
+        "hairAuto": true
       },
       "p6": {
         "name": "Fulbert",
@@ -1502,7 +1518,10 @@
         "gender": "male",
         "description": "",
         "nameLetter": "F",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "swept-back",
+        "hairColor": "auburn",
+        "hairAuto": true
       },
       "p7": {
         "name": "Godelieve",
@@ -1510,7 +1529,10 @@
         "gender": "female",
         "description": "",
         "nameLetter": "G",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "shoulder-straight",
+        "hairColor": "silver",
+        "hairAuto": true
       },
       "p8": {
         "name": "Vastrad",
@@ -1518,7 +1540,10 @@
         "gender": "male",
         "description": "",
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "hairStyle": "undercut",
+        "hairColor": "soft-black",
+        "hairAuto": true
       }
     },
     "rooms": {
@@ -1748,6 +1773,7 @@
         "id": "clue-1",
         "scope": "person",
         "personId": "p1",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1766,6 +1792,7 @@
         "id": "clue-2",
         "scope": "person",
         "personId": "p2",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1784,6 +1811,7 @@
         "id": "clue-3",
         "scope": "person",
         "personId": "p3",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1802,6 +1830,7 @@
         "id": "clue-5",
         "scope": "person",
         "personId": "p4",
+        "locked": false,
         "terms": [
           {
             "not": true,
@@ -1832,6 +1861,7 @@
         "id": "clue-6",
         "scope": "person",
         "personId": "p5",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1850,6 +1880,7 @@
         "id": "clue-7",
         "scope": "person",
         "personId": "p6",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1868,6 +1899,7 @@
         "id": "clue-8",
         "scope": "person",
         "personId": "p7",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -2088,7 +2120,12 @@
       "holds": true
     }
   ],
-  "difficulty": null,
+  "difficulty": {
+    "graad": 5,
+    "label": "Niveau 5 van 5",
+    "uitleg": "Zwaar doorredeneren: lange kettingen van aannames.",
+    "sport": 7
+  },
   "solution": {
     "placements": [
       {
@@ -2130,7 +2167,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 2000,
+    "ms": 997,
     "override": {
       "op": "2026-09-02T15:24:42.947Z",
       "gemeten": {

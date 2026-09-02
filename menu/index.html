@@ -213,7 +213,13 @@ main{
    naam en niet als een zin. De Nederlandse regel eronder is de stem van
    het spel zelf en staat duidelijk apart, groter en in schuine inkt. */
 .titelblok{flex:0 0 auto;text-align:center;padding:10px 0 20px}
-.beeldmerk{width:38px;height:38px;display:block;margin:0 auto 8px}
+.beeldmerk{width:38px;height:38px;display:block;margin:0 auto 8px;object-fit:contain}
+/* De oude .woordmerk-tekstregel staat verderop en zet zelf een display; deze
+   selectors wegen zwaarder zodat er altijd precies één woordmerk staat. */
+img.woordmerk{display:block;height:34px;width:auto;margin:0 auto;font-size:0;letter-spacing:0}
+img.woordmerk.woordmerk-licht{display:none}
+html[data-thema="licht"] img.woordmerk.woordmerk-licht{display:block}
+html[data-thema="licht"] img.woordmerk.woordmerk-donker{display:none}
 .woordmerk{
   font-family:var(--font-display);font-weight:600;font-size:30px;
   letter-spacing:-.02em;line-height:1;color:var(--inkt);
@@ -544,16 +550,11 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 
 <main>
   <header class="titelblok">
-    <svg class="beeldmerk" viewBox="0 0 64 64" aria-hidden="true">
-      <rect class="vak-accent" x="10" y="10" width="17" height="17" rx="5"/>
-      <rect class="lijn" x="37" y="10" width="17" height="17" rx="5" fill="none" stroke-width="3"/>
-      <rect class="lijn" x="10" y="37" width="17" height="17" rx="5" fill="none" stroke-width="3"/>
-      <circle class="lijn" cx="45" cy="45" r="10" fill="none" stroke-width="3.2"/>
-      <path class="lijn" d="M52.4 52.4l6 6" stroke-width="4" stroke-linecap="round"/>
-    </svg>
-    <div class="woordmerk"><span class="w1">Clue</span>Board</div>
+    <img class="beeldmerk" src="../assets/brand/icon.png" alt="">
+    <img class="woordmerk woordmerk-donker" src="../assets/brand/logo-dark.png" alt="ClueBoard">
+    <img class="woordmerk woordmerk-licht" src="../assets/brand/logo.png" alt="ClueBoard">
     <div class="scheiding"></div>
-    <h1>Er is iemand <em>vermoord</em></h1>
+    <h1>De waarheid zit in de <em>details</em></h1>
   </header>
 
   <div class="filter-plak">
