@@ -1605,9 +1605,12 @@ body.in-game #btnCheck[disabled]{opacity:.5;filter:none;color:var(--goud-op)}
 /* Alleen als foutspoor bedoeld: zo klein mogelijk, in de hoek, maar wel
    altijd mee op een schermafdruk. */
 #versieVoet{
-  position:fixed;left:5px;bottom:calc(0px + env(safe-area-inset-bottom));
-  z-index:4;pointer-events:none;font:600 7.5px var(--font-ui);letter-spacing:.06em;
-  color:var(--dof);opacity:.32;
+  position:fixed;left:8px;bottom:calc(5px + env(safe-area-inset-bottom));
+  /* Boven de vellen uit (.modal staat op 70): het foutspoor moet ook op het
+     introscherm zichtbaar zijn, anders mist juist de schermafdruk waarop
+     iemand een probleem meldt zijn versienummer. */
+  z-index:80;pointer-events:none;font:600 8px var(--font-ui);letter-spacing:.06em;
+  color:var(--dof);opacity:.4;
 }
 /* Op het introscherm staat de versie al bij de startknop. */
 
@@ -2030,22 +2033,34 @@ body.in-game #modalIntro .intro-scroll{flex:1;min-height:0;overflow-y:auto;-webk
    Alles wat je nodig hebt om te spelen begint pas ná de haarlijn, dus je
    scrolt bewust door van "welke zaak is dit" naar "wat weet ik". */
 body.in-game #modalIntro .intro-kop{
-  min-height:100%;
   box-sizing:border-box;
-  display:flex;flex-direction:column;justify-content:flex-end;
-  /* Onderaan uitlijnen zou het blok tegen de vouw plakken en een leeg
-     bovenscherm geven; deze onderruimte tilt het naar de onderste helft en
-     laat meteen zien dat er nog iets onder zit. Meeschalend met de hoogte,
-     want op een korter scherm is 140px zonde. */
-  padding:48px 0 clamp(56px,14vh,112px);
-  /* Zonder dit is de bovenhelft een gat. Een heel zachte warme gloed achter
-     de titel geeft de leegte een middelpunt, zodat het als titelpagina leest
-     en niet als een layout die is mislukt. */
-  background:radial-gradient(ellipse 78% 42% at 50% 64%,rgba(201,147,47,.10),transparent 72%);
+  /* Geen volle schermvulling met het blok onderaan meer: dat zette de titel
+     te laag en liet bovendien een gat vallen tussen de tekst en de haarlijn.
+     Nu bepaalt alleen de bovenruimte de plek, en volgt de rest er direct op.
+     Meeschalend met de schermhoogte, want 140px is op een korte telefoon
+     zonde van de ruimte. */
+  padding:clamp(36px,17vh,132px) 0 clamp(28px,6vh,52px);
+  /* Een heel zachte warme gloed achter de titel, zodat de rust eromheen als
+     titelpagina leest en niet als een gat. */
+  background:radial-gradient(ellipse 82% 48% at 50% 44%,rgba(201,147,47,.10),transparent 72%);
 }
 html[data-thema="licht"] body.in-game #modalIntro .intro-kop{
-  background:radial-gradient(ellipse 78% 42% at 50% 64%,rgba(145,96,8,.07),transparent 72%);
+  background:radial-gradient(ellipse 82% 48% at 50% 44%,rgba(145,96,8,.07),transparent 72%);
 }
+/* De terugknop zweeft linksboven op het vel. Absoluut geplaatste kinderen
+   rekenen vanaf de rand van het vel, niet vanaf zijn padding, dus de
+   veilige zone van de telefoon moet er hier zelf bij. */
+body.in-game #modalIntro .intro-terug{
+  position:absolute;z-index:4;
+  left:0;top:calc(2px + env(safe-area-inset-top));
+  width:42px;height:42px;border-radius:999px;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--kaart-2);color:var(--inkt);border:1px solid var(--lijn);
+  box-shadow:var(--sch1);
+}
+body.in-game #modalIntro .intro-terug .ic,
+body.in-game #modalIntro .intro-terug svg{width:19px;height:19px}
+body.in-game #modalIntro .intro-terug:active{transform:translateY(1px);box-shadow:none}
 .intro-zaak{font:800 12px var(--font-ui);letter-spacing:.28em;text-transform:uppercase;color:var(--goud);margin-bottom:14px;min-height:14px}
 .intro-titel{margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(34px,10vw,54px);line-height:1.04;letter-spacing:-.015em;color:var(--inkt);text-wrap:balance}
 .intro-graad{display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:18px}
@@ -2056,7 +2071,10 @@ html[data-thema="licht"] body.in-game #modalIntro .intro-kop{
 /* Taps toelopend in plaats van een blokje: leest als een pennenstreek. */
 .intro-scheiding{width:64px;height:2px;margin:26px auto 22px;border-radius:2px;
   background:linear-gradient(90deg,transparent,var(--goud) 28%,var(--goud) 72%,transparent)}
-.intro-tekst{margin:0 auto;max-width:34em;color:var(--inkt-2);font-size:16.5px;line-height:1.62}
+/* Een em-maat alleen helpt niet op een telefoon: 34em is daar breder dan het
+   scherm, dus liep de tekst alsnog van rand tot rand. De procentmaat knijpt
+   hem ook op een smal scherm in, zodat er marge overblijft. */
+.intro-tekst{margin:0 auto;max-width:min(32em,84%);color:var(--inkt-2);font-size:16.5px;line-height:1.62}
 /* De overgang naar het dossier: één haarlijn die aan beide kanten wegvalt,
    zodat hij scheidt zonder een streep door de bladzijde te trekken. */
 .intro-breuk{height:1px;margin:0 0 28px;
@@ -2064,17 +2082,19 @@ html[data-thema="licht"] body.in-game #modalIntro .intro-kop{
 /* Ligt de telefoon plat of is het scherm laag, dan is een volle schermvulling
    aan cover verspilling: minder lucht, kleinere kop. */
 @media (max-height:620px){
-  body.in-game #modalIntro .intro-kop{min-height:0;padding:18px 0 26px}
+  body.in-game #modalIntro .intro-kop{padding:18px 0 22px}
   .intro-titel{font-size:clamp(28px,7vw,38px)}
   .intro-scheiding{margin:18px auto 16px}
 }
-.intro-kaart{display:flex;justify-content:center;margin:2px 0 16px}
+/* Meer lucht tussen de drie blokken onder de haarlijn: bordregels, wie
+   erbij waren, en het kaartje van het bord. Ze stonden op elkaar geplakt. */
+.intro-kaart{display:flex;justify-content:center;margin:34px 0 18px}
 .mini-kaart{display:grid;gap:2px}
 .mk-c{position:relative;aspect-ratio:1;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(90,70,40,.16)}
 .mk-c.leeg{background:none!important;box-shadow:none}
 .mk-c.blok{opacity:.5}
 .mk-c.blok::before{content:"";position:absolute;inset:24%;border-radius:2px;background:var(--dof);opacity:.85}
-.intro-bordregels{display:flex;flex-direction:column;gap:8px;text-align:left}
+.intro-bordregels{display:flex;flex-direction:column;gap:10px;text-align:left}
 .bordregel{display:flex;gap:10px;align-items:flex-start;background:rgba(201,147,47,.2);border:1px solid rgba(201,147,47,.5);border-left:4px solid var(--goud);
   border-radius:14px;padding:11px 13px;font-size:14.5px;font-weight:600;line-height:1.5;color:var(--inkt)}
 html[data-thema="licht"] .bordregel{background:rgba(145,96,8,.13);border-color:rgba(145,96,8,.38);border-left-color:var(--goud)}
@@ -2083,7 +2103,7 @@ html[data-thema="licht"] .bordregel{background:rgba(145,96,8,.13);border-color:r
 .bordregel.algemeen{background:none;border:0;padding:2px 6px;color:var(--dof);font-weight:600;font-size:13px}
 .bordregel.algemeen .ic{color:var(--dof)}
 /* Dezelfde markering als op het bord. */
-.deelnemers{display:flex;flex-wrap:wrap;gap:16px 6px;justify-content:center;padding:18px 0 4px}
+.deelnemers{display:flex;flex-wrap:wrap;gap:18px 6px;justify-content:center;padding:36px 0 4px}
 .deelnemer{display:flex;flex-direction:column;align-items:center;gap:5px;width:76px;text-align:center}
 .bord-fiche{
   position:relative;width:46px;height:46px;border-radius:999px;flex:0 0 auto;
@@ -2101,7 +2121,6 @@ html[data-thema="licht"] .bordregel{background:rgba(145,96,8,.13);border-color:r
 .deelnemer .naam{font-family:var(--font-display);font-weight:600;font-size:13.5px;line-height:1.1;color:var(--inkt)}
 .deelnemer .rol{font:800 9px var(--font-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--dof);min-height:11px}
 .deelnemer.slachtoffer .rol{color:#E58472}
-.intro-klein{margin-top:12px;font:600 11px var(--font-ui);color:var(--dof);letter-spacing:.04em}
 /* De knop hangt niet meer vast onder het vel maar staat onderaan IN de
    schuifkolom: je leest eerst het dossier en pakt de zaak daarna op. */
 body.in-game #modalIntro .rij-knoppen{display:flex;margin:24px 0 6px}
@@ -2417,9 +2436,16 @@ body.in-game .clue-card.done::before{background:var(--goud)}
 <div class="modal sheet-modal" id="modalIntro">
   <div class="backdrop" data-close></div>
   <div class="sheet intro-vel" id="introVel">
+    <!-- Het introvel dekt het hele scherm af, dus de terugknop in de spelkop
+         is hier onbereikbaar. Zonder deze knop zit je bij het openen van een
+         zaak vast: je kunt alleen nog beginnen. -->
+    <button class="intro-terug" id="btnIntroBack" type="button"
+            aria-label="Terug naar het menu" title="Terug naar het menu">
+      <span class="ic" data-icon="back"></span>
+    </button>
     <div class="intro-scroll" id="introScroll">
-      <!-- De cover: vult de eerste schermvulling. Alleen wie de zaak is,
-           verder niets, zodat je hem eerst op je in laat werken. -->
+      <!-- De cover: zaaknummer, titel, niveau en de intro. Alleen wie de zaak
+           is, verder niets, zodat je hem eerst op je in laat werken. -->
       <div class="intro-kop">
         <div class="intro-zaak" id="introZaak"></div>
         <h2 class="intro-titel" id="introTitel">—</h2>
@@ -2431,7 +2457,6 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       <div class="intro-bordregels" id="introBordregels"></div>
       <div class="deelnemers" id="introDeelnemers"></div>
       <div class="intro-kaart" id="introKaart"></div>
-      <div class="intro-klein" id="introBuild"></div>
       <div class="rij-knoppen"><button class="btn" id="btnBeginLevel">Begin de zaak</button></div>
     </div>
     <!-- Duwtje om verder te lezen: verschijnt pas als je een paar tellen niet
@@ -5240,7 +5265,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.15";
+const PLAYER_APP_VERSION="0.9.16";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -5560,9 +5585,12 @@ function showLevelDetail(levelIndex){
       +'<div class="naam">'+esc(pe.name)+'</div>'
       +'<div class="rol">'+(isV?'Slachtoffer':esc(pe.standingLabel||''))+'</div></div>';
   }).join("");
-  $("#introBuild").textContent=[
-    raw.levelVersion?("Level "+(raw.levelNumber?raw.levelNumber+"v":"v")+raw.levelVersion):"",
-    "Player "+PLAYER_APP_VERSION].filter(Boolean).join(" · ");
+  /* Level- en spelerversie horen bij het foutspoor, niet in het dossier: ze
+     staan daarom vast linksonder in #versieVoet en scrollen niet meer mee. */
+  { const vv=$("#versieVoet");
+    if(vv) vv.textContent=[
+      raw.levelVersion?("Level "+(raw.levelNumber?raw.levelNumber+"v":"v")+raw.levelVersion):"",
+      "Player "+PLAYER_APP_VERSION].filter(Boolean).join(" · "); }
 
   introOpen=true;
   openModal("#modalIntro");
@@ -5940,6 +5968,7 @@ $("#modalIntro .backdrop").addEventListener("click",sluitIntro);
 })();
 
 $("#btnGameBack").addEventListener("click",toMenu);
+$("#btnIntroBack").addEventListener("click",toMenu);
 $("#btnModeNote").addEventListener("click",()=>{ setMode("note"); if(tab!=="board") setTab("board"); });
 $("#btnModePlace").addEventListener("click",()=>{ setMode("place"); if(tab!=="board") setTab("board"); });
 $("#viewSwitch").addEventListener("click",()=>{ haptic(7); setTab(tab==="board"?"clues":"board"); });
