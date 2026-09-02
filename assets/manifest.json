@@ -2470,7 +2470,7 @@
       "name": "warning"
     }
   ],
-  "version": 20,
+  "version": 21,
   "floorArt": {
     "note": "Hoeveel tekeningen er per vloersoort klaarstaan in art/backgrounds/<thema>/. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.",
     "variants": {
@@ -2661,7 +2661,8 @@
     {
       "id": "braid",
       "label": "Vlecht",
-      "gender": "female"
+      "gender": "female",
+      "available": false
     },
     {
       "id": "half-up",
@@ -2701,5 +2702,5 @@
       "hex": "#A7A9AC"
     }
   ],
-  "characterNote": "Characters volgen de V4-master: rond portret, zachte ID-tint, verticale licht/donker-splitsing, geen ogen/neus/mond behalve twee kruisogen bij het slachtoffer. Per persoon staan hairStyle en hairColor in content.people; ontbreken ze, dan kiezen speler en bouwer dezelfde vaste terugval uit naam+geslacht. De laatste zes kapsels zijn alleen voor vrouwen. attributes is gereserveerd voor latere uitbreidingen."
+  "characterNote": "Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ (512px, zelfde canvas). Van achter naar voor: hoofd, shirt, haar, en alleen bij het slachtoffer de kruisogen; de lagen liggen 1:1 op elkaar, niets schuift. Shirt en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden."
 }
