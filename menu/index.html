@@ -305,6 +305,7 @@ html[data-thema="licht"] .titelblok h1 em::after{
 }
 .drop-menu button:hover{background:var(--kaart-2);color:var(--inkt)}
 .drop-menu button.aan{color:var(--inkt)}
+.drop-streep{height:1px;background:var(--lijn);margin:5px 8px}
 .drop-menu button .stipjes{display:flex;gap:3px;margin-left:auto}
 .drop-menu button .stipjes i{width:5px;height:5px;border-radius:50%;background:var(--lijn);font-style:normal}
 .drop-menu button .stipjes i.aan{background:var(--accent)}
@@ -316,13 +317,20 @@ html[data-thema="licht"] .titelblok h1 em::after{
 .level-list{
   flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
-  display:flex;flex-direction:column;gap:8px;padding-bottom:4px;
+  display:flex;flex-direction:column;gap:8px;
+  /* Geen balk; de randen van het venster zijn een verloop, zodat een kaart
+     onderaan opkomt en bovenaan oplost in plaats van afgesneden te worden. */
+  scrollbar-width:none;
+  padding:30px 0 44px;margin-top:-30px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 44px),transparent 100%);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 44px),transparent 100%);
 }
+.level-list::-webkit-scrollbar{display:none}
 .level-rij{
   position:relative;overflow:hidden;
   display:flex;align-items:center;gap:13px;text-decoration:none;
   background:var(--kaart);border:1px solid var(--lijn);border-radius:15px;
-  padding:13px 15px;box-shadow:var(--sch1);
+  padding:15px 16px;box-shadow:var(--sch1);
   transition:transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .18s,border-color .18s;
 }
 /* het thema als klein wapenschild in de hoek, op een zacht vlakje —
@@ -355,14 +363,23 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
   font:800 9.5px var(--font-ui);letter-spacing:.13em;text-transform:uppercase;
   color:var(--accent);
 }
-/* Uitgespeeld: een vinkje met je snelste tijd, in de accentkleur. */
-.klaar-tag{
-  display:inline-flex;align-items:center;gap:4px;
-  font:800 10px var(--font-ui);letter-spacing:.06em;color:var(--accent);
-  font-variant-numeric:tabular-nums;
-}
-.klaar-tag svg{width:11px;height:11px;flex:0 0 auto}
-.level-rij.voltooid .zaak-nr{border-color:var(--accent);color:var(--accent)}
+/* Het formaat staat rechts naast de pijl. */
+.rij-tags{flex:0 0 auto;display:flex;flex-direction:column;align-items:stretch;gap:5px}
+.rij-tags .grid-tag{text-align:center}
+/* Afgerond: het woord staat op de plek van de bolletjes, met je tijd erachter,
+   en de kaart zelf zakt een toon terug. Zo komen de open zaken naar voren en
+   hoeft er rechts niets meer bij. */
+.afgerond{display:inline-flex;align-items:center;gap:7px;color:var(--accent)}
+.afgerond svg{width:13px;height:13px;flex:0 0 auto}
+.afgerond b{font:800 10px var(--font-ui);letter-spacing:.14em;text-transform:uppercase}
+.afgerond span{font:700 12px var(--font-ui);font-variant-numeric:tabular-nums;color:var(--inkt-2)}
+.level-rij.voltooid{background:color-mix(in srgb,var(--kaart) 50%,var(--grond) 50%);box-shadow:none}
+.level-rij.voltooid h3{color:var(--inkt-2)}
+.level-rij.voltooid .zaak-nr{background:transparent;border-color:var(--accent);color:var(--accent)}
+.level-rij.voltooid .grid-tag{background:transparent}
+.zaak-nr{border-color:var(--accent);color:var(--accent)}
+/* Op een smal scherm is het vinkje met de tijd genoeg; het woord zou de
+   titel te veel ruimte kosten. */
 .zaak-nr{
   flex:0 0 auto;width:40px;height:40px;border-radius:11px;
   display:flex;align-items:center;justify-content:center;
@@ -372,7 +389,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 }
 .level-rij .midden{flex:1;min-width:0}
 .level-rij h3{font-size:18px;font-weight:600;color:var(--inkt);line-height:1.25;overflow-wrap:anywhere}
-.level-rij .onder{margin-top:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.level-rij .onder{margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .niveau-rij{display:flex;align-items:center;gap:3px}
 .niveau-rij i{width:6px;height:6px;border-radius:50%;background:var(--lijn);font-style:normal}
 .niveau-rij i.aan{background:var(--accent)}
@@ -423,6 +440,9 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
   text-transform:uppercase;color:var(--dof);margin-bottom:8px;
 }
 #stapKop{flex:0 0 auto}
+/* Titelkaart: alleen de kop, groot in het midden. */
+#modalUitleg .vel.titelkaart #stapKop{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;margin:0;padding:0;font-size:44px;line-height:1.1}
+#modalUitleg .vel.titelkaart .stap-teller,#modalUitleg .vel.titelkaart .stap-beeld,#modalUitleg .vel.titelkaart .stap-tekst{display:none}
 .stap-beeld{
   flex:0 0 214px;display:flex;align-items:center;justify-content:center;
   background:var(--kaart-2);border:1px solid var(--lijn-zacht);border-radius:16px;
@@ -476,6 +496,16 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
   animation:hbDruk 2.2s ease-in-out infinite}
 @keyframes hbDruk{0%{opacity:.15;transform:scale(.86)}55%{opacity:1;transform:scale(1)}75%,100%{opacity:0;transform:scale(1)}}
 .hb-c .kruis.komt{animation:hbKruis 2.2s ease-out infinite both}
+/* Een kring die opent: alleen de bolletjes, zonder inhoud. */
+.hb-ring{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;z-index:3}
+.hb-ring i{position:absolute;left:-8px;top:-8px;width:16px;height:16px;border-radius:50%;background:var(--kaart);border:2px solid var(--accent);box-shadow:0 2px 5px rgba(0,0,0,.3);
+  transform:rotate(var(--a)) translate(34px) scale(0);animation:hbRing 3s ease-out infinite}
+@keyframes hbRing{0%{transform:rotate(var(--a)) translate(34px) scale(0);opacity:0}18%{transform:rotate(var(--a)) translate(34px) scale(1);opacity:1}72%{transform:rotate(var(--a)) translate(34px) scale(1);opacity:1}86%,100%{transform:rotate(var(--a)) translate(34px) scale(0);opacity:0}}
+/* Notitie of plaats: kleine letter in de hoek en grote pion om de beurt. */
+.hb-c.wissel u.hoek{position:absolute;left:4px;top:2px;font-size:11px;animation:hbKlein 4s ease-in-out infinite}
+.hb-c.wissel i{animation:hbGroot 4s ease-in-out infinite}
+@keyframes hbKlein{0%,42%{opacity:.95;transform:scale(1)}50%,92%{opacity:0;transform:scale(.6)}100%{opacity:.95;transform:scale(1)}}
+@keyframes hbGroot{0%,42%{opacity:0;transform:scale(.5)}50%,92%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.5)}}
 @keyframes hbKruis{0%,8%{opacity:0;transform:scale(.4)}22%{opacity:1;transform:scale(1)}88%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1)}}
 .hb-c.gebied.g-nw{box-shadow:inset 3px 3px 0 #2A2118,inset 0 0 0 1px rgba(28,33,64,.13)}
 .hb-c.gebied.g-no{box-shadow:inset -3px 3px 0 #2A2118,inset 0 0 0 1px rgba(28,33,64,.13)}
@@ -575,7 +605,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
     <div class="drop" id="filterDrop">
       <button class="mini-knop" id="filterKnop" type="button" aria-haspopup="true" aria-expanded="false" title="Filter op niveau">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75L12 16.9l-5.2 2.7 1-5.75-4.2-4.1 5.8-.85z"/></svg>
-        <span id="filterLabel">Niveau</span>
+        <span id="filterLabel">Filter</span>
       </button>
       <div class="drop-menu" id="filterMenu"></div>
     </div>
@@ -718,8 +748,10 @@ function helpBord(regels, opt){
       const licht=(o.licht||[]).some(p=>p[0]===x&&p[1]===y);
       const geb=(o.gebied||[]).find(p=>p[0]===x&&p[1]===y);
       const tik=(o.tik||[]).some(p=>p[0]===x&&p[1]===y);
+      const ring=(o.ring||[]).some(p=>p[0]===x&&p[1]===y);
+      const wissel=(o.wissel||[]).find(p=>p[0]===x&&p[1]===y);
       const druk=(o.druk||[]).some(p=>p[0]===x&&p[1]===y);
-      let cls="hb-c"+(licht?" licht":"")+(geb?" gebied "+geb[2]:"")+(tik?" tik":"")+(druk?" druk":"");
+      let cls="hb-c"+(licht?" licht":"")+(geb?" gebied "+geb[2]:"")+(tik?" tik":"")+(druk?" druk":"")+(ring?" ring":"")+(wissel?" wissel":"");
       let inner="";
       if(c==="#") cls+=" blok";
       else if(c==="_") cls+=" leeg";
@@ -734,6 +766,10 @@ function helpBord(regels, opt){
         const k=HB_KLEUREN[c.toUpperCase()]||"#8A93A6";
         inner='<u style="color:'+k+'">'+c.toUpperCase()+'</u>';
       }
+      /* Een kring die opent, alleen de bolletjes; en de wissel tussen de
+         kleine letter in de hoek (notitie) en de grote pion (plaats). */
+      if(ring) inner+='<span class="hb-ring">'+[0,1,2,3,4,5].map(i=>'<i style="--a:'+(i*60-90)+'deg;animation-delay:'+(i*70)+'ms"></i>').join("")+'</span>';
+      if(wissel){ const km=/background:(#[0-9a-fA-F]{6})/.exec(inner); inner+='<u class="hoek"'+(km?' style="color:'+km[1]+'"':'')+'>'+wissel[2]+'</u>'; }
       h+='<span class="'+cls+'">'+inner+'</span>';
     });
   });
@@ -826,11 +862,11 @@ const UITLEG_SETS = {
       +"edelen staan altijd daar, dorpelingen nooit, en ridders mogen overal.")
   ],
   spelen: [
-    R(helpBord(["....",".A..","....","...."],{tik:[[1,1]]}),
+    R(helpBord(["....","....","....","...."],{tik:[[1,1]],ring:[[1,1]]}),
       "Tik een vak aan",
       "Tik op een vak van het bord. Er opent een kring met alle personen.",
       "Kies daarin wie je op dat vak wilt zetten."),
-    R(helpBord(["....",".a..","....","...."],{licht:[[1,1]]}),
+    R(helpBord(["....",".A..","....","...."],{wissel:[[1,1,"A"]]}),
       "Notitie of plaats",
       "Onderin staat de schuif <b>Notitie</b> en <b>Plaats</b>.",
       "In <b>Notitie</b> zet je alleen de letter van iemand neer: een mogelijkheid die je nog niet zeker weet.",
@@ -850,25 +886,35 @@ const UITLEG_SETS = {
   ]
 };
 let uitlegSet="regels";
-let UITLEG_STAPPEN=UITLEG_SETS.regels;
+/* Eén doorlopende reeks: een titelkaart, de spelregels, een titelkaart, en
+   hoe je speelt. De keuze bovenin springt naar de titelkaart van dat deel;
+   de knop onderaan loopt er gewoon doorheen en sluit aan het eind. */
+const UITLEG_STAPPEN=[{titel:"De Spelregels",set:"regels"}]
+  .concat(UITLEG_SETS.regels.map(s=>Object.assign({set:"regels"},s)))
+  .concat([{titel:"Zo speel je",set:"spelen"}])
+  .concat(UITLEG_SETS.spelen.map(s=>Object.assign({set:"spelen"},s)));
 
 let uitlegStap=0;
 function tekenUitleg(){
+  uitlegStap=Math.max(0,Math.min(UITLEG_STAPPEN.length-1,uitlegStap));
   const s=UITLEG_STAPPEN[uitlegStap];
-  $("#stapTeller").textContent="Stap "+(uitlegStap+1)+" van "+UITLEG_STAPPEN.length;
-  $("#stapKop").textContent=s.kop;
-  $("#stapBeeld").innerHTML=s.beeld;      /* eigen vaste inhoud, geen levelinvoer */
-  $("#stapTekst").innerHTML=s.tekst;      /* idem */
-  $("#stapBolletjes").innerHTML=UITLEG_STAPPEN.map((_,i)=>'<i class="'+(i===uitlegStap?"aan":"")+'"></i>').join("");
+  uitlegSet=s.set;
+  document.querySelectorAll("#uitlegKeuze button").forEach(b=>b.classList.toggle("aan",b.dataset.set===s.set));
+  $("#modalUitleg .vel").classList.toggle("titelkaart",!!s.titel);
+  const deel=UITLEG_STAPPEN.filter(x=>x.set===s.set&&!x.titel), i=deel.indexOf(s);
+  $("#stapTeller").textContent=s.titel?"":"Stap "+(i+1)+" van "+deel.length;
+  $("#stapKop").textContent=s.titel||s.kop;
+  $("#stapBeeld").innerHTML=s.titel?"":s.beeld;      /* eigen vaste inhoud, geen levelinvoer */
+  $("#stapTekst").innerHTML=s.titel?"":s.tekst;      /* idem */
+  $("#stapBolletjes").innerHTML=s.titel?"":deel.map((_,j)=>'<i class="'+(j===i?"aan":"")+'"></i>').join("");
   $("#stapTerug").disabled=uitlegStap===0;
-  const laatste=uitlegStap===UITLEG_STAPPEN.length-1;
-  $("#stapVerder").textContent="Volgende →";
-  $("#stapVerder").disabled=laatste;
+  const volgende=UITLEG_STAPPEN[uitlegStap+1];
+  $("#stapVerder").textContent=!volgende ? "Sluiten" : volgende.titel ? volgende.titel+" →" : "Volgende →";
+  $("#stapVerder").disabled=false;
 }
 function zetUitlegSet(k){
   if(!UITLEG_SETS[k]) return;
-  uitlegSet=k; UITLEG_STAPPEN=UITLEG_SETS[k]; uitlegStap=0;
-  document.querySelectorAll("#uitlegKeuze button").forEach(b=>b.classList.toggle("aan",b.dataset.set===k));
+  uitlegSet=k; uitlegStap=Math.max(0,UITLEG_STAPPEN.findIndex(s=>s.titel&&s.set===k));
   tekenUitleg();
 }
 $("#uitlegKeuze").addEventListener("click",e=>{
@@ -879,11 +925,16 @@ $("#btnUitleg").addEventListener("click",()=>{ zetUitlegSet("regels"); openModal
 $("#stapTerug").addEventListener("click",()=>{ if(uitlegStap>0){ uitlegStap--; tekenUitleg(); } });
 $("#stapVerder").addEventListener("click",()=>{
   if(uitlegStap<UITLEG_STAPPEN.length-1){ uitlegStap++; tekenUitleg(); }
+  else sluitModal($("#modalUitleg"));
 });
 $("#stapBolletjes").addEventListener("click",e=>{
   const alle=[...$("#stapBolletjes").children];
   const i=alle.indexOf(e.target);
-  if(i>=0){ uitlegStap=i; tekenUitleg(); }
+  if(i>=0){
+    const s=UITLEG_STAPPEN[uitlegStap], deel=UITLEG_STAPPEN.filter(x=>x.set===s.set&&!x.titel);
+    if(deel[i]) uitlegStap=UITLEG_STAPPEN.indexOf(deel[i]);
+    tekenUitleg();
+  }
 });
 
 /* ============================================================
@@ -946,6 +997,7 @@ function nieuwsteVersies(items){
 
 let alleLevels=[];       /* gesorteerd; index+1 = vast zaaknummer */
 let actieveFilter=0;
+let alleenOpen=false;   /* alleen zaken die je nog niet hebt afgerond */
 let sorteer="nr";        /* "nr" (zaaknummer) of "titel" (A–Z) */
 
 /* Wat je van een zaak hebt afgerond staat in de browser van deze telefoon,
@@ -996,7 +1048,17 @@ function maakLevelRij(entry){
   midden.appendChild(h);
   const onder=document.createElement("div"); onder.className="onder";
   const g=levelGraad(raw);
-  if(g){
+  const vt=voltooidVan(raw);
+  if(vt){
+    /* Afgerond: het woord en je snelste tijd op de plek van de zwaarte. Hoe
+       zwaar hij was doet er niet meer toe; dat je hem hebt opgelost wel. */
+    a.classList.add("voltooid");
+    const af=document.createElement("span"); af.className="afgerond";
+    af.title="Afgerond in "+tijdTekst(vt.tijd);
+    af.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.6 4.5L19 7.5"/></svg>'
+      +'<b>Afgerond</b><span>'+tijdTekst(vt.tijd)+'</span>';
+    onder.appendChild(af);
+  } else if(g){
     const nv=document.createElement("span"); nv.className="niveau-rij"; nv.title=g.uitleg||("Niveau "+g.graad);
     nv.innerHTML=[1,2,3,4,5].map(n=>'<i class="'+(n<=g.graad?"aan":"")+'"></i>').join("");
     onder.appendChild(nv);
@@ -1004,16 +1066,6 @@ function maakLevelRij(entry){
     const tag=document.createElement("span"); tag.className="demo-tag";
     tag.textContent=GRAAD_WOORD[g.graad]||("Niveau "+g.graad);
     onder.appendChild(tag);
-  }
-  /* Afgerond? Dan een vinkje met je tijd achter het niveau. */
-  const vt=voltooidVan(raw);
-  if(vt){
-    a.classList.add("voltooid");
-    const kl=document.createElement("span"); kl.className="klaar-tag";
-    kl.title="Uitgespeeld in "+tijdTekst(vt.tijd);
-    kl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.6 4.5L19 7.5"/></svg>'
-      +'<span>'+tijdTekst(vt.tijd)+'</span>';
-    onder.appendChild(kl);
   }
   if(onder.children.length) midden.appendChild(onder);
   /* Geen introtekst op de kaart: elke zaak toont hier alleen zijn titel,
@@ -1029,10 +1081,13 @@ function maakLevelRij(entry){
     a.appendChild(hoek);
   }
 
+  const tags=document.createElement("span"); tags.className="rij-tags";
+
   const grid=raw.puzzle.grid;
   const tag=document.createElement("span"); tag.className="grid-tag";
   tag.textContent=grid.columns+"×"+grid.rows;
-  a.appendChild(tag);
+  tags.appendChild(tag);
+  a.appendChild(tags);
 
   const pijl=document.createElement("span"); pijl.className="pijl";
   pijl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.6l6.4 6.4L9 18.4"/></svg>';
@@ -1045,9 +1100,29 @@ function tekenFilter(){
   const menu=$("#filterMenu"), knop=$("#filterKnop"), label=$("#filterLabel");
   const aanwezig=[1,2,3,4,5].filter(n=>
     alleLevels.some(e=>{ const g=levelGraad(e.raw); return g && g.graad===n; }));
-  if(aanwezig.length<=1){ $("#filterDrop").style.display="none"; return; }
+  const ietsAfgerond=alleLevels.some(e=>voltooidVan(e.raw));
+  /* De keuzelijst verdwijnt alleen als er niets te kiezen valt: één niveau
+     én nog niets afgerond. */
+  if(aanwezig.length<=1 && !ietsAfgerond){ $("#filterDrop").style.display="none"; return; }
   $("#filterDrop").style.display="";
   menu.innerHTML="";
+  if(ietsAfgerond){
+    const b=document.createElement("button");
+    b.type="button"; b.className=(alleenOpen?"aan":"");
+    const vink=document.createElement("span"); vink.className="vink";
+    vink.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+    const tekst=document.createElement("span"); tekst.textContent="Alleen open zaken";
+    b.appendChild(vink); b.appendChild(tekst);
+    b.onclick=()=>{
+      alleenOpen=!alleenOpen;
+      $("#filterDrop").classList.remove("open");
+      knop.setAttribute("aria-expanded","false");
+      tekenFilter(); tekenLijst();
+    };
+    menu.appendChild(b);
+    const streep=document.createElement("div"); streep.className="drop-streep";
+    menu.appendChild(streep);
+  }
   [{n:0,l:"Alle niveaus"}].concat(aanwezig.map(n=>({n,l:"Niveau "+n}))).forEach(c=>{
     const b=document.createElement("button");
     b.type="button"; b.className=(actieveFilter===c.n?"aan":"");
@@ -1068,8 +1143,9 @@ function tekenFilter(){
     };
     menu.appendChild(b);
   });
-  knop.classList.toggle("aan", !!actieveFilter);
-  label.textContent = actieveFilter ? ("Niveau "+actieveFilter) : "Niveau";
+  knop.classList.toggle("aan", !!actieveFilter || alleenOpen);
+  label.textContent = actieveFilter ? ("Niveau "+actieveFilter)
+                    : alleenOpen ? "Open" : "Filter";
 }
 $("#filterKnop").addEventListener("click",e=>{
   e.stopPropagation();
@@ -1086,6 +1162,7 @@ document.addEventListener("click",e=>{
 function tekenLijst(){
   const lijst=$("#levelList");
   const zichtbaar=alleLevels.filter(e=>{
+    if(alleenOpen && voltooidVan(e.raw)) return false;
     if(!actieveFilter) return true;
     const g=levelGraad(e.raw);
     return g && g.graad===actieveFilter;
