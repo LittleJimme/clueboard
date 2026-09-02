@@ -321,6 +321,13 @@ html[data-thema="licht"] .titelblok h1 em::after{
   mask-image:linear-gradient(to bottom,transparent 0,#000 40px,#000 calc(100% - 18px),transparent 100%);
 }
 .level-list::-webkit-scrollbar{display:none}
+/* Breed scherm: de zaken in twee kolommen, de kop wat lager. */
+@media (min-width:1100px) and (min-height:600px){
+  main{max-width:1080px}
+  .titelblok{padding-bottom:16px}
+  .level-list{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;align-content:start}
+  .level-rij{margin:0}
+}
 .level-rij{
   position:relative;overflow:hidden;
   /* Nooit krimpen: de lijst is een flexkolom en een kaart met overflow:hidden

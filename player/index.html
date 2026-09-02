@@ -1734,6 +1734,86 @@ body.in-game .mode-switch button{padding:0 19px;height:44px;min-width:62px}
 body.in-game .mode-switch button svg{width:20px;height:20px}
 body.in-game.op-regels .mode-switch{opacity:.45;transition:opacity .2s}
 body.in-game .mode-switch{transition:opacity .2s}
+/* ══════════════════════════════════════════════════════
+   Desktop: regels links, bord rechts, niets scrolt behalve de regelkolom.
+   ------------------------------------------------------
+   Vanaf 1100 px breed en 600 px hoog (body.desktop, gezet in zetDesktop):
+   de kop over de volle breedte, links een eigen kolom met de regels, rechts
+   het bord dat zich naar de vrije ruimte schaalt, en de voet alleen onder
+   het bord. Wisselen tussen bord en regels is er niet meer, want beide staan
+   er. Een tik op een vakje zoomt niet in; het radiaal opent gewoon om het
+   vakje heen. Alles daaronder (tablet, staand, klein venster) blijft de
+   mobiele opzet, want die is gemaakt voor veel tekst op weinig ruimte.
+   ══════════════════════════════════════════════════════ */
+/* Alles wat alleen op desktop bestaat is buiten die stand onzichtbaar. */
+#pane-detail,.kop-titel,.bord-tip{display:none}
+body.desktop #app{max-width:none;width:100%}
+body.desktop.in-game #screen-game{
+  display:grid;
+  grid-template-columns:minmax(350px,410px) minmax(0,1fr) minmax(320px,380px);
+  grid-template-rows:auto minmax(0,1fr) auto;
+  align-items:stretch;
+}
+/* Kop over de volle breedte: terug, de zaak, Controleer, klok en knoppen. */
+body.desktop.in-game .game-head{grid-column:1/4;grid-row:1;grid-template-columns:40px minmax(0,1fr) auto auto;padding:14px 22px 10px;gap:14px;opacity:1;color:var(--inkt)}
+body.desktop.in-game .kop-titel{display:flex;align-items:baseline;gap:12px;min-width:0;padding-left:4px}
+body.desktop.in-game .kop-titel b{font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--inkt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.desktop.in-game .kop-titel span{font:800 11px var(--font-ui);letter-spacing:.2em;text-transform:uppercase;color:var(--goud);white-space:nowrap}
+body.desktop.in-game .kop-midden{justify-content:flex-end}
+body.desktop.in-game .game-head .kop-check{max-width:none}
+body.desktop.in-game .pane{display:flex;animation:none}
+/* Links: de regels, met een eigen schuifbalk. */
+body.desktop.in-game #pane-clues{grid-column:1;grid-row:2/4;min-height:0;border-right:1px solid var(--lijn-zacht)}
+body.desktop.in-game #cluesList{flex:1;min-height:0;overflow-y:auto;padding:12px 16px 32px;scrollbar-width:thin}
+/* Een kaart is op desktop één klikvlak; de band rechts en het slepen zijn
+   telefoongebaren. De gekozen kaart draagt een gouden rand. */
+body.desktop.in-game .clue-card{cursor:pointer;padding-right:14px}
+body.desktop.in-game .clue-card .info,body.desktop.in-game .clue-row.victim .info{display:none}
+body.desktop.in-game .clue-row.victim{padding-right:14px;cursor:pointer}
+body.desktop.in-game .clue-card .memo-merk{right:10px}
+body.desktop.in-game .clue-card .notitie-merk{right:10px}
+body.desktop.in-game .clue-card.geselecteerd,body.desktop.in-game .clue-row.victim.geselecteerd,body.desktop.in-game .clue-card.board.geselecteerd{box-shadow:0 0 0 2px var(--goud),var(--sch1)}
+/* Midden: het bord met daaronder de werkbalk. */
+body.desktop.in-game #pane-board{grid-column:2;grid-row:2;min-height:0;padding:8px 24px 0}
+body.desktop.in-game .tabbar{
+  grid-column:2;grid-row:3;grid-template-columns:auto minmax(0,1fr) auto;
+  border-top:0;padding:10px 24px 18px;gap:16px;
+}
+body.desktop.in-game .tabbar .view-switch,body.desktop.in-game .voet-links{display:none}
+body.desktop.in-game .mode-bar{grid-column:1;justify-content:flex-start}
+body.desktop.in-game .mode-switch{flex:0 0 auto;width:auto}
+body.desktop.in-game .mode-switch button .lbl{display:inline}
+body.desktop.in-game .mode-switch button{padding:0 20px;min-width:0;gap:8px}
+body.desktop.in-game .bord-tip{display:block;grid-column:2;font:600 12.5px var(--font-ui);color:var(--dof);line-height:1.4;padding-right:8px}
+body.desktop.in-game .bord-tip b{color:var(--inkt-2);font-weight:800}
+/* Op een smaller desktopvenster is er minder ruimte naast de schakelaar. */
+@media (max-width:1360px){ body.desktop.in-game .bord-tip{font-size:11.5px;line-height:1.35} }
+/* De hintknop staat in de werkbalk, niet zwevend over het bord. */
+body.desktop.in-game .hint-knop{left:auto;right:24px;bottom:14px;width:46px;height:46px}
+/* Rechts: het detailpaneel, altijd open. */
+body.desktop.in-game #pane-detail{display:flex;grid-column:3;grid-row:2/4;min-height:0;border-left:1px solid var(--lijn-zacht)}
+body.desktop.in-game #detailBody{flex:1;min-height:0;overflow-y:auto;padding:16px 20px 30px;scrollbar-width:thin;text-align:left}
+body.desktop.in-game #detailBody .pd-sluit,body.desktop.in-game #detailBody .row{display:none}
+body.desktop.in-game #detailBody .pd-kop{padding-right:0;gap:12px}
+body.desktop.in-game #detailBody .pd-naam{font-size:28px}
+body.desktop.in-game #detailBody .pd-portret{padding:4px 0}
+body.desktop.in-game #detailBody .detail-kop{font:800 10px var(--font-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--dof);margin:0 0 8px}
+body.desktop.in-game #detailBody .detail-leeg{margin:0 0 18px;padding:12px 14px;border-radius:12px;background:var(--kaart-2);border:1px dashed var(--lijn);color:var(--inkt-2);font-size:13.5px;line-height:1.5}
+body.desktop.in-game #detailBody .pd-regels+.detail-kop{margin-top:18px}
+body.desktop.in-game #detailBody .legend-row{padding:6px 0}
+body.desktop.in-game #detailBody .sheet-greep,body.desktop.in-game #detailBody .sheet-kop{display:none}
+/* Instellingen als klein dialoogvenster in plaats van een vel van onderen. */
+body.desktop .sheet-modal{align-items:center;padding:24px}
+body.desktop .sheet-modal .sheet{max-width:440px;border-radius:22px;transform:none;box-shadow:var(--sch2)}
+body.desktop .sheet-modal .sheet .sheet-greep{display:none}
+/* Het introvel als kolom in het midden, met een lijntje aan weerszijden;
+   de deelnemers krijgen wat meer lucht. */
+body.desktop.in-game #modalIntro .sheet{max-width:760px;margin:0 auto;border-left:1px solid var(--lijn-zacht);border-right:1px solid var(--lijn-zacht)}
+body.desktop.in-game .deelnemers{max-width:560px}
+body.desktop.in-game #modalIntro .intro-kop{padding-top:clamp(40px,12vh,110px)}
+/* De uitslag als kolom in het midden. */
+body.desktop #screen-end .uitslag,body.desktop #screen-end .uitslag-voet{width:100%;max-width:640px;margin-left:auto;margin-right:auto}
+
 /* Te smal voor woorden: dan alleen de pictogrammen. */
 @media (max-width:360px){
   body.in-game .view-switch .vs-txt{display:none}
@@ -2433,6 +2513,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
          het level kleurt alleen het bord. -->
     <div class="game-head">
       <button class="kop-knop" id="btnGameBack" aria-label="Terug naar het menu" title="Terug naar het menu"><span class="ic" data-icon="back"></span></button>
+      <div class="kop-titel" id="kopTitel"></div>
       <div class="kop-midden">
         <button class="kop-check" id="btnCheck" title="Controleer je oplossing"><span class="ic" data-icon="check"></span><span class="lbl">Controleer</span><span class="teller" id="kopStand"></span></button>
       </div>
@@ -2457,6 +2538,11 @@ body.in-game .clue-card.done::before{background:var(--goud)}
     <!-- Regels -->
     <div class="pane" id="pane-clues"><div id="cluesList"></div></div>
 
+    <!-- Detail (alleen op desktop): staat altijd open. Zonder keuze de
+         bordregels en de legenda; na een klik op een persoon zijn regels,
+         notities en waar hij staat. -->
+    <aside class="pane" id="pane-detail"><div id="detailBody"></div></aside>
+
     <!-- De voet: legenda als icoon links, de schuifschakelaar Notitie/Plaats
          in het midden, de wissel naar de regels rechts. -->
     <div class="tabbar">
@@ -2470,6 +2556,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
           <button id="btnModePlace" aria-pressed="false"><span class="ic" data-icon="pawn"></span><span class="lbl">Plaats</span></button>
         </div>
       </div>
+      <span class="bord-tip" id="bordTip"></span>
       <button class="view-switch" id="viewSwitch">
         <span class="vs-ic" id="vsIcon"></span>
         <span class="vs-txt" id="vsTekst">Regels</span>
@@ -4143,6 +4230,7 @@ function tekenKopStand(){
   if(knop) knop.classList.toggle("klaar",placed.size===M.people.length && M.people.length>0);
 }
 function paintBoard(){
+  if(isDesktop()) setTimeout(tekenDetail,0);
   tekenKopStand();
   const pawnHost=$("#pawns"); if(pawnHost) pawnHost.innerHTML="";
   const bb=M.bounds;
@@ -4280,9 +4368,12 @@ function attachTileInput(el,tileId){
   const cancel=()=>{ clearTimeout(timer); timer=null; el.classList.remove("pressing"); };
   el.addEventListener("pointerdown",e=>{
     if(revealed) return;
+    if(e.button!==0) return;             /* rechtermuisknop heeft zijn eigen weg */
     /* Onder een open radiaal menu doet het vakje in het gat niets: slepen
        daarvandaan sluit het menu, en dat hoort niet ook nog een kruis te zetten. */
     if($("#radial").classList.contains("open")) return;
+    /* Desktop: shift-klik zet meteen een kruisje, zonder vasthouden. */
+    if(isDesktop() && e.shiftKey){ fired=true; toggleCross(tileId); return; }
     fired=false; moved=false; veeg=null; sx=e.clientX; sy=e.clientY;
     try{ el.setPointerCapture(e.pointerId); }catch(x){}
     el.classList.add("pressing");
@@ -4322,7 +4413,8 @@ function attachTileInput(el,tileId){
     if(!timer) return;
     if(Math.abs(e.clientX-sx)>10||Math.abs(e.clientY-sy)>10){ moved=true; cancel(); }
   });
-  el.addEventListener("pointerup",()=>{
+  el.addEventListener("pointerup",e=>{
+    if(e.button!==0){ cancel(); return; }
     const wasFired=fired, wasMoved=moved;
     cancel(); veeg=null;
     if(wasFired||wasMoved||revealed) return;
@@ -4338,8 +4430,23 @@ function attachTileInput(el,tileId){
     openTileMenu(tileId,el);
   });
   el.addEventListener("pointercancel",()=>{ moved=true; cancel(); veeg=null; });
-  el.addEventListener("contextmenu",e=>e.preventDefault());
+  /* Desktop: de rechtermuisknop opent de kring in de andere stand — sta je
+     op plaatsen, dan zet je zo een notitie, en andersom. */
+  el.addEventListener("contextmenu",e=>{
+    e.preventDefault();
+    if(!isDesktop()||revealed) return;
+    if($("#radial").classList.contains("open")) return;
+    cancel(); veeg=null;
+    const t=M.tiles.get(tileId);
+    if(t&&t.status==="blocked"){ shakeTile(el.querySelector(".objart")||el.querySelector(".objicon")||el); return; }
+    radialOverride=(mode==="note")?"place":"note";
+    openTileMenu(tileId,el);
+  });
 }
+/* De stand waarin de kring open staat: meestal de gewone stand, na een
+   rechtermuisklik tijdelijk de andere. */
+let radialOverride=null;
+function radialMode(){ return radialOverride||mode; }
 
 function toggleCross(tileId){
   if(!M.tiles.get(tileId)) return;
@@ -4366,6 +4473,13 @@ function basisPlek(el, stage){
 
 function zoomToTile(tileEl){
   const stage=$("#boardStage"), vp=$("#boardViewport");
+  /* Op een breed scherm is het bord al groot genoeg: niet inzoomen, alleen
+     meten waar het vakje staat, en daar komt de ring omheen. */
+  if(isDesktop()){
+    stage.style.transform="";
+    const r=tileEl.getBoundingClientRect();
+    return { x:r.left+r.width/2, y:r.top+r.height/2, w:r.width, h:r.height };
+  }
   const vr=vp.getBoundingClientRect();
   const sw=stage.offsetWidth, sh=stage.offsetHeight;
   /* Linkerbovenhoek van het bord zoals het zonder vergroting zou liggen. */
@@ -4413,6 +4527,7 @@ function openTileMenu(tileId,el){
 }
 function closeRadial(){
   clearTimeout(radialOpenTimer);
+  radialOverride=null;
   $("#radial").classList.remove("open");
   document.body.classList.remove("radiaal-open");
   /* Het objectlabel hoort bij dít vakje; laat het niet staan voor het volgende. */
@@ -4478,7 +4593,14 @@ function openRadial(center,tileId){
      de hulpknop. */
   const SPAN=Math.PI*1.55;
   const size=Math.min(window.innerWidth,window.innerHeight);
-  const radius=Math.max(94,Math.min(190,size/2-34-18));
+  let radius=Math.max(94,Math.min(190,size/2-34-18));
+  /* Op desktop staat het vakje waar het staat, niet in het midden van het
+     scherm: bij een vakje aan de rand krimpt de ring dan mee, zodat geen
+     enkele knop buiten beeld valt (boven de kop, onder de naam meegerekend). */
+  if(isDesktop()){
+    const rand=Math.min(center.x-52, window.innerWidth-center.x-52, center.y-96, window.innerHeight-center.y-84);
+    radius=Math.max(94,Math.min(radius,rand));
+  }
   /* Knoppen mogen elkaar niet raken: de afstand tussen twee buren op de ring
      is de bovengrens. Bij veel personen worden ze dus vanzelf kleiner, en de
      naam en de rol eronder krimpen mee. */
@@ -4522,7 +4644,7 @@ function openRadial(center,tileId){
   /* De hulpknop staat in de opening onderaan de ring. */
   const util=document.createElement("button");
   util.style.left="0px"; util.style.top=Math.round(radius*0.68)+"px";
-  if(mode==="place"){
+  if(radialMode()==="place"){
     const occ=personOnTile(tileId);
     util.className="rbtn util remove";
     util.innerHTML=icon("trash",{sw:2.1});
@@ -4784,7 +4906,7 @@ function personButton(p,tileId,t,x,y){
     b.appendChild(badge);
   }
 
-  if(mode==="note"){
+  if(radialMode()==="note"){
     const marked=!!(notes.get(tileId)||{marks:new Map()}).marks.get(p.id);
     if(marked||placed.get(p.id)) b.classList.add("taken");
     b.addEventListener("click",()=>{
@@ -5068,6 +5190,9 @@ function personCard(clues,p,done){
   info.innerHTML=icon("chevron",{sw:2.4});
   info.addEventListener("click",e=>{ e.stopPropagation(); showClueDetail(clues,p); });
   card.appendChild(info);
+  /* Op desktop is de hele kaart de knop naar het paneel rechts. */
+  card.addEventListener("click",()=>{ if(isDesktop()) showClueDetail(clues,p); });
+  if(isDesktop() && detailSel && detailSel.p && detailSel.p.id===p.id) card.classList.add("geselecteerd");
   return card;
 }
 
@@ -5094,6 +5219,7 @@ function renderClues(){
       .map(c=>'<span class="regel'+(isAlgemeneRegel(c.text)?' algemeen':'')+'">'+highlightClueText(c.text)+'</span>').join("");
     /* Geen pijl: de hele kaart opent het venster. */
     card.addEventListener("click",()=>showClueDetail(M.boardClues,null));
+    if(isDesktop() && detailSel && !detailSel.p && detailSel.cs && detailSel.cs.length) card.classList.add("geselecteerd");
     list.appendChild(card);
   }
 
@@ -5146,6 +5272,7 @@ function renderClues(){
     info.innerHTML=icon("chevron",{sw:2.4});
     row.appendChild(info);
     row.addEventListener("click",()=>showClueDetail(M.victimClue,victimBoven));
+    if(isDesktop() && detailSel && detailSel.p && detailSel.p.id===victimBoven.id) row.classList.add("geselecteerd");
     list.appendChild(row);
   }
 }
@@ -5208,10 +5335,11 @@ function rolHint(p){
   const mv=r?r.labelPlural:"Zij";
   return mv.charAt(0).toUpperCase()+mv.slice(1)+" komen nooit in een gebied voor edelen.";
 }
-function showClueDetail(cs,p){
-  if(cs && !Array.isArray(cs)) cs=[cs];
-  cs=(cs||[]).filter(Boolean);
-  const box=$("#clueDetail");
+/* Wat er in het detailpaneel of het detailvenster staat: dezelfde opbouw,
+   twee bestemmingen. Op desktop staat het paneel rechts altijd open; op de
+   telefoon is het een venster dat je open- en dichtklikt. */
+let detailSel=null;            /* {cs,p} van wat er nu in het paneel staat */
+function detailHtml(cs,p){
   let html='<button class="sheet-sluit pd-sluit" type="button" data-close aria-label="Sluiten">'+icon("cross",{sw:2.2})+'</button>';
   if(p){
     const isV=p.id===M.victimId;
@@ -5252,32 +5380,87 @@ function showClueDetail(cs,p){
       +'</div></div>';
   }
   html+='<div class="row"><button class="btn" data-close>Sluiten</button></div>';
-  box.innerHTML=html;
-  if(p){
-    const h=box.querySelector(".pd-portret"); if(h) h.appendChild(personPortrait(p,{size:100}));
-    const ta=box.querySelector("#pdNotitie");
-    if(ta){
-      ta.value=persoonNotitie(p.id);
-      /* Zo hoog als de tekst: leeg is het één regel, en het groeit mee. */
-      const groei=()=>{ ta.style.height="44px"; ta.style.height=Math.max(44,ta.scrollHeight)+"px"; };
-      groei(); requestAnimationFrame(groei);
-      let wacht=null;
-      ta.addEventListener("input",()=>{ groei(); clearTimeout(wacht); wacht=setTimeout(()=>bewaarNotitie(p.id,ta.value),250); });
-      ta.addEventListener("blur",()=>{ clearTimeout(wacht); bewaarNotitie(p.id,ta.value); });
-      /* Bij sluiten meteen bewaren en het merkje op de kaart bijwerken. */
-      $$("[data-close]",$("#modalClue")).forEach(el=>el.addEventListener("click",()=>{
-        clearTimeout(wacht); bewaarNotitie(p.id,ta.value);
-        if(tab==="clues") renderClues();
-      },{once:true}));
-    }
+  return html;
+}
+/* Portret en notitieveld tot leven brengen in de gegeven bak. */
+function bindDetail(box,p){
+  if(!p) return;
+  const h=box.querySelector(".pd-portret"); if(h) h.appendChild(personPortrait(p,{size:100}));
+  const ta=box.querySelector("#pdNotitie");
+  if(!ta) return;
+  ta.value=persoonNotitie(p.id);
+  /* Zo hoog als de tekst: leeg is het één regel, en het groeit mee. */
+  const groei=()=>{ ta.style.height="44px"; ta.style.height=Math.max(44,ta.scrollHeight)+"px"; };
+  groei(); requestAnimationFrame(groei);
+  let wacht=null;
+  ta.addEventListener("input",()=>{ groei(); clearTimeout(wacht); wacht=setTimeout(()=>bewaarNotitie(p.id,ta.value),250); });
+  ta.addEventListener("blur",()=>{ clearTimeout(wacht); bewaarNotitie(p.id,ta.value); if(tab==="clues"||isDesktop()) renderClues(); });
+  return ()=>{ clearTimeout(wacht); bewaarNotitie(p.id,ta.value); };
+}
+function showClueDetail(cs,p){
+  if(cs && !Array.isArray(cs)) cs=[cs];
+  cs=(cs||[]).filter(Boolean);
+  if(isDesktop()){ toonDetail(cs,p); return; }
+  const box=$("#clueDetail");
+  box.innerHTML=detailHtml(cs,p);
+  const bewaar=bindDetail(box,p);
+  if(bewaar){
+    /* Bij sluiten meteen bewaren en het merkje op de kaart bijwerken. */
+    $$("[data-close]",$("#modalClue")).forEach(el=>el.addEventListener("click",()=>{
+      bewaar(); if(tab==="clues"||isDesktop()) renderClues();
+    },{once:true}));
   }
   openModal("#modalClue");
+}
+/* Het paneel rechts op desktop. */
+function toonDetail(cs,p){
+  detailSel={cs:cs||[],p:p||null};
+  tekenDetail();
+  renderClues();
+}
+function tekenDetail(){
+  const box=$("#detailBody");
+  if(!box||!M) return;
+  /* Tijdens het typen niet onder iemands vingers vandaan hertekenen. */
+  const ta=box.querySelector("#pdNotitie");
+  if(ta && document.activeElement===ta) return;
+  if(detailSel && (detailSel.p || (detailSel.cs&&detailSel.cs.length))){
+    box.innerHTML=detailHtml(detailSel.cs,detailSel.p);
+    bindDetail(box,detailSel.p);
+    return;
+  }
+  /* Niets gekozen: wat over het hele bord gaat, en de legenda. */
+  let html='<div class="detail-leeg">Klik links op een persoon om zijn regels, je notities en zijn plek hier te zien. Klik op het bord om te plaatsen.</div>';
+  if(M.boardClues.length){
+    html+='<div class="detail-kop">'+(M.boardClues.length>1?'Bordregels':'Bordregel')+'</div>'
+      +'<div class="pd-regels">'+M.boardClues.map(c=>'<div class="pd-regel"><span class="ic">'+AssetBank.ui("badge")+'</span><div>'+highlightClueText(c.text)+'</div></div>').join("")+'</div>';
+  }
+  html+='<div class="detail-kop" style="margin-top:18px">Legenda</div>'+legendaHtml();
+  box.innerHTML=html;
+  hydrateLegenda(box);
 }
 
 function showLegend(){
   const box=$("#legendBody");
-  let html='<div class="sheet-greep"></div><div class="sheet-kop"><h3>Legenda</h3>'
-    +'<button class="sheet-sluit" type="button" aria-label="Sluiten">'+icon("cross",{sw:2.2})+'</button></div>';
+  box.innerHTML='<div class="sheet-greep"></div><div class="sheet-kop"><h3>Legenda</h3>'
+    +'<button class="sheet-sluit" type="button" aria-label="Sluiten">'+icon("cross",{sw:2.2})+'</button></div>'
+    +legendaHtml();
+  const sluit=box.querySelector(".sheet-sluit");
+  if(sluit) sluit.addEventListener("click",()=>closeModal($("#modalLegend")));
+  hydrateLegenda(box);
+}
+/* Dezelfde eigen tekeningen ophalen als het bord gebruikt; laadt er geen,
+   dan blijft het lijnpictogram staan — net als op het bord. */
+function hydrateLegenda(box){
+  $$(".legend-icon[data-obj-kind]",box).forEach(host=>{
+    const kind=host.getAttribute("data-obj-kind");
+    const w=parseInt(host.getAttribute("data-obj-w"),10)||1;
+    const h=parseInt(host.getAttribute("data-obj-h"),10)||1;
+    mountAsset(host,objectAssetCandidates(kind,w,h),host,"has-art");
+  });
+}
+function legendaHtml(){
+  let html='';
 
   if(M.rooms.size){
     html+='<div class="legend-sep">Ruimtes</div>';
@@ -5334,18 +5517,7 @@ function showLegend(){
   if(blocked.size){
     html+='<div class="legend-sep">Niet-bezetbare objecten</div>'+objGrid(blocked,"blocked");
   }
-
-  box.innerHTML=html;
-  const sluit=box.querySelector(".sheet-sluit");
-  if(sluit) sluit.addEventListener("click",()=>closeModal($("#modalLegend")));
-  /* Dezelfde eigen tekeningen ophalen als het bord gebruikt; laadt er geen,
-     dan blijft het lijnpictogram staan — net als op het bord. */
-  $$("#legendBody .legend-icon[data-obj-kind]").forEach(host=>{
-    const kind=host.getAttribute("data-obj-kind");
-    const w=parseInt(host.getAttribute("data-obj-w"),10)||1;
-    const h=parseInt(host.getAttribute("data-obj-h"),10)||1;
-    mountAsset(host,objectAssetCandidates(kind,w,h),host,"has-art");
-  });
+  return html;
 }
 /* Legenda en instellingen delen hetzelfde bottom-sheet-gedrag: dezelfde knop
    nogmaals klikken, of ernaast tikken, sluit het paneel weer. De knop zelf
@@ -5376,9 +5548,22 @@ function setMode(m){
   $("#btnModePlace").classList.toggle("active",m==="place");
   $("#btnModePlace").setAttribute("aria-pressed",m==="place");
   $("#modeSwitch").classList.toggle("place",m==="place");
+  const tip=$("#bordTip");
+  if(tip) tip.innerHTML = m==="note"
+    ? '<b>Klik</b> op een vak zet een notitie · <b>rechtermuisknop</b> plaatst · <b>shift-klik</b> zet een kruisje · <b>N</b>/<b>P</b> wisselt de stand'
+    : '<b>Klik</b> op een vak plaatst iemand · <b>rechtermuisknop</b> zet een notitie · <b>shift-klik</b> zet een kruisje · <b>N</b>/<b>P</b> wisselt de stand';
   closeRadial();
   paintBoard();
 }
+/* Sneltoetsen op desktop: N en P voor de stand, Escape sluit de kring. */
+document.addEventListener("keydown",e=>{
+  if(!isDesktop()||!M) return;
+  const inVeld=/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||"");
+  if(e.key==="Escape"){ if($("#radial").classList.contains("open")){ closeRadial(); e.preventDefault(); } return; }
+  if(inVeld||e.metaKey||e.ctrlKey||e.altKey) return;
+  if(e.key==="n"||e.key==="N"){ setMode("note"); }
+  else if(e.key==="p"||e.key==="P"){ setMode("place"); }
+});
 function setTab(t){
   tab=t;
   /* De legenda, de instellingen en het oogjespaneel horen bij de weergave waar
@@ -5391,7 +5576,8 @@ function setTab(t){
      voetbalk niet, en een tik erop brengt je meteen terug naar het bord. */
   document.body.classList.toggle("op-regels",t==="clues");
   updateViewSwitch();
-  if(t==="clues") renderClues();
+  if(t==="clues"||isDesktop()) renderClues();
+  if(isDesktop()) tekenDetail();
   if(t==="board") setTimeout(fitBoard,0);
 }
 /* De schakelknop blijft altijd op dezelfde plek en grootte; alleen de
@@ -5426,7 +5612,7 @@ function updateActionState(){
   /* Controleer mag altijd: wie te vroeg drukt ziet gewoon wat er nog fout
      of leeg staat. */
   $("#btnCheck").disabled=false;
-  if(tab==="clues") renderClues();
+  if(tab==="clues"||isDesktop()) renderClues();
 }
 function allCorrectlyPlaced(){
   return M.people.every(p=>{
@@ -5628,7 +5814,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.34";
+const PLAYER_APP_VERSION="0.9.36";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -5924,6 +6110,8 @@ function showLevelDetail(levelIndex){
   const gr=levelGraad(raw);
   $("#introZaak").textContent=raw.levelNumber?("Zaak "+raw.levelNumber):(raw.demo?"Voorbeeldzaak":"");
   $("#introTitel").textContent=c.title||"Naamloos niveau";
+  { const kt=$("#kopTitel"); if(kt) kt.innerHTML='<b>'+esc(c.title||"Naamloos niveau")+'</b>'+(raw.levelNumber?'<span>Zaak '+raw.levelNumber+'</span>':(raw.demo?'<span>Voorbeeldzaak</span>':'')); }
+  detailSel=null;
   $("#introGraad").innerHTML=gr
     ? '<span class="stippen">'+[1,2,3,4,5].map(n=>'<i class="'+(n<=gr.graad?"aan":"")+'"></i>').join("")+'</span>'
       +'<span class="woord">'+esc(GRAAD_WOORD[gr.graad]||("Niveau "+gr.graad))+'</span>'
@@ -6411,6 +6599,33 @@ $("#btnIntroBack").addEventListener("click",toMenu);
 $("#btnModeNote").addEventListener("click",()=>{ setMode("note"); if(tab!=="board") setTab("board"); });
 $("#btnModePlace").addEventListener("click",()=>{ setMode("place"); if(tab!=="board") setTab("board"); });
 $("#viewSwitch").addEventListener("click",()=>{ haptic(7); setTab(tab==="board"?"clues":"board"); });
+
+/* ── Desktop of niet ──────────────────────────────────
+   Breed én hoog genoeg: dan staan regels en bord naast elkaar. De grens ligt
+   bewust hoog (1100 x 600): een tablet in staande stand, een half venster of
+   een laag schermpje houdt de mobiele opzet, want die is gemaakt voor veel
+   tekst op weinig ruimte. Wisselt het venster van maat, dan wisselt de
+   indeling mee en past het bord zich opnieuw. */
+const DESKTOP_MQ=window.matchMedia("(min-width:1100px) and (min-height:600px)");
+function isDesktop(){ return document.body.classList.contains("desktop"); }
+function zetDesktop(){
+  const aan=DESKTOP_MQ.matches;
+  const was=isDesktop();
+  document.body.classList.toggle("desktop",aan);
+  if(!M) return;
+  if(aan){
+    closeRadial();
+    if(tab!=="board") setTab("board"); else renderClues();
+  } else if(was){
+    closeRadial();
+  }
+  setTimeout(fitBoard,0);
+}
+DESKTOP_MQ.addEventListener("change",zetDesktop);
+/* Niet elke browser vuurt de mediaquery-wissel betrouwbaar bij het slepen
+   van een venster; de gewone resize-gebeurtenis vangt dat op. */
+window.addEventListener("resize",zetDesktop);
+zetDesktop();
 
 $("#btnSettings").addEventListener("click",()=>toggleSheet("modalSettings"));
 $("#btnLegend").addEventListener("click",()=>toggleSheet("modalLegend"));
