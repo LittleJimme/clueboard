@@ -313,9 +313,11 @@ html[data-thema="licht"] .titelblok h1 em::after{
   /* Geen balk; de randen van het venster zijn een verloop, zodat een kaart
      onderaan opkomt en bovenaan oplost in plaats van afgesneden te worden. */
   scrollbar-width:none;
-  padding:40px 0 44px;
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 40px,#000 calc(100% - 44px),transparent 100%);
-  mask-image:linear-gradient(to bottom,transparent 0,#000 40px,#000 calc(100% - 44px),transparent 100%);
+  /* Alleen bovenaan een verloop, zodat kaarten oplossen voor ze de filterrij
+     raken. Onderaan niets: kaarten komen gewoon van onderen in beeld. */
+  padding:40px 0 calc(12px + env(safe-area-inset-bottom));
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 40px,#000 100%);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 40px,#000 100%);
 }
 .level-list::-webkit-scrollbar{display:none}
 .level-rij{
