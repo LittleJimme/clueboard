@@ -305,6 +305,7 @@ html[data-thema="licht"] .titelblok h1 em::after{
 }
 .drop-menu button:hover{background:var(--kaart-2);color:var(--inkt)}
 .drop-menu button.aan{color:var(--inkt)}
+.drop-streep{height:1px;background:var(--lijn);margin:5px 8px}
 .drop-menu button .stipjes{display:flex;gap:3px;margin-left:auto}
 .drop-menu button .stipjes i{width:5px;height:5px;border-radius:50%;background:var(--lijn);font-style:normal}
 .drop-menu button .stipjes i.aan{background:var(--accent)}
@@ -355,14 +356,27 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
   font:800 9.5px var(--font-ui);letter-spacing:.13em;text-transform:uppercase;
   color:var(--accent);
 }
-/* Uitgespeeld: een vinkje met je snelste tijd, in de accentkleur. */
+/* Afgerond: een gevulde tag naast het formaat, met het woord en je snelste
+   tijd eronder. Gevuld en niet alleen een vinkje, zodat het echt als status
+   leest en niet als nog een label. */
+/* Afgerond en formaat onder elkaar, rechts uitgelijnd naast de pijl. */
+.rij-tags{flex:0 0 auto;display:flex;flex-direction:column;align-items:stretch;gap:5px}
+.rij-tags .grid-tag{text-align:center}
+/* Afgerond: een gevuld label, zodat het als status leest en niet als nog
+   een grijs kaartje. */
 .klaar-tag{
-  display:inline-flex;align-items:center;gap:4px;
-  font:800 10px var(--font-ui);letter-spacing:.06em;color:var(--accent);
-  font-variant-numeric:tabular-nums;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  background:var(--accent-vlak,var(--accent));color:var(--accent-op,#231819);
+  border:1px solid var(--accent-diep,var(--accent));border-radius:8px;
+  padding:4px 8px;white-space:nowrap;
 }
-.klaar-tag svg{width:11px;height:11px;flex:0 0 auto}
+.klaar-tag svg{width:12px;height:12px;flex:0 0 auto}
+.klaar-tag b{font:800 8.5px var(--font-ui);letter-spacing:.09em;text-transform:uppercase}
+.klaar-tag span{font:700 11.5px var(--font-ui);font-variant-numeric:tabular-nums}
 .level-rij.voltooid .zaak-nr{border-color:var(--accent);color:var(--accent)}
+/* Op een smal scherm is het vinkje met de tijd genoeg; het woord zou de
+   titel te veel ruimte kosten. */
+@media (max-width:420px){ .klaar-tag b{display:none} }
 .zaak-nr{
   flex:0 0 auto;width:40px;height:40px;border-radius:11px;
   display:flex;align-items:center;justify-content:center;
@@ -946,6 +960,7 @@ function nieuwsteVersies(items){
 
 let alleLevels=[];       /* gesorteerd; index+1 = vast zaaknummer */
 let actieveFilter=0;
+let alleenOpen=false;   /* alleen zaken die je nog niet hebt afgerond */
 let sorteer="nr";        /* "nr" (zaaknummer) of "titel" (A–Z) */
 
 /* Wat je van een zaak hebt afgerond staat in de browser van deze telefoon,
@@ -1005,16 +1020,6 @@ function maakLevelRij(entry){
     tag.textContent=GRAAD_WOORD[g.graad]||("Niveau "+g.graad);
     onder.appendChild(tag);
   }
-  /* Afgerond? Dan een vinkje met je tijd achter het niveau. */
-  const vt=voltooidVan(raw);
-  if(vt){
-    a.classList.add("voltooid");
-    const kl=document.createElement("span"); kl.className="klaar-tag";
-    kl.title="Uitgespeeld in "+tijdTekst(vt.tijd);
-    kl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.6 4.5L19 7.5"/></svg>'
-      +'<span>'+tijdTekst(vt.tijd)+'</span>';
-    onder.appendChild(kl);
-  }
   if(onder.children.length) midden.appendChild(onder);
   /* Geen introtekst op de kaart: elke zaak toont hier alleen zijn titel,
      zodat de lijst één ritme houdt. Het verhaal begint in de player. */
@@ -1029,10 +1034,25 @@ function maakLevelRij(entry){
     a.appendChild(hoek);
   }
 
+  /* De tags staan onder elkaar in één kolom: naast elkaar hielden ze op een
+     telefoon te weinig over voor de titel, die dan middenin een woord afbrak.
+     Afgerond staat bovenaan, het formaat eronder. */
+  const tags=document.createElement("span"); tags.className="rij-tags";
+  const vt=voltooidVan(raw);
+  if(vt){
+    a.classList.add("voltooid");
+    const kl=document.createElement("span"); kl.className="klaar-tag";
+    kl.title="Afgerond in "+tijdTekst(vt.tijd);
+    kl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.6 4.5L19 7.5"/></svg>'
+      +'<b>Afgerond</b><span>'+tijdTekst(vt.tijd)+'</span>';
+    tags.appendChild(kl);
+  }
+
   const grid=raw.puzzle.grid;
   const tag=document.createElement("span"); tag.className="grid-tag";
   tag.textContent=grid.columns+"×"+grid.rows;
-  a.appendChild(tag);
+  tags.appendChild(tag);
+  a.appendChild(tags);
 
   const pijl=document.createElement("span"); pijl.className="pijl";
   pijl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.6l6.4 6.4L9 18.4"/></svg>';
@@ -1045,9 +1065,29 @@ function tekenFilter(){
   const menu=$("#filterMenu"), knop=$("#filterKnop"), label=$("#filterLabel");
   const aanwezig=[1,2,3,4,5].filter(n=>
     alleLevels.some(e=>{ const g=levelGraad(e.raw); return g && g.graad===n; }));
-  if(aanwezig.length<=1){ $("#filterDrop").style.display="none"; return; }
+  const ietsAfgerond=alleLevels.some(e=>voltooidVan(e.raw));
+  /* De keuzelijst verdwijnt alleen als er niets te kiezen valt: één niveau
+     én nog niets afgerond. */
+  if(aanwezig.length<=1 && !ietsAfgerond){ $("#filterDrop").style.display="none"; return; }
   $("#filterDrop").style.display="";
   menu.innerHTML="";
+  if(ietsAfgerond){
+    const b=document.createElement("button");
+    b.type="button"; b.className=(alleenOpen?"aan":"");
+    const vink=document.createElement("span"); vink.className="vink";
+    vink.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+    const tekst=document.createElement("span"); tekst.textContent="Alleen open zaken";
+    b.appendChild(vink); b.appendChild(tekst);
+    b.onclick=()=>{
+      alleenOpen=!alleenOpen;
+      $("#filterDrop").classList.remove("open");
+      knop.setAttribute("aria-expanded","false");
+      tekenFilter(); tekenLijst();
+    };
+    menu.appendChild(b);
+    const streep=document.createElement("div"); streep.className="drop-streep";
+    menu.appendChild(streep);
+  }
   [{n:0,l:"Alle niveaus"}].concat(aanwezig.map(n=>({n,l:"Niveau "+n}))).forEach(c=>{
     const b=document.createElement("button");
     b.type="button"; b.className=(actieveFilter===c.n?"aan":"");
@@ -1068,8 +1108,9 @@ function tekenFilter(){
     };
     menu.appendChild(b);
   });
-  knop.classList.toggle("aan", !!actieveFilter);
-  label.textContent = actieveFilter ? ("Niveau "+actieveFilter) : "Niveau";
+  knop.classList.toggle("aan", !!actieveFilter || alleenOpen);
+  label.textContent = actieveFilter ? ("Niveau "+actieveFilter)
+                    : alleenOpen ? "Open" : "Niveau";
 }
 $("#filterKnop").addEventListener("click",e=>{
   e.stopPropagation();
@@ -1086,6 +1127,7 @@ document.addEventListener("click",e=>{
 function tekenLijst(){
   const lijst=$("#levelList");
   const zichtbaar=alleLevels.filter(e=>{
+    if(alleenOpen && voltooidVan(e.raw)) return false;
     if(!actieveFilter) return true;
     const g=levelGraad(e.raw);
     return g && g.graad===actieveFilter;

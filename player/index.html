@@ -1751,6 +1751,21 @@ body.in-game .modal:not(.sheet-modal) .btn{
   font-family:var(--font-display);font-weight:600;font-size:16.5px;letter-spacing:0;height:46px;padding:0 18px;
   box-shadow:var(--sch1);text-shadow:none;flex:1}
 body.in-game .modal:not(.sheet-modal) .btn.ghost{background:var(--kaart-2);color:var(--inkt);border:1px solid var(--lijn);box-shadow:none}
+/* De keuzerijen in "Wie is de dader?" stonden nog op de lichte tokens uit de
+   basisopmaak: witte kaarten met een lichte rand op een donker vel. Ze delen
+   nu de kaartkleur van het spel, en de naam staat in de schreefletter waarin
+   namen overal staan. */
+body.in-game .opt{
+  background:var(--kaart-2);border:1px solid var(--lijn);color:var(--inkt);
+  box-shadow:none;border-radius:14px;
+}
+body.in-game .opt .av{border-color:var(--lijn)}
+body.in-game .opt b{font-family:var(--font-display);font-weight:600;font-size:16px;letter-spacing:0;color:var(--inkt)}
+body.in-game .opt.selected{border-color:var(--goud);background:var(--kaart);
+  box-shadow:0 0 0 2px rgba(201,147,47,.28)}
+body.in-game .modal:not(.sheet-modal) .btn.danger{
+  background:var(--zaak-rood,#C0564A);color:#FFF;border:1px solid rgba(0,0,0,.28);box-shadow:none}
+body.in-game .modal:not(.sheet-modal) .btn[disabled]{opacity:.45}
 body.in-game .modal:not(.sheet-modal) .btn:active{transform:translateY(1px);box-shadow:none}
 /* De skin legt op elk vak een kamerwaas in ::after; het geselecteerde vak
    moet daar bovenuit komen, dus hier met meer gewicht. */
@@ -5450,7 +5465,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.24";
+const PLAYER_APP_VERSION="0.9.25";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
