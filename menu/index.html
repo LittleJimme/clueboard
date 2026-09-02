@@ -181,6 +181,8 @@ main,.balk{position:relative;z-index:1}
   display:flex;align-items:center;gap:11px;min-height:58px;
 }
 .balk-rechts{margin-left:auto;display:flex;gap:8px}
+.balk-links{display:flex;gap:8px;align-items:center}
+.plus-knop svg{width:17px;height:17px}
 .knop{
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
   border:1px solid var(--lijn);border-radius:999px;background:var(--kaart);
@@ -264,7 +266,8 @@ html[data-thema="licht"] .titelblok h1 em::after{
 
 /* ---------- filterregel boven de lijst ---------- */
 .filter-plak{
-  flex:0 0 auto;padding:2px 0 12px;display:flex;align-items:center;gap:9px;
+  position:relative;z-index:2;
+  flex:0 0 auto;padding:2px 0 0;display:flex;align-items:center;gap:9px;
 }
 .lijst-teller{flex:1;min-width:0;color:var(--dof);font:800 11px var(--font-ui);
   letter-spacing:.14em;text-transform:uppercase}
@@ -289,6 +292,7 @@ html[data-thema="licht"] .titelblok h1 em::after{
   transition:all .15s;
 }
 .mini-knop svg{width:13px;height:13px}
+.mini-knop[hidden]{display:none}
 .mini-knop:hover{border-color:var(--accent-lijn);color:var(--inkt-2)}
 .mini-knop.aan{background:var(--inkt);border-color:var(--inkt);color:var(--grond)}
 .drop-menu{
@@ -321,9 +325,9 @@ html[data-thema="licht"] .titelblok h1 em::after{
   /* Geen balk; de randen van het venster zijn een verloop, zodat een kaart
      onderaan opkomt en bovenaan oplost in plaats van afgesneden te worden. */
   scrollbar-width:none;
-  padding:30px 0 44px;margin-top:-30px;
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 44px),transparent 100%);
-  mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 44px),transparent 100%);
+  padding:40px 0 44px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 40px,#000 calc(100% - 44px),transparent 100%);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 40px,#000 calc(100% - 44px),transparent 100%);
 }
 .level-list::-webkit-scrollbar{display:none}
 .level-rij{
@@ -334,7 +338,7 @@ html[data-thema="licht"] .titelblok h1 em::after{
   flex:0 0 auto;
   display:flex;align-items:center;gap:13px;text-decoration:none;
   background:var(--kaart);border:1px solid var(--lijn);border-radius:15px;
-  padding:18px 16px;box-shadow:var(--sch1);
+  padding:15px 16px;box-shadow:var(--sch1);
   transition:transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .18s,border-color .18s;
 }
 /* het thema als klein wapenschild in de hoek, op een zacht vlakje —
@@ -379,7 +383,8 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .afgerond span{font:700 12px var(--font-ui);font-variant-numeric:tabular-nums;color:var(--inkt-2)}
 .level-rij.voltooid{background:color-mix(in srgb,var(--kaart) 50%,var(--grond) 50%);box-shadow:none}
 .level-rij.voltooid h3{color:var(--inkt-2)}
-.level-rij.voltooid .zaak-nr{background:transparent;border-color:var(--accent);color:var(--accent)}
+.level-rij.voltooid .zaak-nr{background:var(--accent);border-color:var(--accent);color:#fff}
+.level-rij.voltooid .zaak-nr svg{width:22px;height:22px;display:block}
 .level-rij.voltooid .grid-tag{background:transparent}
 .zaak-nr{border-color:var(--accent);color:var(--accent)}
 /* Op een smal scherm is het vinkje met de tijd genoeg; het woord zou de
@@ -541,8 +546,7 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
 /* De kleurschakelaar staat links in dezelfde voet: hij hoort bij de app,
    niet bij het kiezen van een zaak. */
 .thema-knop{
-  position:absolute;left:0;top:14px;
-  width:34px;height:34px;padding:0;border-radius:999px;
+  width:38px;height:38px;padding:0;border-radius:999px;
   border:1px solid var(--lijn);background:var(--kaart);box-shadow:var(--sch1);
   display:inline-flex;align-items:center;justify-content:center;
   transition:border-color .15s;
@@ -593,8 +597,14 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
 
 <div class="balk">
   <div class="balk-in">
+    <div class="balk-links">
+      <button class="thema-knop" id="btnThema" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
+      <button class="vraag-knop plus-knop" id="btnZelf" type="button" title="Eigen level spelen of bouwen" aria-label="Eigen level spelen of bouwen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </div>
     <div class="balk-rechts">
-      <button class="vraag-knop" id="btnUitleg" title="Hoe speel je?" aria-label="Hoe speel je?">?</button>
+      <button class="vraag-knop" id="btnUitleg" title="Speluitleg" aria-label="Speluitleg">?</button>
     </div>
   </div>
 </div>
@@ -617,6 +627,10 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
       </button>
       <div class="drop-menu" id="filterMenu"></div>
     </div>
+    <button class="mini-knop" id="openKnop" type="button" aria-pressed="false" title="Alleen zaken die nog open staan" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/></svg>
+      <span>Open</span>
+    </button>
     <div class="sorteer" id="sorteerRij" title="Sorteer de lijst">
       <button type="button" class="aan" data-s="nr">Nr</button>
       <button type="button" data-s="titel">A–Z</button>
@@ -628,13 +642,6 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
   <!-- Zelf spelen of bouwen is voor de meeste bezoekers niet de eerste
        stap: één rustige knop aan het eind van de lijst, de rest in een
        venster. -->
-  <div class="zelf-voet">
-    <button class="thema-knop" id="btnThema" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
-    <button class="knop" id="btnZelf" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-      Eigen level spelen of bouwen
-    </button>
-  </div>
 </main>
 
 <!-- ============ Uitleg in stappen ============ -->
@@ -1070,6 +1077,8 @@ function maakLevelRij(entry){
     af.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.6 4.5L19 7.5"/></svg>'
       +'<b>Afgerond</b><span>'+tijdTekst(vt.tijd)+'</span>';
     onder.appendChild(af);
+    /* Het nummer maakt plaats voor een wit vinkje op een geel vak. */
+    nr.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.6 4.5L19 7.5"/></svg>';
   } else if(g){
     const nv=document.createElement("span"); nv.className="niveau-rij"; nv.title=g.uitleg||("Niveau "+g.graad);
     nv.innerHTML=[1,2,3,4,5].map(n=>'<i class="'+(n<=g.graad?"aan":"")+'"></i>').join("");
@@ -1115,26 +1124,12 @@ function tekenFilter(){
   const ietsAfgerond=alleLevels.some(e=>voltooidVan(e.raw));
   /* De keuzelijst verdwijnt alleen als er niets te kiezen valt: één niveau
      én nog niets afgerond. */
-  if(aanwezig.length<=1 && !ietsAfgerond){ $("#filterDrop").style.display="none"; return; }
-  $("#filterDrop").style.display="";
+  $("#filterDrop").style.display=aanwezig.length<=1?"none":"";
   menu.innerHTML="";
-  if(ietsAfgerond){
-    const b=document.createElement("button");
-    b.type="button"; b.className=(alleenOpen?"aan":"");
-    const vink=document.createElement("span"); vink.className="vink";
-    vink.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
-    const tekst=document.createElement("span"); tekst.textContent="Alleen open zaken";
-    b.appendChild(vink); b.appendChild(tekst);
-    b.onclick=()=>{
-      alleenOpen=!alleenOpen;
-      $("#filterDrop").classList.remove("open");
-      knop.setAttribute("aria-expanded","false");
-      tekenFilter(); tekenLijst();
-    };
-    menu.appendChild(b);
-    const streep=document.createElement("div"); streep.className="drop-streep";
-    menu.appendChild(streep);
-  }
+  /* Open zaken is een eigen knop naast het niveaufilter, en alleen zichtbaar
+     zodra er iets is afgerond. */
+  const ok=$("#openKnop");
+  if(ok){ ok.hidden=!ietsAfgerond; ok.classList.toggle("aan",alleenOpen); ok.setAttribute("aria-pressed",alleenOpen?"true":"false"); }
   [{n:0,l:"Alle niveaus"}].concat(aanwezig.map(n=>({n,l:"Niveau "+n}))).forEach(c=>{
     const b=document.createElement("button");
     b.type="button"; b.className=(actieveFilter===c.n?"aan":"");
@@ -1155,10 +1150,10 @@ function tekenFilter(){
     };
     menu.appendChild(b);
   });
-  knop.classList.toggle("aan", !!actieveFilter || alleenOpen);
-  label.textContent = actieveFilter ? ("Niveau "+actieveFilter)
-                    : alleenOpen ? "Open" : "Filter";
+  knop.classList.toggle("aan", !!actieveFilter);
+  label.textContent = actieveFilter ? ("Niveau "+actieveFilter) : "Niveau";
 }
+$("#openKnop").addEventListener("click",()=>{ alleenOpen=!alleenOpen; tekenFilter(); tekenLijst(); });
 $("#filterKnop").addEventListener("click",e=>{
   e.stopPropagation();
   const drop=$("#filterDrop");
@@ -1318,6 +1313,15 @@ function initZelf(){
 
 initZelf();
 laadLevels();
+/* Wie het spel voor het eerst opent, krijgt de uitleg vanzelf; daarna nooit
+   meer ongevraagd. */
+(function(){
+  const SLEUTEL="clueboard:uitlegGezien";
+  let gezien=false; try{ gezien=!!localStorage.getItem(SLEUTEL); }catch(e){}
+  if(gezien) return;
+  try{ localStorage.setItem(SLEUTEL,"1"); }catch(e){}
+  zetUitlegSet("regels"); openModal("#modalUitleg");
+})();
 </script>
 </body>
 </html>

@@ -1594,9 +1594,16 @@ body.in-game .kop-check .teller{margin-left:2px;padding:2px 7px;border-radius:99
 body.in-game #btnCheck.klaar .teller{background:rgba(0,0,0,.14);color:inherit}
 body.in-game .kop-check .teller:empty{display:none}
 body.in-game .kop-midden{display:flex;align-items:center;justify-content:center;min-width:0}
+body.in-game .kop-check{min-width:0;max-width:100%;overflow:hidden}
+@media (max-width:420px){
+  body.in-game .game-head{gap:6px}
+  body.in-game .game-head #btnCheck .lbl{display:none}
+  body.in-game .timer .ic{display:none}
+}
 body.in-game .kop-rechts{display:flex;align-items:center;justify-content:flex-end;gap:8px}
 .uitslag-merk .w1{color:var(--goud)}
 body.in-game .kop-rechts{display:flex;align-items:center;gap:8px}
+body.in-game .kop-knop .vraag-ic{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:20px;line-height:1}
 body.in-game .kop-knop{
   width:40px;height:40px;min-width:40px;padding:0;border-radius:999px;
   border:1px solid var(--lijn);background:var(--kaart);color:var(--inkt);
@@ -1645,7 +1652,7 @@ body.in-game #btnCheck[disabled]{opacity:.5;filter:none;color:var(--goud-op)}
 body.in-game .tabbar{
   /* Gelijke buitenkolommen: dan staat de schuif altijd precies in het midden,
      ook als de wisselknop van woord verandert. */
-  display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:10px;
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;
   padding:12px 14px calc(15px + env(safe-area-inset-bottom));
   background:none;border-top:1px solid var(--lijn-zacht);box-shadow:none;
   backdrop-filter:none;-webkit-backdrop-filter:none;
@@ -1674,7 +1681,7 @@ body.in-game .hint-knop[hidden]{display:none}
 /* Vaste kolommen: op het regelstabblad verdwijnt de schakelaar, en dan mag
    de wisselknop niet in het midden schuiven en uitrekken. */
 body.in-game .mode-bar{display:flex;justify-content:flex-start;padding:0;background:none;box-shadow:none;min-width:0;grid-column:2;touch-action:pan-y}
-body.in-game .tabbar .view-switch{grid-column:4;justify-self:end}
+body.in-game .tabbar .view-switch{grid-column:3;justify-self:end}
 body.in-game .mode-switch{
   position:relative;display:flex;gap:0;max-width:300px;width:100%;
   padding:3px;border-radius:999px;background:var(--kaart);border:1px solid var(--lijn);box-shadow:var(--sch1);
@@ -1692,6 +1699,18 @@ body.in-game .mode-switch button{
 }
 body.in-game .mode-switch button svg{width:16px;height:16px}
 body.in-game .mode-switch button.active{color:var(--grond);background:none;text-shadow:none}
+/* Alleen de actieve kant draagt het woord; de andere kant is een pictogram.
+   Zo lees je meteen welke modus aanstaat, en blijft de schakelaar smal. */
+/* Het woord op twee korte regels naast het pictogram: "NOTITIE / MODUS".
+   Op één regel paste het nooit naast de Bord/Regels-knop. */
+body.in-game .mode-switch button .lbl{display:none;white-space:normal;width:min-content;font-size:9.5px;line-height:1.1;letter-spacing:.05em;text-align:left}
+body.in-game .mode-switch button.active .lbl{display:block}
+body.in-game .mode-switch button:not(.active){flex:0 0 42px;padding:0}
+body.in-game .mode-switch button.active{min-width:0;padding:0 8px}
+body.in-game .mode-switch .ms-thumb{width:auto;right:3px;left:3px;transform:none}
+body.in-game .mode-switch.place .ms-thumb{transform:none}
+body.in-game .mode-switch:not(.place) .ms-thumb{right:45px}
+body.in-game .mode-switch.place .ms-thumb{left:45px}
 body.in-game .view-switch{
   /* Vaste maat: "Bord" is korter dan "Regels", en zonder deze bodem
      verspringt de hele voetbalk bij elke wissel. */
@@ -2271,12 +2290,13 @@ html[data-thema="licht"] .dl-tekst .rol.knight,html[data-thema="licht"] body.in-
    schuifkolom: je leest eerst het dossier en pakt de zaak daarna op. */
 /* Onderaan doorgescrold hoort de knop niet tegen de rand te plakken: deze
    staart is ruwweg nog een knophoogte extra, plus het verloop hierboven. */
-body.in-game #modalIntro .rij-knoppen{display:flex;margin:24px 0 clamp(96px,16vh,140px)}
+body.in-game #modalIntro .rij-knoppen{display:flex;justify-content:center;margin:24px 0 clamp(96px,16vh,140px)}
+body.in-game #modalIntro .rij-knoppen .btn{flex:0 0 auto;width:auto;min-width:230px;padding-left:36px;padding-right:36px}
 body.in-game #modalIntro .btn{width:100%;height:50px;font-size:18px}
 /* Het duwtje om verder te lezen. Zweeft boven de kolom, dus buiten de
    scrollstroom; [hidden] moet expliciet winnen van de display:flex hierboven. */
 .scroll-wenk{
-  position:absolute;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));
+  position:absolute;left:50%;bottom:calc(110px + env(safe-area-inset-bottom));
   transform:translateX(-50%);
   width:38px;height:38px;border-radius:999px;padding:0;z-index:3;
   display:flex;align-items:center;justify-content:center;
@@ -2414,6 +2434,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       <div class="kop-rechts">
         <div class="timer" id="timer"><span class="ic" data-icon="clock"></span><span id="timerVal">0:00</span></div>
         <button class="kop-knop icon-btn" id="btnSettings" data-sheet="modalSettings" title="Instellingen" aria-label="Instellingen"><span class="ic" data-icon="settings"></span></button>
+        <button class="kop-knop icon-btn" id="btnHelpTop" title="Speluitleg" aria-label="Speluitleg"><span class="vraag-ic">?</span></button>
       </div>
     </div>
 
@@ -2440,8 +2461,8 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       <div class="mode-bar" id="modeBar">
         <div class="mode-switch" id="modeSwitch">
           <div class="ms-thumb"></div>
-          <button class="active" id="btnModeNote" aria-pressed="true"><span class="ic" data-icon="note"></span><span class="lbl">Notitie</span></button>
-          <button id="btnModePlace" aria-pressed="false"><span class="ic" data-icon="pawn"></span><span class="lbl">Plaats</span></button>
+          <button class="active" id="btnModeNote" aria-pressed="true"><span class="ic" data-icon="note"></span><span class="lbl">Notitie modus</span></button>
+          <button id="btnModePlace" aria-pressed="false"><span class="ic" data-icon="pawn"></span><span class="lbl">Plaats modus</span></button>
         </div>
       </div>
       <button class="view-switch" id="viewSwitch">
@@ -2503,7 +2524,6 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="sheet compact">
     <div class="sheet-greep"></div>
     <div class="sheet-kop"><h3>Instellingen</h3><button class="sheet-sluit" type="button" data-close aria-label="Sluiten"><span class="ic" data-icon="cross"></span></button></div>
-    <button class="set-hoofd" id="btnHelpSet" type="button"><span class="ic vraag-ic">?</span><span>Hoe speel je?</span></button>
     <div class="set-duo">
       <button class="set-row schakel" id="rowEasy" type="button" aria-pressed="false">
         <span class="ic" data-icon="sparkle"></span><span class="set-tekst"><b>Easy mode</b></span><span class="schuif"><i></i></span>
@@ -5060,6 +5080,9 @@ function renderClues(){
 
   const open=[], done=[];
   perPersoon.forEach(x=>(placed.get(x.p.id)?done:open).push(x));
+  /* Op naam, niet in de volgorde waarin de bouwer de regels invoerde. */
+  const opNaam=(a,b)=>String(a.p.name).localeCompare(String(b.p.name),"nl");
+  open.sort(opNaam); done.sort(opNaam);
   open.forEach(x=>list.appendChild(personCard(x.cs,x.p,false)));
   if(done.length){
     const sep=document.createElement("div");
@@ -5571,7 +5594,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.30";
+const PLAYER_APP_VERSION="0.9.31";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6263,7 +6286,7 @@ $("#btnHint").addEventListener("click",()=>{
 $("#btnHintJa").addEventListener("click",()=>{ closeModal($("#modalHint")); geefHint(); });
 $("#rowEasy").addEventListener("click",()=>setEasyMode(!easyMode));
 $("#rowAutoKruis").addEventListener("click",()=>setAutoKruis(!autoKruis));
-$("#btnHelpSet").addEventListener("click",()=>{
+$("#btnHelpTop").addEventListener("click",()=>{
   $$(".sheet-modal.open").forEach(closeModal);
   vulHelp(); openModal("#modalHelp");
 });

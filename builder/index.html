@@ -127,6 +127,17 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .btn[disabled]{opacity:.35;pointer-events:none}
 
 .app{height:calc(100vh - 62px);padding:16px;gap:16px;display:grid;grid-template-columns:320px minmax(0,1fr) 320px}
+/* Een laptopscherm (MacBook Air: 1280-1440 breed, zo'n 720-800 hoog na de
+   browserbalk) krijgt smallere zijpanelen en minder lucht, zodat het bord in
+   het midden zijn ruimte houdt en niets buiten beeld valt. */
+@media (max-width:1500px){
+  .app{grid-template-columns:290px minmax(0,1fr) 300px;padding:12px;gap:12px;height:calc(100vh - 58px)}
+  .panel-body{padding:14px}
+}
+@media (max-width:1340px){
+  .app{grid-template-columns:262px minmax(0,1fr) 284px;padding:10px;gap:10px}
+  h2{font-size:18px}
+}
 .panel{
   background:var(--panel);border-radius:22px;display:flex;flex-direction:column;overflow:hidden;
   border:1px solid var(--edge);box-shadow:0 2px 4px rgba(38,36,25,.03), 0 18px 38px -26px rgba(38,36,25,.4);
@@ -1813,7 +1824,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v19</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v20</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
