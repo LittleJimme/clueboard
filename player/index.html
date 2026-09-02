@@ -2276,7 +2276,7 @@ body.in-game #modalIntro .btn{width:100%;height:50px;font-size:18px}
 /* Het duwtje om verder te lezen. Zweeft boven de kolom, dus buiten de
    scrollstroom; [hidden] moet expliciet winnen van de display:flex hierboven. */
 .scroll-wenk{
-  position:absolute;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));
+  position:absolute;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));
   transform:translateX(-50%);
   width:38px;height:38px;border-radius:999px;padding:0;z-index:3;
   display:flex;align-items:center;justify-content:center;
@@ -2638,7 +2638,6 @@ body.in-game .clue-card.done::before{background:var(--goud)}
 </div>
 
 <div id="toast"></div>
-<div id="versieVoet" aria-hidden="true"></div>
 
 <script>
 "use strict";
@@ -2693,11 +2692,14 @@ function zetThema(naam){
   $$("#themaKeuze [data-thema]").forEach(b=>b.classList.toggle("aan",b.dataset.thema===t));
   zetThemaKleur();
 }
-/* De statusbalk van de telefoon kleurt mee, maar alleen in het spel. */
+/* De statusbalk van de telefoon kleurt altijd mee met het thema. Vroeger
+   kreeg hij buiten het spel een oud lichtblauw en werd hij bij het
+   binnengaan van het spel niet opnieuw gezet, zodat de bovenbalk in het
+   spel niet bij de rest paste. */
 function zetThemaKleur(){
   const m=$("#themeColorMeta"); if(!m) return;
   const t=document.documentElement.dataset.thema||"donker";
-  m.content=document.body.classList.contains("in-game")?THEMA_KLEUR[t]:"#EDF1F8";
+  m.content=THEMA_KLEUR[t]||THEMA_KLEUR.donker;
 }
 function applySkin(theme){
   const id = THEMA_PAKKETTEN[theme] ? theme : "neutral";
@@ -5569,7 +5571,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.29";
+const PLAYER_APP_VERSION="0.9.30";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
