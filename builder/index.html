@@ -463,6 +463,9 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .obj-rij .obj-panel{flex:1;min-width:0}
 .obj-zij{flex:0 0 190px;display:flex;flex-direction:column;gap:8px}
 .obj-zij .obj-current{width:100%;box-sizing:border-box;justify-content:flex-start}
+/* In de aanwijsstand teken je niets; de keuzechip staat dan gedempt. */
+.obj-zij .obj-kies{width:100%;box-sizing:border-box;justify-content:flex-start}
+.obj-current.uit{opacity:.45}
 .obj-zij .obj-search{width:100%}
 .obj-zij .obj-search input{width:100%;box-sizing:border-box}
 /* Het raster toont één rij; het pijltje eronder klapt de rest uit en staat
@@ -1827,7 +1830,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v21</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v22</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -2692,6 +2695,30 @@ function setMat(k, kind){
   newObject([k], kind, null, true);
   if (tile.status === 'empty') tile.status = 'can';
   return true;
+}
+/* Twee tapijten die tegen elkaar aan komen te liggen zijn samen één tapijt.
+   Alleen binnen dezelfde ruimte: door een muur heen sluit niets aan. Het
+   oudste object blijft bestaan, zodat de naam en het nummer blijven van het
+   tapijt dat er al lag. Geeft de tegels terug die opnieuw getekend moeten. */
+function smeltMats(k){
+  const t = S.tiles[k];
+  if (!t || !t.mat) return [k];
+  let geraakt = [k];
+  neighbours(t.x, t.y).forEach(nk => {
+    const nb = S.tiles[nk];
+    if (!nb || nb.off || !nb.mat || nb.mat === t.mat) return;
+    if (nb.room !== t.room) return;
+    const hier = S.objects[t.mat], daar = S.objects[nb.mat];
+    if (!hier || !daar) return;
+    if ((hier.kind || '') !== (daar.kind || '')) return;
+    const keep = (daar.num <= hier.num) ? daar : hier;
+    const drop = (keep === daar) ? hier : daar;
+    geraakt = geraakt.concat(drop.tiles);
+    keep.tiles = keep.tiles.concat(drop.tiles);
+    drop.tiles.forEach(x => S.tiles[x].mat = keep.id);
+    delete S.objects[drop.id];
+  });
+  return geraakt;
 }
 function joinMats(k, into){
   const a = S.tiles[k], b = S.tiles[into];
@@ -4964,28 +4991,14 @@ function applyAt(k){
 
     if (isUnderKind(kind)){
       /* Een tapijt gaat in de onderlaag: het mag onder een bestaand object
-         door lopen en heeft geen vaste vorm. De enige eis is dat het aan één
-         stuk ligt en binnen één ruimte blijft. */
+         door lopen en heeft geen vaste vorm. Tegels die tegen elkaar aan
+         komen te liggen worden vanzelf één tapijt, maar alleen binnen
+         dezelfde ruimte — door een muur heen sluit niets aan. */
       if (S.tiles[k].mat) return;
-      if (!drag.anchor){
-        if (setMat(k, kind)){ drag.anchor = k; drag.changed = true; renderCellAndNeighbours(k); }
-        return;
+      if (setMat(k, kind)){
+        drag.anchor = k; drag.changed = true;
+        smeltMats(k).forEach(x => renderCellAndNeighbours(x));
       }
-      const anker = S.tiles[drag.anchor], mat = S.objects[anker.mat];
-      if (!mat) return;
-      if (S.tiles[k].room !== anker.room){
-        reject(k, { msg:'Een tapijt van meerdere tegels moet binnen één ruimte blijven.' });
-        return;
-      }
-      const samen = mat.tiles.concat([k]);
-      if (components(samen).length !== 1){
-        reject(k, { msg:'Een tapijt moet aan één stuk liggen.' });
-        return;
-      }
-      setMat(k, kind);
-      joinMats(k, drag.anchor);
-      drag.changed = true;
-      samen.forEach(x => renderCellAndNeighbours(x));
       return;
     }
 
@@ -5047,12 +5060,28 @@ $('grid').addEventListener('pointerdown', e => {
   /* Klik op een bestaand object selecteert het; tekenen doe je op vrije vloer.
      Welke laag dat is hangt af van het gekozen gereedschap: met het tapijt in
      de hand kijk je naar de onderlaag, met een tafel naar de bovenste. Zo kun
-     je een tapijt onder een tafel door leggen én er later weer bij. */
+     je een tapijt onder een tafel door leggen én er later weer bij. Met de
+     knop Selecteren wijs je alleen aan en teken je niets. Liggen er twee
+     dingen op één tegel, dan vraagt de bouwer welke je bedoelt. */
   if (step === 3){
-    const laag = isUnderKind(currentObjectKind) ? S.tiles[k].mat : S.tiles[k].obj;
+    const boven = S.tiles[k].obj ? S.objects[S.tiles[k].obj] : null;
+    const onder = S.tiles[k].mat ? S.objects[S.tiles[k].mat] : null;
+    if (boven && onder){
+      drag = null;
+      kiesLaagRadiaal(boven, onder, e.clientX, e.clientY);
+      return;
+    }
+    const laag = selectTool ? (boven || onder)
+               : (isUnderKind(currentObjectKind) ? onder : boven);
     if (laag){
       drag = null;
-      selectEntity({ type:'object', id: objExportId(S.objects[laag]) });
+      selectEntity({ type:'object', id: objExportId(laag) });
+      return;
+    }
+    if (selectTool){
+      /* Aanwijzen en verder niets: een klik naast een object laat los. */
+      drag = null;
+      if (selectedEntity && selectedEntity.type === 'object'){ selectedEntity = null; renderUI(); }
       return;
     }
   }
@@ -5153,7 +5182,10 @@ $('grid').addEventListener('contextmenu', ev => {
   const wk = wallKey(k, nearestSide(cell.getBoundingClientRect(), ev.clientX, ev.clientY));
   if (wk && S.walls && S.walls[wk]){ openWallRadial(wk, cx, cy); return; }
 
-  const o = S.tiles[k].obj && S.objects[S.tiles[k].obj];
+  const boven = S.tiles[k].obj ? S.objects[S.tiles[k].obj] : null;
+  const onder = S.tiles[k].mat ? S.objects[S.tiles[k].mat] : null;
+  if (boven && onder){ kiesLaagRadiaal(boven, onder, cx, cy, x => openObjectRadial(x, cx, cy)); return; }
+  const o = boven || onder;
   if (!o) return;
   openObjectRadial(o, cx, cy);
 });
@@ -5213,6 +5245,18 @@ function openWallRadial(key, cx, cy){
         toast(objectLabel(w.kind) + ' overgenomen.', 'good');
       } }
   ], cx, cy, AssetBank.icon('Door', 'ico'), null, null);
+}
+
+/* Ligt er een tapijt onder een object, dan zijn er twee dingen om aan te
+   wijzen. De bouwer vraagt dan welke je bedoelt in plaats van er zelf een te
+   kiezen. */
+function kiesLaagRadiaal(boven, onder, cx, cy, doen){
+  const act = doen || (o => selectEntity({ type:'object', id: objExportId(o) }));
+  openRadialMenu([boven, onder].map(o => ({
+    icon: AssetBank.icon(o.kind, 'ico') || uiIcon('box'),
+    label: objName(o),
+    act: () => { closeRadial(); act(o); }
+  })), cx, cy, uiIcon('pin'), null, null);
 }
 
 /* Wat je met een geplaatst object kunt: weghalen, of de soort overnemen
@@ -6450,6 +6494,8 @@ document.addEventListener('keydown', e => {
 /* === CLUEBOARD BUILDER 9: content + contextual clue authoring ===
    Added as a self-contained extension to the original Builder 7.0. */
 let selectedEntity = null;
+/* Aanwijsstand: klikken op het bord selecteert dan alleen, en tekent niets. */
+let selectTool = false;
 
 /* Stabiel export-ID (obj-N) per object, herberekend uit de huidige tegelvolgorde.
    Dezelfde volgorde als buildExport()'s objMap, dus content/clues die dit ID
@@ -8211,7 +8257,10 @@ function renderBuildMenu(){
     '</div>';
   const objZij = buildMode === 'objects'
     ? '<div class="obj-zij">'+
-      '<span class="obj-current" title="Dit plaats je bij een klik op het bord">'+
+      '<button class="tool-btn obj-kies'+(selectTool?' active':'')+'" id="objKies" '+
+        'title="Alleen aanwijzen: klik een object op het bord om het te selecteren">'+
+        uiIcon('pin')+' Selecteren</button>'+
+      '<span class="obj-current'+(selectTool?' uit':'')+'" title="Dit plaats je bij een klik op het bord">'+
         objectIconTag(currentObjectKind, '')+
         '<span>'+e(objectLabel(currentObjectKind))+'</span>'+
         '<span class="sz">'+objectSizeText(currentObjectKind)+'</span>'+
@@ -8280,6 +8329,7 @@ function renderBuildMenu(){
     selectEntity({ type:'room', id:'room-'+(+b.dataset.pickRoom + 1) });
   });
   if ($('tbShape')) $('tbShape').onclick = () => { shapeMode = !shapeMode; renderUI(); };
+  if ($('objKies')) $('objKies').onclick = () => { selectTool = !selectTool; renderBuildMenu(); };
   if ($('tbAddRoom')) $('tbAddRoom').onclick = () => {
     addRoom();
     selectEntity({ type:'room', id:'room-'+S.rooms.length });
