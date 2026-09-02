@@ -2081,28 +2081,30 @@ body.in-game #modalIntro .intro-terug:active{transform:translateY(1px);box-shado
    hier: alleen de vorm. Vakjes waar niemand op kan staan zijn juist donkerder
    dan de ondergrond, zodat de vorm van het bord leesbaar blijft. Veel zwakker
    dan het kaartje verderop, dat wél de kamers toont. */
-.intro-watermerk{
-  position:absolute;left:50%;top:52%;
-  /* --par wordt bij het scrollen gezet: het watermerk schuift maar voor een
-     deel mee, zodat het als achtergrond achterblijft. Minimaal effect. */
-  transform:translate(-50%,calc(-50% + var(--par,0px)));
+body.in-game #modalIntro .intro-watermerk{
+  position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);
   z-index:0;pointer-events:none;width:min(88%,var(--wm-breedte,420px));
-  will-change:transform;
 }
-/* De tekst moet erbovenop, anders schemert het raster er doorheen. */
-body.in-game #modalIntro .intro-kop > :not(.intro-watermerk){position:relative;z-index:1}
+/* Het dossier schuift over de plattegrond heen. */
+body.in-game #modalIntro .intro-scroll{position:relative;z-index:1}
 .wm-kaart{display:grid;gap:4px;width:100%}
-.wm-c{aspect-ratio:1;border-radius:4px;background:rgba(240,232,226,.045)}
-.wm-c.blok{background:rgba(0,0,0,.14)}
-/* Buiten het bord blijft alleen de omtrek van het vakje staan: het raster
-   loopt zo door, maar de vorm van het level blijft het enige dat vult. */
-.wm-c.leeg{background:none;box-shadow:inset 0 0 0 1px rgba(240,232,226,.038)}
-html[data-thema="licht"] .wm-c{background:rgba(38,36,29,.032)}
-html[data-thema="licht"] .wm-c.blok{background:rgba(38,36,29,.085)}
+/* Drie soorten vakjes, van donker naar licht:
+     .blok  niet bezetbaar, donkerder dan de ondergrond
+     (basis) vrije vloer, waar iemand kan staan
+     .op    een object waar je juist wél op kunt staan, een tikje lichter
+   En daarbuiten .leeg: alleen de omtrek, zodat het raster doorloopt maar de
+   vorm van het level het enige is dat vult. */
+.wm-c{aspect-ratio:1;border-radius:4px;background:rgba(240,232,226,.05)}
+.wm-c.op{background:rgba(240,232,226,.11)}
+.wm-c.blok{background:rgba(0,0,0,.2)}
+.wm-c.leeg{background:none;box-shadow:inset 0 0 0 1px rgba(240,232,226,.05)}
+html[data-thema="licht"] .wm-c{background:rgba(38,36,29,.038)}
+html[data-thema="licht"] .wm-c.op{background:rgba(38,36,29,.075)}
+html[data-thema="licht"] .wm-c.blok{background:rgba(38,36,29,.14)}
 /* Moet mee in het thema: html[data-thema] .wm-c weegt zwaarder dan .wm-c.leeg,
    dus zonder deze regel kleurden de vakjes buiten het bord alsnog en verloor
    de plattegrond zijn vorm. */
-html[data-thema="licht"] .wm-c.leeg{background:none;box-shadow:inset 0 0 0 1px rgba(38,36,29,.03)}
+html[data-thema="licht"] .wm-c.leeg{background:none;box-shadow:inset 0 0 0 1px rgba(38,36,29,.04)}
 .intro-zaak{font:800 12px var(--font-ui);letter-spacing:.28em;text-transform:uppercase;color:var(--goud);margin-bottom:14px;min-height:14px}
 .intro-titel{margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(34px,10vw,54px);line-height:1.04;letter-spacing:-.015em;color:var(--inkt);text-wrap:balance}
 .intro-graad{display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:18px}
@@ -2126,6 +2128,12 @@ html[data-thema="licht"] .wm-c.leeg{background:none;box-shadow:inset 0 0 0 1px r
      de intro is altijd maar een paar zinnen. */
   font-family:var(--font-display);font-weight:500;
   font-size:20px;line-height:1.5;letter-spacing:0;
+}
+body.in-game #modalIntro .intro-dossier{
+  position:relative;
+  /* Doorzichtig aan de bovenkant, daaronder de kaartkleur: de plattegrond
+     vervaagt zo onder het dossier in plaats van langs een rand te stoppen. */
+  background:linear-gradient(to bottom,transparent 0,var(--kaart) 96px);
 }
 /* De overgang naar het dossier: één haarlijn die aan beide kanten wegvalt,
    zodat hij scheidt zonder een streep door de bladzijde te trekken. */
@@ -2503,22 +2511,31 @@ body.in-game .clue-card.done::before{background:var(--goud)}
     <span class="ic" data-icon="back"></span>
   </button>
   <div class="sheet intro-vel" id="introVel">
+    <!-- De plattegrond hangt aan het vel en niet aan de schuifkolom: hij staat
+         stil terwijl het dossier eroverheen schuift. Meebewegen op de
+         scrollpositie trilde, want die wordt op een andere draad bijgehouden
+         dan het tekenen. -->
+    <div class="intro-watermerk" id="introWatermerk" aria-hidden="true"></div>
     <div class="intro-scroll" id="introScroll">
       <!-- De cover: zaaknummer, titel, niveau en de intro. Alleen wie de zaak
            is, verder niets, zodat je hem eerst op je in laat werken. -->
       <div class="intro-kop">
-        <div class="intro-watermerk" id="introWatermerk" aria-hidden="true"></div>
         <div class="intro-zaak" id="introZaak"></div>
         <h2 class="intro-titel" id="introTitel">—</h2>
         <div class="intro-graad" id="introGraad"></div>
         <div class="intro-scheiding"></div>
         <p class="intro-tekst" id="introTekst"></p>
       </div>
-      <div class="intro-breuk"></div>
-      <div class="intro-bordregels" id="introBordregels"></div>
-      <div class="deelnemers" id="introDeelnemers"></div>
-      <div class="intro-kaart" id="introKaart"></div>
-      <div class="rij-knoppen"><button class="btn" id="btnBeginLevel">Begin de zaak</button></div>
+      <!-- Het dossier schuift als één vlak over de plattegrond heen. De
+           bovenrand loopt van doorzichtig naar de kaartkleur, zodat de
+           plattegrond eronder vervaagt in plaats van te worden afgesneden. -->
+      <div class="intro-dossier">
+        <div class="intro-breuk"></div>
+        <div class="intro-bordregels" id="introBordregels"></div>
+        <div class="deelnemers" id="introDeelnemers"></div>
+        <div class="intro-kaart" id="introKaart"></div>
+        <div class="rij-knoppen"><button class="btn" id="btnBeginLevel">Begin de zaak</button></div>
+      </div>
     </div>
     <!-- Duwtje om verder te lezen: verschijnt pas als je een paar tellen niet
          scrolt terwijl er wél meer onder staat, en verdwijnt zodra je begint. -->
@@ -5326,7 +5343,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.18";
+const PLAYER_APP_VERSION="0.9.19";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -5686,7 +5703,8 @@ function bordWatermerk(){
   for(let r=b.minR;r<=b.maxR;r++) for(let c=b.minC;c<=b.maxC;c++){
     const t=M.tiles.get("c"+c+"r"+r);
     if(!t){ h+='<span class="wm-c leeg"></span>'; continue; }
-    h+='<span class="wm-c'+(t.status==="blocked"?" blok":"")+'"></span>';
+    const soort = t.status==="blocked" ? " blok" : t.status==="occupiable" ? " op" : "";
+    h+='<span class="wm-c'+soort+'"></span>';
   }
   return h+"</div>";
 }
@@ -6037,19 +6055,10 @@ $("#modalIntro .backdrop").addEventListener("click",sluitIntro);
 (function(){
   const sc=$("#introScroll"), w=$("#introWenk");
   if(!sc||!w) return;
-  const wm=$("#introWatermerk");
   sc.addEventListener("scroll",()=>{
     /* Zodra je zelf begint te lezen is het duwtje overbodig. */
     if(!w.hidden) w.hidden=true;
     if(wenkTimer && sc.scrollTop>8){ clearTimeout(wenkTimer); wenkTimer=null; }
-    /* Het watermerk schuift maar voor een deel mee: het blijft als
-       achtergrond achter terwijl het dossier eroverheen loopt. En het vervaagt
-       binnen één schermvulling, zodat het niet achter de regels blijft hangen. */
-    if(wm){
-      const y=sc.scrollTop;
-      wm.style.setProperty("--par", (y*0.62)+"px");
-      wm.style.opacity = String(Math.max(0, 1 - y/(sc.clientHeight*0.9)));
-    }
   },{passive:true});
   /* Draait het scherm of klapt het toetsenbord weg, dan kan de knop alsnog in
      beeld komen; laat de wenk dan niet blijven hangen. */
