@@ -2029,7 +2029,12 @@ body.in-game #modalIntro .sheet{
 body.in-game #modalIntro .intro-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;text-align:center;padding:2px 0 6px;
   /* De schuifbalk zou dwars door de cover lopen; het duwtje onderin zegt al
      dat er meer is. */
-  scrollbar-width:none;-ms-overflow-style:none}
+  scrollbar-width:none;-ms-overflow-style:none;
+  /* De rest van het dossier komt door een verloop in beeld in plaats van
+     langs een harde rand. De knop krijgt hieronder extra ruimte mee, zodat
+     hij bij volledig doorscrollen bóven dit verloop uitkomt. */
+  -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 84px),transparent);
+  mask-image:linear-gradient(to bottom,#000 calc(100% - 84px),transparent)}
 body.in-game #modalIntro .intro-scroll::-webkit-scrollbar{width:0;height:0;display:none}
 /* ── De cover ──
    De eerste schermvulling draagt alleen de zaak zelf: nummer, titel, niveau
@@ -2060,8 +2065,11 @@ html[data-thema="licht"] body.in-game #modalIntro .intro-kop{
    veilige zone van de telefoon moet er hier zelf bij. */
 body.in-game #modalIntro .intro-terug{
   position:absolute;z-index:4;
-  left:0;top:calc(2px + env(safe-area-inset-top));
-  width:42px;height:42px;border-radius:999px;padding:0;
+  /* Exact de plek en maat van btnGameBack in de spelkop (14 / 17, 40x40),
+     zodat de knop niet verspringt zodra het introvel sluit. Deze knop hangt
+     aan #modalIntro zelf, dat het hele scherm beslaat. */
+  left:14px;top:calc(17px + env(safe-area-inset-top));
+  width:40px;height:40px;border-radius:999px;padding:0;
   display:flex;align-items:center;justify-content:center;
   background:var(--kaart-2);color:var(--inkt);border:1px solid var(--lijn);
   box-shadow:var(--sch1);
@@ -2074,21 +2082,27 @@ body.in-game #modalIntro .intro-terug:active{transform:translateY(1px);box-shado
    dan de ondergrond, zodat de vorm van het bord leesbaar blijft. Veel zwakker
    dan het kaartje verderop, dat wél de kamers toont. */
 .intro-watermerk{
-  position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);
-  z-index:0;pointer-events:none;width:min(88%,420px);
+  position:absolute;left:50%;top:52%;
+  /* --par wordt bij het scrollen gezet: het watermerk schuift maar voor een
+     deel mee, zodat het als achtergrond achterblijft. Minimaal effect. */
+  transform:translate(-50%,calc(-50% + var(--par,0px)));
+  z-index:0;pointer-events:none;width:min(88%,var(--wm-breedte,420px));
+  will-change:transform;
 }
 /* De tekst moet erbovenop, anders schemert het raster er doorheen. */
 body.in-game #modalIntro .intro-kop > :not(.intro-watermerk){position:relative;z-index:1}
 .wm-kaart{display:grid;gap:4px;width:100%}
-.wm-c{aspect-ratio:1;border-radius:4px;background:rgba(240,232,226,.055)}
-.wm-c.blok{background:rgba(0,0,0,.17)}
-.wm-c.leeg{background:none}
-html[data-thema="licht"] .wm-c{background:rgba(38,36,29,.05)}
-html[data-thema="licht"] .wm-c.blok{background:rgba(38,36,29,.12)}
+.wm-c{aspect-ratio:1;border-radius:4px;background:rgba(240,232,226,.045)}
+.wm-c.blok{background:rgba(0,0,0,.14)}
+/* Buiten het bord blijft alleen de omtrek van het vakje staan: het raster
+   loopt zo door, maar de vorm van het level blijft het enige dat vult. */
+.wm-c.leeg{background:none;box-shadow:inset 0 0 0 1px rgba(240,232,226,.038)}
+html[data-thema="licht"] .wm-c{background:rgba(38,36,29,.032)}
+html[data-thema="licht"] .wm-c.blok{background:rgba(38,36,29,.085)}
 /* Moet mee in het thema: html[data-thema] .wm-c weegt zwaarder dan .wm-c.leeg,
    dus zonder deze regel kleurden de vakjes buiten het bord alsnog en verloor
    de plattegrond zijn vorm. */
-html[data-thema="licht"] .wm-c.leeg{background:none}
+html[data-thema="licht"] .wm-c.leeg{background:none;box-shadow:inset 0 0 0 1px rgba(38,36,29,.03)}
 .intro-zaak{font:800 12px var(--font-ui);letter-spacing:.28em;text-transform:uppercase;color:var(--goud);margin-bottom:14px;min-height:14px}
 .intro-titel{margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(34px,10vw,54px);line-height:1.04;letter-spacing:-.015em;color:var(--inkt);text-wrap:balance}
 .intro-graad{display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:18px}
@@ -2102,7 +2116,17 @@ html[data-thema="licht"] .wm-c.leeg{background:none}
 /* Een em-maat alleen helpt niet op een telefoon: 34em is daar breder dan het
    scherm, dus liep de tekst alsnog van rand tot rand. De procentmaat knijpt
    hem ook op een smal scherm in, zodat er marge overblijft. */
-.intro-tekst{margin:0 auto;max-width:min(32em,84%);color:var(--inkt-2);font-size:18px;line-height:1.6}
+/* p.intro-tekst en niet .intro-tekst: de algemene regel .sheet p weegt
+   zwaarder en zette hier zowel margin:0 (waardoor het blok links bleef staan
+   in plaats van te centreren) als font-size:14px. */
+.sheet p.intro-tekst{
+  margin:0 auto;max-width:min(30em,86%);
+  color:var(--inkt-2);
+  /* Een schreefletter leest als lopende tekst in plaats van als interface;
+     de intro is altijd maar een paar zinnen. */
+  font-family:var(--font-display);font-weight:500;
+  font-size:20px;line-height:1.5;letter-spacing:0;
+}
 /* De overgang naar het dossier: één haarlijn die aan beide kanten wegvalt,
    zodat hij scheidt zonder een streep door de bladzijde te trekken. */
 .intro-breuk{height:1px;margin:0 0 28px;
@@ -2132,9 +2156,11 @@ html[data-thema="licht"] .bordregel{background:rgba(145,96,8,.13);border-color:r
 .bordregel.algemeen{background:none;border:0;padding:2px 6px;color:var(--dof);font-weight:600;font-size:13px}
 .bordregel.algemeen .ic{color:var(--dof)}
 /* Dezelfde markering als op het bord. */
-/* Hoogstens drie naast elkaar: bij acht personen werd het anders een rommelige
-   rij van vier plus een losse staart. */
-.deelnemers{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 6px;justify-items:center;padding:36px 0 4px}
+/* Rijen van drie en twee om en om. Een doorlopend raster van drie hield bij
+   acht of negen personen een losse staart over; zo staat elke rij gecentreerd
+   en oogt het blok rustiger. */
+.deelnemers{display:flex;flex-direction:column;gap:20px;padding:36px 0 4px}
+.deelnemer-rij{display:flex;justify-content:center;gap:8px}
 .deelnemer{display:flex;flex-direction:column;align-items:center;gap:5px;width:76px;text-align:center}
 .bord-fiche{
   position:relative;width:46px;height:46px;border-radius:999px;flex:0 0 auto;
@@ -2154,7 +2180,9 @@ html[data-thema="licht"] .bordregel{background:rgba(145,96,8,.13);border-color:r
 .deelnemer.slachtoffer .rol{color:#E58472}
 /* De knop hangt niet meer vast onder het vel maar staat onderaan IN de
    schuifkolom: je leest eerst het dossier en pakt de zaak daarna op. */
-body.in-game #modalIntro .rij-knoppen{display:flex;margin:24px 0 6px}
+/* Onderaan doorgescrold hoort de knop niet tegen de rand te plakken: deze
+   staart is ruwweg nog een knophoogte extra, plus het verloop hierboven. */
+body.in-game #modalIntro .rij-knoppen{display:flex;margin:24px 0 clamp(96px,16vh,140px)}
 body.in-game #modalIntro .btn{width:100%;height:50px;font-size:18px}
 /* Het duwtje om verder te lezen. Zweeft boven de kolom, dus buiten de
    scrollstroom; [hidden] moet expliciet winnen van de display:flex hierboven. */
@@ -2466,14 +2494,15 @@ body.in-game .clue-card.done::before{background:var(--goud)}
      onderaan in de schuifkolom staat en niet vastgeprikt onder het vel. -->
 <div class="modal sheet-modal" id="modalIntro">
   <div class="backdrop" data-close></div>
+  <!-- Het introvel dekt het hele scherm af, dus de terugknop in de spelkop is
+       hier onbereikbaar. Zonder deze knop zit je bij het openen van een zaak
+       vast: je kunt alleen nog beginnen. Hij hangt bewust aan het venster en
+       niet aan het vel, want het vel begint lager op het scherm. -->
+  <button class="intro-terug" id="btnIntroBack" type="button"
+          aria-label="Terug naar het menu" title="Terug naar het menu">
+    <span class="ic" data-icon="back"></span>
+  </button>
   <div class="sheet intro-vel" id="introVel">
-    <!-- Het introvel dekt het hele scherm af, dus de terugknop in de spelkop
-         is hier onbereikbaar. Zonder deze knop zit je bij het openen van een
-         zaak vast: je kunt alleen nog beginnen. -->
-    <button class="intro-terug" id="btnIntroBack" type="button"
-            aria-label="Terug naar het menu" title="Terug naar het menu">
-      <span class="ic" data-icon="back"></span>
-    </button>
     <div class="intro-scroll" id="introScroll">
       <!-- De cover: zaaknummer, titel, niveau en de intro. Alleen wie de zaak
            is, verder niets, zodat je hem eerst op je in laat werken. -->
@@ -5297,7 +5326,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.17";
+const PLAYER_APP_VERSION="0.9.18";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -5612,12 +5641,19 @@ function showLevelDetail(levelIndex){
   /* Wie erbij was, precies zoals ze straks op het bord staan: dezelfde
      schijf, dezelfde letter, hetzelfde rolteken. */
   const allen=(M.victimId?[M.peopleById.get(M.victimId)]:[]).concat(M.people.filter(p=>p.id!==M.victimId)).filter(Boolean);
-  $("#introDeelnemers").innerHTML=allen.map(pe=>{
+  /* Om en om drie en twee op een rij. Een blijvend raster van drie liet bij
+     acht of negen personen een losse staart achter; zo is elke rij op zich
+     gecentreerd. Een rij die niet vol raakt staat dus ook netjes midden. */
+  const rijen=[]; { let i=0, maat=3;
+    while(i<allen.length){ rijen.push(allen.slice(i,i+maat)); i+=maat; maat = maat===3?2:3; } }
+  const fiche=pe=>{
     const isV=pe.id===M.victimId;
     return '<div class="deelnemer'+(isV?' slachtoffer':'')+'">'+bordFiche(pe)
       +'<div class="naam">'+esc(pe.name)+'</div>'
       +'<div class="rol">'+(isV?'Slachtoffer':esc(pe.standingLabel||''))+'</div></div>';
-  }).join("");
+  };
+  $("#introDeelnemers").innerHTML=rijen
+    .map(rij=>'<div class="deelnemer-rij">'+rij.map(fiche).join("")+'</div>').join("");
   /* Level- en spelerversie horen bij het foutspoor, niet in het dossier: ze
      staan daarom vast linksonder in #versieVoet en scrollen niet meer mee. */
   { const vv=$("#versieVoet");
@@ -5626,6 +5662,7 @@ function showLevelDetail(levelIndex){
       "Player "+PLAYER_APP_VERSION].filter(Boolean).join(" · "); }
 
   introOpen=true;
+  { const vv=$("#versieVoet"); if(vv) vv.hidden=true; }
   openModal("#modalIntro");
   /* Vel begint altijd bovenaan, ook als je hetzelfde level opnieuw opent. */
   const sc=$("#introScroll"); if(sc) sc.scrollTop=0;
@@ -5641,6 +5678,10 @@ function showLevelDetail(levelIndex){
 function bordWatermerk(){
   if(!M||!M.bounds) return "";
   const b=M.bounds;
+  /* Vakjes van hoogstens 46px: op een klein bord zou een vaste breedte
+     enorme blokken geven die de tekst onleesbaar maken. */
+  const wrap=$("#introWatermerk");
+  if(wrap) wrap.style.setProperty("--wm-breedte", Math.min(420, b.cols*46)+"px");
   let h='<div class="wm-kaart" style="grid-template-columns:repeat('+b.cols+',1fr)">';
   for(let r=b.minR;r<=b.maxR;r++) for(let c=b.minC;c<=b.maxC;c++){
     const t=M.tiles.get("c"+c+"r"+r);
@@ -5704,6 +5745,7 @@ function introWenkStart(){
 function sluitIntro(){
   if(!introOpen) return;
   introOpen=false;
+  { const vv=$("#versieVoet"); if(vv) vv.hidden=false; }
   introWenkStop();
   closeModal($("#modalIntro"));
   if(!revealed) startTimer();
@@ -5995,10 +6037,19 @@ $("#modalIntro .backdrop").addEventListener("click",sluitIntro);
 (function(){
   const sc=$("#introScroll"), w=$("#introWenk");
   if(!sc||!w) return;
+  const wm=$("#introWatermerk");
   sc.addEventListener("scroll",()=>{
     /* Zodra je zelf begint te lezen is het duwtje overbodig. */
     if(!w.hidden) w.hidden=true;
     if(wenkTimer && sc.scrollTop>8){ clearTimeout(wenkTimer); wenkTimer=null; }
+    /* Het watermerk schuift maar voor een deel mee: het blijft als
+       achtergrond achter terwijl het dossier eroverheen loopt. En het vervaagt
+       binnen één schermvulling, zodat het niet achter de regels blijft hangen. */
+    if(wm){
+      const y=sc.scrollTop;
+      wm.style.setProperty("--par", (y*0.62)+"px");
+      wm.style.opacity = String(Math.max(0, 1 - y/(sc.clientHeight*0.9)));
+    }
   },{passive:true});
   /* Draait het scherm of klapt het toetsenbord weg, dan kan de knop alsnog in
      beeld komen; laat de wenk dan niet blijven hangen. */
