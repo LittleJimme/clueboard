@@ -1,11 +1,11 @@
 {
   "levelNumber": 4,
-  "levelVersion": 2,
+  "levelVersion": 3,
   "levelId": "lvl-mtk2htyogtdow",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-02T19:48:09.000Z",
+  "exportedAt": "2026-09-02T20:56:39.000Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",

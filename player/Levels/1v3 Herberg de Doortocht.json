@@ -1,11 +1,11 @@
 {
   "levelNumber": 1,
-  "levelVersion": 2,
+  "levelVersion": 3,
   "levelId": "lvl-1a05ef2624294473",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-02T19:48:09.000Z",
+  "exportedAt": "2026-09-02T20:56:39.000Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -1474,7 +1474,7 @@
   "difficulty": {
     "graad": 2,
     "label": "Niveau 2 van 5",
-    "uitleg": "Je moet per rij en kolom kijken wie er nog past.",
+    "uitleg": "Aanwijzingen combineren, en soms een vakje proberen.",
     "sport": 4
   }
 }

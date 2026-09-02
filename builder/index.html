@@ -1813,7 +1813,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v18</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v19</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -4130,24 +4130,95 @@ function zoekOplossingen(opt){
   });
   const regels = (S.content.clues || []).map(clueBenodigden);
 
+  /* Eigen aanwijzingen vooraf. "Bart zat op een stoel" hangt alleen van Bart
+     af, dus elk vakje dat daar niet aan voldoet kan nu al weg -- in plaats
+     van in elke tak opnieuw te worden geprobeerd en verworpen. Dat scheelt
+     niet een beetje: de vertakking op Barts diepte gaat van alle vrije vakjes
+     naar de paar stoelen, en dat voor élke tak erboven. De regel zelf hoeft
+     daarna niet meer gecontroleerd te worden. */
+  const eigenVan = {};
+  regels.forEach(r => {
+    if (r.iedereen || r.clue.locked || r.nodig.length !== 1) return;
+    r.vooraf = true;
+    (eigenVan[r.nodig[0]] = eigenVan[r.nodig[0]] || []).push(r.clue);
+  });
+  if (!opt.geenSnoei) personen.forEach(p => {
+    const eigen = eigenVan[p];
+    if (!eigen) return;
+    kandidaten[p] = kandidaten[p].filter(k => metBord({ [p]:k }, () => eigen.every(clueTrue)));
+  });
+
   /* Wie de minste vakjes heeft eerst: dan loopt een tak het snelst dood. */
   const volgorde = personen.slice().sort((a,b) => kandidaten[a].length - kandidaten[b].length);
 
   const bewaar = Object.assign({}, S.people);
-  const geplaatst = new Set(), rijen = new Set(), kolommen = new Set();
+  const rijen = new Set(), kolommen = new Set();
   const gevonden = [];
   let aantal = 0, knopen = 0, gestopt = '';
 
-  const beoordeelbaar = r => (opt.geenSnoei || r.iedereen)
-    ? geplaatst.size === personen.length
-    : r.nodig.every(q => geplaatst.has(q));
-
-  const nogGeenTegenspraak = () => {
-    for (const r of regels) if (beoordeelbaar(r) && !clueTrue(r.clue)) return false;
-    /* De vaste regel van het slachtoffer staat als tekst vast maar wordt niet
-       door clueTrue nagerekend; voor de speler is het wél een aanwijzing, dus
-       hij telt hier mee. */
-    if (geplaatst.size === personen.length && !victimAloneWithCulprit()) return false;
+  /* Elke aanwijzing wordt precies één keer beoordeeld: op het moment dat de
+     laatste persoon die hij noemt is neergezet. Eerder valt er niets te
+     zeggen, later verandert het antwoord niet meer -- een regel hangt alleen
+     af van wie hij noemt. Vroeger liep de zoeker bij elke knoop alle regels
+     opnieuw langs; dat kostte tien regels per knoop in plaats van gemiddeld
+     één. Regels over iedereen (en de vaste slachtofferregel) komen pas aan
+     bod als het bord vol is. */
+  const plek = {};
+  volgorde.forEach((p, i) => plek[p] = i);
+  const laatste = volgorde.length - 1;
+  const regelsBij = volgorde.map(() => []);
+  const eindRegels = [];
+  /* Universele regels -- "de enige op een stoel", "alleen in de ruimte",
+     "onder alle dorpelingen" -- gaan over iedereen, maar hebben één
+     eigenschap die goud waard is: staan ze op een half bord al fout, dan
+     blijven ze fout, wat er ook nog bijkomt. Zulke regels worden daarom bij
+     elke knoop nagekeken zodra de genoemde persoon staat, in plaats van pas
+     bij een vol bord. Existentiële regels ("naast iemand van adel") mogen
+     dat juist niet: die zijn onwaar tot de ander er is. Welke atomen
+     universeel zijn staat hier met naam; alles wat er niet in staat wacht
+     op het volle bord. */
+  const UNIVERSEEL = new Set(['alone-in-room','only-one-on-kind','closest-to-kind',
+                              'above-all-role','below-all-role','role-all-different-rooms']);
+  const vroeg = r => !opt.geenSnoei && !r.clue.locked && r.clue.kind !== 'room-access'
+    && (r.clue.terms || []).length > 0
+    && r.clue.terms.every(t => !t.not && (t.any || []).length > 0 && t.any.every(a =>
+         UNIVERSEEL.has(a.atom) || atomAfhankelijkheid(a.atom) === 'zelf' || atomAfhankelijkheid(a.atom) === 'paar'));
+  const vroegVanaf = volgorde.map(() => []);
+  regels.forEach(r => {
+    if (r.vooraf && !opt.geenSnoei) return;          /* al in de kandidaten verwerkt */
+    const i = r.nodig.length ? Math.max(...r.nodig.map(q => plek[q] === undefined ? laatste : plek[q])) : 0;
+    if (vroeg(r)){ vroegVanaf[Math.min(i, laatste)].push(r); return; }
+    if (opt.geenSnoei || r.iedereen || !r.nodig.length){ eindRegels.push(r); return; }
+    if (i >= laatste) eindRegels.push(r); else regelsBij[i].push(r);
+  });
+  /* Per diepte alle universele regels die vanaf daar meelopen. */
+  const vroegTot = []; let lopend = [];
+  vroegVanaf.forEach((lijst, i) => { lopend = lopend.concat(lijst); vroegTot[i] = lopend; });
+  /* De slachtofferregel op een half bord: iemand anders dan de dader bij het
+     slachtoffer in de ruimte, of de dader ergens anders, en het is al mis. */
+  const slachtofferOk = () => {
+    const v = S.victim, c = S.culprit;
+    if (opt.geenSnoei || !v || !S.people[v]) return true;
+    const room = S.tiles[S.people[v]].room;
+    for (const q in S.people){
+      if (q !== v && q !== c && S.tiles[S.people[q]].room === room) return false;
+    }
+    if (c && S.people[c] && S.tiles[S.people[c]].room !== room) return false;
+    return true;
+  };
+  const kloptNa = i => {
+    const lijst = regelsBij[i];
+    for (let x = 0; x < lijst.length; x++) if (!clueTrue(lijst[x].clue)) return false;
+    const vr = vroegTot[i];
+    for (let x = 0; x < vr.length; x++) if (!clueTrue(vr[x].clue)) return false;
+    if (!slachtofferOk()) return false;
+    if (i === laatste){
+      for (let x = 0; x < eindRegels.length; x++) if (!clueTrue(eindRegels[x].clue)) return false;
+      /* De vaste regel van het slachtoffer staat als tekst vast maar wordt
+         niet door clueTrue nagerekend; voor de speler is het wél een
+         aanwijzing, dus hij telt hier mee. */
+      if (!victimAloneWithCulprit()) return false;
+    }
     return true;
   };
 
@@ -4164,9 +4235,9 @@ function zoekOplossingen(opt){
       if ((++knopen & 1023) === 0 && performance.now() - start > maxTijd){ gestopt = 'tijd'; return; }
       const k = lijst[j], t = S.tiles[k];
       if (rijen.has(t.y) || kolommen.has(t.x)) continue;
-      S.people[p] = k; rijen.add(t.y); kolommen.add(t.x); geplaatst.add(p);
-      if (nogGeenTegenspraak()) stap(i + 1);
-      delete S.people[p]; rijen.delete(t.y); kolommen.delete(t.x); geplaatst.delete(p);
+      S.people[p] = k; rijen.add(t.y); kolommen.add(t.x);
+      if (kloptNa(i)) stap(i + 1);
+      delete S.people[p]; rijen.delete(t.y); kolommen.delete(t.x);
       if (gestopt) return;
     }
   }
@@ -4239,14 +4310,19 @@ function graadUitMeting(sport, verworpen, rondes){
      vier is dat veel. Zonder die deling werd elk groot bord vanzelf zwaar. */
   const mensen = Math.max(1, Object.keys(S.people).length || S.n || 1);
   const per = (verworpen || 0) / mensen;
+  /* IJking 2026-09-02 op zeven levels, met Het Fort (39 verworpen op negen
+     personen, zeven rondes) als vastgelegd ijkpunt voor graad 3. Kasteel 1,
+     Herberg en Kathedraal 2 (puur redeneren), Hinderlaag en Watermolen 2
+     (rond de 0,7 per persoon), Kerkers en Fort 3 (rond de 4,4). Daarboven
+     is ruimte voor zwaardere borden. */
   let g;
   if (!verworpen) g = sport <= 3 ? 1 : 2;   /* puur redeneren blijft licht */
   else if (per <= 1)   g = 2;
-  else if (per <= 2.5) g = 3;
-  else if (per <= 5)   g = 4;
+  else if (per <= 6)   g = 3;
+  else if (per <= 10)  g = 4;
   else g = 5;
   /* Alleen echt lange kettingen van aannames tellen als extra zwaar. */
-  if (rondes >= 6 && g < 5) g += 1;
+  if (rondes >= 10 && g < 5) g += 1;
   return g;
 }
 

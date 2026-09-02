@@ -1,11 +1,11 @@
 {
   "levelNumber": 6,
-  "levelVersion": 3,
+  "levelVersion": 4,
   "levelId": "lvl-mtkjs6belwg3k",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-02T20:40:07.228Z",
+  "exportedAt": "2026-09-02T20:56:39.000Z",
   "complete": false,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -2606,7 +2606,12 @@
       "holds": true
     }
   ],
-  "difficulty": null,
+  "difficulty": {
+    "graad": 3,
+    "label": "Niveau 3 van 5",
+    "uitleg": "Geregeld proberen en verwerpen voordat het klapt.",
+    "sport": 7
+  },
   "solution": {
     "placements": [
       {
