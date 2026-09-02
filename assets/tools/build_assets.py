@@ -23,8 +23,8 @@ ASSETS = os.path.dirname(HERE)
 ROOT = os.path.dirname(ASSETS)
 
 TARGETS = [
-    os.path.join(ROOT, "ClueBoard Builder", "clueboard-builder.html"),
-    os.path.join(ROOT, "ClueBoard Player", "Build", "index.html"),
+    os.path.join(ROOT, "builder", "index.html"),
+    os.path.join(ROOT, "player", "index.html"),
 ]
 BEGIN = "/* @clueboard:assets-begin */"
 END = "/* @clueboard:assets-end */"

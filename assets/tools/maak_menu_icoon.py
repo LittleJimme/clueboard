@@ -10,7 +10,7 @@ import os
 from PIL import Image, ImageDraw
 
 DOEL = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
-    os.path.abspath(__file__)))), "ClueBoard Menu")
+    os.path.abspath(__file__)))), "menu")
 
 GROND = (35, 24, 25)        # --grond (bordeaux, het standaardthema)
 CREME = (240, 232, 226)     # --inkt

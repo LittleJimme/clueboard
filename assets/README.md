@@ -18,8 +18,8 @@ preview.html      contactvel van de hele bank
 
 ## Werkwijze
 
-De iconen worden **ingebakken** in `clueboard-builder.html` en
-`ClueBoard Player/Build/index.html`, tussen de markers
+De iconen worden **ingebakken** in `builder/index.html` en
+`player/index.html`, tussen de markers
 `/* @clueboard:assets-begin */` en `/* @clueboard:assets-end */`. Daardoor
 blijft de builder één zelfstandig bestand en heeft de player geen `fetch` nodig
 die op `file://` toch geblokkeerd wordt.

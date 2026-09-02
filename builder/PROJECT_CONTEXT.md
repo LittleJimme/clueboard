@@ -7,9 +7,9 @@ Dit document bevat de productvisie, technische afspraken en ontwerpprincipes voo
 Lees dit samen met:
 
 ```text
-clueboard-builder.html
-CLAUDE.md
-levels/
+builder/index.html
+builder/CLAUDE.md
+player/Levels/
 ```
 
 De builder is een lokale, statische vanilla HTML/CSS/JavaScript-tool. Hij moet zonder server, framework, buildstap of externe API in een browser kunnen openen.

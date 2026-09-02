@@ -4,8 +4,8 @@ ClueBoard is een visuele deductiepuzzel.
 
 ## Belangrijkste bestanden
 
-- `clueboard-builder.html` — actuele level builder
-- `levels/` — geëxporteerde JSON-levels
+- `index.html` — actuele level builder
+- `../player/Levels/` — geëxporteerde JSON-levels
 - `CLAUDE.md` — vaste instructies voor Claude Code
 - `PROJECT_CONTEXT.md` — uitgebreide productcontext
 - `backups/` — veilige kopieën van oudere builderversies

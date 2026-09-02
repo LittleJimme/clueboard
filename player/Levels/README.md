@@ -1,6 +1,6 @@
 # Levels
 
-Elk bestand hier is één niveau: de JSON die je in ClueBoard Builder exporteert.
+Elk bestand hier is één niveau: de JSON die je in de builder exporteert.
 Ze verschijnen op het beginscherm van de player, onder het ingebouwde
 demo-niveau, in alfabetische volgorde op bestandsnaam.
 
@@ -40,10 +40,10 @@ gesorteerd.
 
 De player leest deze map met `fetch`. Dat werkt niet als je `index.html` met
 dubbelklik opent (`file://`) — je ziet dan alleen het demo-niveau plus de knop
-**Niveau laden**. Start in de map `ClueBoard Player`:
+**Niveau laden**. Start in de hoofdmap van het project:
 
 ```
 python -m http.server 8777
 ```
 
-en open `http://127.0.0.1:8777/Build/index.html`.
+en open `http://127.0.0.1:8777/player/index.html`.

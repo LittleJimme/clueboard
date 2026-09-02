@@ -2126,7 +2126,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
            te gaan (bijvoorbeeld dit bestand rechtstreeks geopend), dan werkt
            de speler gewoon zelfstandig verder, met dit linkje als kortste
            weg terug naar de echte voordeur. -->
-      <a class="naar-hoofdmenu" href="../../ClueBoard Menu/index.html">← Naar het hoofdmenu</a>
+      <a class="naar-hoofdmenu" href="../menu/index.html">← Naar het hoofdmenu</a>
       <div class="level-list" id="levelList"></div>
     </div>
     <input type="file" id="fileInput" accept=".json,application/json" hidden>
@@ -5124,15 +5124,15 @@ function toast(msg){
    Niveaulijst op het beginscherm
    ------------------------------------------------------------
    Het demo-niveau zit in dit bestand. Alle andere niveaus zijn losse
-   JSON-bestanden uit de builder in de map ../Levels/. Zie Levels/README.md.
+   JSON-bestanden uit de builder in de map Levels/. Zie Levels/README.md.
    ------------------------------------------------------------ */
-const LEVELS_DIR="../Levels/";
+const LEVELS_DIR="Levels/";
 /* Het hoofdmenu is de echte voordeur; deze speler blijft daarnaast ook
    zelfstandig werken (open je dit bestand direct, dan zie je gewoon zijn
    eigen lijst). Kom je vanuit het menu binnen (via ?level= of ?upload=1),
    dan wijst "terug naar menu" voortaan naar buiten toe, niet naar deze
    eigen lijst. */
-const HUB_URL="../../ClueBoard Menu/index.html";
+const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
 const PLAYER_APP_VERSION="0.9.12";
 

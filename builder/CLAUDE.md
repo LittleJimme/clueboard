@@ -8,7 +8,7 @@ voor een visuele deductiepuzzel op een grid.
 De actuele builder is altijd:
 
 ```text
-clueboard-builder.html
+builder/index.html
 ```
 
 Werk altijd voort op dit bestand.
@@ -16,7 +16,7 @@ Werk altijd voort op dit bestand.
 ## Belangrijke bestanden
 
 ```text
-clueboard-builder.html      actuele builder
+index.html                  actuele builder
 PROJECT_CONTEXT.md          uitgebreide product- en techniekcontext
 levels/                     geëxporteerde JSON-levels
 backups/                    veilige kopieën vóór grote wijzigingen

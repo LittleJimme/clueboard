@@ -1,0 +1,11 @@
+# Tekstbestanden genormaliseerd naar LF in de repo, zodat diffs leesbaar
+# blijven en Windows niet elke regel als gewijzigd markeert.
+* text=auto eol=lf
+
+# Binaire assets nooit aanraken.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.woff binary
+*.woff2 binary
