@@ -1750,7 +1750,9 @@ body.in-game .mode-switch{transition:opacity .2s}
 body.desktop #app{max-width:none;width:100%}
 body.desktop.in-game #screen-game{
   display:grid;
-  grid-template-columns:minmax(350px,410px) minmax(0,1fr) minmax(320px,380px);
+  /* Links en midden delen de ruimte in verhouding; het bord krijgt het meest.
+     Zo blijft er bij 1280 px ook een volwaardig bord over. */
+  grid-template-columns:minmax(420px,.9fr) minmax(380px,1.4fr) minmax(290px,330px);
   grid-template-rows:auto minmax(0,1fr) auto;
   align-items:stretch;
 }
@@ -1764,7 +1766,43 @@ body.desktop.in-game .game-head .kop-check{max-width:none}
 body.desktop.in-game .pane{display:flex;animation:none}
 /* Links: de regels, met een eigen schuifbalk. */
 body.desktop.in-game #pane-clues{grid-column:1;grid-row:2/4;min-height:0;border-right:1px solid var(--lijn-zacht)}
-body.desktop.in-game #cluesList{flex:1;min-height:0;overflow-y:auto;padding:12px 16px 32px;scrollbar-width:thin}
+/* De regels als dossierkaartjes: portret op zijn rolplaat, naamplaatje,
+   daaronder de regel. Drie naast elkaar, alles in één oogopslag; alleen bij
+   een uitzonderlijk lang dossier verschijnt er een schuifbalk. */
+body.desktop.in-game #cluesList{flex:1;min-height:0;overflow-y:auto;padding:12px 14px 14px;scrollbar-width:thin;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-content:start;align-items:stretch}
+body.desktop.in-game #cluesList>*{flex:none}
+/* min-height:auto, niet 0: met een expliciete nul telt de inhoud niet als
+   minimum en verdeelt het raster de rijen over de hoogte, waarna de tekst
+   onder de kaart uit loopt. */
+body.desktop.in-game .clue-card{flex-direction:column;align-items:center;text-align:center;gap:5px;padding:10px 8px 10px;min-height:auto;border-radius:14px;order:10}
+body.desktop.in-game .clue-card .kop{flex:0 0 auto;width:auto;margin:0;padding:0}
+/* flex:0 0 auto, niet flex:1 uit de mobiele opzet: met flex-basis 0 telt de
+   tekst niet mee voor de hoogte van de kaart en maakt het raster de rijen te
+   laag, waarna de regel onder de kaart uit loopt. */
+body.desktop.in-game .clue-card .lijf{display:flex;flex:0 0 auto;flex-direction:column;align-items:center;gap:6px;padding:0;width:100%;min-width:0}
+body.desktop.in-game .clue-card .lijf .name{font-size:15px;line-height:1.1;text-align:center;padding:3px 9px;border-radius:7px;background:var(--kaart-2);border:1px solid var(--lijn);letter-spacing:.01em;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.desktop.in-game .clue-card .lijf .tag{margin:-2px 0 0}
+body.desktop.in-game .clue-card .txt,body.desktop.in-game .clue-row .txt{font-size:12px;line-height:1.35;text-align:center;width:100%}
+body.desktop.in-game .clue-card .txt .regel{display:block}
+body.desktop.in-game .clue-card .txt .regel+.regel{margin-top:5px;padding-top:5px;border-top:1px dashed var(--lijn)}
+body.desktop.in-game .clue-card .tick{top:8px;left:8px}
+body.desktop.in-game .clue-card .memo-merk{top:8px;right:8px}
+body.desktop.in-game .clue-card .notitie-merk{top:auto;bottom:8px;right:8px}
+body.desktop.in-game .clue-card.done{order:60}
+/* Geen scheidingsregel: wie staat is gedempt en draagt een vinkje, en
+   schuift naar achteren. Zo blijft de hoogte van het dossier gelijk. */
+body.desktop.in-game .list-sep{display:none}
+/* Bordregels: één snipper over de volle breedte, onderaan het dossier. */
+body.desktop.in-game .clue-card.board{grid-column:1/-1;order:99;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;padding:10px 12px;min-height:auto}
+body.desktop.in-game .clue-card.board .kop{display:none}
+body.desktop.in-game .clue-card.board .name{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;background:none;border:0;padding:0;color:var(--goud);gap:6px}
+body.desktop.in-game .clue-card.board .txt{text-align:left;font-size:12.5px}
+/* Het slachtoffer als kaartje in het raster. */
+body.desktop.in-game .clue-row.victim{grid-column:auto;order:98;flex-direction:column;align-items:center;text-align:center;gap:5px;padding:10px 8px 10px;margin:0;min-height:auto}
+body.desktop.in-game .clue-row.victim .av{width:auto}
+body.desktop.in-game .clue-row .who{flex-direction:column;gap:6px;align-items:center}
+body.desktop.in-game .clue-row .who b{font-size:15px;padding:3px 9px;border-radius:7px;background:var(--kaart-2);border:1px solid var(--lijn)}
 /* Een kaart is op desktop één klikvlak; de band rechts en het slepen zijn
    telefoongebaren. De gekozen kaart draagt een gouden rand. */
 body.desktop.in-game .clue-card{cursor:pointer;padding-right:14px}
@@ -1787,7 +1825,10 @@ body.desktop.in-game .mode-switch button{padding:0 20px;min-width:0;gap:8px}
 body.desktop.in-game .bord-tip{display:block;grid-column:2;font:600 12.5px var(--font-ui);color:var(--dof);line-height:1.4;padding-right:8px}
 body.desktop.in-game .bord-tip b{color:var(--inkt-2);font-weight:800}
 /* Op een smaller desktopvenster is er minder ruimte naast de schakelaar. */
-@media (max-width:1360px){ body.desktop.in-game .bord-tip{font-size:11.5px;line-height:1.35} }
+@media (max-width:1360px){
+  body.desktop.in-game .bord-tip{font-size:11.5px;line-height:1.35}
+  body.desktop.in-game .clue-card .lijf .name,body.desktop.in-game .clue-row .who b{font-size:14px;padding:3px 7px}
+}
 /* De hintknop staat in de werkbalk, niet zwevend over het bord. */
 body.desktop.in-game .hint-knop{left:auto;right:24px;bottom:14px;width:46px;height:46px}
 /* Rechts: het detailpaneel, altijd open. */
@@ -1802,6 +1843,32 @@ body.desktop.in-game #detailBody .detail-leeg{margin:0 0 18px;padding:12px 14px;
 body.desktop.in-game #detailBody .pd-regels+.detail-kop{margin-top:18px}
 body.desktop.in-game #detailBody .legend-row{padding:6px 0}
 body.desktop.in-game #detailBody .sheet-greep,body.desktop.in-game #detailBody .sheet-kop{display:none}
+/* Hulp: de twee schakelaars en de hint hebben op desktop een vaste plek in
+   het paneel, in plaats van verstopt in de instellingen. */
+body.desktop.in-game .hulp-blok{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+body.desktop.in-game .hulp-rij{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:12px;background:var(--kaart-2);border:1px solid var(--lijn);color:var(--inkt);text-align:left;font:inherit;cursor:pointer}
+body.desktop.in-game .hulp-rij:hover{border-color:var(--goud)}
+body.desktop.in-game .hulp-rij .ic{width:20px;height:20px;flex:0 0 auto;color:var(--goud);display:flex}
+body.desktop.in-game .hulp-rij .ic svg{width:100%;height:100%}
+body.desktop.in-game .hulp-rij .tekst{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+body.desktop.in-game .hulp-rij b{font:700 13.5px var(--font-ui);color:var(--inkt)}
+body.desktop.in-game .hulp-rij small{font-size:11.5px;color:var(--dof);line-height:1.35}
+body.desktop.in-game .hulp-rij .schuif{flex:0 0 auto;width:34px;height:20px;border-radius:999px;background:var(--lijn);position:relative;transition:background .2s}
+body.desktop.in-game .hulp-rij .schuif::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .2s}
+body.desktop.in-game .hulp-rij.aan .schuif{background:var(--goud)}
+body.desktop.in-game .hulp-rij.aan .schuif::after{transform:translateX(14px)}
+body.desktop.in-game .hulp-hint{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+body.desktop.in-game .hulp-hint .ic{width:18px;height:18px;display:flex}
+body.desktop.in-game .hulp-hint .ic svg{width:100%;height:100%}
+body.desktop.in-game .detail-terug{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px;padding:6px 11px 6px 8px;border-radius:999px;border:1px solid var(--lijn);background:var(--kaart-2);color:var(--inkt-2);font:700 11.5px var(--font-ui);cursor:pointer}
+body.desktop.in-game .detail-terug svg{width:12px;height:12px;transform:rotate(90deg)}
+body.desktop.in-game .detail-terug:hover{border-color:var(--goud);color:var(--inkt)}
+body.desktop.in-game .hint-knop{display:none}
+/* Zwaarte in de kop, naast de titel. */
+body.desktop.in-game .kop-graad{display:inline-flex;align-items:center;gap:8px;font:800 11px var(--font-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--goud);white-space:nowrap}
+body.desktop.in-game .kop-graad .stippen{display:inline-flex;gap:3px}
+body.desktop.in-game .kop-graad .stippen b{width:6px;height:6px;border-radius:50%;background:var(--lijn);display:block}
+body.desktop.in-game .kop-graad .stippen b.aan{background:var(--goud)}
 /* Instellingen als klein dialoogvenster in plaats van een vel van onderen. */
 body.desktop .sheet-modal{align-items:center;padding:24px}
 body.desktop .sheet-modal .sheet{max-width:440px;border-radius:22px;transform:none;box-shadow:var(--sch2)}
@@ -5087,7 +5154,7 @@ function personCard(clues,p,done){
      het introscherm, zodat je een persoon overal op dezelfde manier herkent. */
   const kop=document.createElement("div");
   kop.className="kop";
-  kop.appendChild(personPortrait(p,{size:60}));
+  kop.appendChild(personPortrait(p,{size:isDesktop()?64:60}));
   card.appendChild(kop);
 
   /* Naam, rol en regel staan in één tekstkolom naast het portret; niets
@@ -5259,7 +5326,7 @@ function renderClues(){
     row.className="clue-row victim";
     const av=document.createElement("div");
     av.className="av";
-    av.appendChild(personPortrait(victimBoven,{size:60}));
+    av.appendChild(personPortrait(victimBoven,{size:isDesktop()?64:60}));
     row.appendChild(av);
     const body=document.createElement("div");
     body.className="body";
@@ -5425,19 +5492,36 @@ function tekenDetail(){
   const ta=box.querySelector("#pdNotitie");
   if(ta && document.activeElement===ta) return;
   if(detailSel && (detailSel.p || (detailSel.cs&&detailSel.cs.length))){
-    box.innerHTML=detailHtml(detailSel.cs,detailSel.p);
+    box.innerHTML='<button type="button" class="detail-terug" id="detailTerug">'+icon("chevron",{sw:2.4})+' Hulp en legenda</button>'
+      +detailHtml(detailSel.cs,detailSel.p);
     bindDetail(box,detailSel.p);
+    const terug=box.querySelector("#detailTerug");
+    if(terug) terug.addEventListener("click",()=>{ detailSel=null; tekenDetail(); renderClues(); });
     return;
   }
-  /* Niets gekozen: wat over het hele bord gaat, en de legenda. */
-  let html='<div class="detail-leeg">Klik links op een persoon om zijn regels, je notities en zijn plek hier te zien. Klik op het bord om te plaatsen.</div>';
-  if(M.boardClues.length){
-    html+='<div class="detail-kop">'+(M.boardClues.length>1?'Bordregels':'Bordregel')+'</div>'
-      +'<div class="pd-regels">'+M.boardClues.map(c=>'<div class="pd-regel"><span class="ic">'+AssetBank.ui("badge")+'</span><div>'+highlightClueText(c.text)+'</div></div>').join("")+'</div>';
-  }
-  html+='<div class="detail-kop" style="margin-top:18px">Legenda</div>'+legendaHtml();
+  /* Niets gekozen: de hulp die je onderweg nodig hebt, en de legenda. De
+     bordregels staan links in het dossier, dus hier niet nog eens. */
+  let html='<div class="detail-kop">Hulp</div><div class="hulp-blok">'
+    +'<button type="button" class="hulp-rij'+(easyMode?' aan':'')+'" data-desk="easy" aria-pressed="'+(easyMode?'true':'false')+'">'
+      +'<span class="ic">'+AssetBank.ui("sparkle")+'</span>'
+      +'<span class="tekst"><b>Easy mode</b><small>Een verkeerde plek wordt meteen tegengehouden, en je kunt een hint vragen.</small></span>'
+      +'<i class="schuif"></i></button>'
+    +'<button type="button" class="hulp-rij'+(autoKruis?' aan':'')+'" data-desk="kruis" aria-pressed="'+(autoKruis?'true':'false')+'">'
+      +'<span class="ic">'+icon("cross",{sw:2.4})+'</span>'
+      +'<span class="tekst"><b>Auto-kruisjes</b><small>Zet je iemand neer, dan gaan zijn rij en kolom vanzelf dicht.</small></span>'
+      +'<i class="schuif"></i></button>'
+    +(easyMode?'<button type="button" class="btn hulp-hint" data-desk="hint"><span class="ic">'+AssetBank.ui("sparkle")+'</span>Geef een hint</button>':'')
+    +'</div>';
+  html+='<div class="detail-kop">Legenda</div>'+legendaHtml();
   box.innerHTML=html;
   hydrateLegenda(box);
+  $$("[data-desk]",box).forEach(b=>b.addEventListener("click",()=>{
+    const w=b.dataset.desk;
+    if(w==="easy") setEasyMode(!easyMode);
+    else if(w==="kruis") setAutoKruis(!autoKruis);
+    else if(w==="hint"){ $$(".sheet-modal.open").forEach(closeModal); openModal("#modalHint"); return; }
+    tekenDetail();
+  }));
 }
 
 function showLegend(){
@@ -5814,7 +5898,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.36";
+const PLAYER_APP_VERSION="0.9.37";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6110,7 +6194,9 @@ function showLevelDetail(levelIndex){
   const gr=levelGraad(raw);
   $("#introZaak").textContent=raw.levelNumber?("Zaak "+raw.levelNumber):(raw.demo?"Voorbeeldzaak":"");
   $("#introTitel").textContent=c.title||"Naamloos niveau";
-  { const kt=$("#kopTitel"); if(kt) kt.innerHTML='<b>'+esc(c.title||"Naamloos niveau")+'</b>'+(raw.levelNumber?'<span>Zaak '+raw.levelNumber+'</span>':(raw.demo?'<span>Voorbeeldzaak</span>':'')); }
+  { const kt=$("#kopTitel"); if(kt) kt.innerHTML='<b>'+esc(c.title||"Naamloos niveau")+'</b>'
+      +(raw.levelNumber?'<span>Zaak '+raw.levelNumber+'</span>':(raw.demo?'<span>Voorbeeldzaak</span>':''))
+      +(gr?'<span class="kop-graad"><i class="stippen">'+[1,2,3,4,5].map(n=>'<b class="'+(n<=gr.graad?"aan":"")+'"></b>').join("")+'</i>'+esc(GRAAD_WOORD[gr.graad]||"")+'</span>':''); }
   detailSel=null;
   $("#introGraad").innerHTML=gr
     ? '<span class="stippen">'+[1,2,3,4,5].map(n=>'<i class="'+(n<=gr.graad?"aan":"")+'"></i>').join("")+'</span>'
@@ -6622,6 +6708,9 @@ function zetDesktop(){
   setTimeout(fitBoard,0);
 }
 DESKTOP_MQ.addEventListener("change",zetDesktop);
+if(typeof ResizeObserver!=="undefined"){
+  new ResizeObserver(()=>{ if(M && document.body.classList.contains("in-game")) fitBoard(); }).observe($("#boardViewport"));
+}
 /* Niet elke browser vuurt de mediaquery-wissel betrouwbaar bij het slepen
    van een venster; de gewone resize-gebeurtenis vangt dat op. */
 window.addEventListener("resize",zetDesktop);
