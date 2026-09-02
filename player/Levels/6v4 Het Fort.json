@@ -5,8 +5,8 @@
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-02T20:56:39.000Z",
-  "complete": false,
+  "exportedAt": "2026-09-02T21:06:11.057Z",
+  "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
     "tileId": "c{column}r{row}, bijvoorbeeld c3r4.",
@@ -2250,6 +2250,7 @@
         "id": "clue-1",
         "scope": "person",
         "personId": "p1",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -2268,6 +2269,7 @@
         "id": "clue-2",
         "scope": "person",
         "personId": "p2",
+        "locked": false,
         "terms": [
           {
             "not": true,
@@ -2286,6 +2288,7 @@
         "id": "clue-3",
         "scope": "person",
         "personId": "p3",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -2304,6 +2307,7 @@
         "id": "clue-4",
         "scope": "person",
         "personId": "p4",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -2322,6 +2326,7 @@
         "id": "clue-5",
         "scope": "person",
         "personId": "p5",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -2340,6 +2345,7 @@
         "id": "clue-6",
         "scope": "person",
         "personId": "p6",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -2358,6 +2364,7 @@
         "id": "clue-7",
         "scope": "person",
         "personId": "p7",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -2379,6 +2386,7 @@
         "id": "clue-8",
         "scope": "person",
         "personId": "p9",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -2655,9 +2663,9 @@
     "culpritId": "p3"
   },
   "solutionCheck": {
-    "status": "onbepaald",
-    "solutions": null,
-    "ms": 2000,
+    "status": "uniek",
+    "solutions": 1,
+    "ms": 191,
     "override": null
   }
 }
