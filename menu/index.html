@@ -148,21 +148,6 @@ body::after{
   content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:var(--korrel);background-size:170px 170px;opacity:.045;
 }
-/* het lichte bord als groot accentbeeld: linksonder, loopt van het scherm
-   af en schemert achter de lijst door */
-body::before{
-  content:"";position:fixed;left:-120px;bottom:-140px;width:520px;height:520px;
-  z-index:0;opacity:.05;transform:rotate(-6deg);pointer-events:none;
-  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='none' stroke='%23F0E8E2' stroke-width='1.6'><rect x='4' y='4' width='27' height='27' rx='7'/><rect x='37' y='4' width='27' height='27' rx='7'/><rect x='70' y='4' width='27' height='27' rx='7'/><rect x='4' y='37' width='27' height='27' rx='7'/><rect x='70' y='37' width='27' height='27' rx='7'/><rect x='4' y='70' width='27' height='27' rx='7'/><rect x='37' y='70' width='27' height='27' rx='7'/><rect x='70' y='70' width='27' height='27' rx='7'/></g><rect x='37' y='37' width='27' height='27' rx='7' fill='%23C9932F'/></svg>") center/contain no-repeat;
-}
-html[data-thema="licht"] body::before{
-  opacity:.07;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='none' stroke='%23262419' stroke-width='1.6'><rect x='4' y='4' width='27' height='27' rx='7'/><rect x='37' y='4' width='27' height='27' rx='7'/><rect x='70' y='4' width='27' height='27' rx='7'/><rect x='4' y='37' width='27' height='27' rx='7'/><rect x='70' y='37' width='27' height='27' rx='7'/><rect x='4' y='70' width='27' height='27' rx='7'/><rect x='37' y='70' width='27' height='27' rx='7'/><rect x='70' y='70' width='27' height='27' rx='7'/></g><rect x='37' y='37' width='27' height='27' rx='7' fill='%23916008'/></svg>");
-}
-/* op een telefoon is dat bord veel te groot: kleiner en verder uit beeld */
-@media (max-width:620px){
-  body::before{width:300px;height:300px;left:-90px;bottom:-80px;opacity:.045}
-}
 h1,h2,h3{font-family:var(--font-display);font-weight:600;letter-spacing:0;margin:0}
 p{margin:0}
 a{color:inherit;touch-action:manipulation}
@@ -262,7 +247,6 @@ html[data-thema="licht"] .titelblok h1 em::after{
   .titelblok .scheiding{margin:9px auto 9px}
   .titelblok h1{font-size:22px}
 }
-/* het accentbeeld staat paginabreed linksonder (zie body::before) */
 
 /* ---------- filterregel boven de lijst ---------- */
 .filter-plak{

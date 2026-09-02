@@ -1652,7 +1652,7 @@ body.in-game #btnCheck[disabled]{opacity:.5;filter:none;color:var(--goud-op)}
 body.in-game .tabbar{
   /* Gelijke buitenkolommen: dan staat de schuif altijd precies in het midden,
      ook als de wisselknop van woord verandert. */
-  display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;
+  display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:10px;
   padding:12px 14px calc(15px + env(safe-area-inset-bottom));
   background:none;border-top:1px solid var(--lijn-zacht);box-shadow:none;
   backdrop-filter:none;-webkit-backdrop-filter:none;
@@ -1681,7 +1681,7 @@ body.in-game .hint-knop[hidden]{display:none}
 /* Vaste kolommen: op het regelstabblad verdwijnt de schakelaar, en dan mag
    de wisselknop niet in het midden schuiven en uitrekken. */
 body.in-game .mode-bar{display:flex;justify-content:flex-start;padding:0;background:none;box-shadow:none;min-width:0;grid-column:2;touch-action:pan-y}
-body.in-game .tabbar .view-switch{grid-column:3;justify-self:end}
+body.in-game .tabbar .view-switch{grid-column:4;justify-self:end}
 body.in-game .mode-switch{
   position:relative;display:flex;gap:0;max-width:300px;width:100%;
   padding:3px;border-radius:999px;background:var(--kaart);border:1px solid var(--lijn);box-shadow:var(--sch1);
@@ -1699,18 +1699,6 @@ body.in-game .mode-switch button{
 }
 body.in-game .mode-switch button svg{width:16px;height:16px}
 body.in-game .mode-switch button.active{color:var(--grond);background:none;text-shadow:none}
-/* Alleen de actieve kant draagt het woord; de andere kant is een pictogram.
-   Zo lees je meteen welke modus aanstaat, en blijft de schakelaar smal. */
-/* Het woord op twee korte regels naast het pictogram: "NOTITIE / MODUS".
-   Op één regel paste het nooit naast de Bord/Regels-knop. */
-body.in-game .mode-switch button .lbl{display:none;white-space:normal;width:min-content;font-size:9.5px;line-height:1.1;letter-spacing:.05em;text-align:left}
-body.in-game .mode-switch button.active .lbl{display:block}
-body.in-game .mode-switch button:not(.active){flex:0 0 42px;padding:0}
-body.in-game .mode-switch button.active{min-width:0;padding:0 8px}
-body.in-game .mode-switch .ms-thumb{width:auto;right:3px;left:3px;transform:none}
-body.in-game .mode-switch.place .ms-thumb{transform:none}
-body.in-game .mode-switch:not(.place) .ms-thumb{right:45px}
-body.in-game .mode-switch.place .ms-thumb{left:45px}
 body.in-game .view-switch{
   /* Vaste maat: "Bord" is korter dan "Regels", en zonder deze bodem
      verspringt de hele voetbalk bij elke wissel. */
@@ -2135,7 +2123,7 @@ body.in-game #modalIntro .intro-kop{
      Nu bepaalt alleen de bovenruimte de plek, en volgt de rest er direct op.
      Meeschalend met de schermhoogte, want 140px is op een korte telefoon
      zonde van de ruimte. */
-  padding:clamp(52px,21vh,164px) 0 clamp(28px,6vh,52px);
+  padding:clamp(30px,11vh,86px) 0 clamp(28px,6vh,52px);
   /* Een heel zachte warme gloed achter de titel, zodat de rust eromheen als
      titelpagina leest en niet als een gat. */
   background:radial-gradient(ellipse 82% 48% at 50% 44%,rgba(201,147,47,.10),transparent 72%);
@@ -2296,7 +2284,7 @@ body.in-game #modalIntro .btn{width:100%;height:50px;font-size:18px}
 /* Het duwtje om verder te lezen. Zweeft boven de kolom, dus buiten de
    scrollstroom; [hidden] moet expliciet winnen van de display:flex hierboven. */
 .scroll-wenk{
-  position:absolute;left:50%;bottom:calc(110px + env(safe-area-inset-bottom));
+  position:absolute;left:50%;bottom:calc(64px + env(safe-area-inset-bottom));
   transform:translateX(-50%);
   width:38px;height:38px;border-radius:999px;padding:0;z-index:3;
   display:flex;align-items:center;justify-content:center;
@@ -2461,8 +2449,8 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       <div class="mode-bar" id="modeBar">
         <div class="mode-switch" id="modeSwitch">
           <div class="ms-thumb"></div>
-          <button class="active" id="btnModeNote" aria-pressed="true"><span class="ic" data-icon="note"></span><span class="lbl">Notitie modus</span></button>
-          <button id="btnModePlace" aria-pressed="false"><span class="ic" data-icon="pawn"></span><span class="lbl">Plaats modus</span></button>
+          <button class="active" id="btnModeNote" aria-pressed="true"><span class="ic" data-icon="note"></span><span class="lbl">Notitie</span></button>
+          <button id="btnModePlace" aria-pressed="false"><span class="ic" data-icon="pawn"></span><span class="lbl">Plaats</span></button>
         </div>
       </div>
       <button class="view-switch" id="viewSwitch">
@@ -5594,7 +5582,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.31";
+const PLAYER_APP_VERSION="0.9.32";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
