@@ -317,7 +317,7 @@ html[data-thema="licht"] .titelblok h1 em::after{
 .level-list{
   flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
-  display:flex;flex-direction:column;gap:8px;
+  display:flex;flex-direction:column;gap:10px;
   /* Geen balk; de randen van het venster zijn een verloop, zodat een kaart
      onderaan opkomt en bovenaan oplost in plaats van afgesneden te worden. */
   scrollbar-width:none;
@@ -328,9 +328,13 @@ html[data-thema="licht"] .titelblok h1 em::after{
 .level-list::-webkit-scrollbar{display:none}
 .level-rij{
   position:relative;overflow:hidden;
+  /* Nooit krimpen: de lijst is een flexkolom en een kaart met overflow:hidden
+     zou anders in elkaar gedrukt worden zodra de lijst voller is dan het
+     scherm, in plaats van te scrollen. */
+  flex:0 0 auto;
   display:flex;align-items:center;gap:13px;text-decoration:none;
   background:var(--kaart);border:1px solid var(--lijn);border-radius:15px;
-  padding:15px 16px;box-shadow:var(--sch1);
+  padding:20px 16px;box-shadow:var(--sch1);
   transition:transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .18s,border-color .18s;
 }
 /* het thema als klein wapenschild in de hoek, op een zacht vlakje —
@@ -441,7 +445,11 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 }
 #stapKop{flex:0 0 auto}
 /* Titelkaart: alleen de kop, groot in het midden. */
-#modalUitleg .vel.titelkaart #stapKop{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;margin:0;padding:0;font-size:44px;line-height:1.1}
+#modalUitleg .vel.titelkaart #stapKop{flex:1;display:flex;flex-direction:column;gap:22px;align-items:center;justify-content:center;text-align:center;margin:0;padding:0;font-size:44px;line-height:1.1}
+.uitleg-merk{display:none;height:34px;width:auto;max-width:60%}
+#modalUitleg .vel.titelkaart .uitleg-merk-donker{display:block}
+html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-donker{display:none}
+html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display:block}
 #modalUitleg .vel.titelkaart .stap-teller,#modalUitleg .vel.titelkaart .stap-beeld,#modalUitleg .vel.titelkaart .stap-tekst{display:none}
 .stap-beeld{
   flex:0 0 214px;display:flex;align-items:center;justify-content:center;
@@ -903,7 +911,11 @@ function tekenUitleg(){
   $("#modalUitleg .vel").classList.toggle("titelkaart",!!s.titel);
   const deel=UITLEG_STAPPEN.filter(x=>x.set===s.set&&!x.titel), i=deel.indexOf(s);
   $("#stapTeller").textContent=s.titel?"":"Stap "+(i+1)+" van "+deel.length;
-  $("#stapKop").textContent=s.titel||s.kop;
+  if(s.titel){
+    $("#stapKop").innerHTML='<img class="uitleg-merk uitleg-merk-donker" src="../assets/brand/logo-dark.png" alt="ClueBoard">'
+      +'<img class="uitleg-merk uitleg-merk-licht" src="../assets/brand/logo.png" alt="ClueBoard"><span></span>';
+    $("#stapKop span").textContent=s.titel;
+  } else $("#stapKop").textContent=s.kop;
   $("#stapBeeld").innerHTML=s.titel?"":s.beeld;      /* eigen vaste inhoud, geen levelinvoer */
   $("#stapTekst").innerHTML=s.titel?"":s.tekst;      /* idem */
   $("#stapBolletjes").innerHTML=s.titel?"":deel.map((_,j)=>'<i class="'+(j===i?"aan":"")+'"></i>').join("");

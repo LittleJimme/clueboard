@@ -1888,7 +1888,7 @@ body.in-game #cluesList>*{flex:0 0 auto}
    een dun pijltje dat zegt dat er meer achter zit. Weinig lucht, zodat een
    bord met acht personen zonder scrollen te overzien is. */
 body.in-game .clue-card{flex-direction:row;align-items:center;text-align:left;gap:10px;
-  padding:10px 50px 10px 8px;border-left-width:1px;border-radius:12px;min-height:82px;
+  padding:10px 50px 10px 8px;border:1px solid var(--lijn);border-radius:12px;min-height:82px;
   background:color-mix(in srgb,var(--pc,var(--kaart)) 12%,var(--kaart));
   transition:transform .22s cubic-bezier(.2,.8,.3,1);touch-action:pan-y}
 body.in-game .clue-card:hover{transform:none;box-shadow:var(--sch1)}
@@ -1980,7 +1980,7 @@ body.in-game #modalClue .btn{background:var(--goud);color:var(--goud-op);border:
 body.in-game .clue-card.board .name{display:flex;align-items:center;gap:6px}
 body.in-game .clue-card.board .name .ic{width:15px;height:15px;color:var(--goud)}
 body.in-game .clue-card.board .name .ic svg{width:100%;height:100%}
-body.in-game .clue-row.victim{position:relative;margin-top:4px;padding:10px 50px 10px 8px;border-left-width:1px;border-radius:12px;gap:10px;--pc:#B6544A;--pc-op:#fff;background:color-mix(in srgb,#B6544A 12%,var(--kaart))}
+body.in-game .clue-row.victim{position:relative;margin-top:4px;padding:10px 50px 10px 8px;border:1px solid var(--lijn);border-radius:12px;gap:10px;--pc:#B6544A;--pc-op:#fff;background:color-mix(in srgb,#B6544A 12%,var(--kaart))}
 body.in-game .clue-row .who{justify-content:space-between;flex-wrap:nowrap}
 /* Het slachtoffer krijgt hetzelfde ronde portret als iedereen, in dezelfde kolom. */
 body.in-game .clue-row.victim .av{width:68px;height:auto;border:0;padding:0;border-radius:0;background:none;box-shadow:none;overflow:visible;display:flex;justify-content:center;align-items:center}
@@ -1999,7 +1999,7 @@ body.in-game .clue-card .name{font-family:var(--font-display);font-weight:600;fo
 body.in-game .clue-card .txt,body.in-game .clue-row .txt{font-size:15px;line-height:1.42;color:var(--inkt-2);font-weight:500;margin-top:3px}
 body.in-game .clue-card .txt.meer .regel + .regel{border-top:1px solid var(--lijn)}
 body.in-game .clue-card.done,body.in-game .clue-row.done{background:var(--kaart-2);opacity:.7}
-body.in-game .clue-card.victim,body.in-game .clue-row.victim{border-color:rgba(224,112,90,.45)}
+body.in-game .clue-card.victim,body.in-game .clue-row.victim{border-color:var(--lijn)}
 body.in-game .clue-row .who b{font-family:var(--font-display);font-weight:600;font-size:17px;color:var(--inkt)}
 body.in-game .clue-card .txt b,body.in-game .clue-row .txt b,body.in-game .sheet p b{
   color:var(--inkt);background:linear-gradient(180deg,rgba(0,0,0,0) 60%,var(--goud-zacht) 60%)}
@@ -2029,7 +2029,11 @@ body.in-game .clue-card.board .txt.meer .regel + .regel{border-top:1px solid var
 .stap-teller{flex:0 0 auto;font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--dof);margin-bottom:6px}
 #helpKop{flex:0 0 auto;margin:0 36px 10px 0;font-size:26px}
 /* Titelkaart: alleen de kop, groot in het midden. */
-.stap-vel.titelkaart #helpKop{flex:1;min-height:240px;display:flex;align-items:center;justify-content:center;text-align:center;margin:0;font-size:44px;line-height:1.1}
+.stap-vel.titelkaart #helpKop{flex:1;min-height:240px;display:flex;flex-direction:column;gap:22px;align-items:center;justify-content:center;text-align:center;margin:0;font-size:44px;line-height:1.1}
+.help-merk{display:none;height:34px;width:auto;max-width:60%}
+.stap-vel.titelkaart .help-merk-donker{display:block}
+html[data-thema="licht"] .stap-vel.titelkaart .help-merk-donker{display:none}
+html[data-thema="licht"] .stap-vel.titelkaart .help-merk-licht{display:block}
 .stap-vel.titelkaart .stap-teller,.stap-vel.titelkaart .stap-beeld,.stap-vel.titelkaart .stap-tekst{display:none}
 .stap-beeld[hidden]{display:none}
 .help-keuze{flex:0 0 auto;display:flex;gap:4px;padding:3px;margin:0 40px 12px 0;border-radius:999px;
@@ -2069,8 +2073,11 @@ body.in-end::after{opacity:.045}
 /* Titel en zwaarte staan vast; de rest schuift eronder door, met een zacht
    verloop aan de bovenkant in plaats van een harde snede. */
 
-.uitslag-merk{text-align:center;font-family:var(--font-display);font-weight:600;font-size:14px;
-  letter-spacing:.2em;text-transform:uppercase;color:var(--dof)}
+.uitslag-merk{text-align:center}
+.uitslag-logo{display:block;height:26px;width:auto;margin:0 auto}
+.uitslag-logo-licht{display:none}
+html[data-thema="licht"] .uitslag-logo-licht{display:block}
+html[data-thema="licht"] .uitslag-logo-donker{display:none}
 /* De rolvorm zegt al wat iemand is en de regel erboven telt de rollen; de
    banderol eronder zou het een derde keer zeggen. */
 
@@ -2154,13 +2161,13 @@ body.in-game #modalIntro .intro-scroll{position:relative;z-index:1}
 /* Vier soorten: vrije vloer (basis) alleen een omtrek, een object waar je op
    kunt staan (.op) licht gevuld, niet bezetbaar (.blok) donkerder, en vakjes
    die in de bouwer zijn weggehaald (.leeg) helemaal niet. */
-.wm-c{aspect-ratio:1;border-radius:4px;background:none;box-shadow:inset 0 0 0 1px rgba(240,232,226,.14)}
-.wm-c.op{background:rgba(240,232,226,.12);box-shadow:none}
-.wm-c.blok{background:rgba(0,0,0,.24);box-shadow:none}
+.wm-c{aspect-ratio:1;border-radius:4px;background:none;box-shadow:inset 0 0 0 1px rgba(240,232,226,.08)}
+.wm-c.op{background:rgba(240,232,226,.06);box-shadow:none}
+.wm-c.blok{background:rgba(0,0,0,.12);box-shadow:none}
 .wm-c.leeg{background:none;box-shadow:none;visibility:hidden}
-html[data-thema="licht"] .wm-c{background:none;box-shadow:inset 0 0 0 1px rgba(38,36,29,.13)}
-html[data-thema="licht"] .wm-c.op{background:rgba(38,36,29,.07);box-shadow:none}
-html[data-thema="licht"] .wm-c.blok{background:rgba(38,36,29,.16);box-shadow:none}
+html[data-thema="licht"] .wm-c{background:none;box-shadow:inset 0 0 0 1px rgba(38,36,29,.08)}
+html[data-thema="licht"] .wm-c.op{background:rgba(38,36,29,.045);box-shadow:none}
+html[data-thema="licht"] .wm-c.blok{background:rgba(38,36,29,.09);box-shadow:none}
 /* Moet mee in het thema: html[data-thema] .wm-c weegt zwaarder dan .wm-c.leeg,
    dus zonder deze regel kleurden de vakjes buiten het bord alsnog en verloor
    de plattegrond zijn vorm. */
@@ -2233,7 +2240,7 @@ html[data-thema="licht"] .bordregel{background:rgba(145,96,8,.13);border-color:r
    en oogt het blok rustiger. */
 /* Wie erbij was: rijen van drie en twee om en om (zes kolommen, elk portret
    over twee), portret met de naam eronder. */
-.deelnemers{display:grid;grid-template-columns:repeat(6,1fr);gap:28px 6px;padding:40px 0 10px;justify-items:center}
+.deelnemers{display:grid;grid-template-columns:repeat(6,1fr);gap:22px 0;padding:40px 0 10px;justify-items:center;max-width:340px;margin:0 auto}
 .deelnemer{display:grid;grid-template-rows:calc(88px*1.12) auto;align-content:start;align-items:center;justify-items:center;gap:6px;min-width:0;width:100%}
 .deelnemer .portret{flex:0 0 auto}
 .dl-tekst{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;max-width:100%;text-align:center}
@@ -2319,9 +2326,9 @@ body.in-end #endTitle{margin:0;font-family:var(--font-display);font-weight:600;f
 .uitslag-lijst{display:flex;flex-direction:column;gap:6px;text-align:left}
 .uitslag-rij{display:flex;align-items:center;gap:11px;background:var(--kaart);border:1px solid var(--lijn);border-radius:14px;
   padding:8px 12px 8px 8px;animation:uitslagIn .4s cubic-bezier(.2,.8,.3,1) both}
-.uitslag-rij .av{width:38px;height:38px;border-radius:11px;overflow:hidden;flex:0 0 auto}
+.uitslag-rij .av{width:52px;height:auto;flex:0 0 auto;display:flex;justify-content:center;align-items:center}
 .uitslag-rij .av svg{width:100%;height:100%;display:block}
-.uitslag-rij .av{position:relative;background:var(--ch-tint,#F3E9DA)}
+.uitslag-rij .av{position:relative;background:none}
 .uitslag-rij .wie{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}
 .uitslag-rij .wie b{font-family:var(--font-display);font-weight:600;font-size:17px;color:var(--inkt)}
 .uitslag-rij .wie small{font-size:12px;color:var(--dof);font-weight:600;margin-top:1px}
@@ -2448,7 +2455,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <!-- ============ EINDE ============ -->
   <section id="screen-end" class="screen">
     <div class="uitslag">
-      <div class="uitslag-merk"><span class="w1">Clue</span>Board</div>
+      <div class="uitslag-merk"><img class="uitslag-logo uitslag-logo-donker" src="../assets/brand/logo-dark.png" alt="ClueBoard"><img class="uitslag-logo uitslag-logo-licht" src="../assets/brand/logo.png" alt="ClueBoard"></div>
       <div class="uitslag-beeld" id="endBeeld"></div>
       <h2 id="endTitle">—</h2>
       <p class="uitslag-sub" id="endSub"></p>
@@ -2970,7 +2977,7 @@ function buildModel(raw){
     const item={id:c.id, personId:c.personId||null, text:c.text||c.storyText};
     if(item.personId && item.personId===M.victimId && !M.victimClue) M.victimClue=item;
     else if(item.personId) M.clues.push(item);
-    else M.boardClues.push(item);
+    else if(!isAlgemeneRegel(item.text||item.storyText)) M.boardClues.push(item);
   });
   assignGenericObjectIcons(M);
   M.bounds=boardBounds(M);
@@ -4421,9 +4428,12 @@ function openRadial(center,tileId){
      naam en de rol eronder krimpen mee. */
   const stepAng=(N>1)?SPAN/(N-1):Math.PI;
   const chord=2*radius*Math.sin(Math.min(stepAng,Math.PI)/2);
-  const btnSize=Math.max(38,Math.min(68,Math.floor(Math.min(chord-8,size*0.17))));
+  /* Groter dan vroeger, maar vanaf tien personen weer de oude maat: dan
+     zit de ring te vol en zouden de knoppen elkaar raken. */
+  const vol=N>=10;
+  const btnSize=Math.max(38,Math.min(vol?68:82,Math.floor(Math.min(chord-8,size*(vol?0.17:0.21)))));
   ring.style.setProperty("--rbtn",btnSize+"px");
-  ring.style.setProperty("--rlbl",Math.max(10,Math.min(14,Math.round(btnSize*0.21)))+"px");
+  ring.style.setProperty("--rlbl",Math.max(10,Math.min(vol?14:17,Math.round(btnSize*0.21)))+"px");
   ring.style.setProperty("--rsub",Math.max(9,Math.min(12,Math.round(btnSize*0.18)))+"px");
   /* Krap in de ring: dan alleen de rol tonen, niet ook nog de stand. */
   ring.classList.toggle("crowded",btnSize<58);
@@ -5423,14 +5433,14 @@ function checkSolution(){
   let html="";
   details.forEach((d,i)=>{
     html+='<div class="uitslag-rij '+(d.ok?"goed":"fout")+'" style="animation-delay:'+(120+i*70)+'ms">'
-      +'<span class="av">'+characterHtml(d.p)+'</span>'
+      +'<span class="av">'+personPortrait(d.p,{size:44}).outerHTML+'</span>'
       +'<span class="wie"><b>'+esc(d.p.name)+'</b><small>'+esc(d.mine?tileLabel(d.mine):"niet geplaatst")+'</small></span>'
       +'<span class="oordeel">'+(d.ok?"goed":"fout")+'</span></div>';
   });
   if(accused){
     const nm=M.peopleById.get(accused);
     html+='<div class="uitslag-rij dader '+(accusedResult?"goed":"fout")+'" style="animation-delay:'+(120+details.length*70)+'ms">'
-      +'<span class="av">'+(nm?characterHtml(nm):"")+'</span>'
+      +'<span class="av">'+(nm?personPortrait(nm,{size:44}).outerHTML:"")+'</span>'
       +'<span class="wie"><b>'+esc(nm?nm.name:accused)+'</b><small>beschuldigd als dader</small></span>'
       +'<span class="oordeel">'+(accusedResult?"juist":"onjuist")+'</span></div>';
   } else {
@@ -5559,7 +5569,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.28";
+const PLAYER_APP_VERSION="0.9.29";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -5796,7 +5806,7 @@ function isAlgemeneRegel(tekst){
 function getBoardRules(raw){
   const content=raw.content||{};
   const src=(Array.isArray(raw.clues)&&raw.clues.length)?raw.clues:(content.clues||[]);
-  return src.filter(c=>c && !c.personId && (c.text||c.storyText));
+  return src.filter(c=>c && !c.personId && (c.text||c.storyText) && !isAlgemeneRegel(c.text||c.storyText));
 }
 /* Genoeg model om portretten te kunnen tekenen voordat het level start:
    kleuren, letters en standen, meer heeft personPortrait niet nodig. */
@@ -6124,7 +6134,10 @@ function tekenHelp(){
   $("#helpBody").classList.toggle("titelkaart",!!st.titel);
   const deel=HELP_STAPPEN.filter(s=>s.set===st.set&&!s.titel), i=deel.indexOf(st);
   $("#helpTeller").textContent=st.titel?"":"Stap "+(i+1)+" van "+deel.length;
-  $("#helpKop").textContent=st.titel||st.kop;
+  if(st.titel){
+    $("#helpKop").innerHTML='<img class="help-merk help-merk-donker" src="../assets/brand/logo-dark.png" alt="ClueBoard">'
+      +'<img class="help-merk help-merk-licht" src="../assets/brand/logo.png" alt="ClueBoard"><span>'+esc(st.titel)+'</span>';
+  } else $("#helpKop").textContent=st.kop;
   $("#helpBeeld").innerHTML=st.titel?"":(st.beeld||"");
   $("#helpBeeld").hidden=!!st.titel||!st.beeld;
   $("#helpTekst").innerHTML=st.titel?"":st.tekst;
