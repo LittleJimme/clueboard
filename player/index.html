@@ -189,6 +189,11 @@ html,body{
   margin:0;padding:0;width:100%;height:100%;
   position:fixed;overflow:hidden;overscroll-behavior:none;
 }
+/* Het canvas krijgt altijd de kleur van de onderkant van het scherm. Als
+   webapp op een iPhone kan er anders een strook boven de thuisbalk in de
+   kale canvaskleur (wit) verschijnen; zie het menu voor het hoe en waarom. */
+html{background:var(--sky-2)}
+html:has(body.in-game){background:var(--grond)}
 body{
   color:var(--ink);
   font-family:var(--font-ui);
@@ -200,7 +205,6 @@ body{
     radial-gradient(680px 420px at 108% 4%, rgba(91,75,232,.13), rgba(91,75,232,0) 62%),
     radial-gradient(720px 520px at -12% 96%, rgba(23,162,119,.09), rgba(23,162,119,0) 64%),
     linear-gradient(180deg,var(--sky) 0%,var(--sky-2) 100%);
-  background-attachment:fixed;
 }
 /* Korrel over alle schermen — houdt witruimtes levend, blokkeert geen input */
 body::after{
@@ -5624,7 +5628,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.33";
+const PLAYER_APP_VERSION="0.9.34";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en

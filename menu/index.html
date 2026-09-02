@@ -131,17 +131,21 @@ html[data-thema="licht"]{
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-html{touch-action:manipulation;background:var(--grond)}
+/* Het verloop staat op het canvas (html), niet op body, en zonder
+   background-attachment:fixed. Als webapp op een iPhone meet iOS een vast
+   verloop op de layout-viewport, die boven de thuisbalk ophoudt; daaronder
+   scheen dan de effen html-kleur door, lichter dan het eind van het verloop:
+   een lichte balk met een harde rand. Op het canvas dekt het verloop altijd
+   het hele scherm, en wat daar nog buiten valt (thuisbalk, overscroll) krijgt
+   de eindkleur, zodat er niets meer aansluit met een naad. */
+html{touch-action:manipulation;
+  background:var(--grond-2) linear-gradient(180deg,var(--grond) 0%,var(--grond-2) 100%) no-repeat}
 html,body{height:100%;overflow:hidden}
 body{
   color:var(--inkt);font-family:var(--font-ui);
   font-size:15px;line-height:1.55;font-weight:500;
   display:flex;flex-direction:column;
-  background:linear-gradient(180deg,var(--grond) 0%,var(--grond-2) 100%);
-  background-attachment:fixed;
-  /* De statusbalk van de telefoon valt over de pagina heen; die ruimte
-     vullen de balk en de voet zelf op, zodat alles dezelfde donkere
-     ondergrond deelt. */
+  background:none;overscroll-behavior:none;
 }
 /* een vleugje papierkorrel over alles */
 body::after{
