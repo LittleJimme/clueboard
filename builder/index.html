@@ -1813,7 +1813,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v17</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v18</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -3797,7 +3797,7 @@ function doeOplossingCheck(){
         if (slot){
           slot.innerHTML = '<p class="opl-bezig">Moeilijkheid bepalen\u2026</p>';
           setTimeout(() => {
-            try { LAATSTE_GRAAD = bepaalGraad(); } catch (err){ LAATSTE_GRAAD = null; }
+            try { LAATSTE_GRAAD = bepaalGraad(r); } catch (err){ LAATSTE_GRAAD = null; }
             stelGraadknopIn();
             slot.innerHTML = graadKortHtml();
           }, 30);
@@ -4088,6 +4088,11 @@ function clueBenodigden(clue){
    niet; het balkje hieronder loopt wel door, want dat is een CSS-animatie op
    transform en die draait buiten de hoofddraad om. */
 const ZOEK_BUDGET_MS = 60000;
+/* En net zo lang voor de moeilijkheidsgraad: de controle, het redeneren en
+   alle proeven samen. Is de tijd om, dan krijgt het level de zwaarste graad
+   -- wat zo lang niet uit te rekenen is, is voor een mens ook niet licht. */
+const GRAAD_BUDGET_MS = 60000;
+let GRAAD_DEADLINE = 0;
 
 /* Het wachtscherm. Het balkje verschijnt pas na een seconde -- korte zoekopdrachten
    hoeven er niet mee te knipperen -- en loopt daarna in precies het budget vol,
@@ -4554,7 +4559,13 @@ function kanNog(st, extraP, extraK){
   if (extraP) vast[extraP] = extraK;
   const kand = {};
   st.personen.forEach(p => kand[p] = vast[p] ? [vast[p]] : [...st.kand[p]]);
-  const r = zoekOplossingen({ kandidaten:kand, tellen:1, tonen:1, ms:1500 });
+  /* Elke proef krijgt wat er van het graadbudget over is, met een dak zodat
+     één zware tak niet alles opeet. Is de tijd om, dan geldt "onbekend" als
+     "kan nog" en onthoudt de staat dat de meting niet is afgemaakt. */
+  const over = GRAAD_DEADLINE ? GRAAD_DEADLINE - performance.now() : 1500;
+  if (over <= 0){ st.tijdOp = true; return true; }
+  const r = zoekOplossingen({ kandidaten:kand, tellen:1, tonen:1, ms:Math.min(6000, Math.max(250, over)) });
+  if (r.status === 'onbepaald') st.tijdOp = true;
   return r.status === 'onbepaald' ? true : (r.aantal || 0) > 0;
 }
 
@@ -4563,6 +4574,7 @@ function sportAanname(st){
     .sort((a,b) => st.kand[a].size - st.kand[b].size);
   if (!open.length) return false;
   for (const p of open){
+    if (st.tijdOp || (GRAAD_DEADLINE && performance.now() > GRAAD_DEADLINE)){ st.tijdOp = true; return 'tijd'; }
     const houdt = [...st.kand[p]].filter(k => kanNog(st, p, k));
     if (!houdt.length) return 'klapt';
     if (houdt.length < st.kand[p].size){
@@ -4579,8 +4591,12 @@ function sportAanname(st){
 /* ── De graad zelf ───────────────────────────────────
    Probeer het met steeds zwaarder gereedschap; de eerste sport waarmee het
    helemaal uitkomt bepaalt de graad. */
-function bepaalGraad(){
-  const controle = zoekOplossingen();
+function bepaalGraad(bekend){
+  GRAAD_DEADLINE = performance.now() + GRAAD_BUDGET_MS;
+  /* De oplossingscontrole is net gedaan? Dan niet nog eens zoeken. */
+  const controle = (bekend && bekend.status) ? bekend : zoekOplossingen({ ms: GRAAD_BUDGET_MS });
+  if (controle.status === 'onbepaald')
+    return { graad:5, sport:7, controle, onaf:true, tijdOp:true, uitleg:'Niet binnen een minuut uit te rekenen; daarom de zwaarste graad.' };
   if (controle.status !== 'uniek')
     return { graad:0, controle };
 
@@ -4600,14 +4616,17 @@ function bepaalGraad(){
   for (let ronde = 0; ronde < 60 && uit === 'vast'; ronde++){
     const gedaan = sportAanname(st);
     if (gedaan === 'klapt'){ uit = 'klapt'; break; }
+    if (gedaan === 'tijd' || st.tijdOp){ uit = 'tijd'; break; }
     if (!gedaan) break;
     uit = propageer(st, 6);
   }
   pogingen.push({ tot:7, uit, stappen:st.stappen, aannames:st.aannames,
                   open:st.personen.filter(p => !st.vast[p]) });
+  /* Niet afgemaakt -- door de tijd of doordat het redeneren vastloopt --
+     betekent de zwaarste graad. */
   if (uit !== 'klaar')
     return { graad:5, sport:7, aannames:st.aannames, verworpen:st.verworpen || 0,
-             pogingen, controle, staat:st, onaf:true };
+             pogingen, controle, staat:st, onaf:true, tijdOp:!!st.tijdOp };
   return { graad:graadUitMeting(7, st.verworpen || 0, st.aannames), sport:7,
            stappen:st.stappen, aannames:st.aannames, verworpen:st.verworpen || 0,
            pogingen, controle, staat:st };
