@@ -216,7 +216,7 @@ main{
 .beeldmerk{width:38px;height:38px;display:block;margin:0 auto 8px;object-fit:contain}
 /* De oude .woordmerk-tekstregel staat verderop en zet zelf een display; deze
    selectors wegen zwaarder zodat er altijd precies één woordmerk staat. */
-img.woordmerk{display:block;height:34px;width:auto;margin:0 auto;font-size:0;letter-spacing:0}
+img.woordmerk{display:block;height:clamp(46px,15vw,68px);width:auto;max-width:82%;margin:0 auto;font-size:0;letter-spacing:0}
 img.woordmerk.woordmerk-licht{display:none}
 html[data-thema="licht"] img.woordmerk.woordmerk-licht{display:block}
 html[data-thema="licht"] img.woordmerk.woordmerk-donker{display:none}
@@ -251,7 +251,7 @@ html[data-thema="licht"] .titelblok h1 em::after{
 @media (max-height:720px){
   .titelblok{padding:6px 0 14px}
   .beeldmerk{width:32px;height:32px;margin-bottom:6px}
-  .woordmerk{font-size:26px}
+  img.woordmerk{height:clamp(38px,12vw,50px)}
   .titelblok .scheiding{margin:9px auto 9px}
   .titelblok h1{font-size:22px}
 }
