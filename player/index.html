@@ -3432,12 +3432,30 @@ function persoonKapsel(person){
 /* ── Inkleuren ─────────────────────────────────────────── */
 const CH_CACHE=new Map();     /* "laag|#kleur" -> dataURL, of de Promise ernaartoe */
 const CH_BRON=new Map();      /* laag -> Promise<Image> */
+/* Een tekening die niet aankomt is geen blijvende waarheid: op een telefoon
+   sneuvelt er wel eens een verzoek als er veel tegelijk loopt. Daarom drie
+   pogingen met een korte pauze ertussen, en lukt het dan nog niet, dan wordt
+   de mislukking niet onthouden -- de volgende keer dat iemand deze laag nodig
+   heeft, wordt hij gewoon opnieuw gevraagd. Zonder dat bleef een persoon de
+   rest van het spel kaal of zonder lijf. */
 function chLaadBron(laag){
   if(CH_BRON.has(laag)) return CH_BRON.get(laag);
   const p=new Promise((ok,nee)=>{
-    const img=new Image();
-    img.onload=()=>ok(img); img.onerror=()=>nee(new Error("laag niet geladen: "+laag));
-    img.src=CH_DIR+laag+chBust();
+    let poging=0;
+    const haal=()=>{
+      const img=new Image();
+      img.decoding="async";
+      img.onload=()=>ok(img);
+      img.onerror=()=>{
+        poging++;
+        if(poging<3) setTimeout(haal, 300*poging);
+        else { CH_BRON.delete(laag); nee(new Error("laag niet geladen: "+laag)); }
+      };
+      /* Bij een herkansing een eigen sleutel achter de naam, anders geeft de
+         browser meteen dezelfde mislukking terug uit zijn cache. */
+      img.src=CH_DIR+laag+chBust()+(poging?"&p="+poging:"");
+    };
+    haal();
   });
   CH_BRON.set(laag,p); return p;
 }
@@ -3493,18 +3511,46 @@ function chKleur(laag,hex){
     const url=c.toDataURL("image/png");
     CH_CACHE.set(sleutel,url);
     return url;
+  }).catch(e=>{
+    /* Niet bewaren wat niet gelukt is, anders krijgt elke volgende vraag om
+       deze laag dezelfde mislukking terug. */
+    if(CH_CACHE.get(sleutel)===p) CH_CACHE.delete(sleutel);
+    throw e;
   });
   CH_CACHE.set(sleutel,p); return p;
 }
 /* Zodra een <img data-tint> in het document staat, krijgt hij zijn
    ingekleurde versie. Tot die tijd toont hij de ongekleurde laag. */
-function chVul(img){
+function chVul(img,poging){
   const laag=img.dataset.laag, hex=img.dataset.tint;
   if(!laag||!hex||img.dataset.klaar===hex) return;
   const r=chKleur(laag,hex);
   const zet=url=>{ if(img.dataset.tint===hex){ img.src=url; img.dataset.klaar=hex; } };
-  (typeof r==="string") ? zet(r) : r.then(zet).catch(()=>{});
+  const nog=poging||0;
+  (typeof r==="string") ? zet(r) : r.then(zet).catch(()=>{
+    /* Mislukt inkleuren laat de ongekleurde laag staan; even later nog eens
+       proberen, want meestal was het een verzoek dat sneuvelde. */
+    if(nog<2 && img.isConnected) setTimeout(()=>chVul(img,nog+1), 500*(nog+1));
+  });
 }
+/* Komt de tekening zelf niet aan, dan is er niets te zien: geen hoofd, geen
+   lijf of geen haar. Dat is de meest zichtbare storing, dus die krijgt zijn
+   eigen herkansing, los van het inkleuren. */
+document.addEventListener("error",e=>{
+  const img=e.target;
+  if(!img || img.tagName!=="IMG" || !img.classList || !img.classList.contains("ch-l")) return;
+  const bron=img.dataset.bron; if(!bron) return;
+  const n=(parseInt(img.dataset.poging,10)||0)+1;
+  if(n>2) return;
+  img.dataset.poging=String(n);
+  setTimeout(()=>{
+    if(!img.isConnected) return;
+    img.src=bron+"&p="+n;
+    /* Was dit een gekleurde laag, dan moet hij daarna ook weer zijn kleur
+       krijgen; anders staat er een grijs shirt of een grijze pruik. */
+    if(img.dataset.tint){ delete img.dataset.klaar; chVul(img); }
+  }, 300*n);
+},true);
 (function(){
   if(typeof MutationObserver==="undefined") return;
   const mo=new MutationObserver(ms=>{
@@ -3520,7 +3566,8 @@ function chVul(img){
 
 /* ── De markup ─────────────────────────────────────────── */
 function chLaag(laag,tint){
-  return '<img class="ch-l" alt="" draggable="false" src="'+CH_DIR+laag+chBust()+'"'
+  const bron=CH_DIR+laag+chBust();
+  return '<img class="ch-l" alt="" draggable="false" decoding="async" src="'+bron+'" data-bron="'+chEsc(bron)+'"'
     +(tint?' data-laag="'+laag+'" data-tint="'+chEsc(tint)+'"':'')+'>';
 }
 function characterHtml(person,opt){
@@ -6237,7 +6284,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.50";
+const PLAYER_APP_VERSION="0.9.51";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6642,21 +6689,22 @@ function warmLevel(){
   /* Wat er op het bord staat is al door de browser opgevraagd; met decode()
      is het straks ook echt klaar om te tekenen in plaats van halverwege. */
   $$("#grid .tile img, #grid .tile .objart img").forEach(i=>{ if(i.currentSrc) beelden.push(i.currentSrc); });
-  const rij=werk.slice(); let i=0;
+  /* Eén ding per beeldbeurt, niet twee of tien tegelijk. Een telefoon die
+     twintig verzoeken en twintig inkleuringen tegelijk krijgt, laat er wel
+     eens een vallen, en dan miste er een hoofd of een shirt. Rustig achter
+     elkaar duurt nauwelijks langer -- het introvel staat toch op het scherm --
+     en het blijft binnen wat de browser aankan. */
+  const rij=werk.concat(kaal.map(l=>[l,null])).concat([...new Set(beelden)].map(s=>[null,s]));
+  let i=0;
   const stap=()=>{
-    if(!introOpen && i>=rij.length){ warmBezig=false; return; }
-    const eind=Math.min(rij.length,i+2);
-    for(;i<eind;i++){ try{ chKleur(rij[i][0],rij[i][1]); }catch(e){} }
-    if(i<rij.length) requestAnimationFrame(stap);
-    else {
-      kaal.forEach(l=>{ try{ chLaadBron(l); }catch(e){} });
-      [...new Set(beelden)].forEach(src=>{
-        const im=new Image();
-        im.src=src;
-        if(im.decode) im.decode().catch(()=>{});
-      });
-      warmBezig=false;
-    }
+    if(i>=rij.length){ warmBezig=false; return; }
+    const [laag,extra]=rij[i++];
+    try{
+      if(laag && extra) chKleur(laag,extra);
+      else if(laag) chLaadBron(laag);
+      else if(extra){ const im=new Image(); im.decoding="async"; im.src=extra; if(im.decode) im.decode().catch(()=>{}); }
+    }catch(e){}
+    requestAnimationFrame(stap);
   };
   requestAnimationFrame(stap);
 }
