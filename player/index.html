@@ -4677,13 +4677,7 @@ function basisPlek(el, stage){
 
 function zoomToTile(tileEl){
   const stage=$("#boardStage"), vp=$("#boardViewport");
-  /* Op een breed scherm is het bord al groot genoeg: niet inzoomen, alleen
-     meten waar het vakje staat, en daar komt de ring omheen. */
-  if(isDesktop()){
-    stage.style.transform="";
-    const r=tileEl.getBoundingClientRect();
-    return { x:r.left+r.width/2, y:r.top+r.height/2, w:r.width, h:r.height };
-  }
+  const bureau=isDesktop();
   const vr=vp.getBoundingClientRect();
   const sw=stage.offsetWidth, sh=stage.offsetHeight;
   /* Linkerbovenhoek van het bord zoals het zonder vergroting zou liggen. */
@@ -4695,23 +4689,31 @@ function zoomToTile(tileEl){
 
   /* De tegel krijgt altijd ongeveer dezelfde maat op het scherm, wat voor bord
      je ook speelt: op een klein bord wordt er dus minder ver ingezoomd dan op
-     een groot. Zo staat hij ruim binnen de ring en herken je hem meteen. */
-  const target=Math.min(vr.width*0.26, 116);
-  const Z=Math.min(4.5, Math.max(1.2, target/Math.max(1,b.w)));
+     een groot. Zo staat hij ruim binnen de ring en herken je hem meteen.
+     Op desktop een stuk bescheidener: daar is het bord al groot, en een forse
+     sprong zou je de kaart uit tillen. */
+  const target=bureau?Math.min(vr.width*0.155,118):Math.min(vr.width*0.26,116);
+  const Z=Math.min(bureau?2.1:4.5, Math.max(bureau?1.24:1.2, target/Math.max(1,b.w)));
 
   const C={ x:s0.x+sw/2, y:s0.y+sh/2 };                 /* draaipunt */
   const P={ x:s0.x+b.x+b.w/2, y:s0.y+b.y+b.h/2 };       /* midden van de tegel */
   const V={ x:vr.left+vr.width/2, y:vr.top+vr.height/2 };
-  /* Precies centreren, zonder terug te duwen als het bord daardoor buiten
+  /* Hoe ver het vakje naar het midden trekt. Op de telefoon helemaal (daar
+     tik je toch weer op de kring), op desktop een stuk van de weg: genoeg om
+     een vakje aan de rand ruimte te geven voor de kring, maar niet zo veel
+     dat je muis daarna het halve scherm terug moet. */
+  const trek=bureau?0.55:1;
+  const D={ x:P.x+(V.x-P.x)*trek, y:P.y+(V.y-P.y)*trek };
+  /* Precies plaatsen, zonder terug te duwen als het bord daardoor buiten
      beeld steekt. Dat terugduwen zette de tegel uit het midden van de ring en
      dan is niet meer te zien welke je hebt aangetikt; de sluier eromheen maakt
      de lege ruimte naast het bord toch onzichtbaar. */
-  const tx=V.x-C.x-Z*(P.x-C.x), ty=V.y-C.y-Z*(P.y-C.y);
+  const tx=D.x-C.x-Z*(P.x-C.x), ty=D.y-C.y-Z*(P.y-C.y);
   stage.style.transform="translate("+tx.toFixed(1)+"px,"+ty.toFixed(1)
     +"px) scale("+Z.toFixed(3)+")";
   /* De plek en de maat die het vakje straks op het scherm heeft; daar wordt
      het gat in de sluier precies op gemaakt. */
-  return { x:V.x, y:V.y, w:b.w*Z, h:b.h*Z };
+  return { x:D.x, y:D.y, w:b.w*Z, h:b.h*Z };
 }
 
 function openTileMenu(tileId,el){
@@ -4798,13 +4800,10 @@ function openRadial(center,tileId){
   const SPAN=Math.PI*1.55;
   const size=Math.min(window.innerWidth,window.innerHeight);
   let radius=Math.max(94,Math.min(190,size/2-34-18));
-  /* Op desktop staat het vakje waar het staat, niet in het midden van het
-     scherm: bij een vakje aan de rand krimpt de ring dan mee, zodat geen
-     enkele knop buiten beeld valt (boven de kop, onder de naam meegerekend). */
-  if(isDesktop()){
-    const rand=Math.min(center.x-52, window.innerWidth-center.x-52, center.y-96, window.innerHeight-center.y-84);
-    radius=Math.max(94,Math.min(radius,rand));
-  }
+  /* De kring is overal even groot, ook op desktop. Het vakje wordt bij het
+     openen al een stuk naar het midden getrokken, en past de kring dan nog
+     niet, dan schuift fitRing hem als geheel bij in plaats van hem te laten
+     krimpen -- een kring die per vakje van maat verschilt leest onrustig. */
   /* Knoppen mogen elkaar niet raken: de afstand tussen twee buren op de ring
      is de bovengrens. Bij veel personen worden ze dus vanzelf kleiner, en de
      naam en de rol eronder krimpen mee. */
@@ -6046,7 +6045,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.42";
+const PLAYER_APP_VERSION="0.9.43";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6777,6 +6776,14 @@ $("#helpBolletjes").addEventListener("click",e=>{
   const rad=$("#radial"); if(!rad) return;
   let sx=0, sy=0, bezig=false;
   rad.addEventListener("pointerdown",e=>{ if(e.target.closest(".rbtn")) return; sx=e.clientX; sy=e.clientY; bezig=true; });
+  /* Je opent de kring met de rechtermuisknop, dus is het logisch dat je er
+     ook mee kiest. Zonder dit klapte bij de tweede rechterklik het menu van
+     de browser open, precies over de kring heen. */
+  rad.addEventListener("contextmenu",e=>{
+    e.preventDefault();
+    const knop=e.target.closest(".rbtn");
+    if(knop && !knop.disabled){ bezig=false; knop.click(); }
+  });
   rad.addEventListener("pointermove",e=>{
     if(!bezig) return;
     if(Math.hypot(e.clientX-sx,e.clientY-sy)>44){ bezig=false; haptic(8); closeRadial(); }
