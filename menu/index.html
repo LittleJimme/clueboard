@@ -141,6 +141,13 @@ html,body{margin:0;padding:0}
 html{touch-action:manipulation;overscroll-behavior:none;
   background:var(--grond-2) linear-gradient(180deg,var(--grond) 0%,var(--grond-2) 100%) no-repeat}
 html,body{height:100%;overflow:hidden}
+/* Kom je uit een spel terug in de telefoonbrowser, dan is de werkbalk van
+   de browser op dat moment vaak nog ingeklapt: de pagina meet zich dan op
+   het hoge scherm. Zodra de werkbalk terugkomt, schuift het zichtbare
+   venster naar de onderkant van die te hoge pagina en staat de knoppenrij
+   boven het scherm. Op de kleinste schermhoogte (svh) is de pagina nooit
+   hoger dan wat je met werkbalk ziet, dus valt er niets te verschuiven. */
+@supports (height:100svh){ html,body{height:100svh} }
 body{
   color:var(--inkt);font-family:var(--font-ui);
   font-size:15px;line-height:1.55;font-weight:500;
@@ -738,8 +745,21 @@ function sluitModal(el){ el.closest(".modal").classList.remove("open"); window.s
    als je in een venster doorschuift tot voorbij het eind; dan staat de
    bovenste rij met knoppen buiten beeld. Zodra dat gebeurt, gaat hij terug
    naar nul, ook als de pagina uit de cache terugkomt. */
-window.addEventListener("scroll",()=>{ if(window.scrollY) window.scrollTo(0,0); },{passive:true});
-window.addEventListener("pageshow",()=>window.scrollTo(0,0));
+function naarBoven(){
+  if(window.scrollY||document.documentElement.scrollTop||document.body.scrollTop) window.scrollTo(0,0);
+  document.documentElement.scrollTop=0; document.body.scrollTop=0;
+  /* Het zichtbare venster kan los van de pagina verschoven zijn (iOS bij
+     het in- en uitklappen van de werkbalk); ook dat hoort op nul. */
+  if(window.visualViewport && window.visualViewport.offsetTop>0) window.scrollTo(0,0);
+}
+window.addEventListener("scroll",naarBoven,{passive:true});
+window.addEventListener("resize",naarBoven);
+window.addEventListener("pageshow",naarBoven);
+window.addEventListener("load",naarBoven);
+if(window.visualViewport){
+  window.visualViewport.addEventListener("resize",naarBoven);
+  window.visualViewport.addEventListener("scroll",naarBoven);
+}
 document.addEventListener("click", e=>{
   const s=e.target.closest("[data-sluit]");
   if(s) sluitModal(s);
