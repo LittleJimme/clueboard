@@ -138,7 +138,7 @@ html,body{margin:0;padding:0}
    een lichte balk met een harde rand. Op het canvas dekt het verloop altijd
    het hele scherm, en wat daar nog buiten valt (thuisbalk, overscroll) krijgt
    de eindkleur, zodat er niets meer aansluit met een naad. */
-html{touch-action:manipulation;
+html{touch-action:manipulation;overscroll-behavior:none;
   background:var(--grond-2) linear-gradient(180deg,var(--grond) 0%,var(--grond-2) 100%) no-repeat}
 html,body{height:100%;overflow:hidden}
 body{
@@ -415,8 +415,13 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:18px}
 .modal.open{display:flex}
 .modal .sluier{position:absolute;inset:0;background:rgba(10,12,8,.6);backdrop-filter:blur(3px)}
+/* Nooit in vh: in een telefoonbrowser is 1vh een honderdste van het scherm
+   mét verborgen adresbalk, terwijl het venster (.modal, position:fixed) zo
+   groot is als wat je op dat moment écht ziet. Een vel van 86vh was daardoor
+   hoger dan de ruimte, stond gecentreerd en stak boven én onder uit; de
+   bovenkant leek afgesneden. Procenten van het venster kloppen altijd. */
 .vel{
-  position:relative;width:100%;max-width:430px;max-height:86vh;overflow:auto;
+  position:relative;width:100%;max-width:430px;max-height:100%;overflow:auto;overscroll-behavior:contain;
   background:var(--kaart);border:1px solid var(--lijn);border-radius:20px;
   padding:22px;box-shadow:0 24px 60px rgba(38,36,25,.28);
   animation:velIn .3s cubic-bezier(.2,1.05,.3,1) both;
@@ -435,7 +440,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
    en de voet liggen vast, alleen de tekst mag binnen zijn eigen ruimte
    schuiven. Anders springt het venster bij elke klik van maat. */
 #modalUitleg .vel{
-  height:min(650px,90vh);display:flex;flex-direction:column;
+  height:min(650px,100%);display:flex;flex-direction:column;
 }
 .uitleg-keuze{flex:0 0 auto;display:flex;gap:4px;padding:3px;margin:0 40px 12px 0;border-radius:999px;
   background:var(--kaart-2);border:1px solid var(--lijn)}
@@ -727,7 +732,14 @@ $("#btnThema").addEventListener("click",()=>{
 
 /* ---------- modals ---------- */
 function openModal(id){ $(id).classList.add("open"); }
-function sluitModal(el){ el.closest(".modal").classList.remove("open"); }
+function sluitModal(el){ el.closest(".modal").classList.remove("open"); window.scrollTo(0,0); }
+/* De pagina scrolt zelf nooit: de lijst schuift in zijn eigen vak. Toch kan
+   een telefoonbrowser het document een stukje omhoog duwen, bijvoorbeeld
+   als je in een venster doorschuift tot voorbij het eind; dan staat de
+   bovenste rij met knoppen buiten beeld. Zodra dat gebeurt, gaat hij terug
+   naar nul, ook als de pagina uit de cache terugkomt. */
+window.addEventListener("scroll",()=>{ if(window.scrollY) window.scrollTo(0,0); },{passive:true});
+window.addEventListener("pageshow",()=>window.scrollTo(0,0));
 document.addEventListener("click", e=>{
   const s=e.target.closest("[data-sluit]");
   if(s) sluitModal(s);
