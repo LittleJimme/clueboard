@@ -125,6 +125,11 @@ try{ var _t=localStorage.getItem("clueboard:menuThema");
   --inkt:#F0E8E2;   --inkt-2:#CBBBB4;  --dof:#96837E;
   --goud:#C9932F;   --goud-op:#231819; --goud-diep:#A97A22;
   --goud-zacht:rgba(201,147,47,.14); --goud-lijn:rgba(201,147,47,.42);
+  /* De ene knop die de zaak opent. Bewust in beide thema's dezelfde kleur:
+     dit is het zegel op de titelpagina, geen gewone interfaceknop. Fel goud
+     met donkere tekst schreeuwde; wit op fel goud haalt geen leesbaar
+     contrast (2,2:1). Brons met crème haalt 4,7:1 en oogt rustiger. */
+  --zegel:#8A5F16; --zegel-op:#FBF4EA;
   --sch1:0 1px 2px rgba(0,0,0,.22);
   --sch2:0 2px 6px rgba(0,0,0,.26),0 12px 30px rgba(0,0,0,.28);
 }
@@ -135,6 +140,7 @@ html[data-thema="licht"]{
   --inkt:#262419;   --inkt-2:#4C493D;  --dof:#71695A;
   --goud:#C9932F;   --goud-op:#2A1F06; --goud-diep:#A87B18;
   --goud-zacht:rgba(145,96,8,.10);   --goud-lijn:rgba(145,96,8,.32);
+  --zegel:#8A5F16; --zegel-op:#FBF4EA;
   --sch1:0 1px 2px rgba(48,44,32,.06);
   --sch2:0 2px 6px rgba(48,44,32,.06),0 10px 26px rgba(48,44,32,.06);
 }
@@ -2016,29 +2022,33 @@ body.desktop.in-game #modalIntro .intro-watermerk{
   display:block;left:50%;top:52%;width:min(62%,760px);opacity:.55}
 body.desktop.in-game #modalIntro .intro-terug{left:22px;top:17px}
 body.desktop.in-game #modalIntro .intro-scroll{
-  display:grid;grid-template-columns:minmax(360px,.95fr) minmax(0,1.05fr);grid-template-rows:auto auto auto;
+  display:grid;grid-template-columns:minmax(360px,.95fr) minmax(0,1.05fr);grid-template-rows:1fr auto auto auto 1fr;
   column-gap:64px;row-gap:22px;align-content:center;align-items:start;
   width:100%;max-width:1180px;margin:0 auto;padding:0;text-align:left;
   -webkit-mask-image:none;mask-image:none;scrollbar-width:thin}
-body.desktop.in-game #modalIntro .intro-kop{grid-column:1;grid-row:1;min-height:0;padding:0;background:none;text-align:left}
-body.desktop.in-game #modalIntro img.intro-merk{margin:0 0 22px;height:32px}
+body.desktop.in-game #modalIntro .intro-kop{grid-column:1;grid-row:2;min-height:0;padding:0;background:none;text-align:left}
 body.desktop.in-game #modalIntro .intro-titel{font-size:clamp(40px,4vw,58px);text-wrap:balance}
 body.desktop.in-game #modalIntro .intro-graad{align-items:flex-start;margin-top:14px}
 body.desktop.in-game #modalIntro .intro-scheiding{margin:20px 0 16px}
 body.desktop.in-game #modalIntro .sheet p.intro-tekst{margin:0;max-width:30em;font-size:18px}
 body.desktop.in-game #modalIntro .intro-dossier{display:contents}
 body.desktop.in-game #modalIntro .intro-breuk{display:none}
-body.desktop.in-game #modalIntro .intro-bordregels{grid-column:1;grid-row:2;gap:10px}
+body.desktop.in-game #modalIntro .intro-bordregels{grid-column:1;grid-row:3;gap:10px}
 body.desktop.in-game #modalIntro .bordregel{font-size:15.5px;padding:12px 16px;gap:12px;border-radius:14px}
 body.desktop.in-game #modalIntro .bordregel .ic{width:20px;height:20px}
 body.desktop.in-game #modalIntro .bordregel.algemeen{font-size:13px;padding:2px 6px}
-body.desktop.in-game #modalIntro .deelnemers{grid-column:2;grid-row:1/3;align-self:center;max-width:none;width:100%;padding:0;margin:0;gap:16px 0}
+/* Niet de volle kolombreedte: op zes kolommen wordt elk portret een derde
+   van de bak, en dan drijven ze uit elkaar. Met een bovengrens staan ze als
+   groep bij elkaar, met de kolom eromheen als lucht. */
+body.desktop.in-game #modalIntro .deelnemers{grid-column:2;grid-row:1/6;align-self:center;justify-self:center;max-width:min(100%,400px);width:100%;padding:0;margin:0;gap:18px 0}
 body.desktop.in-game #modalIntro .deelnemer{grid-template-rows:calc(var(--dl,78px)*1.22) auto;gap:4px}
 body.desktop.in-game #modalIntro .dl-tekst .naam{font-size:22px}
 body.desktop.in-game #modalIntro .deelnemer.lang .dl-tekst .naam{font-size:19px}
 body.desktop.in-game #modalIntro .deelnemer.zeerlang .dl-tekst .naam{font-size:16px}
 body.desktop.in-game #modalIntro .dl-tekst .rol{font-size:11px}
-body.desktop.in-game #modalIntro .rij-knoppen{grid-column:1/3;grid-row:3;margin:6px 0 0;justify-content:center}
+/* De knop hoort bij de tekst, dus links onder de bordregels en niet
+   gecentreerd onder de hele bladzijde. */
+body.desktop.in-game #modalIntro .rij-knoppen{grid-column:1;grid-row:4;align-self:start;margin:26px 0 0;justify-content:flex-start}
 body.desktop.in-game #modalIntro .scroll-wenk{display:none}
 
 /* Te smal voor woorden: dan alleen de pictogrammen. */
@@ -2507,11 +2517,8 @@ html[data-thema="licht"] .wm-c.blok{background:rgba(38,36,29,.09);box-shadow:non
    dus zonder deze regel kleurden de vakjes buiten het bord alsnog en verloor
    de plattegrond zijn vorm. */
 html[data-thema="licht"] .wm-c.leeg{background:none;box-shadow:none;visibility:hidden}
-img.intro-merk{display:block;height:clamp(28px,7.5vw,36px);width:auto;max-width:64%;margin:0 auto 22px}
-img.intro-merk.intro-merk-licht{display:none}
-html[data-thema="licht"] img.intro-merk.intro-merk-licht{display:block}
-html[data-thema="licht"] img.intro-merk.intro-merk-donker{display:none}
-@media (max-height:620px){ img.intro-merk{height:24px;margin-bottom:14px} }
+/* Geen woordmerk meer boven de zaak: je komt hier altijd via het menu, waar
+   het merk al boven de lijst staat. Zonder leest de titelpagina strakker. */
 .intro-zaak{font:800 12px var(--font-ui);letter-spacing:.28em;text-transform:uppercase;color:var(--goud);margin-bottom:14px;min-height:14px}
 .intro-titel{margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(34px,10vw,54px);line-height:1.04;letter-spacing:-.015em;color:var(--inkt);text-wrap:balance}
 .intro-graad{display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:18px}
@@ -2609,6 +2616,25 @@ html[data-thema="licht"] .dl-tekst .rol.knight,html[data-thema="licht"] body.in-
 body.in-game #modalIntro .rij-knoppen{display:flex;justify-content:center;margin:24px 0 clamp(96px,16vh,140px)}
 body.in-game #modalIntro .rij-knoppen .btn{flex:0 0 auto;width:auto;min-width:230px;padding-left:36px;padding-right:36px}
 body.in-game #modalIntro .btn{width:100%;height:50px;font-size:18px}
+/* Het zegel op de titelpagina: brons met een gouden rand die het licht
+   vangt, en de letters in de kapitalen van de labels erboven ("ZAAK 4",
+   "LICHT"). Zo hoort de knop bij de bladzijde in plaats van erop te liggen
+   als een knop uit een ander ontwerp. */
+body.in-game #modalIntro .rij-knoppen .btn{
+  background:var(--zegel);color:var(--zegel-op);
+  border:1px solid var(--goud);
+  height:52px;border-radius:999px;
+  font-family:var(--font-ui);font-weight:800;font-size:13px;
+  letter-spacing:.18em;text-transform:uppercase;
+  box-shadow:0 10px 26px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.14);
+  gap:12px;
+}
+body.in-game #modalIntro .rij-knoppen .btn::after{
+  content:"";width:16px;height:1.5px;background:currentColor;opacity:.65;
+  transition:transform .18s cubic-bezier(.2,.8,.3,1);
+}
+body.in-game #modalIntro .rij-knoppen .btn:hover{filter:none;background:#9B6B19}
+body.in-game #modalIntro .rij-knoppen .btn:hover::after{transform:translateX(4px)}
 /* Het duwtje om verder te lezen. Zweeft boven de kolom, dus buiten de
    scrollstroom; [hidden] moet expliciet winnen van de display:flex hierboven. */
 .scroll-wenk{
@@ -2934,10 +2960,6 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       <!-- De cover: zaaknummer, titel, niveau en de intro. Alleen wie de zaak
            is, verder niets, zodat je hem eerst op je in laat werken. -->
       <div class="intro-kop">
-        <!-- Het merk boven de zaak: kleiner dan in het menu, want daar is het
-             de kop van de pagina en hier alleen de afzender van het dossier. -->
-        <img class="intro-merk intro-merk-donker" src="../assets/brand/logo-dark.png" alt="ClueBoard">
-        <img class="intro-merk intro-merk-licht" src="../assets/brand/logo.png" alt="ClueBoard">
         <div class="intro-zaak" id="introZaak"></div>
         <h2 class="intro-titel" id="introTitel">—</h2>
         <div class="intro-graad" id="introGraad"></div>
@@ -6288,7 +6310,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.52";
+const PLAYER_APP_VERSION="0.9.53";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6626,7 +6648,7 @@ function showLevelDetail(levelIndex){
   const n=allen.length, laatsteAlleen=(n%5===1);
   /* Op desktop staat het hele vel op één pagina; de portretten zijn daar
      wat kleiner, en bij meer dan zes personen nog een maat kleiner. */
-  const maat=isDesktop()?(n>6?68:78):88;
+  const maat=isDesktop()?(n>6?82:94):88;
   host.style.setProperty("--dl",maat+"px");
   allen.forEach((pe,ix)=>{
     const isV=pe.id===M.victimId;
