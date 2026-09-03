@@ -467,6 +467,11 @@ body.in-game #pane-clues.active{animation:paneVanRechts .22s cubic-bezier(.2,.8,
 */
 #grid{display:grid;gap:0;position:relative;z-index:1;isolation:isolate}
 #walls{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:2}
+/* De harde schaduw onder het bord: dezelfde vorm als de buitencontour, een
+   stuk naar rechtsonder geschoven, in één vlakke kleur zonder vervaging. Hij
+   ligt onder het raster, dus je ziet alleen het stuk dat buiten het bord
+   uitsteekt. Zo staat het bord als een plaat op tafel. */
+#bordSchaduw{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:0}
 #labels{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:3}
 #pawns{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:4}
 .pawn-slot{position:absolute;width:var(--cell);height:var(--cell);
@@ -586,6 +591,12 @@ body.vloer-v3 .tile{background-image:none}
 /* Geen glans over een edele kamer: een vlakke tegel hoort geen lichtspel te
    hebben. Dat een kamer edel is lees je aan de muurkleur. */
 body.vloer-v3 .tile .glans{display:none}
+/* Tijdelijke stand: de getekende objecten weg, het platte pictogram terug.
+   Handig zolang de ondergrond nog verandert -- dan zie je de vlakken zonder
+   de tekeningen erover. */
+body.plat-icoon .tile .objart{display:none}
+body.plat-icoon .tile.has-art .objicon{display:block}
+body.plat-icoon .tile .objicon{color:var(--plat-icoon,rgba(38,36,25,.62))}
 /* Klaar voor een latere overlaylaag over meerdere vakjes: die komt straks
    bovenop deze basis, niet erin. */
 
@@ -996,6 +1007,12 @@ body.hide-objsurf .tile .objsurf{display:none}
 .tile.w-r{--sh-r:inset -11px 0 12px -9px rgba(0,0,0,.28)}
 .tile.w-b{--sh-b:inset 0 -11px 12px -9px rgba(0,0,0,.28)}
 .tile.w-l{--sh-l:inset 11px 0 12px -9px rgba(0,0,0,.28)}
+/* In de vlakke stand een kortere, strakkere schaduw net binnen elke muur:
+   genoeg om de ruimte diepte te geven, niet zoveel dat het een waas wordt. */
+body.vloer-v3 .tile.w-t{--sh-t:inset 0 9px 7px -6px var(--muur-schaduw)}
+body.vloer-v3 .tile.w-r{--sh-r:inset -9px 0 7px -6px var(--muur-schaduw)}
+body.vloer-v3 .tile.w-b{--sh-b:inset 0 -9px 7px -6px var(--muur-schaduw)}
+body.vloer-v3 .tile.w-l{--sh-l:inset 9px 0 7px -6px var(--muur-schaduw)}
 .tile.out-of-bounds{box-shadow:none}
 /* Gloed over een voorbehouden gebied. */
 .tile .glans{position:absolute;inset:0;pointer-events:none;z-index:1;opacity:0;
@@ -2877,7 +2894,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
     <!-- Bord -->
     <div class="pane active" id="pane-board">
       <div id="boardViewport">
-        <div id="boardStage"><div id="gridWrap"><div id="grid"></div><svg id="walls"></svg><div id="labels"></div><div id="pawns"></div></div></div>
+        <div id="boardStage"><div id="gridWrap"><svg id="bordSchaduw" aria-hidden="true"></svg><div id="grid"></div><svg id="walls"></svg><div id="labels"></div><div id="pawns"></div></div></div>
       </div>
     </div>
 
@@ -2973,6 +2990,13 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       </button>
       <button class="set-row schakel" id="rowAutoKruis" type="button" aria-pressed="false">
         <span class="ic" data-icon="cross"></span><span class="set-tekst"><b>Auto kruisjes</b></span><span class="schuif"><i></i></span>
+      </button>
+    </div>
+    <!-- Tijdelijk, zolang de ondergrond in ontwikkeling is: terug naar de
+         platte pictogrammen in plaats van de getekende objecten. -->
+    <div class="set-duo">
+      <button class="set-row schakel" id="rowPlat" type="button" aria-pressed="false">
+        <span class="ic" data-icon="dossier"></span><span class="set-tekst"><b>Platte pictogrammen</b></span><span class="schuif"><i></i></span>
       </button>
     </div>
     <div class="set-kop weergave-kop">Weergave</div>
@@ -3144,8 +3168,21 @@ function zetVlakPalet(){
   /* Onbekende of ontbrekende vloersoort: één neutrale kleur, nooit een
      tekening of patroon. */
   st.setProperty("--vl-onbekend",nacht?"#4C545E":"#DAD5C9");
+  /* De muren nemen de inkt van het thema: in de lichte stand dus donker, net
+     als de kop- en titeltekst, en in de donkere stand juist licht. Dat geeft
+     in beide standen hetzelfde harde contrast met de vloer. De edele muur
+     blijft goud -- die moet in beide standen opvallen, dus altijd de heldere
+     dagwaarde. */
+  st.setProperty("--muur-standard",nacht?"#F0E8E2":"#262419");
+  st.setProperty("--muur-noble",VLAK_PALET.muren.noble.dag);
   /* Het raster: rustig, maar in beide standen te zien. */
   st.setProperty("--raster",nacht?"rgba(255,255,255,.16)":"rgba(30,34,40,.16)");
+  /* De harde slagschaduw onder het bord en de zachtere schaduw binnen elke
+     muur; in de donkere stand mag de eerste steviger, want de ondergrond is
+     al donker. */
+  st.setProperty("--bord-schaduw",nacht?"rgba(0,0,0,.55)":"rgba(38,36,25,.28)");
+  st.setProperty("--muur-schaduw",nacht?"rgba(0,0,0,.42)":"rgba(38,36,25,.30)");
+  st.setProperty("--plat-icoon",nacht?"rgba(240,232,226,.72)":"rgba(38,36,25,.62)");
   document.documentElement.dataset.stand=nacht?"night":"day";
 }
 
@@ -4693,6 +4730,7 @@ function renderWalls(cell){
   const W=bb.cols*cell, H=bb.rows*cell;
   svg.setAttribute("width",W); svg.setAttribute("height",H);
   svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  tekenBordSchaduw(cell,W,H);
 
   const thin=[], walls=new Map();
   /* Randen van het bord die bij een besloten ruimte horen. De contour wordt
@@ -4752,9 +4790,7 @@ function renderWalls(cell){
   const outline=boardOutlinePath(cell);
   if(outline){
     const t=Math.max(3,cell*0.09);
-    out+='<path d="'+outline+'" fill="none" stroke="rgba(21,26,51,.22)" stroke-width="'+(t+3)
-       +'" stroke-linejoin="round" stroke-linecap="round" transform="translate(0,2.5)"/>';
-    out+='<path d="'+outline+'" fill="none" stroke="var(--board-ink)" stroke-width="'+t
+    out+='<path d="'+outline+'" fill="none" stroke="var(--muur-standard)" stroke-width="'+t
        +'" stroke-linejoin="round" stroke-linecap="round"/>';
     /* En daar bovenop de stukken buitenrand die bij een besloten ruimte horen,
        met dezelfde dikte als de contour zodat het één doorlopende muur blijft
@@ -4762,6 +4798,19 @@ function renderWalls(cell){
     randen.forEach(sd => { out+=wallSegmentsSVG(sd.a,sd.b,sd.colors,t); });
   }
   svg.innerHTML=out;
+}
+
+/* De schaduw van het hele bord: de buitencontour als gevuld vlak, verschoven
+   naar rechtsonder. Geen vervaging -- een harde, grafische slagschaduw. */
+function tekenBordSchaduw(cell,W,H){
+  const svg=$("#bordSchaduw"); if(!svg) return;
+  const pad=boardOutlinePath(cell);
+  const d=Math.max(10,Math.round(cell*0.26));     /* hoe ver hij uitsteekt */
+  svg.setAttribute("width",W+d); svg.setAttribute("height",H+d);
+  svg.setAttribute("viewBox","0 0 "+(W+d)+" "+(H+d));
+  svg.innerHTML=pad
+    ? '<path d="'+pad+'" fill="var(--bord-schaduw)" transform="translate('+d+','+d+')"/>'
+    : "";
 }
 
 /* De buitenrand van het bord als één pad. We verzamelen elke zijde van een
@@ -6508,7 +6557,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.64";
+const PLAYER_APP_VERSION="0.9.65";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -7474,6 +7523,19 @@ document.addEventListener("pointerdown",e=>{
   if(e.target.closest("#legendaPop")||e.target.closest("#btnLegendaDesk")) return;
   toonLegendaPop(false);
 },true);
+
+/* Tijdelijke knop: platte pictogrammen. Blijft bewaard op dit apparaat. */
+{ const PLAT_SLEUTEL="clueboard:platIcoon";
+  const knop=$("#rowPlat");
+  const zet=aan=>{
+    document.body.classList.toggle("plat-icoon",!!aan);
+    if(knop) knop.setAttribute("aria-pressed",aan?"true":"false");
+    try{ localStorage.setItem(PLAT_SLEUTEL,aan?"1":"0"); }catch(e){}
+  };
+  let start=false; try{ start=localStorage.getItem(PLAT_SLEUTEL)==="1"; }catch(e){}
+  zet(start);
+  if(knop) knop.addEventListener("click",()=>zet(!document.body.classList.contains("plat-icoon")));
+}
 
 [["visNotes","notes"],["visCrosses","crosses"],["visRoomLabels","roomLabels"],
  ["visRoles","roles"]].forEach(([id,key])=>{
