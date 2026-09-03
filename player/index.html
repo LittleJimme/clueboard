@@ -627,14 +627,10 @@ body.vloer-v3 .tile .glans{display:none}
    blijft in de code staan voor de oude skin, maar tekent hier niets. */
 body.vloer-v3 .tile[data-floor]::after{content:none}
 /* ══════ Tijdelijke proefstanden voor de ondergrond ══════
-   Vier schuifjes in de instellingen om varianten naast elkaar te zien. Ze
-   zetten alleen een klasse op de body en raken het bord zelf niet aan, dus
-   aan- en uitzetten kan zonder opnieuw te tekenen. Weg zodra de keuze staat.
-     1 Gouden muren uit         de edele muur in de gewone kleur
+   Twee schuifjes in het bouwmenu om varianten naast elkaar te zien. Ze zetten
+   alleen een klasse op de body en raken het bord zelf niet aan.
+     1 Platte pictogrammen      de tekeningen weg, het lijnpictogram terug
      2 Tegels tussen de muren   de tegel springt in waar een muur staat  */
-body.geen-goud #walls .edel{stroke:var(--muur-standard)}
-body.geen-goud #walls .knoop.edel circle{fill:var(--muur-standard)}
-body.geen-goud.vloer-v3 .tile.edel{--edel-deel:0%}
 /* De tegels tussen de muren in plaats van eronder. Aan elke kant waar een muur
    staat schuift de tegel de halve muurdikte naar binnen, precies tot aan de
    binnenkant van die muur. De muur krijgt daarmee echt ruimte op het bord, en
@@ -2684,16 +2680,12 @@ body.in-game #modalIntro .intro-scroll::-webkit-scrollbar{width:0;height:0;displ
    scrolt bewust door van "welke zaak is dit" naar "wat weet ik". */
 body.in-game #modalIntro .intro-kop{
   box-sizing:border-box;position:relative;
-  /* Weer een volle schermvulling: voor het scrollen hoor je alleen de titel
-     en de ondertitel te zien. De ruimte die daardoor onder de tekst overblijft
-     is geen gat meer maar draagt het bordwatermerk. */
-  min-height:100%;
-  /* Geen volle schermvulling met het blok onderaan meer: dat zette de titel
-     te laag en liet bovendien een gat vallen tussen de tekst en de haarlijn.
-     Nu bepaalt alleen de bovenruimte de plek, en volgt de rest er direct op.
-     Meeschalend met de schermhoogte, want 140px is op een korte telefoon
-     zonde van de ruimte. */
-  padding:clamp(30px,11vh,86px) 0 clamp(28px,6vh,52px);
+  /* Geen omslag van een heel scherm meer. De zaak leest nu als één doorlopende
+     bladzijde: de tekst, een stukje lucht, de bordregels, wie erbij waren en
+     onderaan de knop. Scrollen mag, maar je hoeft niet eerst een leeg scherm
+     weg te vegen om te zien dat er meer staat. */
+  min-height:0;
+  padding:clamp(26px,8vh,58px) 0 clamp(22px,4vh,34px);
   /* Een heel zachte warme gloed achter de titel, zodat de rust eromheen als
      titelpagina leest en niet als een gat. */
   background:radial-gradient(ellipse 82% 48% at 50% 44%,rgba(201,147,47,.10),transparent 72%);
@@ -2726,6 +2718,10 @@ body.in-game #modalIntro .intro-watermerk{
   position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
   z-index:0;pointer-events:none;width:min(88%,var(--wm-breedte,420px));
 }
+/* Zonder omslag is er geen rustvlak meer om het watermerk in te leggen; het
+   zou nu achter de bordregels komen te staan. Op een groot scherm blijft het,
+   daar staat de tekst in een eigen kolom. */
+body.in-game:not(.desktop) #modalIntro .intro-watermerk{display:none}
 /* Het dossier schuift over de plattegrond heen. */
 body.in-game #modalIntro .intro-scroll{position:relative;z-index:1}
 .wm-kaart{display:grid;gap:4px;width:100%}
@@ -2775,12 +2771,10 @@ html[data-thema="licht"] .wm-c.leeg{background:none;box-shadow:none;visibility:h
   font-family:var(--font-display);font-weight:500;
   font-size:20px;line-height:1.5;letter-spacing:0;
 }
-body.in-game #modalIntro .intro-dossier{
-  position:relative;
-  /* Doorzichtig aan de bovenkant, daaronder de kaartkleur: de plattegrond
-     vervaagt zo onder het dossier in plaats van langs een rand te stoppen. */
-  background:linear-gradient(to bottom,transparent 0,var(--grond) 96px);
-}
+body.in-game #modalIntro .intro-dossier{position:relative}
+/* Heeft een zaak geen bordregels, dan zou de lucht die voor dat blok bedoeld
+   was als een gat onder de haarlijn blijven staan. */
+body.in-game #modalIntro .intro-bordregels:empty + .deelnemers{padding-top:12px}
 /* De overgang naar het dossier: één haarlijn die aan beide kanten wegvalt,
    zodat hij scheidt zonder een streep door de bladzijde te trekken. */
 .intro-breuk{height:1px;margin:0 0 28px;
@@ -3113,9 +3107,8 @@ body.in-game .clue-card.done::before{background:var(--goud)}
 <div class="debug-paneel" id="debugPaneel" hidden>
   <div class="debug-kop">Proef: ondergrond</div>
   <button class="debug-rij schakel" id="rowPlat" type="button" aria-pressed="false"><b>Platte pictogrammen</b><span class="schuif"><i></i></span></button>
-  <button class="debug-rij schakel" id="rowGeenGoud" type="button" aria-pressed="false"><b>Gouden muren uit</b><span class="schuif"><i></i></span></button>
   <button class="debug-rij schakel" id="rowTussen" type="button" aria-pressed="false"><b>Tegels tussen de muren</b><span class="schuif"><i></i></span></button>
-  <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="2" max="22" step="0.5" value="9.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">9.5</span></div>
+  <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="4" max="22" step="0.5" value="9.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">9.5</span></div>
   <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="1.1" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">1.1</span></div>
 </div>
 
@@ -3312,7 +3305,7 @@ function zetVlakPalet(){
      in beide standen hetzelfde harde contrast met de vloer. De edele muur
      blijft goud -- die moet in beide standen opvallen, dus altijd de heldere
      dagwaarde. */
-  st.setProperty("--muur-standard",nacht?"#F0E8E2":"#262419");
+  st.setProperty("--muur-standard",nacht?"#DBD1C9":"#262419");
   st.setProperty("--muur-noble",VLAK_PALET.muren.noble.dag);
   /* Het raster: rustig, maar in beide standen te zien. */
   /* De tegels staan los van elkaar; wat je in de kier ziet ís het raster.
@@ -4895,8 +4888,11 @@ function renderBoard(){
    schuifbalk in de instellingen, zodat we de maat kunnen zoeken; daarna wordt
    dit weer één vast getal. Meteen bij het laden uitlezen, want het eerste bord
    wordt getekend voordat de instellingen aan de knoppen hangen. */
+/* Onder de vier procent wordt een muur een haarlijn: dan leest hij niet meer
+   als muur en gaan alle maten die eraan hangen scheef staan. */
+const MUUR_MINIMAAL = 4;
 let MUUR_PROCENT = (function(){
-  try{ const v=parseFloat(localStorage.getItem("clueboard:muurDikte")); if(v>0) return v; }catch(e){}
+  try{ const v=parseFloat(localStorage.getItem("clueboard:muurDikte")); if(v>0) return Math.max(MUUR_MINIMAAL,v); }catch(e){}
   return 9.5;
 })();
 /* De ronding van een tegelhoek, ook in procent van een vakje. De muren nemen
@@ -4987,18 +4983,24 @@ function renderWalls(cell){
   const outline=boardOutlinePath(cell,rond);
   if(outline) out+=muurPad(outline,"var(--muur-standard)","contour");
 
-  /* Waar meerdere muren samenkomen buigt elke ruimte zijn eigen hoek van het
-     kruispunt vandaan. Bij een dunne muur reikt geen enkele bocht nog tot in
-     het midden en blijft daar een gaatje over. Dat vullen we met een stipje in
-     de muurkleur: groot genoeg om het gat te dekken, en altijd kleiner dan de
-     afstand tot de dichtstbijzijnde tegel, dus het raakt nooit een vloer.
-     Alleen op echte kruispunten -- een vrije buitenhoek van het bord hoort
-     juist rond te blijven, daar zit ook geen gat. */
-  /* Hoe ver het gat reikt is uit te rekenen: de bochten liggen het verst van
-     het kruispunt af in de richting van de muren zelf. Precies zo groot maken
-     we het stipje, plus een haartje. Bij een normale muurdikte valt het binnen
-     de muur en zie je het niet; alleen bij een dunne muur doet het zijn werk. */
-  const stip=Math.max(wall/2, rond - Math.sqrt(rond*wall + wall*wall/4) + 0.3);
+  /* Waar drie of meer muren samenkomen buigt elke ruimte zijn eigen hoek van
+     het kruispunt vandaan. Bij een dunne muur reikt geen enkele bocht nog tot
+     in het midden en blijft daar een gaatje over.
+
+     Dat gat heeft de vorm van de muren die er samenkomen: op een T-splitsing
+     een driehoek met zijn punt in de richting van de aankomende muur, op een
+     kruising een ruit. Een rondje dekt dat wel, maar steekt daarbuiten uit en
+     leest dan als een kraaltje op de lijn. Daarom vullen we het met precies
+     die veelhoek: één punt in elke muurrichting, en de zijden vallen weg onder
+     de bochten die er toch al liggen.
+
+     Hoe ver het gat reikt is uit te rekenen: de bochten liggen het verst van
+     het kruispunt af in de richting van de muren zelf. Die afstand schaalt dus
+     mee met de muurdikte en de bocht. Altijd in de gewone muurkleur, nooit in
+     het goud -- een geel plekje op een kruispunt leest als een knoop.
+     Bij precies twee muren is er geen kruispunt en dus ook geen gat: daar
+     hoort de hoek gewoon rond te blijven. */
+  const stip=Math.max(wall/2, rond - Math.sqrt(rond*wall + wall*wall/4) + 0.25);
   const gebied=(c,r)=>{ const tl=M.tiles.get("c"+c+"r"+r); return tl?String(tl.roomId):null; };
   const knopen=[];
   for(let r=bb.minR;r<=bb.maxR+1;r++) for(let c=bb.minC;c<=bb.maxC+1;c++){
@@ -5010,34 +5012,25 @@ function renderWalls(cell){
     const S=(sw!==null||se!==null)&&sw!==se;
     const Wz=(nw!==null||sw!==null)&&nw!==sw;
     const E=(ne!==null||se!==null)&&ne!==se;
-    const graad=(N?1:0)+(S?1:0)+(Wz?1:0)+(E?1:0);
-    const vol=nw!==null&&ne!==null&&sw!==null&&se!==null;
-    /* Drie of meer muren is altijd een kruispunt. Precies twee is alleen een
-       kruispunt als ze een hoek maken én het punt van alle kanten door het
-       bord omsloten is. */
-    const kruis = graad>=3 || (graad===2 && !(N&&S) && !(Wz&&E) && vol);
-    if(!kruis) continue;
-    const isEdel=[nw,ne,sw,se].some(id=>id!==null && roomWallStyle(M.rooms.get(id)).edel);
-    knopen.push({x:(c-bb.minC)*cell, y:(r-bb.minR)*cell, edel:isEdel});
+    /* Met de klok mee, zodat de punten meteen een nette veelhoek vormen. */
+    const richting=[];
+    if(E) richting.push([1,0]);
+    if(S) richting.push([0,1]);
+    if(Wz) richting.push([-1,0]);
+    if(N) richting.push([0,-1]);
+    if(richting.length<3) continue;
+    knopen.push({x:(c-bb.minC)*cell, y:(r-bb.minR)*cell, r:richting});
   }
   /* De stipjes blijven binnen de vorm van het bord, zodat er bij een muur die
      op de buitenrand uitkomt niets buiten het bord uitsteekt. */
-  const stipjes=lijst=>{
-    if(!lijst.length) return "";
-    const kleur=lijst[0].edel?"var(--muur-noble)":"var(--muur-standard)";
-    let s='<g class="knoop'+(lijst[0].edel?" edel":"")+'"'+(outline?' clip-path="url(#bordKnip)"':'')+'>';
-    lijst.forEach(k=>{ s+='<circle cx="'+k.x+'" cy="'+k.y+'" r="'+stip.toFixed(2)+'" fill="'+kleur+'"/>'; });
-    return s+"</g>";
-  };
   if(outline) out+='<defs><clipPath id="bordKnip"><path d="'+outline+'"/></clipPath></defs>';
-  out+=stipjes(knopen.filter(k=>!k.edel));
 
   const gewoon=[], edel=[];
   M.rooms.forEach(room=>{
     const st=roomWallStyle(room);
     (st.edel?edel:gewoon).push({room:room,kleur:st.colors[0]});
   });
-  gewoon.concat(edel).forEach(r=>{
+  const teken=lijst=>lijst.forEach(r=>{
     const id=r.room.id;
     let d="";
     omtrekRingen(cell,(c,rr)=>{
@@ -5046,8 +5039,18 @@ function renderWalls(cell){
     }).forEach(ring=>{ d+=rondPad(ring,rond,true); });
     if(d) out+=muurPad(d,r.kleur,"muur"+(r.kleur===edelKleur()?" edel":""));
   });
-  /* De gouden kruispunten helemaal bovenop, net als de gouden muren zelf. */
-  out+=stipjes(knopen.filter(k=>k.edel));
+  teken(gewoon);
+  /* De kruispunten na de gewone muren en vóór de gouden: zo dicht het stipje
+     wel het gat, maar ligt het goud er nog altijd bovenop. */
+  if(knopen.length){
+    out+='<g class="knoop"'+(outline?' clip-path="url(#bordKnip)"':'')+'>';
+    knopen.forEach(k=>{
+      const p=k.r.map(d=>(k.x+d[0]*stip).toFixed(2)+","+(k.y+d[1]*stip).toFixed(2)).join(" ");
+      out+='<polygon points="'+p+'" fill="var(--muur-standard)"/>';
+    });
+    out+='</g>';
+  }
+  teken(edel);
 
   svg.innerHTML=out;
 }
@@ -5326,17 +5329,21 @@ function paintBoard(){
 function fitBoard(){
   if(!M) return;
   const vp=$("#boardViewport");
-  /* Wat lucht om het bord: de contourmuur wordt op de rand getekend en steekt
-     dus half naar buiten. */
-  /* Opzij alleen ruimte voor de dikte van de buitenmuur: het bord loopt tot
-     de rand van het scherm. Boven en onder houdt het wat lucht. */
+  /* Wat lucht om het bord. De contourmuur wordt op de rand van het bord
+     getekend en steekt dus een halve dikte naar buiten; daar komt opzij nog
+     een hele muurdikte lucht bij, zodat het bord op een telefoon nooit tegen
+     de zijkant van het scherm aan ligt. Omdat die marge in muurdiktes is
+     uitgedrukt, groeit hij mee als de muur dikker wordt.
+     De breedte van een vakje volgt daaruit: het scherm moet niet alleen de
+     kolommen dragen, maar ook drie halve muren aan elke kant. */
+  const zijlucht = MUUR_PROCENT*3/100;      /* in vakjes, links en rechts samen */
   const marge = 20;
   const w=vp.clientWidth-6, h=vp.clientHeight-marge;
   if(w<=0||h<=0) return;
   /* Op de werkelijke omvang schalen, niet op het opgegeven raster: anders
      krimpt een strook van 7x9 mee met een leeg raster van 12x12. */
   const b=M.bounds;
-  const cell=Math.max(22, Math.floor(Math.min(w/b.cols, h/b.rows)));
+  const cell=Math.max(22, Math.floor(Math.min(w/(b.cols+zijlucht), h/b.rows)));
   document.documentElement.style.setProperty("--cell",cell+"px");
   renderWalls(cell);
   renderRoomLabels(cell);
@@ -6885,7 +6892,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.70";
+const PLAYER_APP_VERSION="0.9.71";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -7856,7 +7863,6 @@ document.addEventListener("pointerdown",e=>{
    body en onthoudt zijn stand op dit apparaat. Alles hangt aan CSS, dus bij het
    omzetten hoeft er niets opnieuw getekend te worden. */
 [["rowPlat","plat-icoon","clueboard:platIcoon"],
- ["rowGeenGoud","geen-goud","clueboard:geenGoud"],
  ["rowTussen","tussen-muren","clueboard:tussenMuren"]].forEach(function(rij){
   const id=rij[0], klasse=rij[1], sleutel=rij[2];
   const knop=$("#"+id);
@@ -7898,7 +7904,7 @@ function maatSchuif(balkId,getalId,sleutel,lees,schrijfMaat,opnieuw){
     balk.addEventListener(n,e=>e.stopPropagation(),{passive:true}));
 }
 maatSchuif("muurDikte","muurDikteGetal","clueboard:muurDikte",
-  ()=>MUUR_PROCENT, v=>{ if(v>0) MUUR_PROCENT=v; }, true);
+  ()=>MUUR_PROCENT, v=>{ if(v>0) MUUR_PROCENT=Math.max(MUUR_MINIMAAL,v); }, true);
 maatSchuif("tegelKier","tegelKierGetal","clueboard:tegelKier",
   ()=>KIER_PROCENT, v=>{ if(v>=0) KIER_PROCENT=v; }, true);
 
