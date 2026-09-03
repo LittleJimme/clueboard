@@ -626,6 +626,34 @@ body.vloer-v3 .tile .glans{display:none}
    geschilderde vloeren van de skin en de waas van de ruimtekleur. Die laag
    blijft in de code staan voor de oude skin, maar tekent hier niets. */
 body.vloer-v3 .tile[data-floor]::after{content:none}
+
+/* ── Zachte materiaaloverlays ──
+   Per vloersoort één tekening met alleen het reliëf: een bijna witte plaat met
+   heel lichte nerven, korrels of aders. Die legt zich over de vlakke kleur en
+   vermenigvuldigt zich ermee, zodat de kleur blijft wat hij is en er alleen
+   materiaal bijkomt. De tekening zelf heeft rechte hoeken; hij krijgt de vorm
+   van de tegel doordat hij op dezelfde plek en met dezelfde ronding ligt als
+   het gekleurde vlak eronder. */
+body.vloer-v3.overlays .tile[data-floor]:not(.out-of-bounds)::after{
+  content:"";position:absolute;inset:var(--tegel-kier);z-index:0;pointer-events:none;
+  border-radius:var(--tegel-rond);
+  background-image:var(--ov);background-size:100% 100%;background-repeat:no-repeat;
+  mix-blend-mode:multiply;opacity:.9;
+}
+body.vloer-v3.overlays.tussen-muren .tile[data-floor]:not(.out-of-bounds)::after{
+  inset:var(--mt) var(--mr) var(--mb) var(--ml);
+}
+body.vloer-v3.overlays .tile[data-floor="stone"]{--ov:url("../assets/art/overlays/stone.png")}
+body.vloer-v3.overlays .tile[data-floor="concrete"]{--ov:url("../assets/art/overlays/concrete.png")}
+body.vloer-v3.overlays .tile[data-floor="tile"]{--ov:url("../assets/art/overlays/tile.png")}
+body.vloer-v3.overlays .tile[data-floor="marble"]{--ov:url("../assets/art/overlays/marble.png")}
+body.vloer-v3.overlays .tile[data-floor="dirt"]{--ov:url("../assets/art/overlays/dirt.png")}
+body.vloer-v3.overlays .tile[data-floor="sand"]{--ov:url("../assets/art/overlays/sand.png")}
+body.vloer-v3.overlays .tile[data-floor="gravel"]{--ov:url("../assets/art/overlays/gravel.png")}
+body.vloer-v3.overlays .tile[data-floor="wood"]{--ov:url("../assets/art/overlays/wood.png")}
+body.vloer-v3.overlays .tile[data-floor="grass"]{--ov:url("../assets/art/overlays/grass.png")}
+body.vloer-v3.overlays .tile[data-floor="carpet"]{--ov:url("../assets/art/overlays/carpet.png")}
+body.vloer-v3.overlays .tile[data-floor="water"]{--ov:url("../assets/art/overlays/water.png")}
 /* ══════ Tijdelijke proefstanden voor de ondergrond ══════
    Twee schuifjes in het bouwmenu om varianten naast elkaar te zien. Ze zetten
    alleen een klasse op de body en raken het bord zelf niet aan.
@@ -657,6 +685,27 @@ body.vloer-v3.tussen-muren .tile .glans{inset:var(--mt) var(--mr) var(--mb) var(
 
 /* Tijdelijke stand: de getekende objecten weg, het platte pictogram terug.
    Handig zolang de ondergrond nog verandert. */
+/* ── De golf over water ──
+   Watertegels ademen: heel langzaam een tikje kleiner en weer groter. Als ze
+   dat allemaal tegelijk deden zou het bord knipperen; daarom begint elke tegel
+   een stukje later dan zijn buur, in een richting die je zelf kiest. Het
+   verloop over het bord is dus een golf die er rustig overheen loopt.
+   De diepte en het tempo zitten in de animatie zelf; welke tegel wanneer aan
+   de beurt is staat per tegel in --golf-fase (zie zetGolfFase). */
+@keyframes golfSlag{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(calc(1 - var(--golf-diep,3) / 100))}
+}
+body.golf .tile[data-floor="water"]:not(.out-of-bounds)::before,
+body.golf .tile[data-floor="water"]:not(.out-of-bounds)::after{
+  transform-origin:50% 50%;
+  animation:golfSlag calc(var(--golf-duur,6) * 1s) ease-in-out infinite;
+  animation-delay:var(--golf-fase,0s);
+}
+@media (prefers-reduced-motion:reduce){
+  body.golf .tile[data-floor="water"]::before,
+  body.golf .tile[data-floor="water"]::after{animation:none}
+}
 body.plat-icoon .tile .objart{display:none}
 body.plat-icoon .tile.has-art .objicon{display:block}
 body.plat-icoon .tile .objicon{color:var(--plat-icoon,rgba(38,36,25,.62))}
@@ -1019,10 +1068,13 @@ body.hide-objsurf .tile .objsurf{display:none}
    vier zijden -- bij het kruispunt van vier banen moet de omtrek juist naar
    binnen knikken. Elke tegel tekent daarom zijn eigen stuk van het kleed als
    kleine SVG, met de vorm die volgt uit zijn buren (zie matVorm). */
+/* Het kleed is een vloerkleed en geen vlag: gedempte kleuren, in dezelfde
+   aardse familie als de rest van het bord. Fel rood en diep marineblauw
+   trokken alle aandacht naar zich toe terwijl het juist ondergrond is. */
 #grid{
-  --mat-veld:#B45B3E;   /* het kleed zelf */
-  --mat-lijn:#14162E;   /* de donkere rand eromheen */
-  --mat-kader:#E7B63B;  /* het gele kader daarbinnen */
+  --mat-veld:#B4816C;   /* het kleed zelf */
+  --mat-lijn:#4A4034;   /* de donkere rand eromheen */
+  --mat-kader:#CDB07B;  /* het kader daarbinnen */
 }
 .tile .objmat{position:absolute;inset:0;pointer-events:none;z-index:0}
 .tile .objmat svg{width:100%;height:100%;display:block;overflow:visible}
@@ -1055,6 +1107,14 @@ body.hide-objsurf .tile .objsurf{display:none}
    een tekening in de juiste verhouding, dan verandert er niets aan het beeld:
    uitrekken naar een vak dat al dezelfde verhouding heeft doet niets. */
 .tile .objart.vullend img{object-fit:fill}
+/* Een boom is hoger dan zijn vakje. Hem kleiner schalen tot hij past maakt
+   hem een plantje; daarom houdt hij de breedte van het vakje en steekt hij met
+   zijn kruin over de tegel erboven heen. Zijn voet blijft op zijn eigen tegel
+   staan. De vakjes staan op volgorde in het raster, dus een tegel die lager
+   ligt tekent vanzelf over een tegel die hoger ligt. De muren liggen er nog
+   overheen, want een boom hoort niet door een muur heen te groeien. */
+.tile .objart.uitsteker{z-index:4}
+.tile .objart.uitsteker img{object-fit:contain;object-position:bottom center}
 .tile.has-art{z-index:2}
 .tile.has-art .objicon{display:none}
 .tile.has-pawn{z-index:1}
@@ -1124,7 +1184,7 @@ body.hide-objsurf .tile .objsurf{display:none}
 /* Het kruis draagt zijn eigen lichte onderlaag in de tekening zelf; daar
    overheen één zachte donkere schaduw. Een witte schaduw met een verspringing
    gaf een spookrandje langs de streep. */
-.note-cross svg{width:94%;height:94%;filter:drop-shadow(0 1px 1.5px rgba(26,16,8,.4))}
+.note-cross svg{width:70%;height:70%;filter:drop-shadow(0 1px 1.5px rgba(26,16,8,.4))}
 @keyframes crossIn{from{opacity:0;transform:scale(.55) rotate(-16deg)}to{opacity:1;transform:none}}
 
 /* ---------- Pion: gevulde schijf met witte letter ----------
@@ -3113,8 +3173,15 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="debug-kop">Proef: ondergrond</div>
   <button class="debug-rij schakel" id="rowPlat" type="button" aria-pressed="false"><b>Platte pictogrammen</b><span class="schuif"><i></i></span></button>
   <button class="debug-rij schakel" id="rowTussen" type="button" aria-pressed="false"><b>Tegels tussen de muren</b><span class="schuif"><i></i></span></button>
+  <button class="debug-rij schakel" id="rowOverlays" type="button" aria-pressed="false"><b>Materiaaloverlays</b><span class="schuif"><i></i></span></button>
+  <button class="debug-rij schakel" id="rowGolf" type="button" aria-pressed="false"><b>Golf op water</b><span class="schuif"><i></i></span></button>
   <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="4" max="22" step="0.5" value="9.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">9.5</span></div>
   <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="1.1" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">1.1</span></div>
+  <div class="debug-kop">Golf op water</div>
+  <div class="debug-rij"><b>Diepte</b><input type="range" id="golfDiep" min="0" max="10" step="0.1" value="3" aria-label="Hoeveel procent een watertegel krimpt"><span class="debug-getal" id="golfDiepGetal">3.0</span></div>
+  <div class="debug-rij"><b>Tempo</b><input type="range" id="golfDuur" min="1" max="20" step="0.5" value="7" aria-label="Seconden per golfslag"><span class="debug-getal" id="golfDuurGetal">7.0</span></div>
+  <div class="debug-rij"><b>Lengte</b><input type="range" id="golfLengte" min="1" max="14" step="0.5" value="5" aria-label="Om de hoeveel tegels de golf zich herhaalt"><span class="debug-getal" id="golfLengteGetal">5.0</span></div>
+  <div class="debug-rij"><b>Hoek</b><input type="range" id="golfHoek" min="0" max="355" step="5" value="35" aria-label="Onder welke hoek de golf over het bord loopt"><span class="debug-getal" id="golfHoekGetal">35.0</span></div>
 </div>
 
 <div class="modal sheet-modal van-boven" id="modalSettings">
@@ -4507,7 +4574,9 @@ function roomFloorArt(room){
    ligt de rand een marge naar binnen. Een hoek waar twee zijden aansluiten
    maar de schuine buur ontbreekt (het kruispunt van vier banen) hoort juist
    uitgesneden te worden: daar knikt de omtrek naar binnen. */
-const MAT_M=15;      /* marge tot de rand van de tegel */
+/* Meer vloer om het kleed heen: het is een kleed op een vloer, en dan hoor je
+   de tegel eromheen te zien liggen. */
+const MAT_M=24;      /* marge tot de rand van de tegel */
 const MAT_K=8;       /* afstand van het gele kader tot de omtrek */
 const MAT_R=8;       /* ronding van een buitenhoek */
 const MAT_W1=4.5;    /* dikte van de donkere rand */
@@ -4658,7 +4727,10 @@ function withThemeFallback(folder,names){
      Het beeld wordt altijd naar zijn vak geschaald (object-fit/contain), dus
      een hogere resolutie uploaden maakt alleen scherper, nooit groter. */
   if(th) names.forEach(n=>{ out.push(assetUrl(folder,th+n,"png")); out.push(assetUrl(folder,th+n)); });
-  names.forEach(n=>out.push(assetUrl(folder,n)));
+  /* Ook de gedeelde map mag een PNG hebben: de nieuwe objecttekeningen zijn
+     uitgeknipt uit het stijlvel en gelden voor elk thema. Staat er geen PNG,
+     dan blijft de oude SVG-tekening gewoon staan. */
+  names.forEach(n=>{ out.push(assetUrl(folder,n,"png")); out.push(assetUrl(folder,n)); });
   return out;
 }
 /* Probeert de kandidaten op volgorde. De eerste die laadt wint; lukt er geen
@@ -4679,6 +4751,21 @@ function mountAsset(host,candidates,flagEl,flagClass){
   img.src=candidates[0];
   return img;
 }
+/* Past een tekening niet in de hoogte van zijn vakje, dan wordt hij niet
+   kleiner gemaakt maar mag hij er bovenuit steken. De breedte blijft die van
+   het vak; de hoogte volgt uit de verhouding van de tekening zelf, en de
+   onderkant blijft op zijn plek. Alleen voor een object van één vakje: een
+   tafel van twee vakjes vult zijn vak al helemaal. */
+function laatUitsteken(art,img,plan){
+  if(!art||!img||plan.w>1||plan.h>1) return;
+  const v=img.naturalHeight/(img.naturalWidth||1);
+  if(!(v>1.12)) return;
+  art.classList.add("uitsteker");
+  art.style.height="calc((var(--cell) - var(--art-pad) * 2) * "+v.toFixed(3)+")";
+  art.style.top="auto";
+  art.style.bottom="var(--art-pad)";
+}
+
 /* Objecten: eerst de maatvariant (tafel-2x1), dan de gewone tekening. */
 function objectAssetCandidates(kind,w,h){
   const slug=assetSlug(kind);
@@ -4876,7 +4963,8 @@ function renderBoard(){
           art.style.width="calc(var(--cell) * "+plan.w+" - var(--art-pad) * 2)";
           art.style.height="calc(var(--cell) * "+plan.h+" - var(--art-pad) * 2)";
           el.appendChild(art);
-          mountAsset(art,objectAssetCandidates(kind,plan.w,plan.h),el,"has-art");
+          const beeld=mountAsset(art,objectAssetCandidates(kind,plan.w,plan.h),el,"has-art");
+          if(beeld) beeld.addEventListener("load",()=>laatUitsteken(art,beeld,plan));
         }
       }
       attachTileInput(el,id);
@@ -4884,6 +4972,7 @@ function renderBoard(){
     }
   }
   applyFloorArt();
+  zetGolfFase();
   paintBoard();
   fitBoard();
 }
@@ -4911,10 +5000,34 @@ function maat(sleutel,standaard){
 /* De kier tussen twee tegels. Tijdelijk aan een schuifbalk; hij bepaalt ook de
    lucht tot een muur, want elke tussenruimte hoort even breed te zijn. */
 let KIER_PROCENT = maat("clueboard:tegelKier",1.1);
+/* De golf over het water: hoe diep hij gaat, hoe lang een slag duurt, om de
+   hoeveel tegels hij zich herhaalt en onder welke hoek hij over het bord
+   loopt. Alle vier tijdelijk aan een schuifbalk. */
+let GOLF_DIEP   = maat("clueboard:golfDiep",3);      /* procent kleiner */
+let GOLF_DUUR   = maat("clueboard:golfDuur",7);      /* seconden per slag */
+let GOLF_LENGTE = maat("clueboard:golfLengte",5);    /* tegels per golf */
+let GOLF_HOEK   = maat("clueboard:golfHoek",35);     /* graden */
 function zetMaten(){
   const st=document.documentElement.style;
   st.setProperty("--rond-pct",String(TEGEL_ROND_PROCENT));
   st.setProperty("--kier-pct",String(KIER_PROCENT));
+  st.setProperty("--golf-diep",String(GOLF_DIEP));
+  st.setProperty("--golf-duur",String(GOLF_DUUR));
+}
+/* Welke watertegel wanneer aan de beurt is. De plek van een tegel wordt op de
+   looprichting geprojecteerd; hoe verder langs die richting, hoe later hij
+   begint. Door de vertraging negatief te maken lopen alle tegels al, dus je
+   ziet meteen een golf in plaats van een bord dat op gang moet komen. */
+function zetGolfFase(){
+  if(typeof M==="undefined"||!M) return;
+  const rad=GOLF_HOEK*Math.PI/180, cx=Math.cos(rad), cy=Math.sin(rad);
+  const L=Math.max(0.5,GOLF_LENGTE);
+  $$('#grid .tile[data-floor="water"]').forEach(el=>{
+    const tl=M.tiles.get(el.dataset.tile); if(!tl) return;
+    let f=((tl.column*cx + tl.row*cy)/L)%1;
+    if(f<0) f+=1;
+    el.style.setProperty("--golf-fase",(-f*GOLF_DUUR).toFixed(2)+"s");
+  });
 }
 zetMaten();
 
@@ -5299,7 +5412,7 @@ function paintBoard(){
           /* Eén streek, geen lichte onderlaag: een groot kruis over het hele
              vakje is ook op een fors object niet te missen. */
           cr.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round">'
-            +'<path d="M4 4l16 16M20 4L4 20" stroke="#DC4A46" stroke-width="2.4"/></svg>';
+            +'<path d="M4 4l16 16M20 4L4 20" stroke="#DC4A46" stroke-width="3.6"/></svg>';
           el.appendChild(cr);
         }
         /* Letters blijven bewaard onder een kruis, maar tonen we niet tegelijk
@@ -6897,7 +7010,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.71";
+const PLAYER_APP_VERSION="0.9.72";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -7867,16 +7980,19 @@ document.addEventListener("pointerdown",e=>{
 /* Tijdelijke schuifjes voor de ondergrond. Elk schuifje zet één klasse op de
    body en onthoudt zijn stand op dit apparaat. Alles hangt aan CSS, dus bij het
    omzetten hoeft er niets opnieuw getekend te worden. */
-[["rowPlat","plat-icoon","clueboard:platIcoon"],
- ["rowTussen","tussen-muren","clueboard:tussenMuren"]].forEach(function(rij){
-  const id=rij[0], klasse=rij[1], sleutel=rij[2];
+[["rowPlat","plat-icoon","clueboard:platIcoon",false],
+ ["rowTussen","tussen-muren","clueboard:tussenMuren",false],
+ ["rowOverlays","overlays","clueboard:overlays",true],
+ ["rowGolf","golf","clueboard:golf",true]].forEach(function(rij){
+  const id=rij[0], klasse=rij[1], sleutel=rij[2], standaard=!!rij[3];
   const knop=$("#"+id);
   const zet=aan=>{
     document.body.classList.toggle(klasse,!!aan);
     if(knop) knop.setAttribute("aria-pressed",aan?"true":"false");
     try{ localStorage.setItem(sleutel,aan?"1":"0"); }catch(e){}
   };
-  let start=false; try{ start=localStorage.getItem(sleutel)==="1"; }catch(e){}
+  let start=standaard;
+  try{ const v=localStorage.getItem(sleutel); if(v!==null) start=(v==="1"); }catch(e){}
   zet(start);
   if(knop) knop.addEventListener("click",()=>{
     zet(!document.body.classList.contains(klasse));
@@ -7912,6 +8028,17 @@ maatSchuif("muurDikte","muurDikteGetal","clueboard:muurDikte",
   ()=>MUUR_PROCENT, v=>{ if(v>0) MUUR_PROCENT=Math.max(MUUR_MINIMAAL,v); }, true);
 maatSchuif("tegelKier","tegelKierGetal","clueboard:tegelKier",
   ()=>KIER_PROCENT, v=>{ if(v>=0) KIER_PROCENT=v; }, true);
+/* Diepte en tempo zitten in de animatie zelf, dus die hoeven het bord niet aan
+   te raken. Lengte en hoek bepalen wélke tegel wanneer begint, en dat wordt
+   per tegel opnieuw uitgerekend. */
+maatSchuif("golfDiep","golfDiepGetal","clueboard:golfDiep",
+  ()=>GOLF_DIEP, v=>{ GOLF_DIEP=v; }, false);
+maatSchuif("golfDuur","golfDuurGetal","clueboard:golfDuur",
+  ()=>GOLF_DUUR, v=>{ if(v>0) GOLF_DUUR=v; zetGolfFase(); }, false);
+maatSchuif("golfLengte","golfLengteGetal","clueboard:golfLengte",
+  ()=>GOLF_LENGTE, v=>{ if(v>0) GOLF_LENGTE=v; zetGolfFase(); }, false);
+maatSchuif("golfHoek","golfHoekGetal","clueboard:golfHoek",
+  ()=>GOLF_HOEK, v=>{ GOLF_HOEK=v; zetGolfFase(); }, false);
 
 
 /* De proefstand: vijf keer op het merk in het beginscherm tikken zet hem aan,
