@@ -2034,9 +2034,9 @@ body.desktop.in-game #modalIntro .sheet p.intro-tekst{margin:0;max-width:30em;fo
 body.desktop.in-game #modalIntro .intro-dossier{display:contents}
 body.desktop.in-game #modalIntro .intro-breuk{display:none}
 body.desktop.in-game #modalIntro .intro-bordregels{grid-column:1;grid-row:3;gap:10px}
-body.desktop.in-game #modalIntro .bordregel{font-size:15.5px;padding:12px 16px;gap:12px;border-radius:14px}
-body.desktop.in-game #modalIntro .bordregel .ic{width:20px;height:20px}
-body.desktop.in-game #modalIntro .bordregel.algemeen{font-size:13px;padding:2px 6px}
+body.desktop.in-game #modalIntro .bordregel{font-size:20px;padding:12px 0;gap:12px}
+body.desktop.in-game #modalIntro .bordregel .ic{width:18px;height:18px;margin-top:5px}
+body.desktop.in-game #modalIntro .bordregel.algemeen{font-size:15px;padding:9px 0 0}
 /* Niet de volle kolombreedte: op zes kolommen wordt elk portret een derde
    van de bak, en dan drijven ze uit elkaar. Met een bovengrens staan ze als
    groep bij elkaar, met de kolom eromheen als lucht. */
@@ -2568,14 +2568,25 @@ body.in-game #modalIntro .intro-dossier{
 .mk-c.leeg{background:none!important;box-shadow:none}
 .mk-c.blok{opacity:.5}
 .mk-c.blok::before{content:"";position:absolute;inset:24%;border-radius:2px;background:var(--dof);opacity:.85}
-.intro-bordregels{display:flex;flex-direction:column;gap:14px;text-align:left}
-.bordregel{display:flex;gap:14px;align-items:flex-start;background:rgba(201,147,47,.2);border:1px solid rgba(201,147,47,.5);border-left:4px solid var(--goud);
-  border-radius:16px;padding:18px 20px;font-size:18px;font-weight:600;line-height:1.45;color:var(--inkt)}
-html[data-thema="licht"] .bordregel{background:rgba(145,96,8,.13);border-color:rgba(145,96,8,.38);border-left-color:var(--goud)}
-.bordregel .ic{width:24px;height:24px;color:var(--goud);margin-top:1px;flex:0 0 auto}
+/* De bordregels stonden als gevulde gouden blokken op de bladzijde en wogen
+   daarmee zwaarder dan de titel ernaast, terwijl het gewoon zinnen zijn. Nu
+   in dezelfde schreefletter als de intro, een maat groter dan die tekst, met
+   een gouden schildje ervoor en een haarlijn tussen de regels in plaats van
+   een kader eromheen. Boven de groep hetzelfde gouden kapitaaltje als
+   "ZAAK 4" en "LICHT" erboven, zodat je weet wat je leest. */
+.intro-bordregels{display:flex;flex-direction:column;gap:0;text-align:left}
+.bordregel-kop{font:800 11px var(--font-ui);letter-spacing:.22em;text-transform:uppercase;
+  color:var(--goud);margin:0 0 10px}
+.bordregel{display:flex;gap:13px;align-items:flex-start;background:none;border:0;border-radius:0;
+  padding:13px 0;font-family:var(--font-display);font-weight:500;font-size:21px;line-height:1.4;
+  color:var(--inkt);letter-spacing:0}
+.bordregel+.bordregel{border-top:1px solid var(--lijn-zacht)}
+.bordregel .ic{width:19px;height:19px;color:var(--goud);margin-top:5px;flex:0 0 auto}
 .bordregel .ic svg{width:100%;height:100%}
-.bordregel.algemeen{background:none;border:0;padding:4px 8px;color:var(--dof);font-weight:600;font-size:15px}
-.bordregel.algemeen .ic{color:var(--dof)}
+/* De vaste rolregel is een voetnoot bij de rest, geen eigen regel. */
+.bordregel.algemeen{padding:10px 0 0;color:var(--dof);font-size:16px}
+.bordregel.algemeen+.bordregel.algemeen{border-top:0;padding-top:2px}
+.bordregel.algemeen .ic{color:var(--dof);width:16px;height:16px;margin-top:4px}
 /* Dezelfde markering als op het bord. */
 /* Rijen van drie en twee om en om. Een doorlopend raster van drie hield bij
    acht of negen personen een losse staart over; zo staat elke rij gecentreerd
@@ -6310,7 +6321,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.53";
+const PLAYER_APP_VERSION="0.9.54";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6630,10 +6641,12 @@ function showLevelDetail(levelIndex){
      rolregel als grijze voetnoot. */
   const regels=getBoardRules(raw).slice()
     .sort((a,b)=>(isAlgemeneRegel(a.text||a.storyText)?1:0)-(isAlgemeneRegel(b.text||b.storyText)?1:0));
-  $("#introBordregels").innerHTML=regels.map(r=>{
-    const t=r.text||r.storyText, alg=isAlgemeneRegel(t);
-    return '<div class="bordregel'+(alg?' algemeen':'')+'"><span class="ic">'+AssetBank.ui(alg?"compass":"badge")+'</span><span>'+esc(t)+'</span></div>';
-  }).join("");
+  $("#introBordregels").innerHTML=(regels.length?'<div class="bordregel-kop">'
+      +(regels.length===1?'Bordregel':'Bordregels')+'</div>':'')
+    +regels.map(r=>{
+      const t=r.text||r.storyText, alg=isAlgemeneRegel(t);
+      return '<div class="bordregel'+(alg?' algemeen':'')+'"><span class="ic">'+AssetBank.ui(alg?"compass":"badge")+'</span><span>'+esc(t)+'</span></div>';
+    }).join("");
 
   /* Wie erbij was, precies zoals ze straks op het bord staan: dezelfde
      schijf, dezelfde letter, hetzelfde rolteken. */
