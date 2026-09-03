@@ -876,12 +876,56 @@ body.hide-objsurf .tile .objsurf{display:none}
    pixels. Zo houdt een tapijt dezelfde verhouding op elk bord en bij elke
    zoom: op een groot bord wordt de strook vloer eromheen mee groter, in
    plaats van te verschrompelen tot een haarlijn. */
-#grid{--mat-marge:calc(var(--cell) * .12);--mat-rond:calc(var(--cell) * .1)}
+#grid{
+  --mat-marge:calc(var(--cell) * .12);--mat-rond:calc(var(--cell) * .1);
+  /* Dezelfde vier onderdelen als de tekening in assets/art/objects/carpet.svg:
+     een roodbruin vlak, een vrijwel zwarte rand, een geel kader daarbinnen en
+     een gebroken witte ruit. De tekening zelf past alleen op een rechthoek;
+     een kruis of een hoek moet het vlak zelf opbouwen, en dan hoort het er
+     precies zo uit te zien. Alle maten in delen van de tegel, zodat het
+     meeschaalt met het bord. */
+  --mat-veld:#B45B3E;
+  --mat-lijn:#14162E;
+  --mat-kader:#E7B63B;
+  --mat-ruit:#EFE3C8;
+  --mat-lijn-d:max(2px, calc(var(--cell) * .045));
+  --mat-kader-in:calc(var(--cell) * .09);
+  --mat-kader-d:max(1.5px, calc(var(--cell) * .035));
+  --mat-ruit-m:calc(var(--cell) * .17);
+}
 .tile .objmat{
   position:absolute;inset:var(--mat-marge);border-radius:var(--mat-rond);pointer-events:none;z-index:0;
-  background:linear-gradient(158deg,var(--mat-hi) 0%,var(--mat-base) 62%,var(--mat-lo) 100%);
-  border:1px solid var(--mat-edge);
+  background:var(--mat-veld);
+  border:var(--mat-lijn-d) solid var(--mat-lijn);
 }
+/* Het gele kader loopt binnen de zwarte rand mee met de omtrek van de hele
+   vorm: waar het tapijt doorloopt gaat ook dit kader dwars over de tegelgrens
+   heen, zodat er geen streep midden op het kleed komt te staan. */
+.tile .objmat::before{
+  content:"";position:absolute;inset:var(--mat-kader-in);
+  border:var(--mat-kader-d) solid var(--mat-kader);
+  border-radius:calc(var(--mat-rond) * .55);
+}
+/* De ruit staat altijd in het midden van zijn eigen tegel, ook als het kleed
+   over tien tegels ligt. Een vierkant op zijn punt, met dezelfde donkere
+   omlijning als de rest van de tekening. */
+.tile .objmat::after{
+  content:"";position:absolute;left:50%;top:50%;
+  width:var(--mat-ruit-m);height:var(--mat-ruit-m);
+  margin-left:calc(var(--mat-ruit-m) / -2);margin-top:calc(var(--mat-ruit-m) / -2);
+  background:var(--mat-ruit);
+  border:max(1.2px, calc(var(--cell) * .028)) solid var(--mat-lijn);
+  border-radius:calc(var(--cell) * .012);
+  transform:rotate(45deg);
+}
+/* De ruit hoort in het midden van de tégel, niet van het vlak; op een zijde
+   die aansluit is het vlak naar de rand opgerekt en schuift het midden mee. */
+.tile.m-t .objmat::after{margin-top:calc(var(--mat-ruit-m) / -2 + var(--mat-marge) / 2)}
+.tile.m-b .objmat::after{margin-top:calc(var(--mat-ruit-m) / -2 - var(--mat-marge) / 2)}
+.tile.m-t.m-b .objmat::after{margin-top:calc(var(--mat-ruit-m) / -2)}
+.tile.m-l .objmat::after{margin-left:calc(var(--mat-ruit-m) / -2 + var(--mat-marge) / 2)}
+.tile.m-r .objmat::after{margin-left:calc(var(--mat-ruit-m) / -2 - var(--mat-marge) / 2)}
+.tile.m-l.m-r .objmat::after{margin-left:calc(var(--mat-ruit-m) / -2)}
 /* Waar hetzelfde tapijt doorloopt valt de marge weg en loopt het vlak een
    pixel over de tegelgrens heen, zodat er geen naad overblijft. De ronding
    van een hoek vervalt zodra een van zijn twee zijden aansluit: alleen de
@@ -891,6 +935,13 @@ body.hide-objsurf .tile .objsurf{display:none}
 .tile.m-r .objmat{right:-1px;border-right-color:transparent;border-top-right-radius:0;border-bottom-right-radius:0}
 .tile.m-b .objmat{bottom:-1px;border-bottom-color:transparent;border-bottom-left-radius:0;border-bottom-right-radius:0}
 .tile.m-l .objmat{left:-1px;border-left-color:transparent;border-top-left-radius:0;border-bottom-left-radius:0}
+/* Zelfde verhaal voor het gele kader: de zijde die aansluit loopt door tot
+   over de tegelgrens en heeft daar geen lijn, zodat de twee helften één
+   doorlopend kader vormen. */
+.tile.m-t .objmat::before{top:-1px;border-top-color:transparent;border-top-left-radius:0;border-top-right-radius:0}
+.tile.m-r .objmat::before{right:-1px;border-right-color:transparent;border-top-right-radius:0;border-bottom-right-radius:0}
+.tile.m-b .objmat::before{bottom:-1px;border-bottom-color:transparent;border-bottom-left-radius:0;border-bottom-right-radius:0}
+.tile.m-l .objmat::before{left:-1px;border-left-color:transparent;border-top-left-radius:0;border-bottom-left-radius:0}
 /* Het vlak van een gewoon object is een hulplijn en mag verborgen worden.
    Een tapijt is dat niet: dat vlak ís het tapijt. Verberg je het, dan ligt er
    niets meer op de vloer en klopt de regel "stond op een tapijt" nergens mee.
@@ -4229,7 +4280,6 @@ function renderBoard(){
   grid.style.gridTemplateRows="repeat("+b.rows+", var(--cell))";
   const tegelsVan=(o,veld)=>(o.tiles||[]).map(id=>M.tiles.get(id)).filter(x=>x&&x[veld]===o.id);
   const iconPlan=planObjectIcons(o=>tegelsVan(o,"objectId"));
-  const matPlan=planObjectIcons(o=>tegelsVan(o,"matId"));
 
   for(let r=b.minR;r<=b.maxR;r++){
     for(let c=b.minC;c<=b.maxC;c++){
@@ -4274,26 +4324,14 @@ function renderBoard(){
       if(t.status==="occupiable") el.classList.add("occupiable");
       if(t.matId){
         /* Het tapijt eerst: zijn vlak en tekening liggen onder het object. */
-        const mo=M.objects.get(t.matId);
-        const mk=mo?(mo.kind||mo.name):"";
-        const v=objectSurfaceVars(mk,"occupiable");
-        el.style.setProperty("--mat-base",v["--obj-base"]);
-        el.style.setProperty("--mat-hi",v["--obj-hi"]);
-        el.style.setProperty("--mat-lo",v["--obj-lo"]);
-        el.style.setProperty("--mat-edge",v["--obj-edge"]);
         const matsurf=document.createElement("div");
         matsurf.className="objmat";
         el.appendChild(matsurf);
         joinSides(el,c,r,t.matId,"matId","m");
-        const mplan=matPlan.get(id);
-        if(mplan){
-          const mart=document.createElement("div");
-          mart.className="objart mat";
-          mart.style.width="calc(var(--cell) * "+mplan.w+" - var(--art-pad) * 2)";
-          mart.style.height="calc(var(--cell) * "+mplan.h+" - var(--art-pad) * 2)";
-          el.appendChild(mart);
-          mountAsset(mart,objectAssetCandidates(mk,mplan.w,mplan.h),el,"has-art");
-        }
+        /* Geen losse tekening meer over het vlak heen: het vlak zelf draagt
+           nu de hele tekening (veld, rand, kader en ruit), en dat past ook op
+           een kruis of een hoek. Een tekening erbovenop zou daar een tweede,
+           kleiner tapijtje op leggen. */
       }
       if(t.objectId){
         const o=M.objects.get(t.objectId);
@@ -6130,7 +6168,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.47";
+const PLAYER_APP_VERSION="0.9.48";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
