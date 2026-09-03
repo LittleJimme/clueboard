@@ -549,6 +549,71 @@ body.in-game #pane-clues.active{animation:paneVanRechts .22s cubic-bezier(.2,.8,
   background-size:38% 38%,30% 30%,34% 34%,26% 26%;
 }
 
+/* ══════════════════════════════════════════════════════
+   Lichte vloer-foundations (stijlvel v3)
+   ------------------------------------------------------
+   Elke vloertegel is één gameplayvakje: 128x128, verhouding 1:1, uitgesneden
+   uit het goedgekeurde stijlvel door assets/tools/cut_floors.py. In de tekening
+   zit de belichting die overal hetzelfde is: zacht licht langs boven en links,
+   warme schaduw langs onder en rechts, een heel ondiepe bevel en een brede
+   lichtval van linksboven naar rechtsonder. Die richting staat vast in
+   wereldcoördinaten en wordt nooit per tegel gedraaid.
+
+   Binnen een vakje staat nooit een kleiner raster: geen voegen, bakstenen,
+   planken of ruitpatronen. De naad die je ziet is de rand van het vakje zelf.
+   De hoeken van een tegel zijn licht afgerond, dus waar vier tegels
+   samenkomen blijft een klein vlekje voeg staan -- dat leest als vier losse
+   tegels die tegen elkaar aan zijn gelegd.
+
+   Zes structurele foundations dragen elf vloersoorten. Binnen een familie
+   deelt de tegel dezelfde structuur en verschilt vooral de kleur:
+     mineraal  stone, concrete, tile, marble
+     aarde     dirt, sand, gravel
+     hout      wood
+     gras      grass
+     linnen    carpet
+     water     water
+   De voeg onder de tegels is per materiaal een tint donkerder dan het
+   materiaal zelf; ontbreekt een tekening, dan blijft die vlakke kleur over --
+   nooit een herhalend patroon. */
+body.vloer-v3 .tile[data-floor]{
+  --vloer:#E7DCC9;                                          /* materiaalkleur */
+  --voeg:color-mix(in srgb,var(--vloer) 84%,#6B5843);       /* voeg eronder */
+  --vloer-tex:none;
+  background-image:var(--vloer-tex),linear-gradient(var(--voeg),var(--voeg));
+  background-size:100% 100%,100% 100%;
+  background-position:0 0,0 0;
+  background-repeat:no-repeat,no-repeat;
+}
+/* Gedeelde minerale basis. */
+body.vloer-v3 .tile[data-floor="stone"]{--vloer:#F0E2CE;--vloer-tex:url("../assets/art/backgrounds/foundations/stone.png")}
+body.vloer-v3 .tile[data-floor="concrete"]{--vloer:#EEDFC9;--vloer-tex:url("../assets/art/backgrounds/foundations/concrete.png")}
+body.vloer-v3 .tile[data-floor="tile"]{--vloer:#E5DCCF;--vloer-tex:url("../assets/art/backgrounds/foundations/tile.png")}
+body.vloer-v3 .tile[data-floor="marble"]{--vloer:#EEE4D6;--vloer-tex:url("../assets/art/backgrounds/foundations/marble.png")}
+/* Gedeelde aardebasis. */
+body.vloer-v3 .tile[data-floor="dirt"]{--vloer:#CFB58F;--vloer-tex:url("../assets/art/backgrounds/foundations/dirt.png")}
+body.vloer-v3 .tile[data-floor="sand"]{--vloer:#E6D0AF;--vloer-tex:url("../assets/art/backgrounds/foundations/sand.png")}
+body.vloer-v3 .tile[data-floor="gravel"]{--vloer:#D3BC9D;--vloer-tex:url("../assets/art/backgrounds/foundations/gravel.png")}
+/* Eigen structuur. */
+body.vloer-v3 .tile[data-floor="wood"]{--vloer:#E1D1BD;--vloer-tex:url("../assets/art/backgrounds/foundations/wood.png")}
+body.vloer-v3 .tile[data-floor="grass"]{--vloer:#BEB78F;--vloer-tex:url("../assets/art/backgrounds/foundations/grass.png")}
+body.vloer-v3 .tile[data-floor="carpet"]{--vloer:#E1D5C4;--vloer-tex:url("../assets/art/backgrounds/foundations/carpet.png")}
+body.vloer-v3 .tile[data-floor="water"]{--vloer:#CED6CC;--vloer-tex:url("../assets/art/backgrounds/foundations/water.png")}
+/* Alle oude vloerpatronen uit: strepen, voegen, ruiten en steenverdelingen
+   horen niet in een vakje dat één tegel voorstelt. De laag blijft bestaan
+   voor de oude skin, maar tekent hier niets. */
+body.vloer-v3 .tile[data-floor]::before{background-image:none!important;opacity:0!important}
+/* De ruimtekleur blijft als heel lichte waas over het materiaal liggen, zodat
+   gebieden op kleur te onderscheiden blijven zonder het materiaal te
+   overstemmen. */
+body.vloer-v3 .tile[data-floor]::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:var(--roomtint,transparent);opacity:.13;
+}
+body.vloer-v3[data-skin="medieval"] .tile[data-floor]::after{opacity:.13}
+/* Klaar voor een latere overlaylaag over meerdere vakjes: die komt straks
+   bovenop deze basis, niet erin. */
+
 
 
 
@@ -2778,7 +2843,7 @@ body.in-game .clue-card.done .tick svg{display:block}
 body.in-game .clue-card.done::before{background:var(--goud)}
 </style>
 </head>
-<body class="hide-objsurf laden">
+<body class="hide-objsurf laden vloer-v3">
 
 <div id="app">
 
@@ -4178,7 +4243,11 @@ function updateLabelFloat(){
 /* Ondergronden met een ingebouwde textuur. Elke naam die de builder meegeeft
    werkt ook zonder dat hij hier staat: dan is de tegel effen en kun je hem een
    eigen uiterlijk geven met Assets/backgrounds/floor-<naam>.svg. */
-const FLOORS=["wood","stone","tile","carpet","marble","concrete","dirt","grass","gravel"];
+/* De elf vloersoorten die een level kan opgeven. Zand en water stonden hier
+   niet in, waardoor die tegels geen data-floor kregen en dus ook geen
+   materiaal; de tekeningen werden wel al geladen. De id's blijven zoals ze
+   zijn, dus opgeslagen borden laden ongewijzigd. */
+const FLOORS=["wood","stone","tile","carpet","marble","concrete","dirt","sand","grass","gravel","water"];
 const KIND_FLOOR={
   hall:"stone",corridor:"stone",gatehouse:"stone","great-hall":"stone",chapel:"stone",cellar:"stone",
   "wine-cellar":"stone",storage:"stone",forge:"stone",armoury:"stone",dungeon:"stone",keep:"stone",
@@ -4413,6 +4482,10 @@ function floorArtName(id,n){ return n<=1 ? "floor-"+id : "floor-"+id+"-"+n; }
    kamers dan varianten, dan begint het rijtje opnieuw. De volgorde is die van
    de kamers in het level, dus hij ligt vast en springt niet per keer. */
 function applyFloorArt(){
+  /* De lichte foundations komen uit de CSS, één tekening per vakje. De oude
+     geschilderde vloeren (floor-<soort>.png, met varianten per kamer) blijven
+     in de map staan voor vergelijking, maar worden hier niet meer geladen. */
+  if(document.body.classList.contains("vloer-v3")) return;
   const perVloer=new Map();
   M.rooms.forEach(function(r){
     const f=roomFloorArt(r); if(!f) return;
@@ -6400,7 +6473,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.62";
+const PLAYER_APP_VERSION="0.9.63";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
