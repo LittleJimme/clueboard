@@ -1,0 +1,263 @@
+# -*- coding: utf-8 -*-
+"""Knip de objectbibliotheek uit tot losse tekeningen met hun contactschaduw.
+
+Bron: assets/art/concepts/clueboard-medieval-object-library-white-spaced-v2.png
+Achttien objecten op een witte ondergrond, met bijschrift en formaat eronder.
+
+Wit wegpoetsen is hier niet één regel. Een tekening staat op wit, dus elke half
+doorzichtige randpixel draagt wit met zich mee; en de contactschaduw is niets
+anders dan datzelfde wit, een tikje donkerder. Die twee moeten verschillend
+behandeld worden:
+
+  * de tekening zelf wordt dekkend, met het wit uit de rand teruggerekend;
+  * de schaduw wordt juist doorzichtig zwart, precies zo diep als hij donker
+    was -- zo blijft hij een schaduw en wordt hij geen grijze vlek zodra hij op
+    een gekleurde tegel ligt.
+
+Om die twee uit elkaar te houden zoeken we eerst de vaste kern van elke
+tekening (duidelijk donkerder dan de ondergrond) en vullen we de gaten daarin.
+Wat daarbinnen valt is tekening; wat erbuiten nog van wit afwijkt is schaduw.
+Zo blijven ook de lichte rotsblokken en het lichte standbeeld gewoon dekkend.
+
+Draaien:  python assets/tools/cut_object_library.py
+"""
+import os
+import sys
+from collections import deque
+
+import numpy as np
+from PIL import Image
+
+WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BRON = os.path.join(WORTEL, 'assets', 'art', 'concepts',
+                    'clueboard-medieval-object-library-white-spaced-v2.png')
+UIT = os.path.join(WORTEL, 'assets', 'art', 'objects')
+THEMA = os.path.join(UIT, 'medieval')
+
+# De achttien tekeningen in leesvolgorde, met de naam waaronder de player ze
+# zoekt. De Nederlandse naam op het vel staat erachter ter herkenning.
+NAMEN = [
+    'chair',        # STOEL
+    'barrel',       # TON
+    'shelf',        # BOEKENKAST
+    'tree',         # BOOM
+    'shrub',        # STRUIK
+    'table',        # TAFEL
+    'horse',        # PAARD
+    ['rubble', 'stones'],   # ROTSBLOKKEN -- de bank kent Puin en Stenen; deze
+                            #   ronde keien passen bij allebei
+    'crate',        # KIST
+    'vase',         # VAAS
+    'statue',       # STANDBEELD
+    'puddle',       # MODDERPLAS
+    'treasure',     # SCHATKIST
+    ['weapon-rack', 'weapon-chest'],  # WAPENREK -- de bank kent alleen een
+                            #   Wapenkist; tot die er is staat het rek daarvoor
+    'table-2x1',    # TAFEL HORIZONTAAL
+    'table-1x2',    # TAFEL VERTICAAL
+    'bed-2x1',      # BED HORIZONTAAL
+    'bed-1x2',      # BED VERTICAAL
+]
+
+WIT = 254            # de ondergrond van het vel
+KERN = 45            # zoveel donkerder dan wit is zeker tekening
+RAND_VAN = 8         # waar de zachte rand van de tekening begint
+RAND_TOT = 34        # en waar hij dekkend is
+SCHADUW_MAX = 0.42   # hoe diep de contactschaduw hoogstens wordt
+TEKST_ZWART = 90     # zo donker is alleen een bijschrift
+TEKST_HOOG = 30      # en zo laag is een regel tekst
+MIN_ZIJDE = 40       # kleiner dan dit is geen tekening
+
+
+def tekstregels(luma):
+    """De regels waarop bijschriften staan, als (van, tot)."""
+    zwart = (luma < TEKST_ZWART).sum(axis=1)
+    banden, start = [], None
+    for y in range(len(zwart)):
+        if zwart[y] > 0 and start is None:
+            start = y
+        elif zwart[y] == 0 and start is not None:
+            banden.append((start, y - 1))
+            start = None
+    if start is not None:
+        banden.append((start, len(zwart) - 1))
+    return [b for b in banden if (b[1] - b[0] + 1) <= TEKST_HOOG]
+
+
+def vulGaten(kern):
+    """Alles wat door de kern is ingesloten hoort bij de tekening.
+
+    We lopen vanaf de rand van het vel door alles wat géén kern is; wat we niet
+    bereiken zit erin opgesloten. Zo wordt een rotsblok met alleen donkere
+    contouren toch een dicht vlak.
+    """
+    h, b = kern.shape
+    buiten = np.zeros_like(kern)
+    rij = deque()
+    for x in range(b):
+        for y in (0, h - 1):
+            if not kern[y, x] and not buiten[y, x]:
+                buiten[y, x] = True
+                rij.append((y, x))
+    for y in range(h):
+        for x in (0, b - 1):
+            if not kern[y, x] and not buiten[y, x]:
+                buiten[y, x] = True
+                rij.append((y, x))
+    while rij:
+        cy, cx = rij.popleft()
+        for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            ny, nx = cy + dy, cx + dx
+            if 0 <= ny < h and 0 <= nx < b and not kern[ny, nx] and not buiten[ny, nx]:
+                buiten[ny, nx] = True
+                rij.append((ny, nx))
+    return ~buiten
+
+
+def groei(masker, stappen=2):
+    uit = masker.copy()
+    for _ in range(stappen):
+        g = uit.copy()
+        g[1:, :] |= uit[:-1, :]
+        g[:-1, :] |= uit[1:, :]
+        g[:, 1:] |= uit[:, :-1]
+        g[:, :-1] |= uit[:, 1:]
+        uit = g
+    return uit
+
+
+def vlekken(masker, minzijde):
+    """Losse vlekken met hun omvang, groter dan minzijde."""
+    h, b = masker.shape
+    gezien = np.zeros_like(masker)
+    uit = []
+    for y in range(h):
+        for x in range(b):
+            if not masker[y, x] or gezien[y, x]:
+                continue
+            rij = deque([(y, x)])
+            gezien[y, x] = True
+            minx = maxx = x
+            miny = maxy = y
+            n = 0
+            while rij:
+                cy, cx = rij.popleft()
+                n += 1
+                if cx < minx: minx = cx
+                if cx > maxx: maxx = cx
+                if cy < miny: miny = cy
+                if cy > maxy: maxy = cy
+                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    ny, nx = cy + dy, cx + dx
+                    if 0 <= ny < h and 0 <= nx < b and masker[ny, nx] and not gezien[ny, nx]:
+                        gezien[ny, nx] = True
+                        rij.append((ny, nx))
+            if (maxx - minx + 1) >= minzijde and (maxy - miny + 1) >= minzijde:
+                uit.append((minx, miny, maxx, maxy, n))
+    return uit
+
+
+def schrijf(im, pad):
+    tmp = pad + '.tmp.png'
+    im.save(tmp)
+    os.replace(tmp, pad)
+
+
+def main():
+    if not os.path.exists(BRON):
+        print('bron ontbreekt:', BRON)
+        return 1
+    rgb = np.array(Image.open(BRON).convert('RGB')).astype(np.int16)
+    luma = rgb.mean(axis=2)
+
+    # 1. De bijschriften weg: die regels worden gewoon weer wit.
+    for y0, y1 in tekstregels(luma):
+        rgb[y0:y1 + 1] = WIT
+    luma = rgb.mean(axis=2)
+
+    mn = rgb.min(axis=2)
+    afstand = WIT - mn                      # hoe ver van de ondergrond af
+
+    # 2. De vaste kern van elke tekening, met de gaten erin gevuld.
+    kern = vulGaten(afstand > KERN)
+    tekening = groei(kern, 2)               # de zachte rand hoort er ook bij
+
+    # 3. De alfalaag opbouwen.
+    hoogte, breedte = luma.shape
+    kleur = rgb.astype(np.float32)
+    alfa = np.zeros((hoogte, breedte), dtype=np.float32)
+
+    # De tekening: dekkend in het midden, zacht aflopend naar de rand, met het
+    # wit uit die randpixels teruggerekend.
+    fel = np.clip((afstand - RAND_VAN) / float(RAND_TOT - RAND_VAN), 0, 1)
+    alfa = np.where(tekening, np.maximum(fel, 0.0), alfa)
+    veilig = np.maximum(alfa, 1e-3)[..., None]
+    kleur = np.where(tekening[..., None],
+                     np.clip((rgb - WIT * (1 - veilig)) / veilig, 0, 255),
+                     kleur)
+
+    # De schaduw: alles buiten de tekening dat toch van wit afwijkt. Hoe donker
+    # het was, zo diep wordt de schaduw -- en warm donker in plaats van grijs,
+    # zodat hij bij het bord past.
+    schaduw = (~tekening) & (luma < WIT - 1)
+    diep = np.clip((WIT - luma) / 255.0, 0, SCHADUW_MAX)
+    alfa = np.where(schaduw, diep, alfa)
+    kleur = np.where(schaduw[..., None], np.array([58.0, 48.0, 38.0]), kleur)
+
+    beeld = np.dstack([kleur, alfa * 255.0]).astype(np.uint8)
+    vel = Image.fromarray(beeld, 'RGBA')
+
+    # 4. De losse tekeningen opzoeken en wegschrijven. Alleen de kern telt mee
+    #    voor het vinden; de schaduw hoort bij de tekening die erboven staat.
+    vakken = vlekken(kern, MIN_ZIJDE)
+    if len(vakken) != len(NAMEN):
+        print('let op: %d tekeningen gevonden, %d verwacht' % (len(vakken), len(NAMEN)))
+        for v in sorted(vakken, key=lambda v: (v[1], v[0])):
+            print('   ', v[:4], 'b', v[2] - v[0] + 1, 'h', v[3] - v[1] + 1)
+        return 1
+    vakken.sort(key=lambda v: v[1])
+    regels = []
+    for v in vakken:
+        gezet = False
+        for r in regels:
+            if v[1] <= r[0][3] and v[3] >= r[0][1]:
+                r.append(v); gezet = True; break
+        if not gezet:
+            regels.append([v])
+    plat = []
+    for r in regels:
+        plat.extend(sorted(r, key=lambda v: v[0]))
+
+    os.makedirs(THEMA, exist_ok=True)
+    heel = np.array(vel)
+    for namen, v in zip(NAMEN, plat):
+        namen = namen if isinstance(namen, list) else [namen]
+        # Ruim om de kern heen knippen, zodat de schaduw meekomt, en daarna
+        # strak op wat er werkelijk staat.
+        marge = 40
+        x0 = max(0, v[0] - marge); y0 = max(0, v[1] - marge)
+        x1 = min(breedte, v[2] + 1 + marge); y1 = min(hoogte, v[3] + 1 + marge)
+        deel = Image.fromarray(heel[y0:y1, x0:x1], 'RGBA')
+        # Van een bijschrift blijft soms nog een spikkel antialiasing over, net
+        # buiten de regel die we wit hebben gemaakt. Alles wat losstaat van de
+        # tekening en verwaarloosbaar klein is, gaat weg.
+        d = np.array(deel)
+        stukken = vlekken(d[:, :, 3] > 6, 1)
+        if stukken:
+            grootste = max(s[4] for s in stukken)
+            for s in stukken:
+                if s[4] < grootste * 0.02:
+                    d[s[1]:s[3] + 1, s[0]:s[2] + 1, 3] = 0
+            deel = Image.fromarray(d, 'RGBA')
+        vak = deel.getbbox()
+        if vak:
+            deel = deel.crop(vak)
+        for naam in namen:
+            schrijf(deel, os.path.join(UIT, naam + '.png'))
+            schrijf(deel, os.path.join(THEMA, naam + '.png'))
+        print('%-24s -> %dx%d' % (', '.join(namen), deel.width, deel.height))
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

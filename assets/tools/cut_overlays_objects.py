@@ -7,7 +7,9 @@ daaronder acht objecten, met bijschriften ertussen. Dit gereedschap schrijft ze
 weg als losse bestanden:
 
   assets/art/overlays/<vloersoort>.png   elf vierkanten, exact 1:1
-  assets/art/objects/<naam>.png          acht objecten, op hun eigen maat
+
+De objecten van dit vel zijn later vervangen door de bibliotheek uit
+cut_object_library.py, dus die worden hier niet meer weggeschreven.
 
 De bijschriften moeten eerst weg. Een uitsnede is een rechthoek, en bij de boom
 en het staande bed valt het woord binnen diezelfde rechthoek -- de zachte
@@ -28,13 +30,14 @@ WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file_
 BRON = os.path.join(WORTEL, 'assets', 'art', 'concepts',
                     'clueboard-neutral-overlays-and-objects-transparent-v4.png')
 UIT_OVERLAY = os.path.join(WORTEL, 'assets', 'art', 'overlays')
-UIT_OBJECT = os.path.join(WORTEL, 'assets', 'art', 'objects')
 
 # De elf overlays staan in de volgorde van het stijlvel; de namen zijn de
 # vloersoorten die een level kan opgeven.
 OVERLAYS = ['stone', 'concrete', 'tile', 'marble', 'dirt', 'sand', 'gravel',
             'wood', 'grass', 'carpet', 'water']
 OVERLAY_MAAT = 256          # vierkant, ruim genoeg voor een groot vakje
+RELIEF_RUIMTE = 86          # hoever het relief van middengrijs af mag komen
+RELIEF_MAX = 26             # en hoeveel het hoogstens opgerekt wordt
 
 # De acht objecten, in leesvolgorde: eerst de rij van 1x1, dan de grote.
 OBJECTEN = ['chair', 'barrel', 'shelf', 'tree',
@@ -189,6 +192,31 @@ def schoonmaak(deel):
     return beeld.crop(vak) if vak else beeld
 
 
+def neutraal(deel):
+    """Een overlay omzetten naar zuiver reliëf, zonder eigen helderheid.
+
+    De tekeningen zijn bijna witte plaatjes. Leg je die over een gekleurde
+    tegel, dan verandert de tegel van kleur zodra je de overlay sterker zet --
+    en dat is precies wat je niet wilt: het materiaal mag zichtbaarder worden,
+    de vloer moet dezelfde vloer blijven.
+
+    Daarom halen we het gemiddelde eruit en houden alleen het verschil over,
+    rond middengrijs. Middengrijs is de neutrale waarde van de zachte-lichtstand
+    waarin de player deze laag legt: precies daar verandert er niets. Wat
+    donkerder was wordt donkerder, wat lichter was lichter, en het gemiddelde
+    blijft staan waar het stond. Het verschil wordt daarbij opgerekt tot het
+    de ruimte gebruikt die er is, want in het origineel is het zo subtiel dat
+    er op een tegel niets meer van te zien zou zijn.
+    """
+    grijs = np.array(deel.convert('L')).astype(np.float32)
+    afwijking = grijs - grijs.mean()
+    top = float(np.percentile(np.abs(afwijking), 99)) or 1.0
+    schaal = min(RELIEF_RUIMTE / top, RELIEF_MAX)
+    uit = np.clip(128.0 + afwijking * schaal, 0, 255).astype(np.uint8)
+    return Image.merge('RGBA', [Image.fromarray(uit)] * 3
+                       + [Image.fromarray(np.full(uit.shape, 255, dtype=np.uint8))])
+
+
 def schrijf(im, pad):
     tmp = pad + '.tmp.png'
     im.save(tmp)
@@ -202,7 +230,6 @@ def main():
     vel = wis_bijschriften(Image.open(BRON).convert('RGBA'))
     zicht = np.array(vel)[:, :, 3] > DREMPEL
     os.makedirs(UIT_OVERLAY, exist_ok=True)
-    os.makedirs(UIT_OBJECT, exist_ok=True)
 
     # Wat er nu nog op het vel staat zijn alleen de tekeningen. De overlays
     # vormen de bovenste rij van elf gelijke vierkanten; de acht objecten staan
@@ -221,27 +248,12 @@ def main():
     for naam, v in zip(OVERLAYS, rij):
         deel = vel.crop((v[0], v[1], v[2] + 1, v[3] + 1))
         deel = deel.resize((OVERLAY_MAAT, OVERLAY_MAAT), Image.LANCZOS)
-        schrijf(deel, os.path.join(UIT_OVERLAY, naam + '.png'))
+        schrijf(neutraal(deel), os.path.join(UIT_OVERLAY, naam + '.png'))
         print('overlay %-9s -> %dx%d' % (naam, OVERLAY_MAAT, OVERLAY_MAAT))
 
-    # De objecten per regel op leesvolgorde: eerst van boven naar beneden
-    # groeperen, dan binnen een regel van links naar rechts.
-    rest = vakken[len(OVERLAYS):]
-    regels = []
-    for v in rest:
-        gezet = False
-        for r in regels:
-            if v[1] <= r[0][3] and v[3] >= r[0][1]:
-                r.append(v); gezet = True; break
-        if not gezet:
-            regels.append([v])
-    plat = []
-    for r in regels:
-        plat.extend(sorted(r, key=lambda v: v[0]))
-    for naam, v in zip(OBJECTEN, plat):
-        deel = schoonmaak(vel.crop((v[0], v[1], v[2] + 1, v[3] + 1)))
-        schrijf(deel, os.path.join(UIT_OBJECT, naam + '.png'))
-        print('object  %-10s -> %dx%d' % (naam, deel.width, deel.height))
+    # De objecten van dit vel zijn vervangen door de bibliotheek uit
+    # cut_object_library.py; daar staan er achttien in, met een echte
+    # contactschaduw. Dit gereedschap levert alleen nog de overlays.
     return 0
 
 
