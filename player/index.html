@@ -1831,7 +1831,10 @@ body.desktop.in-game .bord-tip b{color:var(--inkt-2);font-weight:800}
   body.desktop.in-game .clue-card .lijf .name,body.desktop.in-game .clue-row .who b{font-size:14px;padding:3px 7px}
 }
 /* De hintknop staat in de werkbalk, niet zwevend over het bord. */
-body.desktop.in-game .hint-knop{left:auto;right:24px;bottom:14px;width:46px;height:46px}
+/* De hintknop hoort bij het bord, dus links onderin die kolom; hij staat er
+   alleen in easy mode. */
+body.desktop.in-game .hint-knop{left:auto;right:auto;bottom:16px;width:46px;height:46px;
+  margin-left:24px;grid-column:2;grid-row:3;position:absolute}
 /* Rechts: het detailpaneel, altijd open. */
 body.desktop.in-game #pane-detail{display:flex;grid-column:3;grid-row:2/4;min-height:0;border-left:1px solid var(--lijn-zacht);position:relative}
 /* Legenda: knop rechtsonder in de kantlijn, het vel klapt erboven uit. */
@@ -1866,27 +1869,15 @@ body.desktop.in-game #detailBody .detail-leeg{margin:0 0 18px;padding:12px 14px;
 body.desktop.in-game #detailBody .pd-regels+.detail-kop{margin-top:18px}
 body.desktop.in-game #detailBody .legend-row{padding:6px 0}
 body.desktop.in-game #detailBody .sheet-greep,body.desktop.in-game #detailBody .sheet-kop{display:none}
-/* Hulp: de twee schakelaars en de hint hebben op desktop een vaste plek in
-   het paneel, in plaats van verstopt in de instellingen. */
-body.desktop.in-game .hulp-blok{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
-body.desktop.in-game .hulp-rij{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:12px;background:var(--kaart-2);border:1px solid var(--lijn);color:var(--inkt);text-align:left;font:inherit;cursor:pointer}
-body.desktop.in-game .hulp-rij:hover{border-color:var(--goud)}
-body.desktop.in-game .hulp-rij .ic{width:20px;height:20px;flex:0 0 auto;color:var(--goud);display:flex}
-body.desktop.in-game .hulp-rij .ic svg{width:100%;height:100%}
-body.desktop.in-game .hulp-rij .tekst{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-body.desktop.in-game .hulp-rij b{font:700 13.5px var(--font-ui);color:var(--inkt)}
-body.desktop.in-game .hulp-rij small{font-size:11.5px;color:var(--dof);line-height:1.35}
-body.desktop.in-game .hulp-rij .schuif{flex:0 0 auto;width:34px;height:20px;border-radius:999px;background:var(--lijn);position:relative;transition:background .2s}
-body.desktop.in-game .hulp-rij .schuif::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .2s}
-body.desktop.in-game .hulp-rij.aan .schuif{background:var(--goud)}
-body.desktop.in-game .hulp-rij.aan .schuif::after{transform:translateX(14px)}
-body.desktop.in-game .hulp-hint{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px}
-body.desktop.in-game .hulp-hint .ic{width:18px;height:18px;display:flex}
-body.desktop.in-game .hulp-hint .ic svg{width:100%;height:100%}
+/* Niets gekozen: één rustige aanwijzing in plaats van een blok knoppen. */
+body.desktop.in-game .detail-wacht{display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding:26px 0 0;text-align:right}
+body.desktop.in-game .detail-wacht .ic{width:26px;height:26px;color:var(--goud);opacity:.8;display:flex}
+body.desktop.in-game .detail-wacht .ic svg{width:100%;height:100%}
+body.desktop.in-game .detail-wacht b{font:700 14px var(--font-ui);color:var(--inkt-2)}
+body.desktop.in-game .detail-wacht small{font-size:12px;color:var(--dof);line-height:1.5}
 body.desktop.in-game .detail-terug{display:inline-flex;align-items:center;gap:6px;margin:0 0 12px;padding:6px 11px 6px 8px;border-radius:999px;border:1px solid var(--lijn);background:var(--kaart-2);color:var(--inkt-2);font:700 11.5px var(--font-ui);cursor:pointer}
 body.desktop.in-game .detail-terug svg{width:12px;height:12px;transform:rotate(90deg)}
 body.desktop.in-game .detail-terug:hover{border-color:var(--goud);color:var(--inkt)}
-body.desktop.in-game .hint-knop{display:none}
 /* Zwaarte in de kop, naast de titel. */
 body.desktop.in-game .kop-graad{display:inline-flex;align-items:center;gap:8px;font:800 11px var(--font-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--goud);white-space:nowrap}
 body.desktop.in-game .kop-graad .stippen{display:inline-flex;gap:3px}
@@ -1937,12 +1928,16 @@ body.desktop.in-game .hulp-rij .ic{width:18px;height:18px}
 body.desktop.in-game .hulp-hint{font-size:13px}
 body.desktop.in-game .detail-terug{display:flex;width:max-content;margin:0 0 12px auto;flex-direction:row-reverse}
 body.desktop.in-game .detail-terug svg{transform:rotate(-90deg)}
-/* Een gekozen persoon in dezelfde kantlijn: portret rechts, de naam ernaast
-   naar rechts uitgelijnd. Plaats en notities bovenaan, wat je weet eronder. */
-body.desktop.in-game #detailBody .pd-kop{flex-direction:row-reverse;gap:10px}
-body.desktop.in-game #detailBody .pd-naam{font-size:24px}
-body.desktop.in-game #detailBody .pd-rol{justify-content:flex-end}
-body.desktop.in-game #detailBody .pd-hint{flex-direction:row-reverse;text-align:right}
+/* Een gekozen persoon staat als portret midden in de kantlijn, met zijn naam
+   eronder: een kop zoals op een dossierkaart. De rest van de kolom blijft
+   rechts uitgelijnd. */
+body.desktop.in-game #detailBody .pd-kop{flex-direction:column;align-items:center;gap:2px;padding:2px 0 0;text-align:center}
+body.desktop.in-game #detailBody .pd-portret{padding:0}
+body.desktop.in-game #detailBody .pd-wie{flex:0 0 auto;width:100%;text-align:center}
+body.desktop.in-game #detailBody .pd-naam{font-size:26px;line-height:1.1}
+body.desktop.in-game #detailBody .pd-rol{justify-content:center;margin-top:5px}
+body.desktop.in-game #detailBody .pd-omschrijving{text-align:center;margin-top:8px}
+body.desktop.in-game #detailBody .pd-hint{flex-direction:row;text-align:center;justify-content:center;margin-top:8px}
 body.desktop.in-game #detailBody .pd-omschrijving{font-size:13px}
 body.desktop.in-game #detailBody .pd-label{text-align:right;margin:14px 0 6px}
 body.desktop.in-game #detailBody .pd-regels{text-align:right}
@@ -5586,11 +5581,12 @@ function detailHtml(cs,p){
       +(t?'<b>Kolom '+t.column+', rij '+t.row+'</b><span>'+esc(room&&room.name?room.name:"op het bord")+'</span>'
          :'<b>Nog niet geplaatst</b><span>'+(noten?(noten===1?"1 vakje aangemerkt":noten+" vakjes aangemerkt"):"nog geen letters op het bord")+'</span>')
       +'</div></div>';
-    /* Op desktop staan plaats en notities bovenaan: dat is wat je tijdens het
-       spelen bijhoudt. De regels ken je al; die staan eronder. Op de telefoon
-       blijft het plattegrondje een voetnoot onder de regels. */
+    /* Van boven naar beneden zoals je iemand leest: wie het is, wat je van
+       hem weet, waar hij staat, en onderaan wat jij erover opschrijft. Op de
+       telefoon staat de notitie tussen de regels en het plattegrondje, want
+       daar is het plattegrondje de voetnoot van het venster. */
     html+=isDesktop()
-      ? '<div class="pd-label">Plaats</div>'+plaats+notitie+'<div class="pd-label">Wat je weet</div>'+regels
+      ? '<div class="pd-label">Wat je weet</div>'+regels+'<div class="pd-label">Plaats</div>'+plaats+notitie
       : '<div class="pd-label">Wat je weet</div>'+regels+notitie+plaats;
   } else html+=regels;
   html+='<div class="row"><button class="btn" data-close>Sluiten</button></div>';
@@ -5599,7 +5595,7 @@ function detailHtml(cs,p){
 /* Portret en notitieveld tot leven brengen in de gegeven bak. */
 function bindDetail(box,p){
   if(!p) return;
-  const h=box.querySelector(".pd-portret"); if(h) h.appendChild(personPortrait(p,{size:isDesktop()?84:100}));
+  const h=box.querySelector(".pd-portret"); if(h) h.appendChild(personPortrait(p,{size:isDesktop()?128:100}));
   const ta=box.querySelector("#pdNotitie");
   if(!ta) return;
   ta.value=persoonNotitie(p.id);
@@ -5639,34 +5635,21 @@ function tekenDetail(){
   const ta=box.querySelector("#pdNotitie");
   if(ta && document.activeElement===ta) return;
   if(detailSel && (detailSel.p || (detailSel.cs&&detailSel.cs.length))){
-    box.innerHTML='<button type="button" class="detail-terug" id="detailTerug">'+icon("chevron",{sw:2.4})+' Hulp en legenda</button>'
+    box.innerHTML='<button type="button" class="detail-terug" id="detailTerug">'+icon("chevron",{sw:2.4})+' Sluiten</button>'
       +detailHtml(detailSel.cs,detailSel.p);
     bindDetail(box,detailSel.p);
     const terug=box.querySelector("#detailTerug");
     if(terug) terug.addEventListener("click",()=>{ detailSel=null; tekenDetail(); renderClues(); });
     return;
   }
-  /* Niets gekozen: de hulp die je onderweg nodig hebt, en de legenda. De
-     bordregels staan links in het dossier, dus hier niet nog eens. */
-  let html='<div class="detail-kop">Hulp</div><div class="hulp-blok">'
-    +'<button type="button" class="hulp-rij'+(easyMode?' aan':'')+'" data-desk="easy" aria-pressed="'+(easyMode?'true':'false')+'">'
-      +'<span class="ic">'+AssetBank.ui("sparkle")+'</span>'
-      +'<span class="tekst"><b>Easy mode</b><small>Een verkeerde plek wordt meteen tegengehouden, en je kunt een hint vragen.</small></span>'
-      +'<i class="schuif"></i></button>'
-    +'<button type="button" class="hulp-rij'+(autoKruis?' aan':'')+'" data-desk="kruis" aria-pressed="'+(autoKruis?'true':'false')+'">'
-      +'<span class="ic">'+icon("cross",{sw:2.4})+'</span>'
-      +'<span class="tekst"><b>Auto-kruisjes</b><small>Zet je iemand neer, dan gaan zijn rij en kolom vanzelf dicht.</small></span>'
-      +'<i class="schuif"></i></button>'
-    +(easyMode?'<button type="button" class="btn hulp-hint" data-desk="hint"><span class="ic">'+AssetBank.ui("sparkle")+'</span>Geef een hint</button>':'')
+  /* Niets gekozen: alleen een aanwijzing. Easy mode en auto-kruisjes staan
+     in de instellingen, de legenda achter de knop rechtsonder; die hoorden
+     niet als vast blok in een kolom die over de verdachte gaat. */
+  box.innerHTML='<div class="detail-wacht">'
+    +'<span class="ic">'+AssetBank.ui("badge")+'</span>'
+    +'<b>Nog niemand gekozen</b>'
+    +'<small>Klik links op een kaartje om te zien wat je van die persoon weet, waar hij staat en wat jij erover hebt genoteerd.</small>'
     +'</div>';
-  box.innerHTML=html;
-  $$("[data-desk]",box).forEach(b=>b.addEventListener("click",()=>{
-    const w=b.dataset.desk;
-    if(w==="easy") setEasyMode(!easyMode);
-    else if(w==="kruis") setAutoKruis(!autoKruis);
-    else if(w==="hint"){ $$(".sheet-modal.open").forEach(closeModal); openModal("#modalHint"); return; }
-    tekenDetail();
-  }));
 }
 
 function showLegend(){
@@ -6063,7 +6046,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.41";
+const PLAYER_APP_VERSION="0.9.42";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en

@@ -329,10 +329,13 @@ html[data-thema="licht"] .titelblok h1 em::after{
 }
 .level-list::-webkit-scrollbar{display:none}
 /* Breed scherm: de zaken in twee kolommen, de kop wat lager. */
+/* Breed scherm: de zaken als tegels, van links naar rechts en dan een rij
+   lager. Twee brede kolommen lazen als twee losse lijsten naast elkaar; met
+   vier smallere tegels loopt de volgorde weer gewoon door. */
 @media (min-width:1100px) and (min-height:600px){
-  main{max-width:1080px}
+  main{max-width:1120px}
   .titelblok{padding-bottom:16px}
-  .level-list{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;align-content:start}
+  .level-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px;align-content:start}
   .level-rij{margin:0}
 }
 .level-rij{
@@ -601,6 +604,22 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
 .bouw-rij span{display:block;font-size:12px;color:var(--dof);line-height:1.45}
 .bouw-rij .pijl{color:var(--dof);display:flex}
 .bouw-rij .pijl svg{width:14px;height:14px}
+
+/* ── De zaak als tegel op een breed scherm ──
+   Deze regels staan bewust achteraan: ze delen hun gewicht met de basisregels
+   van .level-rij hierboven, en dan wint wie het laatst komt. */
+@media (min-width:1100px) and (min-height:600px){
+  /* Nummer en formaat op één regel, daaronder de titel met de zwaarte.
+     Geen pijl: een tegel is in zijn geheel de knop. */
+  .level-rij{display:grid;grid-template-columns:auto minmax(0,1fr);
+    grid-template-rows:auto auto;gap:9px 11px;align-items:start;padding:14px}
+  .level-rij .zaak-nr{grid-column:1;grid-row:1;width:36px;height:36px;border-radius:10px;font-size:14px}
+  .level-rij .rij-tags{grid-column:2;grid-row:1;justify-self:end;align-self:center;flex-direction:row}
+  .level-rij .midden{grid-column:1/-1;grid-row:2}
+  .level-rij h3{font-size:16.5px;line-height:1.25}
+  .level-rij .onder{margin-top:5px}
+  .level-rij .pijl{display:none}
+}
 </style>
 </head>
 <body>
