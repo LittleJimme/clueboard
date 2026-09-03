@@ -908,6 +908,15 @@ body.hide-objsurf .tile .objsurf{display:none}
 /* Geen CSS-schaduw meer: de tekeningen dragen hun eigen slagschaduw mee.
    Twee schaduwen over elkaar maakt het beeld vuil. */
 .tile .objart img{width:100%;height:100%;display:block;object-fit:contain}
+/* Een object over meer dan één tegel hoort ook echt over die tegels te
+   liggen. De tekeningen die er nu zijn, zijn nauwelijks breder dan hoog: een
+   tafel van twee tegels meet 174 bij 152, terwijl het vak 2 bij 1 tegel is.
+   Met "contain" past hij dan op zijn hoogte en blijft er links en rechts een
+   flinke strook leeg, waardoor het object op één tegel lijkt te staan. Voor
+   deze vakken rekken we de tekening daarom op tot het hele vak. Komt er later
+   een tekening in de juiste verhouding, dan verandert er niets aan het beeld:
+   uitrekken naar een vak dat al dezelfde verhouding heeft doet niets. */
+.tile .objart.vullend img{object-fit:fill}
 .tile.has-art{z-index:2}
 .tile.has-art .objicon{display:none}
 .tile.has-pawn{z-index:1}
@@ -4418,7 +4427,7 @@ function renderBoard(){
           /* Eigen tekening uit assets/art/objects/, over de hele omvang van het
              object heen. Ontbreekt hij, dan blijft het pictogram hierboven. */
           const art=document.createElement("div");
-          art.className="objart";
+          art.className="objart"+((plan.w>1||plan.h>1)?" vullend":"");
           art.style.width="calc(var(--cell) * "+plan.w+" - var(--art-pad) * 2)";
           art.style.height="calc(var(--cell) * "+plan.h+" - var(--art-pad) * 2)";
           el.appendChild(art);
@@ -6228,7 +6237,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.49";
+const PLAYER_APP_VERSION="0.9.50";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
