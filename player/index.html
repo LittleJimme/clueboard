@@ -559,41 +559,65 @@ body.in-game #pane-clues.active{animation:paneVanRechts .22s cubic-bezier(.2,.8,
    ------------------------------------------------------
    Een vloer is een gekleurd vlak, geen tekening. Elk vakje is precies één
    gameplaycel, altijd vierkant, in één kleur: geen textuur, geen verloop,
-   geen glans, geen rand en geen slagschaduw in de tegel zelf. Er staat ook
-   nooit een kleiner raster in een vakje.
+   geen glans en geen materiaalpatroon.
+
+   De tegel wordt getekend op een eigen laag binnen het vakje, een haartje
+   kleiner en met licht ronde hoeken. Daardoor staan de tegels net los van
+   elkaar en leest het bord als losse tegels op een ondergrond. Het vakje zelf
+   verandert niet van maat, dus raken en klikken blijven precies hetzelfde.
 
    De kleuren komen uit één bron: het blok VLAK_PALET verderop, gemaakt uit
    assets/art/concepts/clueboard-floor-wall-flat-colors-day-night-v1.json door
-   assets/tools/build_palette.py. De speler zet ze bij het wisselen van thema
-   als variabelen op de pagina, dus een wissel kleurt alle tegels meteen om
-   zonder het bord opnieuw op te bouwen.
-
-   Het raster is een aparte laag in de muren-SVG en wordt niet uit de vloer
-   afgeleid; zie renderWalls. */
-body.vloer-v3 .tile:not(.out-of-bounds){background-color:var(--vl-onbekend,#CFCabf)}
-body.vloer-v3 .tile[data-floor="stone"]{background-color:var(--vl-stone)}
-body.vloer-v3 .tile[data-floor="concrete"]{background-color:var(--vl-concrete)}
-body.vloer-v3 .tile[data-floor="tile"]{background-color:var(--vl-tile)}
-body.vloer-v3 .tile[data-floor="marble"]{background-color:var(--vl-marble)}
-body.vloer-v3 .tile[data-floor="dirt"]{background-color:var(--vl-dirt)}
-body.vloer-v3 .tile[data-floor="sand"]{background-color:var(--vl-sand)}
-body.vloer-v3 .tile[data-floor="gravel"]{background-color:var(--vl-gravel)}
-body.vloer-v3 .tile[data-floor="wood"]{background-color:var(--vl-wood)}
-body.vloer-v3 .tile[data-floor="grass"]{background-color:var(--vl-grass)}
-body.vloer-v3 .tile[data-floor="carpet"]{background-color:var(--vl-carpet)}
-body.vloer-v3 .tile[data-floor="water"]{background-color:var(--vl-water)}
+   assets/tools/build_palette.py. */
+body.vloer-v3 #grid{
+  --tegel-kier:max(1.5px,calc(var(--cell) * .03));  /* ruimte tussen tegels */
+  --tegel-rond:calc(var(--cell) * .085);            /* ronding van een hoek */
+  background:var(--voeg);                            /* wat je in de kier ziet */
+}
+body.vloer-v3 .tile{background-color:transparent;background-image:none;box-shadow:none}
+/* De tegel zelf. Eén regel rekent de kleur uit: de basiskleur van het
+   materiaal, met een microverschil per ruimte erin gemengd (zie renderBoard),
+   zodat twee ruimtes met dezelfde vloer net iets van elkaar verschillen. */
+body.vloer-v3 .tile:not(.out-of-bounds)::before{
+  content:"";position:absolute;inset:var(--tegel-kier);z-index:0;pointer-events:none;
+  border-radius:var(--tegel-rond);
+  background-color:color-mix(in srgb,var(--kamer-mix,#000000) var(--kamer-deel,0%),var(--vloer-basis,var(--vl-onbekend)));
+  background-image:none;opacity:1;
+  /* Het licht komt uit linksboven: de muur boven en links werpt zijn schaduw
+     de ruimte in, de muur onder en rechts werpt hem juist naar buiten. Daarom
+     alleen aan die twee zijden een schaduw -- zo lijken de muren hoogte te
+     hebben in plaats van een rand te zijn. */
+  box-shadow:var(--sh-t),var(--sh-l);
+}
+body.vloer-v3 .tile[data-floor="stone"]{--vloer-basis:var(--vl-stone)}
+body.vloer-v3 .tile[data-floor="concrete"]{--vloer-basis:var(--vl-concrete)}
+body.vloer-v3 .tile[data-floor="tile"]{--vloer-basis:var(--vl-tile)}
+body.vloer-v3 .tile[data-floor="marble"]{--vloer-basis:var(--vl-marble)}
+body.vloer-v3 .tile[data-floor="dirt"]{--vloer-basis:var(--vl-dirt)}
+body.vloer-v3 .tile[data-floor="sand"]{--vloer-basis:var(--vl-sand)}
+body.vloer-v3 .tile[data-floor="gravel"]{--vloer-basis:var(--vl-gravel)}
+body.vloer-v3 .tile[data-floor="wood"]{--vloer-basis:var(--vl-wood)}
+body.vloer-v3 .tile[data-floor="grass"]{--vloer-basis:var(--vl-grass)}
+body.vloer-v3 .tile[data-floor="carpet"]{--vloer-basis:var(--vl-carpet)}
+body.vloer-v3 .tile[data-floor="water"]{--vloer-basis:var(--vl-water)}
+/* De schaduw die de muren de ruimte in werpen; alleen boven en links. */
+body.vloer-v3 .tile{--sh-t:0 0 0 0 transparent;--sh-l:0 0 0 0 transparent}
+body.vloer-v3 .tile.w-t{--sh-t:inset 0 11px 10px -8px var(--muur-schaduw)}
+body.vloer-v3 .tile.w-l{--sh-l:inset 11px 0 10px -8px var(--muur-schaduw)}
+/* Een edele ruimte krijgt een heel lichte waas van de edele kleur over de
+   hele ruimte: minimaal, maar je ziet dat het gebied bijzonder is. Dat gaat
+   over het bestaande glansvlak, dat alleen in zulke ruimtes bestaat. */
+body.vloer-v3 .tile .glans{
+  display:block;position:absolute;inset:var(--tegel-kier);z-index:1;
+  border-radius:var(--tegel-rond);background:var(--muur-noble);
+  opacity:.075;animation:none;pointer-events:none;
+}
 /* Alle oude vloerbeelden uit: patronen met strepen, voegen en ruiten, de
-   geschilderde vloeren van de skin, en de waas van de ruimtekleur erover.
-   De laag blijft in de code staan voor de oude skin, maar tekent hier niets. */
-body.vloer-v3 .tile[data-floor]::before{background-image:none!important;opacity:0!important}
+   geschilderde vloeren van de skin en de waas van de ruimtekleur. Die laag
+   blijft in de code staan voor de oude skin, maar tekent hier niets. */
 body.vloer-v3 .tile[data-floor]::after{content:none}
-body.vloer-v3 .tile{background-image:none}
-/* Geen glans over een edele kamer: een vlakke tegel hoort geen lichtspel te
-   hebben. Dat een kamer edel is lees je aan de muurkleur. */
-body.vloer-v3 .tile .glans{display:none}
 /* Tijdelijke stand: de getekende objecten weg, het platte pictogram terug.
-   Handig zolang de ondergrond nog verandert -- dan zie je de vlakken zonder
-   de tekeningen erover. */
+   Handig zolang de ondergrond nog verandert. */
 body.plat-icoon .tile .objart{display:none}
 body.plat-icoon .tile.has-art .objicon{display:block}
 body.plat-icoon .tile .objicon{color:var(--plat-icoon,rgba(38,36,25,.62))}
@@ -1007,12 +1031,6 @@ body.hide-objsurf .tile .objsurf{display:none}
 .tile.w-r{--sh-r:inset -11px 0 12px -9px rgba(0,0,0,.28)}
 .tile.w-b{--sh-b:inset 0 -11px 12px -9px rgba(0,0,0,.28)}
 .tile.w-l{--sh-l:inset 11px 0 12px -9px rgba(0,0,0,.28)}
-/* In de vlakke stand een kortere, strakkere schaduw net binnen elke muur:
-   genoeg om de ruimte diepte te geven, niet zoveel dat het een waas wordt. */
-body.vloer-v3 .tile.w-t{--sh-t:inset 0 9px 7px -6px var(--muur-schaduw)}
-body.vloer-v3 .tile.w-r{--sh-r:inset -9px 0 7px -6px var(--muur-schaduw)}
-body.vloer-v3 .tile.w-b{--sh-b:inset 0 -9px 7px -6px var(--muur-schaduw)}
-body.vloer-v3 .tile.w-l{--sh-l:inset 9px 0 7px -6px var(--muur-schaduw)}
 .tile.out-of-bounds{box-shadow:none}
 /* Gloed over een voorbehouden gebied. */
 .tile .glans{position:absolute;inset:0;pointer-events:none;z-index:1;opacity:0;
@@ -3176,7 +3194,10 @@ function zetVlakPalet(){
   st.setProperty("--muur-standard",nacht?"#F0E8E2":"#262419");
   st.setProperty("--muur-noble",VLAK_PALET.muren.noble.dag);
   /* Het raster: rustig, maar in beide standen te zien. */
-  st.setProperty("--raster",nacht?"rgba(255,255,255,.16)":"rgba(30,34,40,.16)");
+  /* De tegels staan los van elkaar; wat je in de kier ziet ís het raster.
+     Een aparte rasterlijn zou daar bovenop komen en dubbel tekenen. */
+  st.setProperty("--raster","transparent");
+  st.setProperty("--voeg",nacht?"#1B222B":"#CFC8B8");
   /* De harde slagschaduw onder het bord en de zachtere schaduw binnen elke
      muur; in de donkere stand mag de eerste steviger, want de ondergrond is
      al donker. */
@@ -4118,6 +4139,16 @@ function wallSwatchCss(colors){
   colors.forEach((c,i)=>{ stops.push(c+" "+(i*100/n)+"%",c+" "+((i+1)*100/n)+"%"); });
   return "background:linear-gradient(90deg,"+stops.join(",")+")";
 }
+/* Het microverschil per ruimte: uit de naam van de ruimte volgt altijd
+   dezelfde stap, zodat een bord er elke keer hetzelfde uitziet. Vijf standen,
+   van twee procent donkerder tot twee procent lichter. */
+function kamerVariatie(id){
+  let h=0; const s=String(id||"");
+  for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))&0xffff;
+  const stap=(h%5)-2;                       /* -2 .. +2 */
+  return { mix: stap<0?"#000000":"#FFFFFF", deel: Math.abs(stap)*1.1 };
+}
+
 /* Hoort deze tegel bij een ruimte? Zo niet, dan ligt hij buiten de
    plattegrond. Bij een onregelmatig bord (L-vormig of uitgesneden) is dat het
    verschil tussen speelruimte en leeg vlak. */
@@ -4639,6 +4670,14 @@ function renderBoard(){
          een themawissel alles om zonder het bord opnieuw te bouwen. De
          ruimtekleur blijft als variabele beschikbaar voor de oude skin. */
       if(!document.body.classList.contains("vloer-v3")) el.style.backgroundColor=room.color||"#DCE3EF";
+      /* Twee ruimtes met dezelfde vloer horen niet exact hetzelfde te zijn.
+         Elke ruimte krijgt daarom een vast microverschil: een paar procent
+         lichter of donkerder, altijd hetzelfde voor die ruimte. Net genoeg om
+         te zien dat het een andere ruimte is, te weinig om als kleurverschil
+         te lezen. */
+      { const v=kamerVariatie(room.id);
+        el.style.setProperty("--kamer-mix",v.mix);
+        el.style.setProperty("--kamer-deel",v.deel+"%"); }
       /* Voor geklede skins: de ruimtekleur ook als waas-variabele, zodat een
          materiaalvloer (hout, gras) er zijn eigen kleur onder kan leggen en de
          ruimte tóch herkenbaar getint blijft. */
@@ -4808,9 +4847,19 @@ function tekenBordSchaduw(cell,W,H){
   const d=Math.max(10,Math.round(cell*0.26));     /* hoe ver hij uitsteekt */
   svg.setAttribute("width",W+d); svg.setAttribute("height",H+d);
   svg.setAttribute("viewBox","0 0 "+(W+d)+" "+(H+d));
-  svg.innerHTML=pad
-    ? '<path d="'+pad+'" fill="var(--bord-schaduw)" transform="translate('+d+','+d+')"/>'
-    : "";
+  if(!pad){ svg.innerHTML=""; return; }
+  /* Een echte slagschaduw is de vorm die het bord aflegt terwijl het licht
+     eroverheen strijkt: niet één verschoven kopie, maar alles daartussen.
+     Daarom tekenen we het pad in stappen van nul tot de volle verschuiving.
+     Zo sluit de schaduw in elke hoek aan op de rand van het bord en lijken de
+     muren hoogte te hebben, ook bij een bord met een uitgesneden vorm. */
+  const stappen=Math.max(6,Math.min(20,Math.round(d/2)));
+  let uit="";
+  for(let i=1;i<=stappen;i++){
+    const f=d*i/stappen;
+    uit+='<path d="'+pad+'" fill="var(--bord-schaduw)" transform="translate('+f.toFixed(2)+','+f.toFixed(2)+')"/>';
+  }
+  svg.innerHTML=uit;
 }
 
 /* De buitenrand van het bord als één pad. We verzamelen elke zijde van een
@@ -6557,7 +6606,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.65";
+const PLAYER_APP_VERSION="0.9.66";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
