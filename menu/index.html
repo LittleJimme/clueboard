@@ -595,6 +595,21 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
   transition:border-color .15s;
 }
 .bouw-rij:hover{border-color:var(--accent-lijn)}
+/* De proefstand: dezelfde rij als "Bouw een level", met een schuifje. */
+.proef-rij{display:flex;align-items:center;gap:12px;width:100%;margin-top:10px;
+  background:var(--kaart-2);border:1px solid var(--lijn);border-radius:14px;
+  padding:11px 14px;text-align:left;color:inherit;cursor:pointer;
+  transition:border-color .15s}
+.proef-rij:hover{border-color:var(--accent-lijn)}
+.proef-rij .tekst{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.proef-rij .tekst b{font:800 14px var(--font-ui)}
+.proef-rij .tekst span{font:600 12px var(--font-ui);color:var(--dof);line-height:1.35}
+.proef-rij .schuif{flex:0 0 auto;position:relative;width:38px;height:22px;border-radius:999px;
+  background:var(--lijn);transition:background .18s}
+.proef-rij .schuif i{position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .18s}
+.proef-rij[aria-pressed="true"] .schuif{background:var(--accent)}
+.proef-rij[aria-pressed="true"] .schuif i{left:19px}
 .bouw-rij .ic{flex:0 0 auto;width:36px;height:36px;border-radius:10px;
   background:var(--kaart);border:1px solid var(--lijn);
   display:flex;align-items:center;justify-content:center;color:var(--inkt-2)}
@@ -717,6 +732,14 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
       <span class="tekst"><b>Bouw een level</b><span>Teken een bord, schrijf aanwijzingen en exporteer je eigen zaak.</span></span>
       <span class="pijl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.6l6.4 6.4L9 18.4"/></svg></span>
     </a>
+    <!-- Tijdelijk, zolang de ondergrond in ontwikkeling is: hiermee komt in de
+         player het bouwmenu voor de vloeren en muren tevoorschijn. Het hoort
+         bij bouwen, niet bij spelen, dus het staat hier en niet bij de
+         instellingen van een zaak. -->
+    <button class="proef-rij" id="btnProef" type="button" aria-pressed="false">
+      <span class="tekst"><b>Proefstand</b><span>Toont in de player het bouwmenu voor vloeren en muren.</span></span>
+      <span class="schuif"><i></i></span>
+    </button>
   </div>
 </div>
 
@@ -1398,6 +1421,20 @@ function initZelf(){
     if(f) verwerkBestand(f);
   });
 }
+
+/* De proefstand staat in dezelfde opslag als waar de player hem uitleest;
+   beide apps draaien op dezelfde herkomst, dus dit is één schakelaar. */
+(function(){
+  const SLEUTEL="clueboard:experimenteel";
+  const knop=$("#btnProef"); if(!knop) return;
+  const zet=aan=>{
+    knop.setAttribute("aria-pressed",aan?"true":"false");
+    try{ localStorage.setItem(SLEUTEL,aan?"1":"0"); }catch(e){}
+  };
+  let aan=false; try{ aan=localStorage.getItem(SLEUTEL)==="1"; }catch(e){}
+  zet(aan);
+  knop.addEventListener("click",()=>zet(knop.getAttribute("aria-pressed")!=="true"));
+})();
 
 initZelf();
 laadLevels();

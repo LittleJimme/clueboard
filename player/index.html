@@ -572,7 +572,7 @@ body.in-game #pane-clues.active{animation:paneVanRechts .22s cubic-bezier(.2,.8,
 /* De kier en de ronding komen uit zetMaten(); zo rekenen de tegels en de
    muren met dezelfde getallen. */
 body.vloer-v3 #grid{
-  --tegel-kier:max(0px,calc(var(--cell) * var(--kier-pct,1.1) / 100));
+  --tegel-kier:max(0px,calc(var(--cell) * var(--kier-pct,4.2) / 100));
   --tegel-rond:calc(var(--cell) * var(--rond-pct,8.5) / 100);
 }
 body.vloer-v3 .tile{background-color:transparent;background-image:none;box-shadow:none}
@@ -673,7 +673,7 @@ body.vloer-v3.tussen-muren .tile{
   /* Twee tegels naast elkaar springen allebei een kier in, dus daar zie je
      twee kieren. De lucht tot een muur is daarom precies het dubbele van een
      kier -- zo is elke tussenruimte op het bord even breed. */
-  --muur-lucht:calc(var(--cell) * var(--kier-pct,1.1) * 2 / 100);
+  --muur-lucht:calc(var(--cell) * var(--kier-pct,4.2) * 2 / 100);
   --mt:var(--tegel-kier);--mr:var(--tegel-kier);--mb:var(--tegel-kier);--ml:var(--tegel-kier);
 }
 body.vloer-v3.tussen-muren .tile.w-t{--mt:calc(var(--wall-w,4px) * .5 + var(--muur-lucht))}
@@ -1092,7 +1092,9 @@ body.hide-objsurf .tile .objsurf{display:none}
    over de buurtegels uitsteken. Laadt hij niet, dan blijft het lijnpictogram. */
 /* Marge rondom een tekening, zodat hij vrij in de tegel staat en de muren
    niet raakt. Groter getal = kleinere tekening. */
-#grid{--art-pad:calc(var(--cell) * .08)}
+/* Meubels horen in hun vakje te passen, met een strook vloer eromheen. Alleen
+   wat van nature hoog is mag daarbuiten treden; zie UITSTEKERS. */
+#grid{--art-pad:calc(var(--cell) * .13)}
 .tile .objart{position:absolute;left:var(--art-pad);top:var(--art-pad);
   pointer-events:none;z-index:2}
 /* Geen CSS-schaduw meer: de tekeningen dragen hun eigen slagschaduw mee.
@@ -1113,7 +1115,7 @@ body.hide-objsurf .tile .objsurf{display:none}
    staan. De vakjes staan op volgorde in het raster, dus een tegel die lager
    ligt tekent vanzelf over een tegel die hoger ligt. De muren liggen er nog
    overheen, want een boom hoort niet door een muur heen te groeien. */
-.tile .objart.uitsteker{z-index:4}
+.tile .objart.uitsteker{z-index:4;transform:translateX(-50%)}
 .tile .objart.uitsteker img{object-fit:contain;object-position:bottom center}
 .tile.has-art{z-index:2}
 .tile.has-art .objicon{display:none}
@@ -2306,7 +2308,8 @@ body.in-game .set-duo{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 /* ── Tijdelijk bouwmenu ──
    Een losse knop links onderin opent een paneeltje met de proefstanden en de
    maten. Gereedschap, geen onderdeel van het spel: daarom bestaat het alleen
-   in de proefstand, die je aanzet door vijf keer op het merk te tikken. Wel
+   in de proefstand, die je aanzet met het schuifje achter de plusknop in het
+   menu -- daar hoort hij thuis, bij het bouwen en niet bij het spelen. Wel
    gewoon goed leesbaar -- een half doorzichtige knop is niet te raken. */
 .debug-knop,.debug-paneel{display:none}
 body.experimenteel.in-game .debug-knop{display:flex}
@@ -3175,8 +3178,8 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <button class="debug-rij schakel" id="rowTussen" type="button" aria-pressed="false"><b>Tegels tussen de muren</b><span class="schuif"><i></i></span></button>
   <button class="debug-rij schakel" id="rowOverlays" type="button" aria-pressed="false"><b>Materiaaloverlays</b><span class="schuif"><i></i></span></button>
   <button class="debug-rij schakel" id="rowGolf" type="button" aria-pressed="false"><b>Golf op water</b><span class="schuif"><i></i></span></button>
-  <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="4" max="22" step="0.5" value="9.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">9.5</span></div>
-  <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="1.1" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">1.1</span></div>
+  <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="4" max="22" step="0.5" value="7.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">7.5</span></div>
+  <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="4.2" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">4.2</span></div>
   <div class="debug-kop">Golf op water</div>
   <div class="debug-rij"><b>Diepte</b><input type="range" id="golfDiep" min="0" max="10" step="0.1" value="3" aria-label="Hoeveel procent een watertegel krimpt"><span class="debug-getal" id="golfDiepGetal">3.0</span></div>
   <div class="debug-rij"><b>Tempo</b><input type="range" id="golfDuur" min="1" max="20" step="0.5" value="7" aria-label="Seconden per golfslag"><span class="debug-getal" id="golfDuurGetal">7.0</span></div>
@@ -3195,12 +3198,6 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       </button>
       <button class="set-row schakel" id="rowAutoKruis" type="button" aria-pressed="false">
         <span class="ic" data-icon="cross"></span><span class="set-tekst"><b>Auto kruisjes</b></span><span class="schuif"><i></i></span>
-      </button>
-    </div>
-    <!-- Tijdelijk: de proefstand met het bouwmenu voor de ondergrond. -->
-    <div class="set-duo">
-      <button class="set-row schakel" id="rowProef" type="button" aria-pressed="false">
-        <span class="ic" data-icon="settings"></span><span class="set-tekst"><b>Proefstand</b></span><span class="schuif"><i></i></span>
       </button>
     </div>
     <div class="set-kop weergave-kop">Weergave</div>
@@ -4751,17 +4748,23 @@ function mountAsset(host,candidates,flagEl,flagClass){
   img.src=candidates[0];
   return img;
 }
-/* Past een tekening niet in de hoogte van zijn vakje, dan wordt hij niet
-   kleiner gemaakt maar mag hij er bovenuit steken. De breedte blijft die van
-   het vak; de hoogte volgt uit de verhouding van de tekening zelf, en de
-   onderkant blijft op zijn plek. Alleen voor een object van één vakje: een
-   tafel van twee vakjes vult zijn vak al helemaal. */
-function laatUitsteken(art,img,plan){
+/* Wat er boven zijn vakje uit mag steken. Op verhouding alleen is dat niet te
+   zien: een stoel is net zo hoog getekend als een boom, maar een stoel hoort
+   gewoon in zijn vakje te staan. Het gaat om wat het ding ís, dus die keuze
+   staat hier met de naam erbij. */
+const UITSTEKERS = ["tree","plant","shrub","statue"];
+/* Hoeveel groter zo'n tekening wordt dan zijn vakje. Hij groeit vanaf de voet
+   omhoog: de onderkant blijft waar hij stond, de kruin komt hoger. */
+const UITSTEEK_SCHAAL = 1.3;
+function laatUitsteken(art,img,plan,kind){
   if(!art||!img||plan.w>1||plan.h>1) return;
+  if(UITSTEKERS.indexOf(assetSlug(kind))<0) return;
   const v=img.naturalHeight/(img.naturalWidth||1);
-  if(!(v>1.12)) return;
+  const vak="(var(--cell) - var(--art-pad) * 2)";
   art.classList.add("uitsteker");
-  art.style.height="calc((var(--cell) - var(--art-pad) * 2) * "+v.toFixed(3)+")";
+  art.style.width="calc("+vak+" * "+UITSTEEK_SCHAAL+")";
+  art.style.height="calc("+vak+" * "+(UITSTEEK_SCHAAL*v).toFixed(3)+")";
+  art.style.left="50%";
   art.style.top="auto";
   art.style.bottom="var(--art-pad)";
 }
@@ -4964,7 +4967,7 @@ function renderBoard(){
           art.style.height="calc(var(--cell) * "+plan.h+" - var(--art-pad) * 2)";
           el.appendChild(art);
           const beeld=mountAsset(art,objectAssetCandidates(kind,plan.w,plan.h),el,"has-art");
-          if(beeld) beeld.addEventListener("load",()=>laatUitsteken(art,beeld,plan));
+          if(beeld) beeld.addEventListener("load",()=>laatUitsteken(art,beeld,plan,kind));
         }
       }
       attachTileInput(el,id);
@@ -4982,12 +4985,26 @@ function renderBoard(){
    schuifbalk in de instellingen, zodat we de maat kunnen zoeken; daarna wordt
    dit weer één vast getal. Meteen bij het laden uitlezen, want het eerste bord
    wordt getekend voordat de instellingen aan de knoppen hangen. */
+/* De standaardmaten zijn tijdens het ontwerpen bijgesteld. Wat er van een
+   vorige ronde op dit apparaat is blijven staan hoort niet meer bij het
+   ontwerp, dus dat ruimen we één keer op. Het nummer hoogt mee zodra de maten
+   opnieuw veranderen. */
+(function(){
+  const SLEUTEL="clueboard:matenVersie", NU="2";
+  try{
+    if(localStorage.getItem(SLEUTEL)===NU) return;
+    ["muurDikte","tegelKier","golfDiep","golfDuur","golfLengte","golfHoek"]
+      .forEach(k=>localStorage.removeItem("clueboard:"+k));
+    localStorage.setItem(SLEUTEL,NU);
+  }catch(e){}
+})();
+
 /* Onder de vier procent wordt een muur een haarlijn: dan leest hij niet meer
    als muur en gaan alle maten die eraan hangen scheef staan. */
 const MUUR_MINIMAAL = 4;
 let MUUR_PROCENT = (function(){
   try{ const v=parseFloat(localStorage.getItem("clueboard:muurDikte")); if(v>0) return Math.max(MUUR_MINIMAAL,v); }catch(e){}
-  return 9.5;
+  return 7.5;
 })();
 /* De ronding van een tegelhoek, ook in procent van een vakje. De muren nemen
    deze straal over, dus beide staan hier bij elkaar en kunnen niet uit elkaar
@@ -4999,7 +5016,7 @@ function maat(sleutel,standaard){
 }
 /* De kier tussen twee tegels. Tijdelijk aan een schuifbalk; hij bepaalt ook de
    lucht tot een muur, want elke tussenruimte hoort even breed te zijn. */
-let KIER_PROCENT = maat("clueboard:tegelKier",1.1);
+let KIER_PROCENT = maat("clueboard:tegelKier",4.2);
 /* De golf over het water: hoe diep hij gaat, hoe lang een slag duurt, om de
    hoeveel tegels hij zich herhaalt en onder welke hoek hij over het bord
    loopt. Alle vier tijdelijk aan een schuifbalk. */
@@ -7010,7 +7027,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.72";
+const PLAYER_APP_VERSION="0.9.73";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8041,42 +8058,12 @@ maatSchuif("golfHoek","golfHoekGetal","clueboard:golfHoek",
   ()=>GOLF_HOEK, v=>{ GOLF_HOEK=v; zetGolfFase(); }, false);
 
 
-/* De proefstand: vijf keer op het merk in het beginscherm tikken zet hem aan,
-   nog eens vijf keer weer uit. Zo staat het gereedschap niet in de weg van wie
-   gewoon wil spelen, maar is het op elk scherm binnen handbereik. De stand
-   blijft bewaard op dit apparaat. */
-{ const SLEUTEL="clueboard:experimenteel";
-  const zet=aan=>{
-    document.body.classList.toggle("experimenteel",!!aan);
-    try{ localStorage.setItem(SLEUTEL,aan?"1":"0"); }catch(e){}
-    const rij=$("#rowProef");
-    if(rij) rij.setAttribute("aria-pressed",aan?"true":"false");
-    if(!aan){
-      const p=$("#debugPaneel"); if(p) p.hidden=true;
-      const k=$("#btnDebug"); if(k) k.setAttribute("aria-expanded","false");
-    }
-  };
-  let aan=false; try{ aan=localStorage.getItem(SLEUTEL)==="1"; }catch(e){}
-  zet(aan);
-  /* De gewone weg ernaartoe: een schakelaar in de instellingen. De vijf tikken
-     op het merk blijven bestaan als snelle weg. */
-  { const rij=$("#rowProef");
-    if(rij) rij.addEventListener("click",()=>zet(!document.body.classList.contains("experimenteel"))); }
-  /* Aan het document gehangen en niet aan het merk zelf: het beginscherm wordt
-     tijdens het laden opnieuw opgebouwd, en een luisteraar op de oude knoop
-     hoort dan niets meer. */
-  let tel=0, vorige=0;
-  document.addEventListener("click",e=>{
-    if(!e.target.closest("#screen-intro .brand")) return;
-    const nu=Date.now();
-    tel=(nu-vorige<1200)?tel+1:1;   /* ruim genoeg om rustig vijf keer te tikken */
-    vorige=nu;
-    if(tel<5) return;
-    tel=0;
-    const nieuw=!document.body.classList.contains("experimenteel");
-    zet(nieuw); haptic(20);
-    toast(nieuw?"Proefstand aan":"Proefstand uit");
-  });
+/* De proefstand hoort niet bij het spel maar bij het bouwen, en staat daarom
+   als schakelaar in het menu, achter de plusknop. Hier lezen we alleen uit wat
+   daar gekozen is; beide apps delen dezelfde opslag. */
+{ let aan=false;
+  try{ aan=localStorage.getItem("clueboard:experimenteel")==="1"; }catch(e){}
+  document.body.classList.toggle("experimenteel",aan);
 }
 
 /* Het bouwmenu open en dicht. Een tik buiten het paneel sluit het weer. */
