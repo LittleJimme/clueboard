@@ -876,72 +876,18 @@ body.hide-objsurf .tile .objsurf{display:none}
    pixels. Zo houdt een tapijt dezelfde verhouding op elk bord en bij elke
    zoom: op een groot bord wordt de strook vloer eromheen mee groter, in
    plaats van te verschrompelen tot een haarlijn. */
+/* Een tapijt is geen vierkant vlak maar een vorm: een strook, een hoek of
+   een kruis. Randen van een <div> kunnen dat niet, want die kennen alleen
+   vier zijden -- bij het kruispunt van vier banen moet de omtrek juist naar
+   binnen knikken. Elke tegel tekent daarom zijn eigen stuk van het kleed als
+   kleine SVG, met de vorm die volgt uit zijn buren (zie matVorm). */
 #grid{
-  --mat-marge:calc(var(--cell) * .12);--mat-rond:calc(var(--cell) * .1);
-  /* Dezelfde vier onderdelen als de tekening in assets/art/objects/carpet.svg:
-     een roodbruin vlak, een vrijwel zwarte rand, een geel kader daarbinnen en
-     een gebroken witte ruit. De tekening zelf past alleen op een rechthoek;
-     een kruis of een hoek moet het vlak zelf opbouwen, en dan hoort het er
-     precies zo uit te zien. Alle maten in delen van de tegel, zodat het
-     meeschaalt met het bord. */
-  --mat-veld:#B45B3E;
-  --mat-lijn:#14162E;
-  --mat-kader:#E7B63B;
-  --mat-ruit:#EFE3C8;
-  --mat-lijn-d:max(2px, calc(var(--cell) * .045));
-  --mat-kader-in:calc(var(--cell) * .09);
-  --mat-kader-d:max(1.5px, calc(var(--cell) * .035));
-  --mat-ruit-m:calc(var(--cell) * .17);
+  --mat-veld:#B45B3E;   /* het kleed zelf */
+  --mat-lijn:#14162E;   /* de donkere rand eromheen */
+  --mat-kader:#E7B63B;  /* het gele kader daarbinnen */
 }
-.tile .objmat{
-  position:absolute;inset:var(--mat-marge);border-radius:var(--mat-rond);pointer-events:none;z-index:0;
-  background:var(--mat-veld);
-  border:var(--mat-lijn-d) solid var(--mat-lijn);
-}
-/* Het gele kader loopt binnen de zwarte rand mee met de omtrek van de hele
-   vorm: waar het tapijt doorloopt gaat ook dit kader dwars over de tegelgrens
-   heen, zodat er geen streep midden op het kleed komt te staan. */
-.tile .objmat::before{
-  content:"";position:absolute;inset:var(--mat-kader-in);
-  border:var(--mat-kader-d) solid var(--mat-kader);
-  border-radius:calc(var(--mat-rond) * .55);
-}
-/* De ruit staat altijd in het midden van zijn eigen tegel, ook als het kleed
-   over tien tegels ligt. Een vierkant op zijn punt, met dezelfde donkere
-   omlijning als de rest van de tekening. */
-.tile .objmat::after{
-  content:"";position:absolute;left:50%;top:50%;
-  width:var(--mat-ruit-m);height:var(--mat-ruit-m);
-  margin-left:calc(var(--mat-ruit-m) / -2);margin-top:calc(var(--mat-ruit-m) / -2);
-  background:var(--mat-ruit);
-  border:max(1.2px, calc(var(--cell) * .028)) solid var(--mat-lijn);
-  border-radius:calc(var(--cell) * .012);
-  transform:rotate(45deg);
-}
-/* De ruit hoort in het midden van de tégel, niet van het vlak; op een zijde
-   die aansluit is het vlak naar de rand opgerekt en schuift het midden mee. */
-.tile.m-t .objmat::after{margin-top:calc(var(--mat-ruit-m) / -2 + var(--mat-marge) / 2)}
-.tile.m-b .objmat::after{margin-top:calc(var(--mat-ruit-m) / -2 - var(--mat-marge) / 2)}
-.tile.m-t.m-b .objmat::after{margin-top:calc(var(--mat-ruit-m) / -2)}
-.tile.m-l .objmat::after{margin-left:calc(var(--mat-ruit-m) / -2 + var(--mat-marge) / 2)}
-.tile.m-r .objmat::after{margin-left:calc(var(--mat-ruit-m) / -2 - var(--mat-marge) / 2)}
-.tile.m-l.m-r .objmat::after{margin-left:calc(var(--mat-ruit-m) / -2)}
-/* Waar hetzelfde tapijt doorloopt valt de marge weg en loopt het vlak een
-   pixel over de tegelgrens heen, zodat er geen naad overblijft. De ronding
-   van een hoek vervalt zodra een van zijn twee zijden aansluit: alleen de
-   hoeken die echt aan de buitenkant van de vorm liggen blijven rond, en de
-   oksels van een kruis lopen vol door. */
-.tile.m-t .objmat{top:-1px;border-top-color:transparent;border-top-left-radius:0;border-top-right-radius:0}
-.tile.m-r .objmat{right:-1px;border-right-color:transparent;border-top-right-radius:0;border-bottom-right-radius:0}
-.tile.m-b .objmat{bottom:-1px;border-bottom-color:transparent;border-bottom-left-radius:0;border-bottom-right-radius:0}
-.tile.m-l .objmat{left:-1px;border-left-color:transparent;border-top-left-radius:0;border-bottom-left-radius:0}
-/* Zelfde verhaal voor het gele kader: de zijde die aansluit loopt door tot
-   over de tegelgrens en heeft daar geen lijn, zodat de twee helften één
-   doorlopend kader vormen. */
-.tile.m-t .objmat::before{top:-1px;border-top-color:transparent;border-top-left-radius:0;border-top-right-radius:0}
-.tile.m-r .objmat::before{right:-1px;border-right-color:transparent;border-top-right-radius:0;border-bottom-right-radius:0}
-.tile.m-b .objmat::before{bottom:-1px;border-bottom-color:transparent;border-bottom-left-radius:0;border-bottom-right-radius:0}
-.tile.m-l .objmat::before{left:-1px;border-left-color:transparent;border-top-left-radius:0;border-bottom-left-radius:0}
+.tile .objmat{position:absolute;inset:0;pointer-events:none;z-index:0}
+.tile .objmat svg{width:100%;height:100%;display:block;overflow:visible}
 /* Het vlak van een gewoon object is een hulplijn en mag verborgen worden.
    Een tapijt is dat niet: dat vlak ís het tapijt. Verberg je het, dan ligt er
    niets meer op de vloer en klopt de regel "stond op een tapijt" nergens mee.
@@ -4112,6 +4058,116 @@ function roomFloorArt(room){
 }
 /* Markeert de zijdes waar hetzelfde object doorloopt, zodat een footprint van
    meerdere tegels als één aaneengesloten meubelstuk oogt. */
+/* ── De vorm van een tapijt op één tegel ──
+   Maten in honderdsten van de tegel. De tekening is dezelfde als die van
+   assets/art/objects/carpet.svg: een roodbruin veld met een donkere rand en
+   een geel kader daarbinnen.
+
+   Per zijde geldt: sluit het kleed daar aan, dan loopt het vlak dóór tot over
+   de tegelgrens en wordt daar geen lijn getekend. Sluit het niet aan, dan
+   ligt de rand een marge naar binnen. Een hoek waar twee zijden aansluiten
+   maar de schuine buur ontbreekt (het kruispunt van vier banen) hoort juist
+   uitgesneden te worden: daar knikt de omtrek naar binnen. */
+const MAT_M=15;      /* marge tot de rand van de tegel */
+const MAT_K=8;       /* afstand van het gele kader tot de omtrek */
+const MAT_R=8;       /* ronding van een buitenhoek */
+const MAT_W1=4.5;    /* dikte van de donkere rand */
+const MAT_W2=3;      /* dikte van het gele kader */
+const MAT_EXT=1.5;   /* overlap over de tegelgrens, tegen haarnaden */
+function matVorm(n){
+  const m=MAT_M, e=MAT_EXT;
+  const X0=n.l?-e:m, X1=n.r?100+e:100-m;
+  const Y0=n.t?-e:m, Y1=n.b?100+e:100-m;
+  /* De hoekpunten met de klok mee, te beginnen linksboven. Een uitgesneden
+     hoek levert drie punten in plaats van één. */
+  const P=[];
+  if(n.t&&n.l&&!n.tl) P.push({x:X0,y:m},{x:m,y:m},{x:m,y:Y0});
+  else P.push({x:X0,y:Y0,rond:(!n.t&&!n.l)});
+  if(n.t&&n.r&&!n.tr) P.push({x:100-m,y:Y0},{x:100-m,y:m},{x:X1,y:m});
+  else P.push({x:X1,y:Y0,rond:(!n.t&&!n.r)});
+  if(n.b&&n.r&&!n.br) P.push({x:X1,y:100-m},{x:100-m,y:100-m},{x:100-m,y:Y1});
+  else P.push({x:X1,y:Y1,rond:(!n.b&&!n.r)});
+  if(n.b&&n.l&&!n.bl) P.push({x:m,y:Y1},{x:m,y:100-m},{x:X0,y:100-m});
+  else P.push({x:X0,y:Y1,rond:(!n.b&&!n.l)});
+  /* Puntjes die samenvallen leveren lijnstukken van niets op. */
+  const pts=P.filter((p,i)=>{ const q=P[(i+P.length-1)%P.length]; return Math.abs(p.x-q.x)>0.01||Math.abs(p.y-q.y)>0.01; });
+  const N=pts.length;
+  if(N<3) return "";
+
+  /* Ligt een lijnstuk op een zijde waar het kleed doorloopt, dan is het geen
+     omtrek maar de naad met de buurtegel: daar hoort geen lijn. */
+  const binnen=i=>{
+    const a=pts[i], b=pts[(i+1)%N];
+    if(Math.abs(a.y-b.y)<0.01) return (n.t&&Math.abs(a.y-Y0)<0.01)||(n.b&&Math.abs(a.y-Y1)<0.01);
+    if(Math.abs(a.x-b.x)<0.01) return (n.l&&Math.abs(a.x-X0)<0.01)||(n.r&&Math.abs(a.x-X1)<0.01);
+    return false;
+  };
+  /* Een afgeronde hoek knipt aan weerszijden een stukje van de lijn af. */
+  const kort=(a,b,d)=>{
+    const dx=b.x-a.x, dy=b.y-a.y, L=Math.hypot(dx,dy)||1;
+    const s=Math.min(d,L/2)/L;
+    return {x:a.x+dx*s, y:a.y+dy*s};
+  };
+  const A=[],B=[];
+  for(let i=0;i<N;i++){
+    const p=pts[i], v=pts[(i+N-1)%N], w=pts[(i+1)%N];
+    if(p.rond){ A.push(kort(p,v,MAT_R)); B.push(kort(p,w,MAT_R)); }
+    else { A.push({x:p.x,y:p.y}); B.push({x:p.x,y:p.y}); }
+  }
+  const nr=v=>Math.round(v*100)/100;
+  /* Het vlak: één gesloten pad, met een boog op elke buitenhoek. */
+  let d="M"+nr(B[0].x)+" "+nr(B[0].y);
+  for(let i=1;i<=N;i++){
+    const k=i%N;
+    d+="L"+nr(A[k].x)+" "+nr(A[k].y);
+    if(pts[k].rond) d+="A"+MAT_R+" "+MAT_R+" 0 0 1 "+nr(B[k].x)+" "+nr(B[k].y);
+  }
+  d+="Z";
+
+  /* De omtrek: alleen de stukken die echt aan de buitenkant liggen, aan
+     elkaar geregen tot doorlopende lijnen. */
+  const rand=[], kader=[];
+  const normaal=i=>{ /* wijst naar binnen bij een pad met de klok mee */
+    const a=pts[i], b=pts[(i+1)%N];
+    const dx=b.x-a.x, dy=b.y-a.y, L=Math.hypot(dx,dy)||1;
+    return {x:-dy/L, y:dx/L};
+  };
+  let i0=0;
+  while(i0<N && binnen(i0)) i0++;
+  if(i0<N){
+    let i=i0, gedaan=0;
+    while(gedaan<N){
+      if(binnen(i)){ i=(i+1)%N; gedaan++; continue; }
+      /* Een reeks aaneengesloten buitenstukken. */
+      const reeks=[];
+      while(gedaan<N && !binnen(i)){ reeks.push(i); i=(i+1)%N; gedaan++; }
+      let p="M"+nr(B[reeks[0]].x)+" "+nr(B[reeks[0]].y);
+      reeks.forEach(k=>{
+        const e2=(k+1)%N;
+        p+="L"+nr(A[e2].x)+" "+nr(A[e2].y);
+        if(pts[e2].rond && reeks.indexOf(e2)>=0) p+="A"+MAT_R+" "+MAT_R+" 0 0 1 "+nr(B[e2].x)+" "+nr(B[e2].y);
+      });
+      rand.push(p);
+      /* Het gele kader loopt op vaste afstand binnen dezelfde reeks mee. */
+      const pk=[];
+      reeks.forEach((k,ix)=>{
+        const nk=normaal(k);
+        if(ix===0) pk.push({x:pts[k].x+MAT_K*nk.x, y:pts[k].y+MAT_K*nk.y});
+        const e2=(k+1)%N;
+        const nv=(ix+1<reeks.length)?normaal(reeks[ix+1]):null;
+        if(nv) pk.push({x:pts[e2].x+MAT_K*(nk.x+nv.x), y:pts[e2].y+MAT_K*(nk.y+nv.y)});
+        else pk.push({x:pts[e2].x+MAT_K*nk.x, y:pts[e2].y+MAT_K*nk.y});
+      });
+      kader.push("M"+pk.map(q=>nr(q.x)+" "+nr(q.y)).join("L"));
+    }
+  }
+  let svg='<svg viewBox="0 0 100 100" aria-hidden="true">'
+    +'<path d="'+d+'" fill="var(--mat-veld)"/>';
+  if(rand.length) svg+='<path d="'+rand.join(" ")+'" fill="none" stroke="var(--mat-lijn)" stroke-width="'+MAT_W1+'" stroke-linejoin="round" stroke-linecap="butt"/>';
+  if(kader.length) svg+='<path d="'+kader.join(" ")+'" fill="none" stroke="var(--mat-kader)" stroke-width="'+MAT_W2+'" stroke-linejoin="round" stroke-linecap="butt"/>';
+  return svg+'</svg>';
+}
+
 function joinSides(el,c,r,objectId,veld,voor){
   const f=veld||"objectId", p=voor||"j";
   const same=(cc,rr)=>{
@@ -4324,10 +4380,14 @@ function renderBoard(){
       if(t.status==="occupiable") el.classList.add("occupiable");
       if(t.matId){
         /* Het tapijt eerst: zijn vlak en tekening liggen onder het object. */
+        const gelijk=(cc,rr)=>{ const n=M.tiles.get("c"+cc+"r"+rr); return !!(n&&n.matId===t.matId); };
         const matsurf=document.createElement("div");
         matsurf.className="objmat";
+        matsurf.innerHTML=matVorm({
+          t:gelijk(c,r-1), r:gelijk(c+1,r), b:gelijk(c,r+1), l:gelijk(c-1,r),
+          tl:gelijk(c-1,r-1), tr:gelijk(c+1,r-1), br:gelijk(c+1,r+1), bl:gelijk(c-1,r+1)
+        });
         el.appendChild(matsurf);
-        joinSides(el,c,r,t.matId,"matId","m");
         /* Geen losse tekening meer over het vlak heen: het vlak zelf draagt
            nu de hele tekening (veld, rand, kader en ruit), en dat past ook op
            een kruis of een hoek. Een tekening erbovenop zou daar een tweede,
@@ -6168,7 +6228,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.48";
+const PLAYER_APP_VERSION="0.9.49";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
