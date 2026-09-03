@@ -1,0 +1,95 @@
+{
+  "format": "clueboard-flat-color-reference",
+  "version": 1,
+  "notes": [
+    "Color only; no texture, gradients, bevels or baked lighting.",
+    "Each floor swatch represents one complete 1x1 gameplay cell.",
+    "Detail textures and overlays are intentionally deferred."
+  ],
+  "floors": [
+    {
+      "id": "stone",
+      "label": "STONE / KALKSTEEN",
+      "day": "#DDD8CB",
+      "night": "#515B66"
+    },
+    {
+      "id": "concrete",
+      "label": "CONCRETE / PLEISTER",
+      "day": "#E7E2D8",
+      "night": "#5D6570"
+    },
+    {
+      "id": "tile",
+      "label": "TILE / PLAAT",
+      "day": "#DCDCCF",
+      "night": "#536260"
+    },
+    {
+      "id": "marble",
+      "label": "MARBLE / MARMER",
+      "day": "#EEE9DF",
+      "night": "#69737E"
+    },
+    {
+      "id": "dirt",
+      "label": "DIRT / AARDE",
+      "day": "#C9B28E",
+      "night": "#5F5549"
+    },
+    {
+      "id": "sand",
+      "label": "SAND / ZAND",
+      "day": "#DDC9A3",
+      "night": "#716756"
+    },
+    {
+      "id": "gravel",
+      "label": "GRAVEL / GRIND",
+      "day": "#C1BBAF",
+      "night": "#555A60"
+    },
+    {
+      "id": "wood",
+      "label": "WOOD / LICHT HOUT",
+      "day": "#D4C4AA",
+      "night": "#685E53"
+    },
+    {
+      "id": "grass",
+      "label": "GRASS / GRAS",
+      "day": "#B8C39A",
+      "night": "#465B49"
+    },
+    {
+      "id": "carpet",
+      "label": "CARPET / LINNEN",
+      "day": "#D4C1B2",
+      "night": "#62525B"
+    },
+    {
+      "id": "water",
+      "label": "WATER",
+      "day": "#B9D1D0",
+      "night": "#406373"
+    }
+  ],
+  "walls": [
+    {
+      "id": "wall-standard",
+      "label": "WALL / STANDAARD",
+      "day": "#AEB5B3",
+      "night": "#313D49"
+    },
+    {
+      "id": "wall-noble",
+      "label": "WALL / EDEL",
+      "day": "#D3B45D",
+      "night": "#74643B"
+    }
+  ],
+  "contexts": {
+    "day": "#F8F4EC",
+    "night": "#252C35"
+  }
+}

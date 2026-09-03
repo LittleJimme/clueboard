@@ -569,10 +569,11 @@ body.in-game #pane-clues.active{animation:paneVanRechts .22s cubic-bezier(.2,.8,
    De kleuren komen uit één bron: het blok VLAK_PALET verderop, gemaakt uit
    assets/art/concepts/clueboard-floor-wall-flat-colors-day-night-v1.json door
    assets/tools/build_palette.py. */
+/* De kier en de ronding komen uit zetMaten(); zo rekenen de tegels en de
+   muren met dezelfde getallen. */
 body.vloer-v3 #grid{
-  --tegel-kier:max(1.5px,calc(var(--cell) * .03));  /* ruimte tussen tegels */
-  --tegel-rond:calc(var(--cell) * .085);            /* ronding van een hoek */
-  background:var(--voeg);                            /* wat je in de kier ziet */
+  --tegel-kier:max(0px,calc(var(--cell) * var(--kier-pct,1.1) / 100));
+  --tegel-rond:calc(var(--cell) * var(--rond-pct,8.5) / 100);
 }
 body.vloer-v3 .tile{background-color:transparent;background-image:none;box-shadow:none}
 /* De tegel zelf. Eén regel rekent de kleur uit: de basiskleur van het
@@ -581,13 +582,19 @@ body.vloer-v3 .tile{background-color:transparent;background-image:none;box-shado
 body.vloer-v3 .tile:not(.out-of-bounds)::before{
   content:"";position:absolute;inset:var(--tegel-kier);z-index:0;pointer-events:none;
   border-radius:var(--tegel-rond);
-  background-color:color-mix(in srgb,var(--kamer-mix,#000000) var(--kamer-deel,0%),var(--vloer-basis,var(--vl-onbekend)));
+  /* Drie lagen in één kleur: het materiaal, het microverschil van de ruimte
+     en -- als er niemand kan staan -- een tint donkerder. Geen laagje
+     eroverheen, want dan zou de tegel zijn eigen kleur verliezen. */
+  background-color:color-mix(in srgb,var(--blok,#000000) var(--blok-deel,0%),
+                   color-mix(in srgb,var(--edel-mix,#000000) var(--edel-deel,0%),
+                   color-mix(in srgb,var(--kamer-mix,#000000) var(--kamer-deel,0%),var(--vloer-basis,var(--vl-onbekend)))));
   background-image:none;opacity:1;
   /* Het licht komt uit linksboven: de muur boven en links werpt zijn schaduw
-     de ruimte in, de muur onder en rechts werpt hem juist naar buiten. Daarom
-     alleen aan die twee zijden een schaduw -- zo lijken de muren hoogte te
-     hebben in plaats van een rand te zijn. */
-  box-shadow:var(--sh-t),var(--sh-l);
+     de ruimte in, de muur onder en rechts werpt hem juist naar buiten. Eén
+     schaduw met een verschuiving naar rechtsonder geeft precies die vorm: een
+     band langs boven en links, in de hoek even donker als langs de zijden, en
+     met een harde rand -- geen vervaging, want alles hier is grafisch. */
+  box-shadow:inset var(--sh-x,0px) var(--sh-y,0px) 0 0 var(--muur-schaduw);
 }
 body.vloer-v3 .tile[data-floor="stone"]{--vloer-basis:var(--vl-stone)}
 body.vloer-v3 .tile[data-floor="concrete"]{--vloer-basis:var(--vl-concrete)}
@@ -601,21 +608,57 @@ body.vloer-v3 .tile[data-floor="grass"]{--vloer-basis:var(--vl-grass)}
 body.vloer-v3 .tile[data-floor="carpet"]{--vloer-basis:var(--vl-carpet)}
 body.vloer-v3 .tile[data-floor="water"]{--vloer-basis:var(--vl-water)}
 /* De schaduw die de muren de ruimte in werpen; alleen boven en links. */
-body.vloer-v3 .tile{--sh-t:0 0 0 0 transparent;--sh-l:0 0 0 0 transparent}
-body.vloer-v3 .tile.w-t{--sh-t:inset 0 11px 10px -8px var(--muur-schaduw)}
-body.vloer-v3 .tile.w-l{--sh-l:inset 11px 0 10px -8px var(--muur-schaduw)}
-/* Een edele ruimte krijgt een heel lichte waas van de edele kleur over de
-   hele ruimte: minimaal, maar je ziet dat het gebied bijzonder is. Dat gaat
-   over het bestaande glansvlak, dat alleen in zulke ruimtes bestaat. */
-body.vloer-v3 .tile .glans{
-  display:block;position:absolute;inset:var(--tegel-kier);z-index:1;
-  border-radius:var(--tegel-rond);background:var(--muur-noble);
-  opacity:.075;animation:none;pointer-events:none;
-}
+body.vloer-v3 .tile{--sh-x:0px;--sh-y:0px}
+body.vloer-v3 .tile.blocked{--blok-deel:11%}
+body.vloer-v3 .tile .blockmask{display:none}
+/* Even lang als de slagschaduw buiten het bord (zie tekenBordSchaduw), zodat
+   binnen en buiten hetzelfde licht laten zien. */
+body.vloer-v3 .tile.w-t{--sh-y:calc(var(--cell) * .26)}
+body.vloer-v3 .tile.w-l{--sh-x:calc(var(--cell) * .26)}
+/* Een edele ruimte is niet een waas over de vloer, maar een eigen vloerkleur:
+   de tegels worden geel. Wel zachter dan de muur -- die blijft het helderste
+   goud, zodat de grens van het gebied de blikvanger is en de vloer alleen
+   vertelt waar dat gebied ligt. Het goud wordt in de vloerkleur gemengd, dus
+   het materiaalverschil binnen zo'n ruimte blijft gewoon te zien. */
+body.vloer-v3 .tile.edel{--edel-mix:var(--muur-noble);--edel-deel:40%}
+body.vloer-v3 .tile .glans{display:none}
 /* Alle oude vloerbeelden uit: patronen met strepen, voegen en ruiten, de
    geschilderde vloeren van de skin en de waas van de ruimtekleur. Die laag
    blijft in de code staan voor de oude skin, maar tekent hier niets. */
 body.vloer-v3 .tile[data-floor]::after{content:none}
+/* ══════ Tijdelijke proefstanden voor de ondergrond ══════
+   Vier schuifjes in de instellingen om varianten naast elkaar te zien. Ze
+   zetten alleen een klasse op de body en raken het bord zelf niet aan, dus
+   aan- en uitzetten kan zonder opnieuw te tekenen. Weg zodra de keuze staat.
+     1 Gouden muren uit         de edele muur in de gewone kleur
+     2 Tegels tussen de muren   de tegel springt in waar een muur staat  */
+body.geen-goud #walls .edel{stroke:var(--muur-standard)}
+body.geen-goud #walls .knoop.edel circle{fill:var(--muur-standard)}
+body.geen-goud.vloer-v3 .tile.edel{--edel-deel:0%}
+/* De tegels tussen de muren in plaats van eronder. Aan elke kant waar een muur
+   staat schuift de tegel de halve muurdikte naar binnen, precies tot aan de
+   binnenkant van die muur. De muur krijgt daarmee echt ruimte op het bord, en
+   omdat de ene tegel meer muren langs zich heeft dan de andere verschillen ze
+   onderling een tikje van maat -- dat is wat het speels maakt. Staat een muur
+   uit, dan springt de tegel daar ook niet in. */
+body.vloer-v3.tussen-muren .tile{
+  /* De muur staat met zijn hart op de celgrens en steekt dus de halve dikte
+     het vakje in. Daar bovenop nog een stukje lucht, zodat de tegel de muur
+     nergens raakt. Het vakje zelf verandert niet van maat, dus het raster en
+     alles wat erop staat blijven precies waar ze waren. */
+  /* Twee tegels naast elkaar springen allebei een kier in, dus daar zie je
+     twee kieren. De lucht tot een muur is daarom precies het dubbele van een
+     kier -- zo is elke tussenruimte op het bord even breed. */
+  --muur-lucht:calc(var(--cell) * var(--kier-pct,1.1) * 2 / 100);
+  --mt:var(--tegel-kier);--mr:var(--tegel-kier);--mb:var(--tegel-kier);--ml:var(--tegel-kier);
+}
+body.vloer-v3.tussen-muren .tile.w-t{--mt:calc(var(--wall-w,4px) * .5 + var(--muur-lucht))}
+body.vloer-v3.tussen-muren .tile.w-r{--mr:calc(var(--wall-w,4px) * .5 + var(--muur-lucht))}
+body.vloer-v3.tussen-muren .tile.w-b{--mb:calc(var(--wall-w,4px) * .5 + var(--muur-lucht))}
+body.vloer-v3.tussen-muren .tile.w-l{--ml:calc(var(--wall-w,4px) * .5 + var(--muur-lucht))}
+body.vloer-v3.tussen-muren .tile:not(.out-of-bounds)::before{inset:var(--mt) var(--mr) var(--mb) var(--ml)}
+body.vloer-v3.tussen-muren .tile .glans{inset:var(--mt) var(--mr) var(--mb) var(--ml)}
+
 /* Tijdelijke stand: de getekende objecten weg, het platte pictogram terug.
    Handig zolang de ondergrond nog verandert. */
 body.plat-icoon .tile .objart{display:none}
@@ -910,7 +953,19 @@ body[data-skin="medieval"] [data-floor="dirt"]::before,
 body[data-skin="medieval"] [data-floor="gravel"]::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E %3Cg fill='none' stroke-linecap='round'%3E %3Cpath d='M6 20q42 8 84-2' stroke='rgba(96,62,28,.16)' stroke-width='4'/%3E %3Cpath d='M4 66q44-8 88 2' stroke='rgba(96,62,28,.13)' stroke-width='4'/%3E %3C/g%3E %3Cg fill='rgba(96,62,28,.28)'%3E %3Ccircle cx='18' cy='36' r='1.6'/%3E%3Ccircle cx='42' cy='24' r='1.2'/%3E %3Ccircle cx='70' cy='42' r='1.7'/%3E%3Ccircle cx='30' cy='78' r='1.3'/%3E %3Ccircle cx='60' cy='84' r='1.5'/%3E%3Ccircle cx='84' cy='70' r='1.1'/%3E %3C/g%3E %3Cg fill='rgba(255,240,214,.34)'%3E %3Ccircle cx='24' cy='52' r='1.3'/%3E%3Ccircle cx='54' cy='12' r='1.2'/%3E%3Ccircle cx='78' cy='88' r='1.2'/%3E %3C/g%3E %3Cpath d='M38 44q5-3 9 0q-1 4-6 4q-4-1-3-4z' fill='rgba(120,90,50,.20)' stroke='rgba(70,48,22,.25)' stroke-width='1.2'/%3E %3C/svg%3E");background-size:100% 100%}
 
 /* Perkamenten naambordjes. */
-body[data-skin="medieval"] .room-label span{
+/* Het naambordje in de stijl van het spel: een licht plaatje met donkere
+   letters in de eigen letter van ClueBoard, in kapitalen met wat spatiëring.
+   Dezelfde kleuren in beide standen, want het bordje moet op elke vloer
+   leesbaar blijven. */
+body.vloer-v3 .room-label span{
+  background:#F6F1E6;border:1px solid rgba(38,36,25,.16);border-radius:7px;
+  color:#262419;font-family:var(--font-ui);font-weight:800;font-size:.92em;
+  letter-spacing:.13em;text-transform:uppercase;padding:3px 10px;
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 2px 6px rgba(20,16,10,.22);
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+body.vloer-v3 .room-label.floating-top span,body.vloer-v3 .room-label.floating-down span{background:#FBF7EE}
+body[data-skin="medieval"]:not(.vloer-v3) .room-label span{
   background:linear-gradient(180deg,#F7EDD4,#E9DAB4);
   border:1px solid #B4A06C;border-bottom-width:2px;border-radius:5px;
   color:#4A3826;font-family:var(--skin-display);font-weight:700;
@@ -2187,6 +2242,59 @@ body.in-game .set-hoofd{
   display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--font-display);font-weight:600;font-size:18px;box-shadow:var(--sch1)}
 body.in-game .set-hoofd .vraag-ic{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:22px;line-height:1}
 body.in-game .set-duo{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+/* ── Tijdelijk bouwmenu ──
+   Een losse knop links onderin opent een paneeltje met de proefstanden en de
+   maten. Gereedschap, geen onderdeel van het spel: daarom bestaat het alleen
+   in de proefstand, die je aanzet door vijf keer op het merk te tikken. Wel
+   gewoon goed leesbaar -- een half doorzichtige knop is niet te raken. */
+.debug-knop,.debug-paneel{display:none}
+body.experimenteel.in-game .debug-knop{display:flex}
+body.experimenteel.in-game .debug-paneel:not([hidden]){display:block}
+.debug-knop{position:fixed;left:14px;z-index:62;
+  bottom:calc(150px + env(safe-area-inset-bottom));
+  width:38px;height:38px;padding:0;border-radius:50%;
+  border:1px solid var(--lijn);background:var(--kaart);color:var(--inkt-2);
+  align-items:center;justify-content:center;box-shadow:var(--sch2)}
+.debug-knop .ic{width:18px;height:18px}
+.debug-knop .ic svg{width:100%;height:100%}
+.debug-knop[aria-expanded="true"]{color:var(--goud);border-color:var(--goud)}
+/* Op een groot scherm is er geen onderbalk, dus mag alles lager staan. */
+body.desktop .debug-knop{bottom:16px;left:16px}
+body.desktop .debug-paneel{bottom:64px;left:16px}
+.debug-paneel{position:fixed;left:14px;z-index:61;
+  bottom:calc(196px + env(safe-area-inset-bottom));
+  width:min(300px,calc(100vw - 24px));max-height:56vh;overflow:auto;
+  padding:10px;border-radius:14px;background:var(--kaart);border:1px solid var(--lijn);
+  color:var(--inkt);box-shadow:var(--sch2)}
+.debug-kop{margin:2px 2px 8px;font:800 10px var(--font-ui);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dof)}
+.debug-rij{display:flex;align-items:center;gap:9px;width:100%;min-height:40px;
+  margin-bottom:5px;padding:5px 10px;border-radius:10px;text-align:left;
+  border:1px solid var(--lijn);background:var(--kaart-2);color:inherit;
+  font:800 12.5px var(--font-ui)}
+.debug-rij:last-child{margin-bottom:0}
+.debug-rij b{flex:0 0 auto;font-weight:800}
+.debug-rij.schakel b{flex:1;min-width:0}
+.debug-rij[aria-pressed="true"]{border-color:var(--goud);color:var(--goud)}
+.debug-rij[aria-pressed="true"] .schuif{background:var(--goud)}
+.debug-rij .schuif{width:32px;height:19px;flex:0 0 auto}
+.debug-rij[aria-pressed="true"] .schuif i{left:15px;transform:none}
+.debug-getal{flex:0 0 auto;min-width:34px;text-align:right;color:var(--dof);
+  font-weight:800;font-variant-numeric:tabular-nums}
+/* De schuifbalken met de hand opgemaakt. Op een telefoon vangt het bord alle
+   veegbewegingen af; touch-action:none geeft de balk zijn eigen gebaar terug,
+   en een dikke knop maakt hem met een duim te bedienen. */
+.debug-rij input[type=range]{flex:1;min-width:60px;height:28px;margin:0;padding:0;
+  background:none;border:0;-webkit-appearance:none;appearance:none;
+  touch-action:none;cursor:pointer}
+.debug-rij input[type=range]::-webkit-slider-runnable-track{
+  height:4px;border-radius:999px;background:var(--lijn)}
+.debug-rij input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+  width:22px;height:22px;margin-top:-9px;border-radius:50%;
+  background:var(--goud);border:2px solid var(--kaart);box-shadow:var(--sch1)}
+.debug-rij input[type=range]::-moz-range-track{height:4px;border-radius:999px;background:var(--lijn)}
+.debug-rij input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;
+  background:var(--goud);border:2px solid var(--kaart)}
 body.in-game .set-duo .set-row{min-height:46px;padding:8px 9px;margin:0;gap:7px}
 body.in-game .set-duo .set-row .set-tekst b{font-size:13px}
 body.in-game .set-duo .schuif{width:32px;height:19px}
@@ -2997,6 +3105,20 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   </div>
 </div>
 
+<!-- Tijdelijk bouwmenu voor de ondergrond. Staat bewust los van de
+     instellingen: dit is gereedschap om maten te zoeken, geen spelkeuze, en
+     het gaat in zijn geheel weg zodra de ondergrond vastligt. Het knopje
+     ernaartoe staat in de onderbalk, naast de legenda. -->
+<button class="debug-knop" id="btnDebug" type="button" aria-expanded="false" title="Proefmenu ondergrond" aria-label="Proefmenu ondergrond"><span class="ic" data-icon="settings"></span></button>
+<div class="debug-paneel" id="debugPaneel" hidden>
+  <div class="debug-kop">Proef: ondergrond</div>
+  <button class="debug-rij schakel" id="rowPlat" type="button" aria-pressed="false"><b>Platte pictogrammen</b><span class="schuif"><i></i></span></button>
+  <button class="debug-rij schakel" id="rowGeenGoud" type="button" aria-pressed="false"><b>Gouden muren uit</b><span class="schuif"><i></i></span></button>
+  <button class="debug-rij schakel" id="rowTussen" type="button" aria-pressed="false"><b>Tegels tussen de muren</b><span class="schuif"><i></i></span></button>
+  <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="2" max="22" step="0.5" value="9.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">9.5</span></div>
+  <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="1.1" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">1.1</span></div>
+</div>
+
 <div class="modal sheet-modal van-boven" id="modalSettings">
   <div class="backdrop" data-close></div>
   <div class="sheet compact">
@@ -3008,13 +3130,6 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       </button>
       <button class="set-row schakel" id="rowAutoKruis" type="button" aria-pressed="false">
         <span class="ic" data-icon="cross"></span><span class="set-tekst"><b>Auto kruisjes</b></span><span class="schuif"><i></i></span>
-      </button>
-    </div>
-    <!-- Tijdelijk, zolang de ondergrond in ontwikkeling is: terug naar de
-         platte pictogrammen in plaats van de getekende objecten. -->
-    <div class="set-duo">
-      <button class="set-row schakel" id="rowPlat" type="button" aria-pressed="false">
-        <span class="ic" data-icon="dossier"></span><span class="set-tekst"><b>Platte pictogrammen</b></span><span class="schuif"><i></i></span>
       </button>
     </div>
     <div class="set-kop weergave-kop">Weergave</div>
@@ -3197,12 +3312,14 @@ function zetVlakPalet(){
   /* De tegels staan los van elkaar; wat je in de kier ziet ís het raster.
      Een aparte rasterlijn zou daar bovenop komen en dubbel tekenen. */
   st.setProperty("--raster","transparent");
-  st.setProperty("--voeg",nacht?"#1B222B":"#CFC8B8");
+
   /* De harde slagschaduw onder het bord en de zachtere schaduw binnen elke
      muur; in de donkere stand mag de eerste steviger, want de ondergrond is
      al donker. */
-  st.setProperty("--bord-schaduw",nacht?"rgba(0,0,0,.55)":"rgba(38,36,25,.28)");
-  st.setProperty("--muur-schaduw",nacht?"rgba(0,0,0,.42)":"rgba(38,36,25,.30)");
+  /* De slagschaduw is een vlak, geen waas: een dekkende kleur, want kopieën
+     over elkaar heen zouden bij doorzichtigheid een rafelrand geven. */
+  st.setProperty("--bord-schaduw",nacht?"#140F10":"#D6CEBD");
+  st.setProperty("--muur-schaduw",nacht?"rgba(0,0,0,.14)":"rgba(38,36,25,.075)");
   st.setProperty("--plat-icoon",nacht?"rgba(240,232,226,.72)":"rgba(38,36,25,.62)");
   document.documentElement.dataset.stand=nacht?"night":"day";
 }
@@ -4139,14 +4256,18 @@ function wallSwatchCss(colors){
   colors.forEach((c,i)=>{ stops.push(c+" "+(i*100/n)+"%",c+" "+((i+1)*100/n)+"%"); });
   return "background:linear-gradient(90deg,"+stops.join(",")+")";
 }
-/* Het microverschil per ruimte: uit de naam van de ruimte volgt altijd
-   dezelfde stap, zodat een bord er elke keer hetzelfde uitziet. Vijf standen,
-   van twee procent donkerder tot twee procent lichter. */
+/* Het microverschil per ruimte. Uit de naam volgt altijd dezelfde stap, dus
+   een bord ziet er elke keer hetzelfde uit. Het is geen grijstint maar een
+   heel lichte kleurzweem: een warme, een koele, een groene of een roze, in
+   twee sterktes, plus een stand zonder verschil. Zo verschillen twee ruimtes
+   met dezelfde vloer net waarneembaar zonder een andere kleur te worden. */
+const KAMER_ZWEEM=["#8A5A22","#2F5C86","#3F6B45","#7A3B58","#F7F1E4","#12161C"];
 function kamerVariatie(id){
   let h=0; const s=String(id||"");
   for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))&0xffff;
-  const stap=(h%5)-2;                       /* -2 .. +2 */
-  return { mix: stap<0?"#000000":"#FFFFFF", deel: Math.abs(stap)*1.1 };
+  const kleur=KAMER_ZWEEM[h%KAMER_ZWEEM.length];
+  const deel=[0,2.2,3.4][(h>>3)%3];
+  return { mix:kleur, deel:deel };
 }
 
 /* Hoort deze tegel bij een ruimte? Zo niet, dan ligt hij buiten de
@@ -4764,6 +4885,32 @@ function renderBoard(){
 }
 
 /* Muren als losse SVG-laag: vrij in dikte, kleur en stippels. */
+/* De dikte van een muur, in procent van een vakje. Staat tijdelijk aan een
+   schuifbalk in de instellingen, zodat we de maat kunnen zoeken; daarna wordt
+   dit weer één vast getal. Meteen bij het laden uitlezen, want het eerste bord
+   wordt getekend voordat de instellingen aan de knoppen hangen. */
+let MUUR_PROCENT = (function(){
+  try{ const v=parseFloat(localStorage.getItem("clueboard:muurDikte")); if(v>0) return v; }catch(e){}
+  return 9.5;
+})();
+/* De ronding van een tegelhoek, ook in procent van een vakje. De muren nemen
+   deze straal over, dus beide staan hier bij elkaar en kunnen niet uit elkaar
+   lopen; de CSS krijgt hem als variabele. */
+const TEGEL_ROND_PROCENT = 8.5;
+function maat(sleutel,standaard){
+  try{ const v=parseFloat(localStorage.getItem(sleutel)); if(v>=0) return v; }catch(e){}
+  return standaard;
+}
+/* De kier tussen twee tegels. Tijdelijk aan een schuifbalk; hij bepaalt ook de
+   lucht tot een muur, want elke tussenruimte hoort even breed te zijn. */
+let KIER_PROCENT = maat("clueboard:tegelKier",1.1);
+function zetMaten(){
+  const st=document.documentElement.style;
+  st.setProperty("--rond-pct",String(TEGEL_ROND_PROCENT));
+  st.setProperty("--kier-pct",String(KIER_PROCENT));
+}
+zetMaten();
+
 function renderWalls(cell){
   const svg=$("#walls"), bb=M.bounds;
   const W=bb.cols*cell, H=bb.rows*cell;
@@ -4771,104 +4918,240 @@ function renderWalls(cell){
   svg.setAttribute("viewBox","0 0 "+W+" "+H);
   tekenBordSchaduw(cell,W,H);
 
-  const thin=[], walls=new Map();
-  /* Randen van het bord die bij een besloten ruimte horen. De contour wordt
-     als één doorlopend pad getekend en kent geen ruimtes, dus die stukken
-     krijgen er hun kleur bovenop. */
-  const randen=[];
-  const sides=[[0,-1,"top"],[1,0,"right"],[0,1,"bottom"],[-1,0,"left"]];
-  const SIDECLASS={top:"w-t",right:"w-r",bottom:"w-b",left:"w-l"};
-  const wall=Math.max(3,Math.round(cell*0.095));
+  const wall=Math.max(2,Math.round(cell*MUUR_PROCENT/100));
+  const tegelRond=cell*TEGEL_ROND_PROCENT/100;
+  /* Staan de tegels tussen de muren, dan houden ze overal dezelfde lucht tot
+     de muur -- ook in een hoek. Dat lukt alleen als de muur om precies
+     hetzelfde punt draait als de hoek van de tegel. De hartlijn van de muur
+     ligt een halve muurdikte plus die lucht plus de tegelronding van dat punt
+     af, en dat is dus meteen de straal van de bocht. Muur en tegel lopen dan
+     als twee evenwijdige lijnen om de hoek.
+     Liggen de muren gewoon over de tegels heen, dan is er geen lucht en volgt
+     de bocht de buitenkant van de tegelhoek. */
+  const tussen=document.body.classList.contains("tussen-muren");
+  const lucht=cell*KIER_PROCENT*2/100;
+  const rond=tussen ? (wall/2 + lucht + tegelRond)
+                    : Math.max(0, tegelRond - wall/2);
   /* Dezelfde dikte voor de SVG en voor de CSS die de notitieletters laat
      uitwijken; anders raken die letters bij een dikke muur toch de rand. */
   document.documentElement.style.setProperty("--wall-w",wall+"px");
 
+  /* Eerst per vakje bijhouden aan welke kanten een muur staat: de tegel zet
+     daar zijn schaduw en zijn inspringing op. */
+  const sides=[[0,-1,"top"],[1,0,"right"],[0,1,"bottom"],[-1,0,"left"]];
+  const SIDECLASS={top:"w-t",right:"w-r",bottom:"w-b",left:"w-l"};
+  const thin=[];
   $$("#grid .tile").forEach(el=>el.classList.remove("w-t","w-r","w-b","w-l"));
-
   for(let r=bb.minR;r<=bb.maxR;r++) for(let c=bb.minC;c<=bb.maxC;c++){
-    const t=M.tiles.get("c"+c+"r"+r); if(!t) continue;
+    const tl=M.tiles.get("c"+c+"r"+r); if(!tl) continue;
     const x0=(c-bb.minC)*cell, y0=(r-bb.minR)*cell, x1=x0+cell, y1=y0+cell;
-    const st=roomWallStyle(M.rooms.get(t.roomId));
     const el=$('#grid .tile[data-tile="c'+c+'r'+r+'"]');
     sides.forEach(sd=>{
       const nb=M.tiles.get("c"+(c+sd[0])+"r"+(r+sd[1]));
-      let a,b;
-      if(sd[2]==="top"){a=[x0,y0];b=[x1,y0];}
-      else if(sd[2]==="right"){a=[x1,y0];b=[x1,y1];}
-      else if(sd[2]==="bottom"){a=[x0,y1];b=[x1,y1];}
-      else {a=[x0,y0];b=[x0,y1];}
-      /* Geen buurtegel: dat is de rand van het bord en die tekent de contour
-         als één doorlopende lijn, niet als losse randjes per tegel. */
-      if(!nb){
+      if(!nb || nb.roomId!==tl.roomId){
         if(el) el.classList.add(SIDECLASS[sd[2]]);
-        if(st.prio>1) randen.push({a,b,colors:st.colors});
-      } else if(nb.roomId!==t.roomId){
-        if(el) el.classList.add(SIDECLASS[sd[2]]);
-        const k=[a[0],a[1],b[0],b[1]].join(",");
-        const cur=walls.get(k);
-        if(!cur || st.prio>cur.prio) walls.set(k,{a,b,colors:st.colors,prio:st.prio});
-      } else if(sd[2]==="right"||sd[2]==="bottom"){
-        /* Celgrens binnen dezelfde ruimte: dat is raster, geen muur. */
-        thin.push({a,b});
+      } else if(sd[2]==="right"){
+        thin.push({a:[x1,y0],b:[x1,y1]});
+      } else if(sd[2]==="bottom"){
+        thin.push({a:[x0,y1],b:[x1,y1]});
       }
     });
   }
 
   let out="";
-  /* Het raster als eigen laag, één lijn per celgrens en niet uit de vloer
-     afgeleid. De muren komen er daarna overheen; waar een muur staat is de
-     rasterlijn niet meer te zien, dus dubbel getekend wordt er niets. */
+  /* Het raster als eigen laag, één lijn per celgrens binnen een ruimte. De
+     muren komen er daarna overheen. */
   thin.forEach(s=>{
     out+='<line x1="'+s.a[0]+'" y1="'+s.a[1]+'" x2="'+s.b[0]+'" y2="'+s.b[1]
        +'" stroke="var(--raster)" stroke-width="1"/>';
   });
-  Array.from(walls.values()).sort((a,b)=>a.prio-b.prio).forEach(s=>{
-    out+=wallSegmentsSVG(s.a,s.b,s.colors,wall);
-  });
-  /* De contour bovenop, zodat hij nergens door een ruimtemuur wordt doorsneden. */
-  const outline=boardOutlinePath(cell);
-  if(outline){
-    const t=Math.max(3,cell*0.09);
-    out+='<path d="'+outline+'" fill="none" stroke="var(--muur-standard)" stroke-width="'+t
-       +'" stroke-linejoin="round" stroke-linecap="round"/>';
-    /* En daar bovenop de stukken buitenrand die bij een besloten ruimte horen,
-       met dezelfde dikte als de contour zodat het één doorlopende muur blijft
-       en niet een streepje op een lijn. */
-    randen.forEach(sd => { out+=wallSegmentsSVG(sd.a,sd.b,sd.colors,t); });
+
+  /* De muren: elke ruimte krijgt zijn eigen gesloten omtrek, in plaats van
+     losse streepjes per celgrens. Daardoor is élke hoek van een ruimte rond,
+     ook waar drie ruimtes samenkomen -- daar tekent iedere ruimte gewoon zijn
+     eigen hoek. Een gedeelde muur wordt twee keer getekend, in dezelfde kleur
+     en dikte, dus dat zie je niet.
+     De volgorde is: eerst de buitenrand van het bord, dan de gewone ruimtes,
+     en als laatste de edele. Zo ligt het goud altijd boven het zwart, ook waar
+     een edele ruimte tegen de rand van het bord aan ligt. */
+  const muurPad=(d,kleur,klasse)=>
+    '<path class="'+klasse+'" d="'+d+'" fill="none" stroke="'+kleur
+    +'" stroke-width="'+wall+'" stroke-linejoin="round" stroke-linecap="butt"/>';
+
+  const outline=boardOutlinePath(cell,rond);
+  if(outline) out+=muurPad(outline,"var(--muur-standard)","contour");
+
+  /* Waar meerdere muren samenkomen buigt elke ruimte zijn eigen hoek van het
+     kruispunt vandaan. Bij een dunne muur reikt geen enkele bocht nog tot in
+     het midden en blijft daar een gaatje over. Dat vullen we met een stipje in
+     de muurkleur: groot genoeg om het gat te dekken, en altijd kleiner dan de
+     afstand tot de dichtstbijzijnde tegel, dus het raakt nooit een vloer.
+     Alleen op echte kruispunten -- een vrije buitenhoek van het bord hoort
+     juist rond te blijven, daar zit ook geen gat. */
+  /* Hoe ver het gat reikt is uit te rekenen: de bochten liggen het verst van
+     het kruispunt af in de richting van de muren zelf. Precies zo groot maken
+     we het stipje, plus een haartje. Bij een normale muurdikte valt het binnen
+     de muur en zie je het niet; alleen bij een dunne muur doet het zijn werk. */
+  const stip=Math.max(wall/2, rond - Math.sqrt(rond*wall + wall*wall/4) + 0.3);
+  const gebied=(c,r)=>{ const tl=M.tiles.get("c"+c+"r"+r); return tl?String(tl.roomId):null; };
+  const knopen=[];
+  for(let r=bb.minR;r<=bb.maxR+1;r++) for(let c=bb.minC;c<=bb.maxC+1;c++){
+    const nw=gebied(c-1,r-1), ne=gebied(c,r-1), sw=gebied(c-1,r), se=gebied(c,r);
+    if(nw===null&&ne===null&&sw===null&&se===null) continue;
+    /* Een zijde is een muur als de twee vakjes erlangs bij verschillende
+       gebieden horen; twee keer "buiten het bord" telt niet als zijde. */
+    const N=(nw!==null||ne!==null)&&nw!==ne;
+    const S=(sw!==null||se!==null)&&sw!==se;
+    const Wz=(nw!==null||sw!==null)&&nw!==sw;
+    const E=(ne!==null||se!==null)&&ne!==se;
+    const graad=(N?1:0)+(S?1:0)+(Wz?1:0)+(E?1:0);
+    const vol=nw!==null&&ne!==null&&sw!==null&&se!==null;
+    /* Drie of meer muren is altijd een kruispunt. Precies twee is alleen een
+       kruispunt als ze een hoek maken én het punt van alle kanten door het
+       bord omsloten is. */
+    const kruis = graad>=3 || (graad===2 && !(N&&S) && !(Wz&&E) && vol);
+    if(!kruis) continue;
+    const isEdel=[nw,ne,sw,se].some(id=>id!==null && roomWallStyle(M.rooms.get(id)).edel);
+    knopen.push({x:(c-bb.minC)*cell, y:(r-bb.minR)*cell, edel:isEdel});
   }
+  /* De stipjes blijven binnen de vorm van het bord, zodat er bij een muur die
+     op de buitenrand uitkomt niets buiten het bord uitsteekt. */
+  const stipjes=lijst=>{
+    if(!lijst.length) return "";
+    const kleur=lijst[0].edel?"var(--muur-noble)":"var(--muur-standard)";
+    let s='<g class="knoop'+(lijst[0].edel?" edel":"")+'"'+(outline?' clip-path="url(#bordKnip)"':'')+'>';
+    lijst.forEach(k=>{ s+='<circle cx="'+k.x+'" cy="'+k.y+'" r="'+stip.toFixed(2)+'" fill="'+kleur+'"/>'; });
+    return s+"</g>";
+  };
+  if(outline) out+='<defs><clipPath id="bordKnip"><path d="'+outline+'"/></clipPath></defs>';
+  out+=stipjes(knopen.filter(k=>!k.edel));
+
+  const gewoon=[], edel=[];
+  M.rooms.forEach(room=>{
+    const st=roomWallStyle(room);
+    (st.edel?edel:gewoon).push({room:room,kleur:st.colors[0]});
+  });
+  gewoon.concat(edel).forEach(r=>{
+    const id=r.room.id;
+    let d="";
+    omtrekRingen(cell,(c,rr)=>{
+      const tl=M.tiles.get("c"+c+"r"+rr);
+      return !!tl && tl.roomId===id;
+    }).forEach(ring=>{ d+=rondPad(ring,rond,true); });
+    if(d) out+=muurPad(d,r.kleur,"muur"+(r.kleur===edelKleur()?" edel":""));
+  });
+  /* De gouden kruispunten helemaal bovenop, net als de gouden muren zelf. */
+  out+=stipjes(knopen.filter(k=>k.edel));
+
   svg.innerHTML=out;
 }
+/* Welke kleur hoort bij een edele ruimte; alleen om de muur een naam te geven
+   waar de proefstand "gouden muren uit" iets mee kan. */
+function edelKleur(){ return "var(--muur-noble)"; }
 
 /* De schaduw van het hele bord: de buitencontour als gevuld vlak, verschoven
    naar rechtsonder. Geen vervaging -- een harde, grafische slagschaduw. */
+/* De slagschaduw buiten het bord staat voorlopig uit; de schaduw binnen de
+   ruimtes doet het werk. Op true zetten brengt hem terug zoals hij was. */
+const BORD_SLAGSCHADUW=false;
 function tekenBordSchaduw(cell,W,H){
   const svg=$("#bordSchaduw"); if(!svg) return;
+  if(!BORD_SLAGSCHADUW){ svg.innerHTML=""; svg.setAttribute("width",0); svg.setAttribute("height",0); return; }
   const pad=boardOutlinePath(cell);
   const d=Math.max(10,Math.round(cell*0.26));     /* hoe ver hij uitsteekt */
   svg.setAttribute("width",W+d); svg.setAttribute("height",H+d);
   svg.setAttribute("viewBox","0 0 "+(W+d)+" "+(H+d));
   if(!pad){ svg.innerHTML=""; return; }
+  const id="schaduwUit";
   /* Een echte slagschaduw is de vorm die het bord aflegt terwijl het licht
      eroverheen strijkt: niet één verschoven kopie, maar alles daartussen.
      Daarom tekenen we het pad in stappen van nul tot de volle verschuiving.
      Zo sluit de schaduw in elke hoek aan op de rand van het bord en lijken de
      muren hoogte te hebben, ook bij een bord met een uitgesneden vorm. */
-  const stappen=Math.max(6,Math.min(20,Math.round(d/2)));
-  let uit="";
+  /* Genoeg stappen om de vorm dicht te vullen; de kleur is dekkend, dus
+     kopieën die elkaar overlappen leveren één vlak op met een harde rand in
+     plaats van een gerafeld randje. */
+  const stappen=Math.max(24,Math.round(d*2));
+  let kopieen="";
   for(let i=1;i<=stappen;i++){
     const f=d*i/stappen;
-    uit+='<path d="'+pad+'" fill="var(--bord-schaduw)" transform="translate('+f.toFixed(2)+','+f.toFixed(2)+')"/>';
+    kopieen+='<path d="'+pad+'" transform="translate('+f.toFixed(2)+','+f.toFixed(2)+')"/>';
   }
-  svg.innerHTML=uit;
+  /* Het bord zelf uit de schaduw knippen: anders schijnt hij door de kieren
+     tussen de tegels heen en krijgt het bord alsnog een ondergrond. */
+  svg.innerHTML=
+     '<defs><mask id="'+id+'" maskUnits="userSpaceOnUse" x="0" y="0" width="'+(W+d)+'" height="'+(H+d)+'">'
+    +'<rect x="0" y="0" width="'+(W+d)+'" height="'+(H+d)+'" fill="#fff"/>'
+    +'<path d="'+pad+'" fill="#000"/></mask></defs>'
+    +'<g mask="url(#'+id+')" fill="var(--bord-schaduw)" shape-rendering="crispEdges">'+kopieen+'</g>';
 }
 
 /* De buitenrand van het bord als één pad. We verzamelen elke zijde van een
    tegel die geen buurtegel heeft, allemaal met dezelfde draairichting, en
    rijgen ze aan elkaar tot gesloten lussen. Een bord met een gat erin levert
    zo vanzelf twee lussen op: de buitenrand en de rand van het gat. */
-function boardOutlinePath(cell){
+/* Een reeks punten als één vloeiende lijn: rechte stukken, en in elke hoek
+   een boogje in plaats van een knik.
+
+   De straal die je opgeeft is die van de BUITENkant van de muur, want dat is
+   de kromming die naast een tegel komt te liggen en die dus gelijk moet zijn
+   aan de ronding van de tegels. De hartlijn buigt daarom een halve muurdikte
+   krapper; dat rekent de aanroeper uit. Blijft er niets over, dan wordt het
+   vanzelf weer een scherpe hoek.
+
+   Omdat het één doorlopend pad is, steekt er nergens iets voorbij een hoek:
+   de lijn loopt gewoon door, precies zoals een muur hoort te lopen. */
+function rondPad(punten,r,gesloten){
+  let p=punten.slice();
+  if(gesloten && p.length>1 && p[0][0]===p[p.length-1][0] && p[0][1]===p[p.length-1][1]) p.pop();
+  /* Punten midden op een recht stuk zijn geen hoek; die eruit, anders zou er
+     een boogje van nul graden getekend worden. */
+  p=p.filter((q,i,l)=>{
+    if(!gesloten && (i===0||i===l.length-1)) return true;
+    const a=l[(i-1+l.length)%l.length], z=l[(i+1)%l.length];
+    return !((a[0]===q[0]&&q[0]===z[0])||(a[1]===q[1]&&q[1]===z[1]));
+  });
+  const n=p.length;
+  if(n<2) return "";
+  const nr=q=>q[0].toFixed(2)+" "+q[1].toFixed(2);
+  if(!(r>0.05) || n<3) return "M"+p.map(nr).join("L")+(gesloten?"Z":"");
+  /* Een punt op afstand r vanaf v richting doel, maar nooit voorbij het
+     midden van die zijde: anders zouden twee boogjes elkaar overlappen. */
+  const naar=(v,doel)=>{
+    const dx=doel[0]-v[0], dy=doel[1]-v[1], L=Math.hypot(dx,dy)||1;
+    const f=Math.min(r,L/2)/L;
+    return [v[0]+dx*f,v[1]+dy*f];
+  };
+  const hoek=i=>{
+    const v=p[i], a=p[(i-1+n)%n], z=p[(i+1)%n];
+    /* Linksom of rechtsom? Het kruisproduct van de twee richtingen zegt het;
+       in een assenstelsel met y naar beneden hoort positief bij sweep 1. */
+    const kruis=(v[0]-a[0])*(z[1]-v[1])-(v[1]-a[1])*(z[0]-v[0]);
+    const straal=Math.min(r,Math.hypot(v[0]-a[0],v[1]-a[1])/2,Math.hypot(z[0]-v[0],z[1]-v[1])/2);
+    return "L"+nr(naar(v,a))+"A"+straal.toFixed(2)+" "+straal.toFixed(2)
+          +" 0 0 "+(kruis>0?1:0)+" "+nr(naar(v,z));
+  };
+  let d;
+  if(gesloten){
+    d="M"+nr(naar(p[0],p[1]));
+    for(let i=1;i<n;i++) d+=hoek(i);
+    d+=hoek(0)+"Z";
+  } else {
+    d="M"+nr(p[0]);
+    for(let i=1;i<n-1;i++) d+=hoek(i);
+    d+="L"+nr(p[n-1]);
+  }
+  return d;
+}
+
+/* De omtrek van een verzameling vakjes als gesloten ringen. Elke zijde die
+   geen buurvakje binnen die verzameling heeft is een stukje omtrek; die
+   stukjes worden aan elkaar geregen tot ronden. Werkt zowel voor het hele
+   bord als voor één ruimte, en ook als een ruimte uit losse stukken bestaat.
+   Rechte stukken worden samengevoegd, zodat alleen echte hoeken overblijven. */
+function omtrekRingen(cell,heeft){
   const b=M.bounds;
-  const has=(c,r)=>!!M.tiles.get("c"+c+"r"+r);
+  const has=heeft;
   const segs=new Map();
   const add=(ax,ay,bx,by)=>{
     const k=ax+","+ay;
@@ -4884,7 +5167,7 @@ function boardOutlinePath(cell){
     if(!has(c,r+1)){ add(x+1,y+1,x,y+1); n++; }
     if(!has(c-1,r)){ add(x,y+1,x,y); n++; }
   }
-  let d="";
+  const ringen=[];
   while(n>0){
     let start=null;
     for(const [k,v] of segs){ if(v.length){ start=k; break; } }
@@ -4909,29 +5192,19 @@ function boardOutlinePath(cell){
       if(!straight) keep.push(m);
     }
     keep.push(pts[pts.length-1]);
-    d+="M"+keep.map(p=>(p[0]*cell)+" "+(p[1]*cell)).join("L")+"Z";
+    ringen.push(keep.map(p=>[p[0]*cell,p[1]*cell]));
   }
-  return d;
-}
-/* Tekent een muursegment als aaneengesloten, effen stukjes; bij meerdere
-   toegestane rollen wisselen de kleuren elkaar af, zonder open plekken. */
-function wallSegmentsSVG(a,b,colors,width){
-  if(colors.length===1){
-    return '<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]
-      +'" stroke="'+colors[0]+'" stroke-width="'+width+'" stroke-linecap="square"/>';
-  }
-  const reps=2, n=colors.length*reps;
-  let out="";
-  for(let i=0;i<n;i++){
-    const t0=i/n, t1=(i+1)/n;
-    const x1=a[0]+(b[0]-a[0])*t0, y1=a[1]+(b[1]-a[1])*t0;
-    const x2=a[0]+(b[0]-a[0])*t1, y2=a[1]+(b[1]-a[1])*t1;
-    out+='<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2
-      +'" stroke="'+colors[i%colors.length]+'" stroke-width="'+width+'" stroke-linecap="square"/>';
-  }
-  return out;
+  return ringen;
 }
 
+/* De buitenrand van het hele bord als één pad. */
+function boardOutlinePath(cell,rond){
+  let d="";
+  omtrekRingen(cell,(c,r)=>!!M.tiles.get("c"+c+"r"+r)).forEach(ring=>{
+    d+=rondPad(ring,rond||0,true);
+  });
+  return d;
+}
 function tekenKopStand(){
   const el=$("#kopStand"); if(!el||!M) return;
   el.textContent=placed.size+"/"+M.people.length;
@@ -6606,7 +6879,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.66";
+const PLAYER_APP_VERSION="0.9.70";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -7573,17 +7846,105 @@ document.addEventListener("pointerdown",e=>{
   toonLegendaPop(false);
 },true);
 
-/* Tijdelijke knop: platte pictogrammen. Blijft bewaard op dit apparaat. */
-{ const PLAT_SLEUTEL="clueboard:platIcoon";
-  const knop=$("#rowPlat");
+/* Tijdelijke schuifjes voor de ondergrond. Elk schuifje zet één klasse op de
+   body en onthoudt zijn stand op dit apparaat. Alles hangt aan CSS, dus bij het
+   omzetten hoeft er niets opnieuw getekend te worden. */
+[["rowPlat","plat-icoon","clueboard:platIcoon"],
+ ["rowGeenGoud","geen-goud","clueboard:geenGoud"],
+ ["rowTussen","tussen-muren","clueboard:tussenMuren"]].forEach(function(rij){
+  const id=rij[0], klasse=rij[1], sleutel=rij[2];
+  const knop=$("#"+id);
   const zet=aan=>{
-    document.body.classList.toggle("plat-icoon",!!aan);
+    document.body.classList.toggle(klasse,!!aan);
     if(knop) knop.setAttribute("aria-pressed",aan?"true":"false");
-    try{ localStorage.setItem(PLAT_SLEUTEL,aan?"1":"0"); }catch(e){}
+    try{ localStorage.setItem(sleutel,aan?"1":"0"); }catch(e){}
   };
-  let start=false; try{ start=localStorage.getItem(PLAT_SLEUTEL)==="1"; }catch(e){}
+  let start=false; try{ start=localStorage.getItem(sleutel)==="1"; }catch(e){}
   zet(start);
-  if(knop) knop.addEventListener("click",()=>zet(!document.body.classList.contains("plat-icoon")));
+  if(knop) knop.addEventListener("click",()=>{
+    zet(!document.body.classList.contains(klasse));
+    /* De bocht van een muur hangt ervan af of de tegels ertussen staan, dus
+       na het omzetten het bord even opnieuw opmeten. */
+    try{ fitBoard(); }catch(e){}
+  });
+});
+
+/* Tijdelijke schuifbalken: de dikte van de muren en de kier tussen de tegels.
+   Na elke stap wordt het bord opnieuw opgemeten, waardoor ook de lucht tussen
+   tegel en muur en de ronding van de muurhoeken meebewegen -- die rekenen
+   immers met dezelfde maten. */
+function maatSchuif(balkId,getalId,sleutel,lees,schrijfMaat,opnieuw){
+  const balk=$("#"+balkId), getal=$("#"+getalId);
+  const toon=v=>{ if(getal) getal.textContent=v.toFixed(1); };
+  if(balk) balk.value=String(lees());
+  toon(lees());
+  if(!balk) return;
+  balk.addEventListener("input",()=>{
+    const v=parseFloat(balk.value); if(isNaN(v)) return;
+    schrijfMaat(v); toon(v);
+    try{ localStorage.setItem(sleutel,String(v)); }catch(e){}
+    zetMaten();
+    if(opnieuw) fitBoard();
+  });
+  /* Op een telefoon vangt de laag eronder het vegen af; hier houden we het
+     gebaar bij de schuifbalk zelf. */
+  ["pointerdown","touchstart","touchmove"].forEach(n=>
+    balk.addEventListener(n,e=>e.stopPropagation(),{passive:true}));
+}
+maatSchuif("muurDikte","muurDikteGetal","clueboard:muurDikte",
+  ()=>MUUR_PROCENT, v=>{ if(v>0) MUUR_PROCENT=v; }, true);
+maatSchuif("tegelKier","tegelKierGetal","clueboard:tegelKier",
+  ()=>KIER_PROCENT, v=>{ if(v>=0) KIER_PROCENT=v; }, true);
+
+
+/* De proefstand: vijf keer op het merk in het beginscherm tikken zet hem aan,
+   nog eens vijf keer weer uit. Zo staat het gereedschap niet in de weg van wie
+   gewoon wil spelen, maar is het op elk scherm binnen handbereik. De stand
+   blijft bewaard op dit apparaat. */
+{ const SLEUTEL="clueboard:experimenteel";
+  const zet=aan=>{
+    document.body.classList.toggle("experimenteel",!!aan);
+    try{ localStorage.setItem(SLEUTEL,aan?"1":"0"); }catch(e){}
+    if(!aan){
+      const p=$("#debugPaneel"); if(p) p.hidden=true;
+      const k=$("#btnDebug"); if(k) k.setAttribute("aria-expanded","false");
+    }
+  };
+  let aan=false; try{ aan=localStorage.getItem(SLEUTEL)==="1"; }catch(e){}
+  zet(aan);
+  /* Aan het document gehangen en niet aan het merk zelf: het beginscherm wordt
+     tijdens het laden opnieuw opgebouwd, en een luisteraar op de oude knoop
+     hoort dan niets meer. */
+  let tel=0, vorige=0;
+  document.addEventListener("click",e=>{
+    if(!e.target.closest("#screen-intro .brand")) return;
+    const nu=Date.now();
+    tel=(nu-vorige<1200)?tel+1:1;   /* ruim genoeg om rustig vijf keer te tikken */
+    vorige=nu;
+    if(tel<5) return;
+    tel=0;
+    const nieuw=!document.body.classList.contains("experimenteel");
+    zet(nieuw); haptic(20);
+    toast(nieuw?"Proefstand aan":"Proefstand uit");
+  });
+}
+
+/* Het bouwmenu open en dicht. Een tik buiten het paneel sluit het weer. */
+{ const knop=$("#btnDebug"), paneel=$("#debugPaneel");
+  const zet=open=>{
+    if(!paneel||!knop) return;
+    paneel.hidden=!open;
+    knop.setAttribute("aria-expanded",open?"true":"false");
+  };
+  if(knop) knop.addEventListener("click",e=>{
+    e.stopPropagation();
+    zet(paneel && paneel.hidden);
+  });
+  document.addEventListener("click",e=>{
+    if(!paneel||paneel.hidden) return;
+    if(e.target.closest("#debugPaneel")||e.target.closest("#btnDebug")) return;
+    zet(false);
+  },true);
 }
 
 [["visNotes","notes"],["visCrosses","crosses"],["visRoomLabels","roomLabels"],
