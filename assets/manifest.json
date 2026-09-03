@@ -2471,7 +2471,7 @@
       "name": "warning"
     }
   ],
-  "version": 24,
+  "version": 25,
   "floorArt": {
     "note": "Hoeveel tekeningen er per vloersoort klaarstaan in art/backgrounds/<thema>/. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.",
     "variants": {

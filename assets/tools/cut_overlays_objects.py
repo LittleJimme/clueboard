@@ -42,6 +42,8 @@ OBJECTEN = ['chair', 'barrel', 'shelf', 'tree',
 
 DREMPEL = 8                 # alfa waaronder een pixel als leeg telt
 MIN_ZIJDE = 60              # kleiner dan dit is een letter, geen tekening
+SCHADUW_ALFA = 70           # zo doorzichtig staat de ingebakken schaduw erop
+SCHADUW_ZWART = 16          # en zo zwart; de tekeningen zelf worden dat nooit
 INKT_LUMA = 70              # zo donker wordt alleen een bijschrift
 TEKST_HOOG = 22             # hoger dan dit is geen regel tekst meer
 TEKST_MIN = 100             # en zoveel zwart staat er minstens op
@@ -132,6 +134,61 @@ def wis_bijschriften(im):
     return Image.fromarray(a, 'RGBA')
 
 
+def schoonmaak(deel):
+    """Een uitgeknipte tekening klaarmaken voor het bord.
+
+    Twee dingen zitten er nog in die er niet horen.
+
+    De ingebakken slagschaduw: een silhouet in zwart op zeventien procent,
+    naar rechtsonder verschoven. Op het vel oogt dat goed, maar op het bord is
+    het geen contactschaduw -- hij hangt los van de tegel en volgt het licht
+    van het bord niet. Zwart bij zo'n lage dekking komt in de tekeningen zelf
+    nergens voor, dus hij is er eenduidig uit te halen.
+
+    En een lichte rand: de tekeningen zijn op een witte ondergrond gemaakt, dus
+    elke half doorzichtige randpixel draagt een deel wit met zich mee. Op een
+    lichte tegel valt dat weg, op een donkere leest het als een wit lijntje om
+    het object. Door het wit er weer uit te rekenen -- de kleur die er stond
+    ís de kleur van de tekening gemengd met wit -- komt de echte kleur terug en
+    blijft de zachte rand gewoon zacht.
+    """
+    a = np.array(deel).astype(np.int16)
+    alfa = a[:, :, 3]
+    rgb = a[:, :, :3]
+
+    schaduw = (alfa <= SCHADUW_ALFA) & (rgb.max(axis=2) <= SCHADUW_ZWART)
+    alfa = np.where(schaduw, 0, alfa)
+
+    # De kleur terugrekenen: waargenomen = echt * a + wit * (1 - a).
+    rand = (alfa > 0) & (alfa < 250)
+    f = (alfa / 255.0)[..., None]
+    echt = np.where(rand[..., None],
+                    np.clip((rgb - 255.0 * (1.0 - f)) / np.maximum(f, 1e-3), 0, 255),
+                    rgb)
+    uit = np.dstack([echt, alfa]).astype(np.uint8)
+
+    # Zonder schaduw valt de tekening uiteen in wat er echt bij hoort en wat er
+    # nog aan spikkels omheen zweeft -- de laatste resten van een bijschrift.
+    # Alleen de grote vlekken houden we over.
+    vlek = uit[:, :, 3] > 8
+    stukken = vlekken(vlek)
+    if stukken:
+        grootste = max(len(s[4]) for s in stukken)
+        houden = [s for s in stukken if len(s[4]) >= grootste * 0.03]
+        weg = np.ones(vlek.shape, dtype=bool)
+        for s in houden:
+            for cy, cx in s[4]:
+                weg[cy, cx] = False
+        uit[:, :, 3] = np.where(weg, 0, uit[:, :, 3])
+
+    beeld = Image.fromarray(uit, 'RGBA')
+    # De uitsnede was op de oude vorm gemaakt, met de schaduw erin. Nu die weg
+    # is zou de tekening scheef in zijn vak hangen; opnieuw strak knippen zet
+    # hem weer in het midden van zijn eigen omvang.
+    vak = beeld.getbbox()
+    return beeld.crop(vak) if vak else beeld
+
+
 def schrijf(im, pad):
     tmp = pad + '.tmp.png'
     im.save(tmp)
@@ -142,8 +199,8 @@ def main():
     if not os.path.exists(BRON):
         print('bron ontbreekt:', BRON)
         return 1
-    schoon = wis_bijschriften(Image.open(BRON).convert('RGBA'))
-    zicht = np.array(schoon)[:, :, 3] > DREMPEL
+    vel = wis_bijschriften(Image.open(BRON).convert('RGBA'))
+    zicht = np.array(vel)[:, :, 3] > DREMPEL
     os.makedirs(UIT_OVERLAY, exist_ok=True)
     os.makedirs(UIT_OBJECT, exist_ok=True)
 
@@ -162,7 +219,7 @@ def main():
 
     rij = sorted(vakken[:len(OVERLAYS)], key=lambda v: v[0])
     for naam, v in zip(OVERLAYS, rij):
-        deel = schoon.crop((v[0], v[1], v[2] + 1, v[3] + 1))
+        deel = vel.crop((v[0], v[1], v[2] + 1, v[3] + 1))
         deel = deel.resize((OVERLAY_MAAT, OVERLAY_MAAT), Image.LANCZOS)
         schrijf(deel, os.path.join(UIT_OVERLAY, naam + '.png'))
         print('overlay %-9s -> %dx%d' % (naam, OVERLAY_MAAT, OVERLAY_MAAT))
@@ -182,7 +239,7 @@ def main():
     for r in regels:
         plat.extend(sorted(r, key=lambda v: v[0]))
     for naam, v in zip(OBJECTEN, plat):
-        deel = schoon.crop((v[0], v[1], v[2] + 1, v[3] + 1))
+        deel = schoonmaak(vel.crop((v[0], v[1], v[2] + 1, v[3] + 1)))
         schrijf(deel, os.path.join(UIT_OBJECT, naam + '.png'))
         print('object  %-10s -> %dx%d' % (naam, deel.width, deel.height))
     return 0
