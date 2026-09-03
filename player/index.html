@@ -4505,8 +4505,25 @@ function shakeTile(el){
   setTimeout(()=>el.classList.remove("shake"),340);
 }
 function attachTileInput(el,tileId){
-  let timer=null, fired=false, sx=0, sy=0, moved=false, veeg=null;
+  let timer=null, fired=false, sx=0, sy=0, moved=false, veeg=null, klaar=false;
   const cancel=()=>{ clearTimeout(timer); timer=null; el.classList.remove("pressing"); };
+  /* Het einde van een tik: menu open, of niets als het een lange druk of een
+     veeg was. Eén plek, want de tik komt langs twee wegen binnen (zie onder). */
+  const tik=()=>{
+    const wasFired=fired, wasMoved=moved;
+    cancel(); veeg=null;
+    if(wasFired||wasMoved||revealed) return;
+    const t=M.tiles.get(tileId);
+    /* Op een tegel waar niemand kan staan valt er niets te kiezen, dus er gaat
+       geen menu open. Het object schudt even, dan weet je dat de tik is
+       aangekomen. Een kruis komt er wel, maar net als overal pas na lang
+       indrukken. */
+    if(t&&t.status==="blocked"){
+      shakeTile(el.querySelector(".objart")||el.querySelector(".objicon")||el);
+      return;
+    }
+    openTileMenu(tileId,el);
+  };
   el.addEventListener("pointerdown",e=>{
     if(revealed) return;
     if(e.button!==0) return;             /* rechtermuisknop heeft zijn eigen weg */
@@ -4515,8 +4532,11 @@ function attachTileInput(el,tileId){
     if($("#radial").classList.contains("open")) return;
     /* Desktop: shift-klik zet meteen een kruisje, zonder vasthouden. */
     if(isDesktop() && e.shiftKey){ fired=true; toggleCross(tileId); return; }
-    fired=false; moved=false; veeg=null; sx=e.clientX; sy=e.clientY;
-    try{ el.setPointerCapture(e.pointerId); }catch(x){}
+    fired=false; moved=false; veeg=null; klaar=false; sx=e.clientX; sy=e.clientY;
+    /* Alleen de muis vastpakken. Een vinger is al impliciet aan het vakje
+       gebonden zolang hij het scherm raakt; expliciet vastpakken bleek op
+       Android-Chrome samen te gaan met een pointerup die nooit meer kwam. */
+    if(e.pointerType!=="touch"){ try{ el.setPointerCapture(e.pointerId); }catch(x){} }
     el.classList.add("pressing");
     timer=setTimeout(()=>{
       fired=true; el.classList.remove("pressing");
@@ -4556,20 +4576,23 @@ function attachTileInput(el,tileId){
   });
   el.addEventListener("pointerup",e=>{
     if(e.button!==0){ cancel(); return; }
-    const wasFired=fired, wasMoved=moved;
-    cancel(); veeg=null;
-    if(wasFired||wasMoved||revealed) return;
-    const t=M.tiles.get(tileId);
-    /* Op een tegel waar niemand kan staan valt er niets te kiezen, dus er gaat
-       geen menu open. Het object schudt even, dan weet je dat de tik is
-       aangekomen. Een kruis komt er wel, maar net als overal pas na lang
-       indrukken. */
-    if(t&&t.status==="blocked"){
-      shakeTile(el.querySelector(".objart")||el.querySelector(".objicon")||el);
-      return;
-    }
-    openTileMenu(tileId,el);
+    /* Al afgehandeld via touchend: dan alleen nog opruimen. */
+    if(klaar){ klaar=false; cancel(); veeg=null; return; }
+    tik();
   });
+  /* Op Android-Chrome bleef de pointerup soms uit: de vinger ging omhoog,
+     maar de pagina hoorde het niet. De lange druk (een timer) werkte dan nog
+     wel, een gewone tik niet meer. Het touch-event komt wél altijd; als dat
+     eerder is dan de pointerup, handelt dit de tik af en slaat pointerup hem
+     over. preventDefault houdt de nagebootste muisklik tegen, zodat er niet
+     alsnog iets dubbel gebeurt. */
+  el.addEventListener("touchend",e=>{
+    if(!timer) return;                     /* al afgehandeld, of nooit begonnen */
+    if(e.touches&&e.touches.length) return; /* nog een vinger op het scherm */
+    klaar=true;
+    if(e.cancelable) e.preventDefault();
+    tik();
+  },{passive:false});
   el.addEventListener("pointercancel",()=>{ moved=true; cancel(); veeg=null; });
   /* Desktop: de rechtermuisknop opent de kring in de andere stand — sta je
      op plaatsen, dan zet je zo een notitie, en andersom. */
@@ -5989,7 +6012,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.39";
+const PLAYER_APP_VERSION="0.9.40";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6726,6 +6749,34 @@ $("#helpBolletjes").addEventListener("click",e=>{
   });
   rad.addEventListener("pointerup",()=>{ bezig=false; });
   rad.addEventListener("pointercancel",()=>{ bezig=false; });
+  /* Dezelfde terugval als op de tegels: een tik op een knop of op de sluier
+     wordt op het touch-event zelf afgehandeld, zodat hij ook aankomt als de
+     pointerup en de click uitblijven (Android-Chrome). preventDefault houdt
+     de gewone click daarna tegen; anders zou een notitie twee keer omslaan. */
+  let tsx=0, tsy=0, tstart=null;
+  rad.addEventListener("touchstart",e=>{
+    const t=e.touches[0]; if(!t) return;
+    tsx=t.clientX; tsy=t.clientY;
+    tstart=(e.target.closest&&e.target.closest(".rbtn"))||null;
+  },{passive:true});
+  rad.addEventListener("touchend",e=>{
+    if(e.touches&&e.touches.length) return;
+    const t=e.changedTouches&&e.changedTouches[0]; if(!t) return;
+    if(Math.hypot(t.clientX-tsx,t.clientY-tsy)>24){ tstart=null; return; }
+    const onder=document.elementFromPoint(t.clientX,t.clientY);
+    const knop=(onder&&onder.closest)?onder.closest(".rbtn"):null;
+    if(knop&&knop===tstart){
+      if(e.cancelable) e.preventDefault();
+      bezig=false; tstart=null;
+      if(!knop.disabled) knop.click();
+      return;
+    }
+    if(!knop&&!tstart&&onder&&onder.closest&&onder.closest("#radialBackdrop")){
+      if(e.cancelable) e.preventDefault();
+      bezig=false; closeRadial();
+    }
+    tstart=null;
+  },{passive:false});
 })();
 /* Vegen over de schakelaar Notitie/Plaats wisselt ook; een veeg die op een
    knop eindigt mag daarna niet nog eens als klik tellen. */
