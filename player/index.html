@@ -192,19 +192,14 @@ html,body{
 /* Het canvas krijgt altijd de kleur van de onderkant van het scherm. Als
    webapp op een iPhone kan er anders een strook boven de thuisbalk in de
    kale canvaskleur (wit) verschijnen; zie het menu voor het hoe en waarom. */
-html{background:var(--sky-2)}
-html:has(body.in-game){background:var(--grond)}
+html{background:var(--grond)}
 body{
   color:var(--ink);
   font-family:var(--font-ui);
   font-size:15px;line-height:1.42;font-weight:500;
   -webkit-user-select:none;user-select:none;
   -webkit-text-size-adjust:100%;
-  background:
-    radial-gradient(1100px 620px at 50% -14%, #FFFFFF 0%, rgba(255,255,255,0) 60%),
-    radial-gradient(680px 420px at 108% 4%, rgba(91,75,232,.13), rgba(91,75,232,0) 62%),
-    radial-gradient(720px 520px at -12% 96%, rgba(23,162,119,.09), rgba(23,162,119,0) 64%),
-    linear-gradient(180deg,var(--sky) 0%,var(--sky-2) 100%);
+  background:var(--grond);
 }
 /* Korrel over alle schermen — houdt witruimtes levend, blokkeert geen input */
 body::after{
@@ -283,14 +278,14 @@ h1,h2,h3,.display{font-family:var(--font-display);letter-spacing:-.01em}
 .intro-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
   padding:4px 20px calc(20px + env(safe-area-inset-bottom))}
 .brand{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:8px}
-.brand svg{width:82px;height:82px;filter:drop-shadow(0 10px 22px rgba(91,75,232,.28))}
-.brand h1{
-  margin:4px 0 0;font-size:34px;font-weight:800;letter-spacing:-.02em;
-  background:linear-gradient(180deg,var(--ink) 30%,#3A4270);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
+/* Het woordmerk zoals overal; het oude paarse tegeltje met de loep hoort bij
+   een ontwerp dat er niet meer is. */
+.brand img{display:block;height:38px;width:auto;max-width:70%}
+.brand .merk-licht{display:none}
+html[data-thema="licht"] .brand .merk-licht{display:block}
+html[data-thema="licht"] .brand .merk-donker{display:none}
 .brand .tag{
-  color:var(--faint);font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--dof);font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
 }
 .brand .app-versie{
   margin-top:2px;color:var(--faint);font-size:10.5px;font-weight:700;
@@ -588,11 +583,12 @@ body[data-skin="medieval"]{background:#1B2A21}
 .upload-hoek{position:absolute;top:calc(10px + env(safe-area-inset-top));right:12px;
   width:40px;height:40px;min-width:40px;color:var(--faint)}
 .upload-hoek:hover{color:var(--accent)}
-#screen-intro{background:
-  radial-gradient(130% 46% at 50% -6%, rgba(91,75,232,.10) 0%, rgba(91,75,232,0) 62%),
-  linear-gradient(180deg,#FAFBFF,#F1F3FA)}
-.brand{gap:8px;margin-top:14px}
-.brand svg{width:92px;height:92px}
+/* De eigen levelkiezer van de speler is een terugval: je komt er alleen via
+   een kale link. Hij deelt nu de ondergrond van de rest, zodat er nergens
+   meer een blauwwit vlak met paarse gloed onder vandaan komt. */
+#screen-intro{background:var(--grond);color:var(--inkt)}
+#screen-intro .naar-hoofdmenu,#screen-intro .brand .app-versie{color:var(--dof)}
+.brand{gap:10px;margin-top:16px}
 .brand h1{font-size:40px;letter-spacing:-.035em}
 .brand .tag{display:flex;align-items:center;gap:11px}
 .brand .tag::before,.brand .tag::after{content:"";width:30px;height:1px}
@@ -1250,14 +1246,14 @@ body.radiaal-open .room-label{opacity:0}
 /* Edele en ridder staan in de kring op hun banier of schild, precies als in
    de portretten; het hoekbadge vervalt daarmee. De box is 1.12 keer de
    cirkel zodat het hoofd even groot blijft. */
-.rbtn[data-standing]{width:calc(var(--rbtn,68px)*1.12);height:calc(var(--rbtn,68px)*1.12);border-radius:0;border:0;background:none;box-shadow:none}
+.rbtn[data-standing]{width:calc(var(--rbtn,68px)*1.22);height:calc(var(--rbtn,68px)*1.22);border-radius:0;border:0;background:none;box-shadow:none}
 body.in-game .rbtn[data-standing]{border:0;box-shadow:none}
 .rbtn[data-standing] .rc{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
 .rbtn[data-standing] .face{border-radius:0;background:none;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%}
 .rbtn[data-standing="noble"] .face{-webkit-mask-image:url("../assets/characters/ui/masker-banier.png");mask-image:url("../assets/characters/ui/masker-banier.png")}
 .rbtn[data-standing="knight"] .face{-webkit-mask-image:url("../assets/characters/ui/masker-schild.png");mask-image:url("../assets/characters/ui/masker-schild.png")}
-.rbtn[data-standing="noble"] .face .ch{width:96%;height:96%;left:2%;top:6%}
-.rbtn[data-standing="knight"] .face .ch{width:94%;height:94%;left:3%;top:10.6%}
+.rbtn[data-standing="noble"] .face .ch{width:92%;height:92%;left:4%;top:6.4%}
+.rbtn[data-standing="knight"] .face .ch{width:90%;height:90%;left:5%;top:11%}
 .rbtn[data-standing] .lbl,body.in-game .rbtn[data-standing] .lbl{bottom:calc(var(--rbtn,68px)*-.14)}
 .rbtn.victim{transform:translate(-50%,-50%)}
 
@@ -1272,7 +1268,7 @@ body.in-game .rbtn[data-standing]{border:0;box-shadow:none}
    hieronder is een percentage van die box. */
 /* Banier en schild zijn 1:1-backplates; de box wordt daarom vierkant en iets
    groter dan de ronde basis, zodat het gezicht even groot blijft. */
-.portret[data-standing="noble"],.portret[data-standing="knight"]{width:calc(var(--pz)*1.12);height:calc(var(--pz)*1.12)}
+.portret[data-standing="noble"],.portret[data-standing="knight"]{width:calc(var(--pz)*1.22);height:calc(var(--pz)*1.22)}
 .portret .vorm{position:absolute;inset:0;pointer-events:none}
 .portret .vorm svg,.portret .vorm img{width:100%;height:100%;display:block}
 /* De ring om het gezicht draagt de kleur van de persoon; zie personPortrait. */
@@ -1290,8 +1286,8 @@ body.in-game .rbtn[data-standing]{border:0;box-shadow:none}
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%}
 .portret[data-standing="noble"] .gezicht{-webkit-mask-image:url("../assets/characters/ui/masker-banier.png");mask-image:url("../assets/characters/ui/masker-banier.png")}
 .portret[data-standing="knight"] .gezicht{-webkit-mask-image:url("../assets/characters/ui/masker-schild.png");mask-image:url("../assets/characters/ui/masker-schild.png")}
-.portret[data-standing="noble"] .gezicht .ch{width:96%;height:96%;left:2%;top:6%}
-.portret[data-standing="knight"] .gezicht .ch{width:94%;height:94%;left:3%;top:10.6%}
+.portret[data-standing="noble"] .gezicht .ch{width:92%;height:92%;left:4%;top:6.4%}
+.portret[data-standing="knight"] .gezicht .ch{width:90%;height:90%;left:5%;top:11%}
 /* Het character: vier lagen 1:1 op een vierkant, van achter naar voor. */
 .ch{position:absolute;inset:0;display:block}
 .ch .ch-l{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:contain;pointer-events:none}
@@ -2088,8 +2084,12 @@ body.in-game .stap-voet .btn.ghost,body.in-end .btn.ghost{background:var(--kaart
 body.in-game .stap-voet .btn:active,body.in-game #modalIntro .btn:active,body.in-end .btn:active{transform:translateY(1px);box-shadow:none}
 
 /* ── Introscherm van een level, in de stijl van het menu ── */
+/* Tot de speler weet wat hij toont, is het scherm gewoon de ondergrond van
+   het spel. Zo is er nooit een flits van een scherm dat je niet gevraagd
+   hebt. De klasse staat al in de markup; JS haalt hem weg zodra het juiste
+   scherm klaarstaat. */
 body.laden{background:var(--grond)}
-body.laden .screen{visibility:hidden}
+body.laden .screen,body.laden .modal{visibility:hidden}
 body.in-game #screen-game.active{animation:schermIn .2s ease-out both}
 @keyframes schermIn{from{opacity:0}to{opacity:1}}
 body.in-end{background:var(--grond);color:var(--inkt)}
@@ -2265,7 +2265,7 @@ html[data-thema="licht"] .bordregel{background:rgba(145,96,8,.13);border-color:r
 /* Wie erbij was: rijen van drie en twee om en om (zes kolommen, elk portret
    over twee), portret met de naam eronder. */
 .deelnemers{display:grid;grid-template-columns:repeat(6,1fr);gap:22px 0;padding:40px 0 10px;justify-items:center;max-width:340px;margin:0 auto}
-.deelnemer{display:grid;grid-template-rows:calc(88px*1.12) auto;align-content:start;align-items:center;justify-items:center;gap:6px;min-width:0;width:100%}
+.deelnemer{display:grid;grid-template-rows:calc(88px*1.22) auto;align-content:start;align-items:center;justify-items:center;gap:6px;min-width:0;width:100%}
 .deelnemer .portret{flex:0 0 auto}
 .dl-tekst{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;max-width:100%;text-align:center}
 .dl-tekst .naam{font-family:var(--font-display);font-weight:600;font-size:26px;line-height:1.05;color:var(--inkt);white-space:nowrap}
@@ -2374,7 +2374,7 @@ body.in-game .clue-card.done .tick svg{display:block}
 body.in-game .clue-card.done::before{background:var(--goud)}
 </style>
 </head>
-<body class="hide-objsurf">
+<body class="hide-objsurf laden">
 
 <div id="app">
 
@@ -2382,27 +2382,8 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <section id="screen-intro" class="screen active">
     <div class="intro-top">
       <div class="brand">
-        <svg viewBox="0 0 64 64" aria-hidden="true">
-          <defs>
-            <linearGradient id="brandG" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#8577FF"/><stop offset=".55" stop-color="#5B4BE8"/><stop offset="1" stop-color="#3B2FB4"/>
-            </linearGradient>
-            <linearGradient id="brandGlass" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#DDE4F6"/>
-            </linearGradient>
-          </defs>
-          <rect x="3" y="3" width="58" height="58" rx="17" fill="url(#brandG)"/>
-          <rect x="3.9" y="3.9" width="56.2" height="56.2" rx="16.2" fill="none" stroke="rgba(255,255,255,.42)" stroke-width="1.8"/>
-          <g stroke="rgba(255,255,255,.9)" stroke-width="2.4" fill="none" stroke-linejoin="round">
-            <rect x="13" y="13" width="15" height="15" rx="4"/>
-            <rect x="36" y="13" width="15" height="15" rx="4" opacity=".45"/>
-            <rect x="13" y="36" width="15" height="15" rx="4" opacity=".45"/>
-          </g>
-          <circle cx="41.5" cy="41.5" r="11" fill="url(#brandGlass)" stroke="#151A33" stroke-width="2.6"/>
-          <path d="M36.5 41.5h10M41.5 36.5v10" stroke="#5B4BE8" stroke-width="2.4" stroke-linecap="round"/>
-          <path d="M49.6 49.6l6.2 6.2" stroke="#151A33" stroke-width="4.2" stroke-linecap="round"/>
-        </svg>
-        <h1>ClueBoard</h1>
+        <img class="merk-donker" src="../assets/brand/logo-dark.png" alt="ClueBoard">
+        <img class="merk-licht" src="../assets/brand/logo.png" alt="ClueBoard">
         <div class="tag">Deductiepuzzels op het bord</div>
         <!-- Versie van de player zelf; met de hand opgehoogd bij wijzigingen. -->
         <div class="app-versie">Player v<span id="playerVersieTekst"></span></div>
@@ -5628,7 +5609,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.34";
+const PLAYER_APP_VERSION="0.9.35";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -5720,7 +5701,10 @@ async function bootVanUrl(){
   const qs=new URLSearchParams(location.search);
   const upload=qs.get("upload");
   const id=qs.get("level");
-  if(!upload&&!id) return false;
+  /* Geen level in de link? Dan hoort de levelkeuze in het menu, niet hier.
+     Meteen doorsturen — de eigen lijst van de speler is een terugval voor
+     als er iets misgaat, geen scherm om per ongeluk in te belanden. */
+  if(!upload&&!id){ location.replace(HUB_URL); return true; }
 
   let raw=null, fout=null, bron="";
   try{
@@ -6499,7 +6483,6 @@ loadVisibility();
 applyVisibility();
 /* Vanuit het menu: niets tonen tot het level er is. Anders flitst eerst de
    eigen levellijst voorbij. */
-if(/[?&](level|upload)=/.test(location.search)) document.body.classList.add("laden");
 bootVanUrl().then(gelukt=>{ document.body.classList.remove("laden"); if(!gelukt) renderLevelList(); });
 </script>
 </body>
