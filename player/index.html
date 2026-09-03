@@ -2009,7 +2009,11 @@ body.desktop.in-game .sheet-modal.van-boven.open .sheet{transform:none}
    en de bordregels), rechts wie erbij waren, onderaan de knop. Niets om te
    scrollen, zoals de eerste bladzijde van een zaak in het boek. */
 body.desktop.in-game #modalIntro .sheet{max-width:none;border:0;padding:26px 56px 24px}
-body.desktop.in-game #modalIntro .intro-watermerk{display:none}
+/* Het bord heel licht achter het hele vel, net als op de telefoon: het geeft
+   de bladzijde een bodem zonder de tekst in de weg te zitten. Op desktop
+   staat het midden achter beide kolommen. */
+body.desktop.in-game #modalIntro .intro-watermerk{
+  display:block;left:50%;top:52%;width:min(62%,760px);opacity:.55}
 body.desktop.in-game #modalIntro .intro-terug{left:22px;top:17px}
 body.desktop.in-game #modalIntro .intro-scroll{
   display:grid;grid-template-columns:minmax(360px,.95fr) minmax(0,1.05fr);grid-template-rows:auto auto auto;
@@ -6284,7 +6288,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.51";
+const PLAYER_APP_VERSION="0.9.52";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6352,14 +6356,17 @@ async function discoverLevelFiles(){
       });
     }
   }catch(e){}
-  try{
-    const r=await fetch(LEVELS_DIR,{cache:"no-store"});
-    if(r.ok && /html/i.test(r.headers.get("content-type")||"")){
-      const html=await r.text();
-      const re=/href\s*=\s*["']([^"']+)["']/gi;
-      let m; while((m=re.exec(html))) add(decodeURIComponent(m[1]));
-    }
-  }catch(e){}
+  /* Alleen als de index niets gaf: zie de toelichting in het menu. */
+  if(!names.size){
+    try{
+      const r=await fetch(LEVELS_DIR,{cache:"no-store"});
+      if(r.ok && /html/i.test(r.headers.get("content-type")||"")){
+        const html=await r.text();
+        const re=/href\s*=\s*["']([^"']+)["']/gi;
+        let m; while((m=re.exec(html))) add(decodeURIComponent(m[1]));
+      }
+    }catch(e){}
+  }
   return Array.from(names).sort(function(a,b){ return a.localeCompare(b,"nl"); });
 }
 /* Zelfde sleutel als het menu gebruikt om een geüpload level heel eventjes
@@ -6441,16 +6448,17 @@ async function renderLevelList(){
   const alles=[{raw:buildDemoLevel(),source:"Ingebouwd oefenlevel"}];
   let files=[], broken=0;
   try{ files=await discoverLevelFiles(); }catch(e){ files=[]; }
-  for(const name of files){
+  /* Tegelijk ophalen, niet een voor een. */
+  await Promise.all(files.map(async name=>{
     let raw=null;
     try{
       const r=await fetch(LEVELS_DIR+name,{cache:"no-store"});
-      if(!r.ok) continue;
+      if(!r.ok) return;
       raw=await r.json();
-    }catch(e){ broken++; continue; }
-    if(validateLevel(raw)){ broken++; continue; }
+    }catch(e){ broken++; return; }
+    if(validateLevel(raw)){ broken++; return; }
     alles.push({raw,source:name});
-  }
+  }));
   /* Van elk level (herkenbaar aan zijn verborgen levelId) alleen de nieuwste
      versie tonen. Oudere exportbestanden mogen gewoon in de map blijven
      staan — de speler laat ze alleen niet meer zien. Een bestand zonder

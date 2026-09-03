@@ -1041,14 +1041,20 @@ async function discoverLevelFiles(){
       (Array.isArray(j)?j:((j&&j.levels)||[])).forEach(e=>add(typeof e==="string"?e:(e&&e.file)));
     }
   }catch(e){}
-  try{
-    const r=await fetch(LEVELS_DIR,{cache:"no-store"});
-    if(r.ok && /html/i.test(r.headers.get("content-type")||"")){
-      const html=await r.text();
-      const re=/href\s*=\s*["']([^"']+)["']/gi;
-      let m; while((m=re.exec(html))) add(decodeURIComponent(m[1]));
-    }
-  }catch(e){}
+  /* De index is de gewone weg. Alleen als die niets oplevert kijken we of de
+     server toevallig een mapoverzicht geeft. Op GitHub Pages bestaat dat niet,
+     dus die poging kostte alleen een wachttijd voordat het eerste level werd
+     opgehaald. */
+  if(!names.size){
+    try{
+      const r=await fetch(LEVELS_DIR,{cache:"no-store"});
+      if(r.ok && /html/i.test(r.headers.get("content-type")||"")){
+        const html=await r.text();
+        const re=/href\s*=\s*["']([^"']+)["']/gi;
+        let m; while((m=re.exec(html))) add(decodeURIComponent(m[1]));
+      }
+    }catch(e){}
+  }
   return Array.from(names).sort((a,b)=>a.localeCompare(b,"nl"));
 }
 /* Van elk level (herkenbaar aan zijn verborgen levelId) alleen de nieuwste
@@ -1251,19 +1257,50 @@ function tekenLijst(){
   /* Geen slogan meer boven de lijst; alleen als je filtert telt hij mee. */
   $("#levelTeller").textContent = (!tot || n===tot) ? "" : n+" van "+tot+" zaken";
 }
+/* Het overzicht: van elke zaak alleen wat er op de kaart komt te staan --
+   titel, zwaarte, bordmaat, nummer. Eén klein bestand voor alle zaken samen,
+   in plaats van elk levelbestand helemaal ophalen om er vier regels uit te
+   lezen. Het volledige level laadt pas als je erop klikt, in de speler.
+   Bijwerken met: python assets/tools/build_levels.py */
+async function laadOverzicht(){
+  try{
+    const r=await fetch(LEVELS_DIR+"overzicht.json",{cache:"no-store"});
+    if(!r.ok) return null;
+    const j=await r.json();
+    const rij=Array.isArray(j)?j:((j&&j.levels)||[]);
+    const uit=new Map();
+    rij.forEach(e=>{
+      const naam=e&&e.file;
+      if(naam && e.content && e.puzzle && e.puzzle.grid) uit.set(naam,e);
+    });
+    return uit.size?uit:null;
+  }catch(e){ return null; }
+}
 async function laadLevels(){
   const lijst=$("#levelList");
   let files=[], gebroken=0, geladen=[];
-  try{ files=await discoverLevelFiles(); }catch(e){ files=[]; }
-  for(const naam of files){
+  const [lijstUitIndex,overzicht]=await Promise.all([
+    discoverLevelFiles().catch(()=>[]),
+    laadOverzicht()
+  ]);
+  files=lijstUitIndex;
+  /* Staat een zaak nog niet in het overzicht -- net toegevoegd, script nog
+     niet gedraaid -- dan wordt alleen díe zaak in zijn geheel opgehaald. Zo
+     komt een nieuw level altijd in beeld, ook zonder het script. */
+  const missend=overzicht?files.filter(n=>!overzicht.has(n)):files;
+  if(overzicht) files.forEach(n=>{ const e=overzicht.get(n); if(e) geladen.push({raw:e, source:n}); });
+  /* De rest tegelijk ophalen in plaats van een voor een: de browser doet
+     meerdere aanvragen naast elkaar, dus dit duurt zo lang als de traagste
+     in plaats van alle wachttijden bij elkaar opgeteld. */
+  await Promise.all(missend.map(async naam=>{
     try{
       const r=await fetch(LEVELS_DIR+naam,{cache:"no-store"});
-      if(!r.ok) continue;
+      if(!r.ok) return;
       const raw=await r.json();
-      if(validateLevel(raw)){ gebroken++; continue; }
+      if(validateLevel(raw)){ gebroken++; return; }
       geladen.push({raw, source:naam});
     }catch(e){ gebroken++; }
-  }
+  }));
   /* Volgorde: de voorbeeldzaak altijd eerst, daarna op niveau en titel.
      Het NUMMER komt uit het level zelf (levelNumber uit de bouwer) en hoort
      dus bij de zaak, niet bij zijn plek in de lijst — zet er een level bij en

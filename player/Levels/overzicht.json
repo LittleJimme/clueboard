@@ -1,0 +1,173 @@
+{
+  "gemaakt": "2026-09-03T19:14:29",
+  "levels": [
+    {
+      "file": "1v4 Herberg de Doortocht.json",
+      "content": {
+        "title": "Herberg de Doortocht"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 6,
+          "rows": 6
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-1a05ef2624294473",
+      "levelNumber": 1,
+      "levelVersion": 4,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "2v3 Een hinderlaag vol struikrovers.json",
+      "content": {
+        "title": "Een hinderlaag vol struikrovers"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 7,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-1a05ef262400984c",
+      "levelNumber": 2,
+      "levelVersion": 3,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "3v4 De Watermolen.json",
+      "content": {
+        "title": "De Watermolen"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 8,
+          "rows": 8
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtj6rhpxaokxv",
+      "levelNumber": 3,
+      "levelVersion": 4,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "4v4 De Kathedraal.json",
+      "content": {
+        "title": "De Kathedraal"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtk2htyogtdow",
+      "levelNumber": 4,
+      "levelVersion": 4,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "5v10 De Kerkers.json",
+      "content": {
+        "title": "De Kerkers"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 8,
+          "rows": 8
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtk57guwn6i9e",
+      "levelNumber": 5,
+      "levelVersion": 10,
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "6v4 Het Fort.json",
+      "content": {
+        "title": "Het Fort"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtkjs6belwg3k",
+      "levelNumber": 6,
+      "levelVersion": 4,
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "6v5 Het Fort.json",
+      "content": {
+        "title": "Het Fort"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtkjs6belwg3k",
+      "levelNumber": 6,
+      "levelVersion": 5,
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "Voorbeeld - Moord op het kasteel.json",
+      "content": {
+        "title": "Moord op het kasteel"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 4,
+          "rows": 4
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-demo-kasteel",
+      "levelVersion": 5,
+      "demo": true,
+      "difficulty": {
+        "graad": 1,
+        "uitleg": "Elke stap volgt rechtstreeks uit één aanwijzing."
+      }
+    }
+  ]
+}
