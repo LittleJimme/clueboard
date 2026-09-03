@@ -241,10 +241,10 @@ h1,h2,h3,.display{font-family:var(--font-display);letter-spacing:-.01em}
    verloop, geen slagschaduw, geen glansrandje. Een rustig geel vlak met
    donkere letters, zoals de bordjes met de ruimtenamen. */
 #btnBeginLevel{
-  background:#EBCE79;border-color:#D3AE4E;color:#2E2410;
+  background:var(--goud);border-color:var(--goud-diep);color:var(--goud-op);
   box-shadow:none;text-shadow:none;
 }
-#btnBeginLevel:hover{filter:none;background:#F0D68C}
+#btnBeginLevel:hover{filter:none;background:var(--goud-diep)}
 #btnBeginLevel:active{transform:translateY(1px);box-shadow:none}
 .btn:hover{filter:brightness(1.05)}
 .btn:active{transform:translateY(2px) scale(.985);box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 2px 7px rgba(59,47,180,.26)}
@@ -2955,12 +2955,13 @@ body.in-game #modalIntro .intro-bordregels:empty + .deelnemers{padding-top:12px}
    en oogt het blok rustiger. */
 /* Wie erbij was: rijen van drie en twee om en om (zes kolommen, elk portret
    over twee), portret met de naam eronder. */
-/* Zes namen op een rij laat van "Constantijn" niets over. Hoogstens drie naast
-   elkaar dus, gecentreerd afgebroken, zodat een naam de breedte van een derde
-   scherm krijgt in plaats van een zesde. */
-.deelnemers{display:flex;flex-wrap:wrap;justify-content:center;gap:22px 10px;
-  padding:40px 0 10px;max-width:360px;margin:0 auto}
-.deelnemers>*{flex:0 0 auto;width:calc((100% - 20px) / 3);min-width:0}
+/* Zes namen op een rij laat van "Constantijn" niets over. Vier kolommen dus,
+   waarin een portret er twee beslaat: bovenaan één, daaronder telkens twee,
+   en als het uitkomt onderaan weer één (zie deelnemerRijen). Elke naam krijgt
+   zo de halve breedte in plaats van een zesde, en de groep blijft compact bij
+   elkaar in plaats van een lange sliert. */
+.deelnemers{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 0;
+  padding:40px 0 10px;justify-items:center;max-width:370px;margin:0 auto}
 .deelnemer{display:grid;grid-template-rows:calc(88px*1.22) auto;align-content:start;align-items:center;justify-items:center;gap:6px;min-width:0;width:100%}
 .deelnemer .portret{flex:0 0 auto}
 .dl-tekst{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;max-width:100%;text-align:center}
@@ -3017,14 +3018,14 @@ body.in-end .uitslag-voet .btn:hover::after{transform:translateX(4px)}
    streepje dat bij het bronzen zegel hoorde. Hij hoort bij de platte stijl van
    het bord, niet bij een knop uit een ander ontwerp. */
 body.in-game #modalIntro .rij-knoppen .btn{
-  background:#EBCE79;color:#2E2410;border:1px solid #D3AE4E;
+  background:var(--goud);color:var(--goud-op);border:1px solid var(--goud-diep);
   height:52px;border-radius:999px;
   font-family:var(--font-ui);font-weight:800;font-size:13px;
   letter-spacing:.18em;text-transform:uppercase;
   box-shadow:none;text-shadow:none;gap:12px;
 }
 body.in-game #modalIntro .rij-knoppen .btn::after{content:none}
-body.in-game #modalIntro .rij-knoppen .btn:hover{filter:none;background:#F0D68C}
+body.in-game #modalIntro .rij-knoppen .btn:hover{filter:none;background:var(--goud-diep)}
 /* Het duwtje om verder te lezen. Zweeft boven de kolom, dus buiten de
    scrollstroom; [hidden] moet expliciet winnen van de display:flex hierboven. */
 .scroll-wenk{
@@ -4515,6 +4516,18 @@ function scoreRun(run,needed,cen,b){
   if(!runHasObject(run)) s+=1;
   s+=Math.min(3,Math.max(0,run.len-needed));
   return s;
+}
+
+/* Hoeveel portretten er op elke regel staan: één, dan telkens twee, en als er
+   precies één overblijft sluit die de rij weer alleen af. Zo staat de groep
+   als een ruitje bij elkaar in plaats van als een lange sliert. */
+function deelnemerRijen(n){
+  if(n<=2) return [n];
+  const rijen=[1];
+  let rest=n-1;
+  while(rest>2){ rijen.push(2); rest-=2; }
+  if(rest>0) rijen.push(rest);
+  return rijen;
 }
 
 function renderRoomLabels(cell){
@@ -7209,7 +7222,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.78";
+const PLAYER_APP_VERSION="0.9.79";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -7543,10 +7556,16 @@ function showLevelDetail(levelIndex){
      banier of schild), naam en rol in de tekstkolom rechts. Het fiche met
      de letter hoort op het bord; hier lees je wie iemand is. */
   const host=$("#introDeelnemers"); host.innerHTML="";
-  /* Rijen van drie en twee om en om op zes kolommen; blijft er onderaan één
-     over, dan staat die in het midden. */
-  const KOLOM=["1/3","3/5","5/7","2/4","4/6"];
-  const n=allen.length, laatsteAlleen=(n%5===1);
+  /* Een ruitje: bovenaan één, daaronder telkens twee, en als het uitkomt
+     onderaan weer één. Op vier kolommen staat een enkeling in het midden
+     (2/4) en staan twee naast elkaar op 1/3 en 3/5. */
+  const n=allen.length;
+  const rijen=deelnemerRijen(n);
+  const kolommen=[];
+  rijen.forEach(len=>{
+    if(len===1) kolommen.push("2/4");
+    else { kolommen.push("1/3"); kolommen.push("3/5"); }
+  });
   /* Op desktop staat het hele vel op één pagina; de portretten zijn daar
      wat kleiner, en bij meer dan zes personen nog een maat kleiner. */
   const maat=isDesktop()?(n>6?82:94):88;
@@ -7555,7 +7574,7 @@ function showLevelDetail(levelIndex){
     const isV=pe.id===M.victimId;
     const rij=document.createElement("div");
     rij.className="deelnemer"+(isV?" slachtoffer":"")+(pe.name.length>10?" zeerlang":pe.name.length>7?" lang":"");
-    rij.style.gridColumn=(laatsteAlleen&&ix===n-1)?"3/5":KOLOM[ix%5];
+    rij.style.gridColumn=kolommen[ix]||"2/4";
     rij.appendChild(personPortrait(pe,{size:maat}));
     const tekst=document.createElement("div");
     tekst.className="dl-tekst";
