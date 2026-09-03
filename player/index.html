@@ -1790,7 +1790,7 @@ body.desktop.in-game .clue-card.done{order:60}
    schuift naar achteren. Zo blijft de hoogte van het dossier gelijk. */
 body.desktop.in-game .list-sep{display:none}
 /* Bordregels: één snipper over de volle breedte, onderaan het dossier. */
-body.desktop.in-game .clue-card.board{grid-column:1/-1;order:99;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;padding:10px 12px;min-height:auto}
+body.desktop.in-game .clue-card.board{grid-column:1/-1;order:0;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;padding:10px 12px;min-height:auto}
 body.desktop.in-game .clue-card.board .kop{display:none}
 body.desktop.in-game .clue-card.board .name{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;background:none;border:0;padding:0;color:var(--goud);gap:6px}
 body.desktop.in-game .clue-card.board .txt{text-align:left;font-size:12.5px}
@@ -1871,11 +1871,104 @@ body.desktop .sheet-modal .sheet{max-width:440px;border-radius:22px;transform:no
 body.desktop .sheet-modal .sheet .sheet-greep{display:none}
 /* Het introvel als kolom in het midden, met een lijntje aan weerszijden;
    de deelnemers krijgen wat meer lucht. */
-body.desktop.in-game #modalIntro .sheet{max-width:760px;margin:0 auto;border-left:1px solid var(--lijn-zacht);border-right:1px solid var(--lijn-zacht)}
-body.desktop.in-game .deelnemers{max-width:560px}
-body.desktop.in-game #modalIntro .intro-kop{padding-top:clamp(40px,12vh,110px)}
 /* De uitslag als kolom in het midden. */
 body.desktop #screen-end .uitslag,body.desktop #screen-end .uitslag-voet{width:100%;max-width:640px;margin-left:auto;margin-right:auto}
+
+/* ══════════════════════════════════════════════════════
+   Desktop, tweede ronde.
+   ══════════════════════════════════════════════════════ */
+/* De rechterkolom is een kantlijn naast het bord: smaller, en alles erin
+   leunt tegen de rechterrand. Het bord krijgt de ruimte die vrijkomt. */
+body.desktop.in-game #screen-game{grid-template-columns:minmax(420px,.9fr) minmax(380px,1.5fr) minmax(236px,268px)}
+body.desktop.in-game #detailBody{padding:14px 18px 24px 14px;text-align:right}
+body.desktop.in-game #detailBody .detail-kop,body.desktop.in-game #detailBody .legend-sep{text-align:right}
+body.desktop.in-game #detailBody .legend-sep{margin:14px 0 6px}
+body.desktop.in-game #detailBody .legend-row{flex-direction:row-reverse;text-align:right;gap:9px;padding:7px 0}
+body.desktop.in-game #detailBody .legend-row .name{font-size:14.5px}
+body.desktop.in-game #detailBody .legend-tags{justify-content:flex-end}
+/* De objecten vullen van rechts naar links, zodat een halve rij rechts
+   aansluit; elk tegeltje zelf leest gewoon van links naar rechts. */
+body.desktop.in-game #detailBody .legend-objgrid{grid-template-columns:repeat(auto-fill,minmax(54px,1fr));direction:rtl;gap:8px 2px}
+body.desktop.in-game #detailBody .legend-obj{direction:ltr}
+body.desktop.in-game #detailBody .detail-leeg{text-align:right}
+/* Hulp: dezelfde rijen, een maat kleiner; de schakelaar links, de tekst
+   rechts uitgelijnd. */
+body.desktop.in-game .hulp-rij{flex-direction:row-reverse;padding:8px 10px;gap:9px;text-align:right}
+body.desktop.in-game .hulp-rij .tekst{align-items:flex-end}
+body.desktop.in-game .hulp-rij b{font-size:12.5px}
+body.desktop.in-game .hulp-rij small{font-size:10.5px}
+body.desktop.in-game .hulp-rij .ic{width:18px;height:18px}
+body.desktop.in-game .hulp-hint{font-size:13px}
+body.desktop.in-game .detail-terug{display:flex;width:max-content;margin:0 0 12px auto;flex-direction:row-reverse}
+body.desktop.in-game .detail-terug svg{transform:rotate(-90deg)}
+/* Een gekozen persoon in dezelfde kantlijn: portret rechts, de naam ernaast
+   naar rechts uitgelijnd. Plaats en notities bovenaan, wat je weet eronder. */
+body.desktop.in-game #detailBody .pd-kop{flex-direction:row-reverse;gap:10px}
+body.desktop.in-game #detailBody .pd-naam{font-size:24px}
+body.desktop.in-game #detailBody .pd-rol{justify-content:flex-end}
+body.desktop.in-game #detailBody .pd-hint{flex-direction:row-reverse;text-align:right}
+body.desktop.in-game #detailBody .pd-omschrijving{font-size:13px}
+body.desktop.in-game #detailBody .pd-label{text-align:right;margin:14px 0 6px}
+body.desktop.in-game #detailBody .pd-regels{text-align:right}
+body.desktop.in-game #detailBody .pd-regel{flex-direction:row-reverse;font-size:14px;padding:9px 11px;gap:8px}
+body.desktop.in-game #detailBody .pd-voet{flex-direction:row-reverse;margin-top:0;padding-top:0;border-top:0}
+body.desktop.in-game #detailBody .pd-plek-tekst{flex:1;text-align:right}
+body.desktop.in-game #detailBody .pd-notitie{text-align:left;font-size:13.5px}
+
+/* De persoonskaartjes: geen gekleurde streep meer aan de linkerkant, maar
+   de hele kaart heel licht in de tint van de persoon. Zo is de kleur nog
+   steeds de sleutel naar zijn pion, zonder dat er een lat langs staat. */
+body.desktop.in-game .clue-card{border:1px solid color-mix(in srgb,var(--pc,var(--lijn)) 26%,var(--lijn));background:color-mix(in srgb,var(--pc,var(--lijn)) 10%,var(--kaart))}
+html[data-thema="licht"] body.desktop.in-game .clue-card{border-color:color-mix(in srgb,var(--pc,var(--lijn)) 30%,var(--lijn));background:color-mix(in srgb,var(--pc,var(--lijn)) 9%,var(--kaart))}
+body.desktop.in-game .clue-card.done{background:color-mix(in srgb,var(--pc,var(--lijn)) 5%,var(--kaart-2))}
+body.desktop.in-game .clue-row.victim{border-left-width:1px}
+/* De bordregels: bovenaan, en duidelijker aanwezig dan de kaartjes eronder. */
+body.desktop.in-game .clue-card.board{padding:10px 14px 11px;gap:4px;background:var(--goud-zacht);border:1px solid var(--goud-lijn);border-left:4px solid var(--goud)}
+body.desktop.in-game .clue-card.board .name{font-size:11.5px}
+body.desktop.in-game .clue-card.board .txt{font-size:14px;line-height:1.4}
+body.desktop.in-game .clue-card.board .txt .regel{padding:3px 0 3px 15px}
+body.desktop.in-game .clue-card.board .txt .regel::before{top:9px}
+body.desktop.in-game .clue-card.board .txt .regel.algemeen{font-size:12.5px}
+
+/* Instellingen: geen venstertje midden op het scherm, maar een lade die
+   uit de kop over de linkerkolom naar beneden klapt. De breedte van die
+   kolom (--links-b) zet toggleSheet bij het openen. */
+body.desktop.in-game .sheet-modal.van-boven{left:0;right:auto;width:var(--links-b,440px);top:var(--kop-h,64px);bottom:0;align-items:flex-start;padding:0}
+body.desktop.in-game .sheet-modal.van-boven .backdrop{background:transparent}
+body.desktop.in-game .sheet-modal.van-boven .sheet{max-width:none;width:100%;max-height:100%;border-radius:0;border:0;border-right:1px solid var(--lijn-zacht);box-shadow:10px 0 34px rgba(0,0,0,.28);padding:12px 18px 22px;transform:translateY(-100%)}
+body.desktop.in-game .sheet-modal.van-boven.open .sheet{transform:none}
+
+/* Het introvel als één pagina: links de zaak (merk, titel, zwaarte, intro
+   en de bordregels), rechts wie erbij waren, onderaan de knop. Niets om te
+   scrollen, zoals de eerste bladzijde van een zaak in het boek. */
+body.desktop.in-game #modalIntro .sheet{max-width:none;border:0;padding:26px 56px 24px}
+body.desktop.in-game #modalIntro .intro-watermerk{display:none}
+body.desktop.in-game #modalIntro .intro-terug{left:22px;top:17px}
+body.desktop.in-game #modalIntro .intro-scroll{
+  display:grid;grid-template-columns:minmax(360px,.95fr) minmax(0,1.05fr);grid-template-rows:auto auto auto;
+  column-gap:64px;row-gap:22px;align-content:center;align-items:start;
+  width:100%;max-width:1180px;margin:0 auto;padding:0;text-align:left;
+  -webkit-mask-image:none;mask-image:none;scrollbar-width:thin}
+body.desktop.in-game #modalIntro .intro-kop{grid-column:1;grid-row:1;min-height:0;padding:0;background:none;text-align:left}
+body.desktop.in-game #modalIntro img.intro-merk{margin:0 0 22px;height:32px}
+body.desktop.in-game #modalIntro .intro-titel{font-size:clamp(40px,4vw,58px);text-wrap:balance}
+body.desktop.in-game #modalIntro .intro-graad{align-items:flex-start;margin-top:14px}
+body.desktop.in-game #modalIntro .intro-scheiding{margin:20px 0 16px}
+body.desktop.in-game #modalIntro .sheet p.intro-tekst{margin:0;max-width:30em;font-size:18px}
+body.desktop.in-game #modalIntro .intro-dossier{display:contents}
+body.desktop.in-game #modalIntro .intro-breuk{display:none}
+body.desktop.in-game #modalIntro .intro-bordregels{grid-column:1;grid-row:2;gap:10px}
+body.desktop.in-game #modalIntro .bordregel{font-size:15.5px;padding:12px 16px;gap:12px;border-radius:14px}
+body.desktop.in-game #modalIntro .bordregel .ic{width:20px;height:20px}
+body.desktop.in-game #modalIntro .bordregel.algemeen{font-size:13px;padding:2px 6px}
+body.desktop.in-game #modalIntro .deelnemers{grid-column:2;grid-row:1/3;align-self:center;max-width:none;width:100%;padding:0;margin:0;gap:16px 0}
+body.desktop.in-game #modalIntro .deelnemer{grid-template-rows:calc(var(--dl,78px)*1.22) auto;gap:4px}
+body.desktop.in-game #modalIntro .dl-tekst .naam{font-size:22px}
+body.desktop.in-game #modalIntro .deelnemer.lang .dl-tekst .naam{font-size:19px}
+body.desktop.in-game #modalIntro .deelnemer.zeerlang .dl-tekst .naam{font-size:16px}
+body.desktop.in-game #modalIntro .dl-tekst .rol{font-size:11px}
+body.desktop.in-game #modalIntro .rij-knoppen{grid-column:1/3;grid-row:3;margin:6px 0 0;justify-content:center}
+body.desktop.in-game #modalIntro .scroll-wenk{display:none}
 
 /* Te smal voor woorden: dan alleen de pictogrammen. */
 @media (max-width:360px){
@@ -5403,14 +5496,13 @@ function detailHtml(cs,p){
       +(rolHint(p)?'<div class="pd-hint"><span class="ic">'+AssetBank.ui("compass")+'</span>'+esc(rolHint(p))+'</div>':'')
       +'</div></div>'
       +(p.description?'<p class="pd-omschrijving">'+esc(p.description)+'</p>':'');
-    html+='<div class="pd-label">Wat je weet</div>';
   } else {
     html+='<div class="pd-kop"><div class="pd-schild"><span class="ic">'+AssetBank.ui("badge")+'</span></div><div class="pd-wie">'
       +'<h3 class="pd-naam">'+(cs.length>1?'Bordregels':'Bordregel')+'</h3>'
       +'<p class="pd-omschrijving">Gelden voor iedereen op het bord.</p></div></div>';
     html+='<div class="pd-label">'+(cs.length>1?'De regels':'De regel')+'</div>';
   }
-  html+='<div class="pd-regels">'+(cs.length
+  const regels='<div class="pd-regels">'+(cs.length
     ? cs.map(c=>'<div class="pd-regel"><span class="ic">'+AssetBank.ui("badge")+'</span><div>'+highlightClueText(c.text)+'</div></div>').join("")
     : '<div class="pd-regel leeg"><div>Over deze persoon is niets bekend. Wat er overblijft, moet uit de andere regels komen.</div></div>')+'</div>';
   if(p){
@@ -5418,22 +5510,28 @@ function detailHtml(cs,p){
     const t=tid?M.tiles.get(tid):null;
     const room=t?M.rooms.get(t.roomId):null;
     let noten=0; notes.forEach(n=>{ if(n.marks&&n.marks.get(p.id)) noten++; });
-    html+='<div class="pd-label">Jouw notities</div>'
+    const notitie='<div class="pd-label">Jouw notities</div>'
       +'<textarea class="pd-notitie" id="pdNotitie" rows="1" placeholder="Wat denk je over '+esc(p.name)+'? Bijvoorbeeld: kan niet in de tuin, want…"></textarea>';
-    /* Het plattegrondje is een voetnoot: klein, naast een korte plaatsaanduiding. */
-    html+='<div class="pd-voet">'+miniBord(p.id)
+    /* Het plattegrondje: klein, naast een korte plaatsaanduiding. */
+    const plaats='<div class="pd-voet">'+miniBord(p.id)
       +'<div class="pd-plek-tekst">'
       +(t?'<b>Kolom '+t.column+', rij '+t.row+'</b><span>'+esc(room&&room.name?room.name:"op het bord")+'</span>'
          :'<b>Nog niet geplaatst</b><span>'+(noten?(noten===1?"1 vakje aangemerkt":noten+" vakjes aangemerkt"):"nog geen letters op het bord")+'</span>')
       +'</div></div>';
-  }
+    /* Op desktop staan plaats en notities bovenaan: dat is wat je tijdens het
+       spelen bijhoudt. De regels ken je al; die staan eronder. Op de telefoon
+       blijft het plattegrondje een voetnoot onder de regels. */
+    html+=isDesktop()
+      ? '<div class="pd-label">Plaats</div>'+plaats+notitie+'<div class="pd-label">Wat je weet</div>'+regels
+      : '<div class="pd-label">Wat je weet</div>'+regels+notitie+plaats;
+  } else html+=regels;
   html+='<div class="row"><button class="btn" data-close>Sluiten</button></div>';
   return html;
 }
 /* Portret en notitieveld tot leven brengen in de gegeven bak. */
 function bindDetail(box,p){
   if(!p) return;
-  const h=box.querySelector(".pd-portret"); if(h) h.appendChild(personPortrait(p,{size:100}));
+  const h=box.querySelector(".pd-portret"); if(h) h.appendChild(personPortrait(p,{size:isDesktop()?84:100}));
   const ta=box.querySelector("#pdNotitie");
   if(!ta) return;
   ta.value=persoonNotitie(p.id);
@@ -5596,10 +5694,22 @@ function toggleSheet(id){
   document.documentElement.style.setProperty("--tabbar-h",barH+"px");
   const kopH=$(".game-head").getBoundingClientRect().height;
   document.documentElement.style.setProperty("--kop-h",kopH+"px");
+  /* Op desktop klapt de lade over de linkerkolom; die is zo breed als het
+     dossier op dat moment is. */
+  if(isDesktop()){ const pc=$("#pane-clues"); if(pc) document.documentElement.style.setProperty("--links-b",pc.getBoundingClientRect().width+"px"); }
   if(id==="modalLegend") showLegend();
   openModal("#"+id);
   if(btn) btn.classList.add("active");
 }
+
+/* De lade beslaat alleen de linkerkolom, dus een klik op het bord of in het
+   paneel rechts sluit hem ook. */
+document.addEventListener("pointerdown",e=>{
+  if(!isDesktop()) return;
+  const m=$("#modalSettings"); if(!m||!m.classList.contains("open")) return;
+  if(e.target.closest("#modalSettings .sheet")||e.target.closest("#btnSettings")) return;
+  closeModal(m);
+},true);
 
 /* ============================================================
    10. Modus, tabs, timer, controle
@@ -5879,7 +5989,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.38";
+const PLAYER_APP_VERSION="0.9.39";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6211,12 +6321,16 @@ function showLevelDetail(levelIndex){
      over, dan staat die in het midden. */
   const KOLOM=["1/3","3/5","5/7","2/4","4/6"];
   const n=allen.length, laatsteAlleen=(n%5===1);
+  /* Op desktop staat het hele vel op één pagina; de portretten zijn daar
+     wat kleiner, en bij meer dan zes personen nog een maat kleiner. */
+  const maat=isDesktop()?(n>6?68:78):88;
+  host.style.setProperty("--dl",maat+"px");
   allen.forEach((pe,ix)=>{
     const isV=pe.id===M.victimId;
     const rij=document.createElement("div");
     rij.className="deelnemer"+(isV?" slachtoffer":"")+(pe.name.length>10?" zeerlang":pe.name.length>7?" lang":"");
     rij.style.gridColumn=(laatsteAlleen&&ix===n-1)?"3/5":KOLOM[ix%5];
-    rij.appendChild(personPortrait(pe,{size:88}));
+    rij.appendChild(personPortrait(pe,{size:maat}));
     const tekst=document.createElement("div");
     tekst.className="dl-tekst";
     tekst.innerHTML='<b class="naam">'+esc(pe.name)+'</b>'
