@@ -1,5 +1,5 @@
 {
-  "levelVersion": 4,
+  "levelVersion": 5,
   "levelId": "lvl-mtm44se3p7bh8",
   "format": "clueboard-level",
   "version": 11,
@@ -28,7 +28,7 @@
   "puzzle": {
     "grid": {
       "columns": 6,
-      "rows": 11,
+      "rows": 10,
       "personCount": 6,
       "shape": "rectangle"
     },
@@ -47,7 +47,7 @@
         "allowedStandingsLabel": null,
         "gebiedsklasse": null,
         "color": "#CBD9EA",
-        "tileCount": 21,
+        "tileCount": 15,
         "tiles": [
           "c3r5",
           "c4r5",
@@ -56,20 +56,14 @@
           "c1r6",
           "c2r6",
           "c3r6",
-          "c4r6",
-          "c5r6",
-          "c6r6",
           "c1r7",
           "c2r7",
           "c3r7",
           "c1r8",
-          "c2r8",
           "c3r8",
-          "c1r9",
-          "c3r9",
-          "c4r9",
-          "c5r9",
-          "c6r9"
+          "c4r8",
+          "c5r8",
+          "c6r8"
         ]
       },
       {
@@ -146,12 +140,12 @@
         "color": "#E4D3DC",
         "tileCount": 6,
         "tiles": [
+          "c4r6",
+          "c5r6",
+          "c6r6",
           "c4r7",
           "c5r7",
-          "c6r7",
-          "c4r8",
-          "c5r8",
-          "c6r8"
+          "c6r7"
         ]
       },
       {
@@ -168,19 +162,19 @@
         "color": "#DCDDC6",
         "tileCount": 13,
         "tiles": [
+          "c2r8",
+          "c1r9",
           "c2r9",
+          "c3r9",
+          "c4r9",
+          "c5r9",
+          "c6r9",
           "c1r10",
           "c2r10",
           "c3r10",
           "c4r10",
           "c5r10",
-          "c6r10",
-          "c1r11",
-          "c2r11",
-          "c3r11",
-          "c4r11",
-          "c5r11",
-          "c6r11"
+          "c6r10"
         ]
       }
     ],
@@ -197,13 +191,13 @@
         "roomId": "room-4",
         "size": 1,
         "tiles": [
-          "c4r7"
+          "c4r6"
         ],
         "bounds": {
           "minColumn": 4,
           "maxColumn": 4,
-          "minRow": 7,
-          "maxRow": 7
+          "minRow": 6,
+          "maxRow": 6
         }
       },
       {
@@ -218,13 +212,13 @@
         "roomId": "room-4",
         "size": 1,
         "tiles": [
-          "c6r7"
+          "c6r6"
         ],
         "bounds": {
           "minColumn": 6,
           "maxColumn": 6,
-          "minRow": 7,
-          "maxRow": 7
+          "minRow": 6,
+          "maxRow": 6
         }
       },
       {
@@ -239,13 +233,13 @@
         "roomId": "room-5",
         "size": 1,
         "tiles": [
-          "c1r10"
+          "c1r9"
         ],
         "bounds": {
           "minColumn": 1,
           "maxColumn": 1,
-          "minRow": 10,
-          "maxRow": 10
+          "minRow": 9,
+          "maxRow": 9
         }
       },
       {
@@ -260,13 +254,13 @@
         "roomId": "room-5",
         "size": 1,
         "tiles": [
-          "c2r11"
+          "c2r10"
         ],
         "bounds": {
           "minColumn": 2,
           "maxColumn": 2,
-          "minRow": 11,
-          "maxRow": 11
+          "minRow": 10,
+          "maxRow": 10
         }
       },
       {
@@ -281,13 +275,13 @@
         "roomId": "room-5",
         "size": 1,
         "tiles": [
-          "c3r10"
+          "c3r9"
         ],
         "bounds": {
           "minColumn": 3,
           "maxColumn": 3,
-          "minRow": 10,
-          "maxRow": 10
+          "minRow": 9,
+          "maxRow": 9
         }
       },
       {
@@ -302,13 +296,13 @@
         "roomId": "room-5",
         "size": 1,
         "tiles": [
-          "c4r11"
+          "c4r10"
         ],
         "bounds": {
           "minColumn": 4,
           "maxColumn": 4,
-          "minRow": 11,
-          "maxRow": 11
+          "minRow": 10,
+          "maxRow": 10
         }
       },
       {
@@ -323,13 +317,13 @@
         "roomId": "room-5",
         "size": 1,
         "tiles": [
-          "c5r10"
+          "c5r9"
         ],
         "bounds": {
           "minColumn": 5,
           "maxColumn": 5,
-          "minRow": 10,
-          "maxRow": 10
+          "minRow": 9,
+          "maxRow": 9
         }
       },
       {
@@ -366,14 +360,14 @@
         "roomId": "room-1",
         "size": 2,
         "tiles": [
-          "c4r9",
-          "c5r9"
+          "c4r8",
+          "c5r8"
         ],
         "bounds": {
           "minColumn": 4,
           "maxColumn": 5,
-          "minRow": 9,
-          "maxRow": 9
+          "minRow": 8,
+          "maxRow": 8
         }
       },
       {
@@ -430,13 +424,13 @@
         "roomId": "room-5",
         "size": 1,
         "tiles": [
-          "c2r9"
+          "c2r8"
         ],
         "bounds": {
           "minColumn": 2,
           "maxColumn": 2,
-          "minRow": 9,
-          "maxRow": 9
+          "minRow": 8,
+          "maxRow": 8
         }
       },
       {
@@ -579,13 +573,13 @@
         "roomId": "room-5",
         "size": 1,
         "tiles": [
-          "c3r11"
+          "c3r10"
         ],
         "bounds": {
           "minColumn": 3,
           "maxColumn": 3,
-          "minRow": 11,
-          "maxRow": 11
+          "minRow": 10,
+          "maxRow": 10
         }
       },
       {
@@ -600,13 +594,13 @@
         "roomId": "room-4",
         "size": 1,
         "tiles": [
-          "c5r7"
+          "c5r6"
         ],
         "bounds": {
           "minColumn": 5,
           "maxColumn": 5,
-          "minRow": 7,
-          "maxRow": 7
+          "minRow": 6,
+          "maxRow": 6
         }
       },
       {
@@ -621,13 +615,13 @@
         "roomId": "room-4",
         "size": 1,
         "tiles": [
-          "c6r8"
+          "c6r7"
         ],
         "bounds": {
           "minColumn": 6,
           "maxColumn": 6,
-          "minRow": 8,
-          "maxRow": 8
+          "minRow": 7,
+          "maxRow": 7
         }
       },
       {
@@ -1042,10 +1036,10 @@
         "id": "c4r6",
         "column": 4,
         "row": 6,
-        "roomId": "room-1",
-        "status": "neutral",
-        "statusLabel": "vrije vloer",
-        "objectId": null,
+        "roomId": "room-4",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-1",
         "matId": null,
         "personId": null
       },
@@ -1053,10 +1047,10 @@
         "id": "c5r6",
         "column": 5,
         "row": 6,
-        "roomId": "room-1",
-        "status": "neutral",
-        "statusLabel": "vrije vloer",
-        "objectId": null,
+        "roomId": "room-4",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-26",
         "matId": null,
         "personId": null
       },
@@ -1064,10 +1058,10 @@
         "id": "c6r6",
         "column": 6,
         "row": 6,
-        "roomId": "room-1",
-        "status": "neutral",
-        "statusLabel": "vrije vloer",
-        "objectId": null,
+        "roomId": "room-4",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-3",
         "matId": null,
         "personId": null
       },
@@ -1109,20 +1103,20 @@
         "column": 4,
         "row": 7,
         "roomId": "room-4",
-        "status": "blocked",
-        "statusLabel": "geblokkeerd object",
-        "objectId": "obj-1",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
         "matId": null,
-        "personId": null
+        "personId": "p4"
       },
       {
         "id": "c5r7",
         "column": 5,
         "row": 7,
         "roomId": "room-4",
-        "status": "occupiable",
-        "statusLabel": "beloopbaar object",
-        "objectId": "obj-26",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
         "matId": null,
         "personId": null
       },
@@ -1133,7 +1127,7 @@
         "roomId": "room-4",
         "status": "blocked",
         "statusLabel": "geblokkeerd object",
-        "objectId": "obj-3",
+        "objectId": "obj-27",
         "matId": null,
         "personId": null
       },
@@ -1152,10 +1146,10 @@
         "id": "c2r8",
         "column": 2,
         "row": 8,
-        "roomId": "room-1",
-        "status": "neutral",
-        "statusLabel": "vrije vloer",
-        "objectId": null,
+        "roomId": "room-5",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-15",
         "matId": null,
         "personId": null
       },
@@ -1174,21 +1168,21 @@
         "id": "c4r8",
         "column": 4,
         "row": 8,
-        "roomId": "room-4",
-        "status": "neutral",
-        "statusLabel": "vrije vloer",
-        "objectId": null,
+        "roomId": "room-1",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-11",
         "matId": null,
-        "personId": "p4"
+        "personId": null
       },
       {
         "id": "c5r8",
         "column": 5,
         "row": 8,
-        "roomId": "room-4",
-        "status": "neutral",
-        "statusLabel": "vrije vloer",
-        "objectId": null,
+        "roomId": "room-1",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-11",
         "matId": null,
         "personId": null
       },
@@ -1196,10 +1190,10 @@
         "id": "c6r8",
         "column": 6,
         "row": 8,
-        "roomId": "room-4",
-        "status": "blocked",
-        "statusLabel": "geblokkeerd object",
-        "objectId": "obj-27",
+        "roomId": "room-1",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
         "matId": null,
         "personId": null
       },
@@ -1207,72 +1201,6 @@
         "id": "c1r9",
         "column": 1,
         "row": 9,
-        "roomId": "room-1",
-        "status": "neutral",
-        "statusLabel": "vrije vloer",
-        "objectId": null,
-        "matId": null,
-        "personId": null
-      },
-      {
-        "id": "c2r9",
-        "column": 2,
-        "row": 9,
-        "roomId": "room-5",
-        "status": "occupiable",
-        "statusLabel": "beloopbaar object",
-        "objectId": "obj-15",
-        "matId": null,
-        "personId": null
-      },
-      {
-        "id": "c3r9",
-        "column": 3,
-        "row": 9,
-        "roomId": "room-1",
-        "status": "neutral",
-        "statusLabel": "vrije vloer",
-        "objectId": null,
-        "matId": null,
-        "personId": null
-      },
-      {
-        "id": "c4r9",
-        "column": 4,
-        "row": 9,
-        "roomId": "room-1",
-        "status": "occupiable",
-        "statusLabel": "beloopbaar object",
-        "objectId": "obj-11",
-        "matId": null,
-        "personId": null
-      },
-      {
-        "id": "c5r9",
-        "column": 5,
-        "row": 9,
-        "roomId": "room-1",
-        "status": "occupiable",
-        "statusLabel": "beloopbaar object",
-        "objectId": "obj-11",
-        "matId": null,
-        "personId": null
-      },
-      {
-        "id": "c6r9",
-        "column": 6,
-        "row": 9,
-        "roomId": "room-1",
-        "status": "neutral",
-        "statusLabel": "vrije vloer",
-        "objectId": null,
-        "matId": null,
-        "personId": null
-      },
-      {
-        "id": "c1r10",
-        "column": 1,
-        "row": 10,
         "roomId": "room-5",
         "status": "occupiable",
         "statusLabel": "beloopbaar object",
@@ -1281,9 +1209,9 @@
         "personId": null
       },
       {
-        "id": "c2r10",
+        "id": "c2r9",
         "column": 2,
-        "row": 10,
+        "row": 9,
         "roomId": "room-5",
         "status": "neutral",
         "statusLabel": "vrije vloer",
@@ -1292,9 +1220,9 @@
         "personId": null
       },
       {
-        "id": "c3r10",
+        "id": "c3r9",
         "column": 3,
-        "row": 10,
+        "row": 9,
         "roomId": "room-5",
         "status": "blocked",
         "statusLabel": "geblokkeerd object",
@@ -1303,9 +1231,9 @@
         "personId": null
       },
       {
-        "id": "c4r10",
+        "id": "c4r9",
         "column": 4,
-        "row": 10,
+        "row": 9,
         "roomId": "room-5",
         "status": "neutral",
         "statusLabel": "vrije vloer",
@@ -1314,9 +1242,9 @@
         "personId": null
       },
       {
-        "id": "c5r10",
+        "id": "c5r9",
         "column": 5,
-        "row": 10,
+        "row": 9,
         "roomId": "room-5",
         "status": "blocked",
         "statusLabel": "geblokkeerd object",
@@ -1325,9 +1253,9 @@
         "personId": null
       },
       {
-        "id": "c6r10",
+        "id": "c6r9",
         "column": 6,
-        "row": 10,
+        "row": 9,
         "roomId": "room-5",
         "status": "neutral",
         "statusLabel": "vrije vloer",
@@ -1336,9 +1264,9 @@
         "personId": "p6"
       },
       {
-        "id": "c1r11",
+        "id": "c1r10",
         "column": 1,
-        "row": 11,
+        "row": 10,
         "roomId": "room-5",
         "status": "neutral",
         "statusLabel": "vrije vloer",
@@ -1347,9 +1275,9 @@
         "personId": null
       },
       {
-        "id": "c2r11",
+        "id": "c2r10",
         "column": 2,
-        "row": 11,
+        "row": 10,
         "roomId": "room-5",
         "status": "blocked",
         "statusLabel": "geblokkeerd object",
@@ -1358,9 +1286,9 @@
         "personId": null
       },
       {
-        "id": "c3r11",
+        "id": "c3r10",
         "column": 3,
-        "row": 11,
+        "row": 10,
         "roomId": "room-5",
         "status": "occupiable",
         "statusLabel": "beloopbaar object",
@@ -1369,9 +1297,9 @@
         "personId": "p3"
       },
       {
-        "id": "c4r11",
+        "id": "c4r10",
         "column": 4,
-        "row": 11,
+        "row": 10,
         "roomId": "room-5",
         "status": "blocked",
         "statusLabel": "geblokkeerd object",
@@ -1380,9 +1308,9 @@
         "personId": null
       },
       {
-        "id": "c5r11",
+        "id": "c5r10",
         "column": 5,
-        "row": 11,
+        "row": 10,
         "roomId": "room-5",
         "status": "neutral",
         "statusLabel": "vrije vloer",
@@ -1391,9 +1319,9 @@
         "personId": null
       },
       {
-        "id": "c6r11",
+        "id": "c6r10",
         "column": 6,
-        "row": 11,
+        "row": 10,
         "roomId": "room-5",
         "status": "neutral",
         "statusLabel": "vrije vloer",
@@ -1452,9 +1380,9 @@
         },
         {
           "id": "p3",
-          "tileId": "c3r11",
+          "tileId": "c3r10",
           "column": 3,
-          "row": 11,
+          "row": 10,
           "roomId": "room-5",
           "objectId": "obj-25",
           "role": "culprit",
@@ -1472,9 +1400,9 @@
         },
         {
           "id": "p4",
-          "tileId": "c4r8",
+          "tileId": "c4r7",
           "column": 4,
-          "row": 8,
+          "row": 7,
           "roomId": "room-4",
           "objectId": null,
           "role": "suspect",
@@ -1515,9 +1443,9 @@
         },
         {
           "id": "p6",
-          "tileId": "c6r10",
+          "tileId": "c6r9",
           "column": 6,
-          "row": 10,
+          "row": 9,
           "roomId": "room-5",
           "objectId": null,
           "role": "victim",
@@ -2023,8 +1951,8 @@
       "personId": null,
       "locked": true,
       "terms": [],
-      "text": "Er zijn 5 lege rijen.",
-      "generatedText": "Er zijn 5 lege rijen.",
+      "text": "Er zijn 4 lege rijen.",
+      "generatedText": "Er zijn 4 lege rijen.",
       "storyText": null,
       "holds": true
     },
@@ -2232,11 +2160,11 @@
       },
       {
         "personId": "p3",
-        "tileId": "c3r11"
+        "tileId": "c3r10"
       },
       {
         "personId": "p4",
-        "tileId": "c4r8"
+        "tileId": "c4r7"
       },
       {
         "personId": "p5",
@@ -2244,7 +2172,7 @@
       },
       {
         "personId": "p6",
-        "tileId": "c6r10"
+        "tileId": "c6r9"
       }
     ],
     "victimId": "p6",
@@ -2253,7 +2181,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 39,
+    "ms": null,
     "override": null
   },
   "test": true

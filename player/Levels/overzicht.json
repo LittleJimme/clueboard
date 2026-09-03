@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-04T01:13:58",
+  "gemaakt": "2026-09-04T01:41:01",
   "levels": [
     {
       "file": "1v4 Herberg de Doortocht.json",
@@ -156,13 +156,13 @@
       "puzzle": {
         "grid": {
           "columns": 6,
-          "rows": 11
+          "rows": 10
         },
         "theme": "medieval",
         "themeLabel": "Middeleeuwen"
       },
       "levelId": "lvl-mtm44se3p7bh8",
-      "levelVersion": 4,
+      "levelVersion": 5,
       "test": true,
       "difficulty": {
         "graad": 2,
