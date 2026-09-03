@@ -881,7 +881,11 @@ body.hide-objsurf .tile .objsurf{display:none}
 .tile.m-r .objmat{right:-1px;border-right-color:transparent;border-top-right-radius:0;border-bottom-right-radius:0}
 .tile.m-b .objmat{bottom:-1px;border-bottom-color:transparent;border-bottom-left-radius:0;border-bottom-right-radius:0}
 .tile.m-l .objmat{left:-1px;border-left-color:transparent;border-top-left-radius:0;border-bottom-left-radius:0}
-body.hide-objsurf .tile .objmat{display:none}
+/* Het vlak van een gewoon object is een hulplijn en mag verborgen worden.
+   Een tapijt is dat niet: dat vlak ís het tapijt. Verberg je het, dan ligt er
+   niets meer op de vloer en klopt de regel "stond op een tapijt" nergens mee.
+   Het blijft dus staan, ook als de objectvlakken uit staan. */
+.tile .objmat{z-index:0}
 .tile .objart.mat{z-index:1}
 .tile .objicon{position:absolute;inset:20%;pointer-events:none;color:rgba(21,26,51,.62);opacity:.85}
 .tile .objicon svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 0 rgba(255,255,255,.55))}
@@ -3258,6 +3262,7 @@ function buildModel(raw){
   (p.rooms||[]).forEach(r=>M.rooms.set(r.id,r));
   (p.objects||[]).forEach(o=>M.objects.set(o.id,o));
   p.tiles.forEach(t=>M.tiles.set(t.id,t));
+  legOnderlagenOnder(M);
 
   const cp=content.people||{};
   p.people.placements.forEach((pl,i)=>{
@@ -3290,6 +3295,32 @@ function buildModel(raw){
   assignGenericObjectIcons(M);
   M.bounds=boardBounds(M);
   return M;
+}
+
+/* Kent de bank deze soort als iets waar andere dingen op staan (een tapijt)? */
+function isOnderSoort(kind){
+  const m=AssetBank.meta(String(kind||"").toLowerCase());
+  return !!(m && m.under);
+}
+/* Een tapijt ligt in het bestand op twee plekken. Op een tegel waar niets op
+   staat noteert de bouwer hem als het object zelf (objectId), en op een tegel
+   waar wél iets op staat als onderlaag (matId). Voor de bouwer maakt dat niet
+   uit -- die kent de groep -- maar de speler tekent per laag, en zag daardoor
+   twee halve tapijten in plaats van één. De randen tussen beide helften bleven
+   dicht (het aansluiten kijkt maar naar één veld) en elke tegel kreeg zijn
+   eigen tekening.
+   Hier zetten we het recht: alles van een ondersoort gaat naar de onderlaag,
+   op alle tegels van dat object. Daarna is het één vlak, met één omtrek en
+   één tekening -- ook als de vorm een kruis is. */
+function legOnderlagenOnder(m){
+  m.objects.forEach(o=>{
+    if(!isOnderSoort(o.kind||o.name)) return;
+    (o.tiles||[]).forEach(id=>{
+      const t=m.tiles.get(id); if(!t) return;
+      if(t.objectId===o.id) t.objectId=null;
+      t.matId=o.id;
+    });
+  });
 }
 
 /* De werkelijke omvang van het bord: het kleinste vak dat alle bestaande
@@ -4158,7 +4189,20 @@ function planObjectIcons(tilesVan){
     const w=c1-c0+1, h=r1-r0+1;
     const line=(w===1||h===1);
     if(tiles.length>1 && line && w*h===tiles.length){
+      /* Een rechte strook: de tekening loopt over de hele lengte. */
       plan.set("c"+c0+"r"+r0,{w:w,h:h});
+    } else if(tiles.length>1){
+      /* Een hoek, een kruis of een ander onregelmatig vlak: daar past geen
+         rechthoekige tekening op. Eén tekening op de tegel die het dichtst bij
+         het midden van de groep ligt, in plaats van op elke tegel een eigen
+         exemplaar -- dat las als evenveel losse voorwerpen als tegels. */
+      const mc=(c0+c1)/2, mr=(r0+r1)/2;
+      let mid=tiles[0], best=Infinity;
+      tiles.forEach(x=>{
+        const d=Math.abs(x.column-mc)+Math.abs(x.row-mr);
+        if(d<best){ best=d; mid=x; }
+      });
+      plan.set(mid.id,{w:1,h:1});
     } else {
       tiles.forEach(t=>plan.set(t.id,{w:1,h:1}));
     }
@@ -4852,7 +4896,9 @@ function openRadial(center,tileId){
      boven de ring: dan weet je waar je iemand op zet. */
   const objEl=$("#radialObj");
   if(objEl){
-    const o=(t&&t.objectId)?(M.objects.get?M.objects.get(t.objectId):null):null;
+    /* Ligt er alleen een tapijt, dan is dát waar je iemand op zet. */
+    const oid=(t&&(t.objectId||t.matId))||null;
+    const o=oid?(M.objects.get?M.objects.get(oid):null):null;
     if(o&&t.status==="occupiable"){
       const room=M.rooms.get(t.roomId);
       const rn=(room&&room.name)?room.name:"";
@@ -6074,7 +6120,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.45";
+const PLAYER_APP_VERSION="0.9.46";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
