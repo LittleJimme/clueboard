@@ -81,23 +81,35 @@ METGEZEL = [
     'watermill-1x2',  # WATERRAD VERTICAAL
 ]
 
+# Vel, namenlijst, en de map waar het heen gaat. De nachtversie van de eerste
+# batch gaat naar een eigen map, zodat de player er in de donkere stand naar
+# kan grijpen zonder dat de dagtekeningen eronder verdwijnen.
 VELLEN = [
-    ('clueboard-medieval-object-library-white-spaced-v2.png', BASIS),
-    ('clueboard-medieval-object-library-companion-white-v2-diagonal-animals.png', METGEZEL),
+    ('clueboard-medieval-object-library-white-spaced-v2.png', BASIS, None),
+    ('clueboard-medieval-object-library-companion-white-v2-diagonal-animals.png', METGEZEL, None),
+    # Het nachtvel staat klaar maar wordt nog niet gesneden: de donkerste
+    # onderdelen -- een boomstam, een tafelpoot, de onderkant van een ton --
+    # verschillen daar te weinig van de bijna zwarte ondergrond om ze er
+    # betrouwbaar uit te halen. Zodra het vel op een middengrijze ondergrond
+    # staat, of met een echt alfakanaal, hoeft deze regel alleen terug.
+    # ('clueboard-medieval-object-library-night-proposal-v1.png', BASIS, 'medieval-nacht'),
 ]
 
 KERN = 45            # zoveel donkerder dan wit is zeker tekening
+KERN_DONKER = 3      # op het nachtvel steken de tekeningen minder af
 RAND_VAN = 8         # waar de zachte rand van de tekening begint
 RAND_TOT = 34        # en waar hij dekkend is
 SCHADUW_MAX = 0.42   # hoe diep de contactschaduw hoogstens wordt
 TEKST_ZWART = 90     # zo donker is alleen een bijschrift
 TEKST_HOOG = 30      # en zo laag is een regel tekst
 MIN_ZIJDE = 40       # kleiner dan dit is geen tekening
+SPELING = 22         # zo dicht bij elkaar hoort bij dezelfde tekening
 
 
-def tekstregels(luma):
+def tekstregels(luma, donker=False, achter=254):
     """De regels waarop bijschriften staan, als (van, tot)."""
-    zwart = (luma < TEKST_ZWART).sum(axis=1)
+    inkt = (luma > achter + 90) if donker else (luma < TEKST_ZWART)
+    zwart = inkt.sum(axis=1)
     banden, start = [], None
     for y in range(len(zwart)):
         if zwart[y] > 0 and start is None:
@@ -183,32 +195,64 @@ def vlekken(masker, minzijde):
     return uit
 
 
+def smeltSamen(vakken, speling):
+    """Vlekken die dicht bij elkaar liggen horen bij dezelfde tekening.
+
+    Op het nachtvel steekt niet elk onderdeel even ver boven de ondergrond uit,
+    waardoor een stoel uiteen kan vallen in een zitting en twee poten. Ze staan
+    op het vel ruim uit elkaar, dus wat elkaar bijna raakt hoort bij elkaar.
+    """
+    vakken = [list(v[:4]) + [v[4]] for v in vakken]
+    veranderd = True
+    while veranderd:
+        veranderd = False
+        for i in range(len(vakken)):
+            for j in range(len(vakken) - 1, i, -1):
+                a, b = vakken[i], vakken[j]
+                if (a[0] - speling <= b[2] and b[0] - speling <= a[2]
+                        and a[1] - speling <= b[3] and b[1] - speling <= a[3]):
+                    a[0] = min(a[0], b[0]); a[1] = min(a[1], b[1])
+                    a[2] = max(a[2], b[2]); a[3] = max(a[3], b[3])
+                    a[4] += b[4]
+                    vakken.pop(j)
+                    veranderd = True
+    return [tuple(v) for v in vakken]
+
+
 def schrijf(im, pad):
     tmp = pad + '.tmp.png'
     im.save(tmp)
     os.replace(tmp, pad)
 
 
-def snij(bestand, NAMEN):
+def snij(bestand, NAMEN, submap):
     bron = os.path.join(CONCEPTEN, bestand)
     if not os.path.exists(bron):
         print('bron ontbreekt:', bron)
         return 1
     rgb = np.array(Image.open(bron).convert('RGB')).astype(np.int16)
-    # De ondergrond is bijna wit, maar niet op elk vel even wit.
-    WIT = int(np.median(rgb.reshape(-1, 3).max(axis=1)))
+    # De ondergrond is bijna wit, maar niet op elk vel even wit -- en het
+    # nachtvel staat juist op bijna zwart. De toon van de ondergrond meten we
+    # dus gewoon op, en alles daarna rekent met "hoe ver van de ondergrond af".
+    ACHTER = int(np.median(rgb.reshape(-1, 3).mean(axis=1)))
+    donker = ACHTER < 128
     luma = rgb.mean(axis=2)
 
-    # 1. De bijschriften weg: die regels worden gewoon weer wit.
-    for y0, y1 in tekstregels(luma):
-        rgb[y0:y1 + 1] = WIT
+    # 1. De bijschriften weg: die regels worden gewoon weer ondergrond.
+    for y0, y1 in tekstregels(luma, donker, ACHTER):
+        rgb[y0:y1 + 1] = ACHTER
     luma = rgb.mean(axis=2)
 
-    mn = rgb.min(axis=2)
-    afstand = WIT - mn                      # hoe ver van de ondergrond af
+    # Hoe ver van de ondergrond af. Op wit is dat het donkerste kanaal, op
+    # zwart juist het lichtste.
+    afstand = (rgb.max(axis=2) - ACHTER) if donker else (ACHTER - rgb.min(axis=2))
 
     # 2. De vaste kern van elke tekening, met de gaten erin gevuld.
-    kern = vulGaten(afstand > KERN)
+    # Op het nachtvel liggen de tekeningen dichter bij hun ondergrond dan op
+    # het witte vel, dus daar moet de grens lager liggen -- anders valt een
+    # stoel uiteen in losse latjes.
+    drempel = KERN_DONKER if donker else KERN
+    kern = vulGaten(afstand > drempel)
     tekening = groei(kern, 2)               # de zachte rand hoort er ook bij
 
     # 3. De alfalaag opbouwen.
@@ -224,23 +268,28 @@ def snij(bestand, NAMEN):
     alfa = np.where(tekening, np.where(kern, 1.0, fel), alfa)
     veilig = np.maximum(alfa, 1e-3)[..., None]
     kleur = np.where(tekening[..., None],
-                     np.clip((rgb - WIT * (1 - veilig)) / veilig, 0, 255),
+                     np.clip((rgb - ACHTER * (1 - veilig)) / veilig, 0, 255),
                      kleur)
 
     # De schaduw: alles buiten de tekening dat toch van wit afwijkt. Hoe donker
     # het was, zo diep wordt de schaduw -- en warm donker in plaats van grijs,
     # zodat hij bij het bord past.
-    schaduw = (~tekening) & (luma < WIT - 1)
-    diep = np.clip((WIT - luma) / 255.0, 0, SCHADUW_MAX)
-    alfa = np.where(schaduw, diep, alfa)
-    kleur = np.where(schaduw[..., None], np.array([58.0, 48.0, 38.0]), kleur)
+    # Op het nachtvel is de schaduw donkerder dan de al donkere ondergrond en
+    # levert hij niets op; daar laten we hem weg.
+    if not donker:
+        schaduw = (~tekening) & (luma < ACHTER - 1)
+        diep = np.clip((ACHTER - luma) / 255.0, 0, SCHADUW_MAX)
+        alfa = np.where(schaduw, diep, alfa)
+        kleur = np.where(schaduw[..., None], np.array([58.0, 48.0, 38.0]), kleur)
 
     beeld = np.dstack([kleur, alfa * 255.0]).astype(np.uint8)
     vel = Image.fromarray(beeld, 'RGBA')
 
     # 4. De losse tekeningen opzoeken en wegschrijven. Alleen de kern telt mee
     #    voor het vinden; de schaduw hoort bij de tekening die erboven staat.
-    vakken = vlekken(kern, MIN_ZIJDE)
+    vakken = smeltSamen(vlekken(kern, 8), SPELING)
+    vakken = [v for v in vakken
+              if (v[2] - v[0] + 1) >= MIN_ZIJDE and (v[3] - v[1] + 1) >= MIN_ZIJDE]
     if len(vakken) != len(NAMEN):
         print('let op: %d tekeningen gevonden, %d verwacht' % (len(vakken), len(NAMEN)))
         for v in sorted(vakken, key=lambda v: (v[1], v[0])):
@@ -259,7 +308,9 @@ def snij(bestand, NAMEN):
     for r in regels:
         plat.extend(sorted(r, key=lambda v: v[0]))
 
-    os.makedirs(THEMA, exist_ok=True)
+    doelen = [UIT, THEMA] if not submap else [os.path.join(UIT, submap)]
+    for d in doelen:
+        os.makedirs(d, exist_ok=True)
     heel = np.array(vel)
     for namen, v in zip(NAMEN, plat):
         namen = namen if isinstance(namen, list) else [namen]
@@ -273,27 +324,35 @@ def snij(bestand, NAMEN):
         # buiten de regel die we wit hebben gemaakt. Alles wat losstaat van de
         # tekening en verwaarloosbaar klein is, gaat weg.
         d = np.array(deel)
+        # Op het nachtvel niet opruimen: daar zijn de donkerste onderdelen --
+        # een boomstam, een tafelpoot -- losse stukjes die maar net van de
+        # ondergrond verschillen. Weggooien zou het object slopen.
         stukken = vlekken(d[:, :, 3] > 6, 1)
+        # Op het nachtvel ligt de grens lager: daar zijn de donkerste
+        # onderdelen -- een boomstam, een tafelpoot -- maar net van de
+        # ondergrond te onderscheiden, en die horen er wel bij. Wat overblijft
+        # is korrel in de ondergrond zelf.
+        ondergrens = 0.004 if donker else 0.02
         if stukken:
             grootste = max(s[4] for s in stukken)
             for s in stukken:
-                if s[4] < grootste * 0.02:
+                if s[4] < grootste * ondergrens:
                     d[s[1]:s[3] + 1, s[0]:s[2] + 1, 3] = 0
             deel = Image.fromarray(d, 'RGBA')
         vak = deel.getbbox()
         if vak:
             deel = deel.crop(vak)
         for naam in namen:
-            schrijf(deel, os.path.join(UIT, naam + '.png'))
-            schrijf(deel, os.path.join(THEMA, naam + '.png'))
+            for d in doelen:
+                schrijf(deel, os.path.join(d, naam + '.png'))
         print('  %-24s -> %dx%d' % (', '.join(namen), deel.width, deel.height))
     return 0
 
 
 def main():
-    for bestand, namen in VELLEN:
+    for bestand, namen, submap in VELLEN:
         print(bestand)
-        fout = snij(bestand, namen)
+        fout = snij(bestand, namen, submap)
         if fout:
             return fout
     return 0
