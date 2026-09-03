@@ -1783,6 +1783,12 @@ body.in-game .hb-c.licht{box-shadow:0 0 0 2px var(--goud)}
   color:var(--faint);margin:16px 0 9px}
 .legend-sep:first-child{margin-top:0}
 .legend-row{display:flex;align-items:center;gap:11px;padding:7px 0;font-size:14px}
+/* Twee kolommen: een lijst van acht ruimtes onder elkaar duwt de objecten
+   buiten beeld, terwijl een naam met een staaltje maar een halve regel nodig
+   heeft. */
+.legend-rooms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
+.legend-rooms .legend-row{padding:5px 0;font-size:13px;gap:9px;min-width:0}
+.legend-rooms .legend-row .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .legend-swatch{width:24px;height:24px;border-radius:7px;flex:0 0 auto;position:relative;overflow:hidden;
   border:1px solid rgba(21,26,51,.2);box-shadow:0 1px 3px rgba(21,26,51,.14)}
 .legend-wall{width:26px;height:8px;border-radius:4px;flex:0 0 auto;box-shadow:0 1px 2px rgba(21,26,51,.2)}
@@ -1805,6 +1811,8 @@ body.in-game .hb-c.licht{box-shadow:0 0 0 2px var(--goud)}
 .legend-obj{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;
   padding:0;background:none;border:none;box-shadow:none}
 .legend-obj .legend-icon{width:22px;height:22px;position:relative;z-index:1;color:rgba(21,26,51,.66)}
+.legend-chip.occupiable{background:none;border:2px dashed var(--goud);border-radius:50%;box-shadow:none}
+.legend-chip.occupiable::before,.legend-chip.occupiable::after{content:none}
 /* Laadt de eigen tekening uit assets/art/objects/, dan verdwijnt het lijnpictogram
    zodat de legenda exact hetzelfde beeld toont als het bord. */
 .legend-icon img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
@@ -1879,13 +1887,15 @@ body.in-game #boardViewport,body.in-game #pane-clues,body.in-game #pane-board{ba
 body.in-game #boardViewport::before{display:none}
 /* De binnenschaduw is een rechthoek; op een uitgesneden bord zou die een
    vierkant vak suggereren dat er niet is. Alleen bij een recht bord dus. */
-body.in-game #gridWrap.regular::after{box-shadow:inset 0 0 24px rgba(0,0,0,.16)}
-body.in-game #gridWrap.regular{box-shadow:0 2px 6px rgba(0,0,0,.16),0 18px 40px rgba(0,0,0,.26)}
+/* Geen schaduw meer onder of in het bord: de stijl is plat, en zo'n wolk
+   eronder maakt van een plattegrond een zwevende plaat. */
+body.in-game #gridWrap.regular::after{box-shadow:none}
+body.in-game #gridWrap.regular{box-shadow:none}
 
 /* ── De kop ── */
 body.in-game .game-head{
-  display:grid;grid-template-columns:40px 1fr auto;align-items:center;gap:8px;
-  padding:8px 14px 8px;padding-top:calc(17px + env(safe-area-inset-top));
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;
+  padding:6px 14px 4px;padding-top:calc(10px + env(safe-area-inset-top));
   background:none;border:0;box-shadow:none;
 }
 body.in-game #btnCheck .ic{color:var(--dof)}
@@ -1899,6 +1909,13 @@ body.in-game .kop-check .teller{margin-left:2px;padding:2px 7px;border-radius:99
   color:var(--dof);font:800 11px var(--font-ui);letter-spacing:.02em;line-height:1.3}
 body.in-game #btnCheck.klaar .teller{background:rgba(0,0,0,.14);color:inherit}
 body.in-game .kop-check .teller:empty{display:none}
+/* De klok staat links, meteen naast de terugknop: hij hoort bij het lezen van
+   de bladzijde, niet bij het afronden. Controleer staat rechts bij de andere
+   knoppen. */
+/* De klok staat links, meteen naast de terugknop: hij hoort bij het lezen van
+   de bladzijde, niet bij het afronden. Controleer houdt zijn plek in het
+   midden, want dat is de knop waar je naartoe werkt. */
+.kop-links{display:flex;align-items:center;gap:8px;min-width:0}
 body.in-game .kop-midden{display:flex;align-items:center;justify-content:center;min-width:0}
 body.in-game .kop-check{min-width:0;max-width:100%;overflow:hidden}
 @media (max-width:420px){
@@ -1961,7 +1978,9 @@ body.in-game .tabbar{
   /* Gelijke buitenkolommen: dan staat de schuif altijd precies in het midden,
      ook als de wisselknop van woord verandert. */
   display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:10px;
-  padding:12px 14px calc(15px + env(safe-area-inset-bottom));
+  /* Bovenlangs zo min mogelijk: die ruimte gaat rechtstreeks van het bord af.
+     Onderlangs blijft wat lucht, want daar zit de duim. */
+  padding:4px 14px calc(15px + env(safe-area-inset-bottom));
   background:none;border-top:1px solid var(--lijn-zacht);box-shadow:none;
   backdrop-filter:none;-webkit-backdrop-filter:none;
 }
@@ -2286,6 +2305,10 @@ body.desktop.in-game .clue-card{border:1px solid color-mix(in srgb,var(--pc,var(
 html[data-thema="licht"] body.desktop.in-game .clue-card{border-color:color-mix(in srgb,var(--pc,var(--lijn)) 30%,var(--lijn));background:color-mix(in srgb,var(--pc,var(--lijn)) 9%,var(--kaart))}
 body.desktop.in-game .clue-card.done{background:color-mix(in srgb,var(--pc,var(--lijn)) 5%,var(--kaart-2))}
 body.desktop.in-game .clue-row.victim{border-left-width:1px}
+/* Ook in het spel dezelfde vorm als de andere kaarten: alleen het goud
+   onderscheidt de bordregels, niet de opmaak. */
+body.in-game .clue-card.board{background:var(--goud-zacht);border-color:var(--goud-lijn);
+  border-left:1px solid var(--goud-lijn)}
 /* De bordregels: bovenaan, en duidelijker aanwezig dan de kaartjes eronder. */
 body.desktop.in-game .clue-card.board{padding:10px 14px 11px;gap:4px;background:var(--goud-zacht);border:1px solid var(--goud-lijn);border-left:4px solid var(--goud)}
 body.desktop.in-game .clue-card.board .name{font-size:11.5px}
@@ -2331,9 +2354,9 @@ body.desktop.in-game #modalIntro .sheet p.intro-tekst{margin:0;max-width:30em;fo
 body.desktop.in-game #modalIntro .intro-dossier{display:contents}
 body.desktop.in-game #modalIntro .intro-breuk{display:none}
 body.desktop.in-game #modalIntro .intro-bordregels{grid-column:1;grid-row:3;gap:10px}
-body.desktop.in-game #modalIntro .bordregel{font-size:20px;padding:12px 0;gap:12px}
+body.desktop.in-game #modalIntro .bordregel{font-size:19px;padding:12px 14px;gap:12px}
 body.desktop.in-game #modalIntro .bordregel .ic{width:18px;height:18px;margin-top:5px}
-body.desktop.in-game #modalIntro .bordregel.algemeen{font-size:15px;padding:9px 0 0}
+body.desktop.in-game #modalIntro .bordregel.algemeen{font-size:14px;padding:9px 2px 0}
 /* Niet de volle kolombreedte: op zes kolommen wordt elk portret een derde
    van de bak, en dan drijven ze uit elkaar. Met een bovengrens staan ze als
    groep bij elkaar, met de kolom eromheen als lucht. */
@@ -2580,7 +2603,9 @@ body.in-game .legend-row{border-bottom:1px solid var(--lijn-zacht);padding:9px 0
 body.in-game .legend-row .name{color:var(--inkt);font-family:var(--font-display);font-weight:600;font-size:16px}
 body.in-game .legend-row .badge.rol{border-color:transparent}
 body.in-game .legend-obj .name{color:var(--inkt-2);font-weight:700}
-body.in-game .legend-objgrid{gap:8px 4px}
+body.in-game .legend-objgrid{gap:8px 8px}
+/* Een lange naam mag afbreken in plaats van tegen zijn buurman aan te lopen. */
+body.in-game .legend-obj .name{min-width:0;overflow-wrap:anywhere;line-height:1.15}
 
 /* ── Regels: leesbaar en op orde ── */
 /* Geen raster maar een gewone kolom: het raster gaf de rijen de
@@ -2699,7 +2724,8 @@ body.in-game .clue-card,body.in-game .clue-row{
 }
 /* De kleur van een persoon staat al op de kaart zelf; een streep ernaast
    maakte de lijst een streepjescode. */
-body.in-game .clue-card{border-left:1px solid var(--lijn)}
+body.in-game .clue-card{border-left:1px solid var(--lijn);box-shadow:none}
+body.in-game .clue-card:hover{box-shadow:none}
 body.in-game .clue-card.board{border-left:4px solid var(--goud)}
 body.in-game .clue-card .name{font-family:var(--font-display);font-weight:600;font-size:21px;line-height:1.1;letter-spacing:0;color:var(--inkt)}
 body.in-game .clue-card .txt,body.in-game .clue-row .txt{font-size:15px;line-height:1.42;color:var(--inkt-2);font-weight:500;margin-top:3px}
@@ -2746,7 +2772,9 @@ html[data-thema="licht"] .stap-vel.titelkaart .help-merk-licht{display:block}
   background:var(--kaart-2);border:1px solid var(--lijn)}
 .help-keuze button{flex:1;height:32px;border-radius:999px;color:var(--dof);font:700 12px var(--font-ui);
   letter-spacing:.04em;white-space:nowrap}
-.help-keuze button.aan{background:var(--inkt);color:var(--grond)}
+/* De gekozen kant in het goud van het merk, niet in inkt: een zwarte pil hoort
+   bij een systeemknop, deze schakelaar hoort bij ClueBoard. */
+.help-keuze button.aan{background:var(--goud);color:var(--goud-op)}
 .stap-beeld{flex:0 0 210px;display:flex;align-items:center;justify-content:center;
   background:var(--kaart-2);border:1px solid var(--lijn-zacht);border-radius:16px;padding:12px;margin-bottom:14px;overflow:hidden}
 .stap-beeld[hidden]{display:none}
@@ -2939,15 +2967,19 @@ body.in-game #modalIntro .intro-bordregels:empty + .deelnemers{padding-top:12px}
 .intro-bordregels{display:flex;flex-direction:column;gap:0;text-align:left}
 .bordregel-kop{font:800 11px var(--font-ui);letter-spacing:.22em;text-transform:uppercase;
   color:var(--goud);margin:0 0 10px}
-.bordregel{display:flex;gap:13px;align-items:flex-start;background:none;border:0;border-radius:0;
-  padding:13px 0;font-family:var(--font-display);font-weight:500;font-size:21px;line-height:1.4;
-  color:var(--inkt);letter-spacing:0}
-.bordregel+.bordregel{border-top:1px solid var(--lijn-zacht)}
+/* Dezelfde kaartvorm als de regels verderop in het spel: een zacht gouden vlak
+   met een rand eromheen. Ze stonden hier als losse zinnen op de bladzijde en
+   dat las als iets heel anders dan wat je even later in het dossier ziet. */
+.intro-bordregels{gap:8px}
+.bordregel{display:flex;gap:12px;align-items:flex-start;
+  background:var(--goud-zacht);border:1px solid var(--goud-lijn);border-radius:14px;
+  padding:12px 14px;font-family:var(--font-display);font-weight:500;font-size:18px;
+  line-height:1.4;color:var(--inkt);letter-spacing:0}
 .bordregel .ic{width:19px;height:19px;color:var(--goud);margin-top:5px;flex:0 0 auto}
 .bordregel .ic svg{width:100%;height:100%}
 /* De vaste rolregel is een voetnoot bij de rest, geen eigen regel. */
-.bordregel.algemeen{padding:10px 0 0;color:var(--dof);font-size:16px}
-.bordregel.algemeen+.bordregel.algemeen{border-top:0;padding-top:2px}
+.bordregel.algemeen{background:none;border:0;padding:8px 2px 0;color:var(--dof);font-size:15px}
+.bordregel.algemeen+.bordregel.algemeen{padding-top:2px}
 .bordregel.algemeen .ic{color:var(--dof);width:16px;height:16px;margin-top:4px}
 /* Dezelfde markering als op het bord. */
 /* Rijen van drie en twee om en om. Een doorlopend raster van drie hield bij
@@ -3148,13 +3180,15 @@ body.in-game .clue-card.done::before{background:var(--goud)}
          instellingen rechts. In de stijl van het hoofdmenu; het thema van
          het level kleurt alleen het bord. -->
     <div class="game-head">
-      <button class="kop-knop" id="btnGameBack" aria-label="Terug naar het menu" title="Terug naar het menu"><span class="ic" data-icon="back"></span></button>
+      <div class="kop-links">
+        <button class="kop-knop" id="btnGameBack" aria-label="Terug naar het menu" title="Terug naar het menu"><span class="ic" data-icon="back"></span></button>
+        <div class="timer" id="timer"><span class="ic" data-icon="clock"></span><span id="timerVal">0:00</span></div>
+      </div>
       <div class="kop-titel" id="kopTitel"></div>
       <div class="kop-midden">
         <button class="kop-check" id="btnCheck" title="Controleer je oplossing"><span class="ic" data-icon="check"></span><span class="lbl">Controleer</span><span class="teller" id="kopStand"></span></button>
       </div>
       <div class="kop-rechts">
-        <div class="timer" id="timer"><span class="ic" data-icon="clock"></span><span id="timerVal">0:00</span></div>
         <button class="kop-knop thema-knop" id="btnThema" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
         <button class="kop-knop icon-btn" id="btnSettings" data-sheet="modalSettings" title="Instellingen" aria-label="Instellingen"><span class="ic" data-icon="settings"></span></button>
         <button class="kop-knop icon-btn" id="btnHelpTop" title="Speluitleg" aria-label="Speluitleg"><span class="vraag-ic">?</span></button>
@@ -4497,12 +4531,34 @@ function roomCentroid(room){
   return n?{c:sc/n, r:sr/n}:{c:0,r:0};
 }
 
-function runHasObject(run){
+/* Hoeveel vakjes van dit stuk rij een object dragen. Een naam die daar
+   overheen valt, valt over een tekening heen. */
+function runObjecten(run){
+  let n=0;
   for(let c=run.start;c<run.start+run.len;c++){
     const t=M.tiles.get("c"+c+"r"+run.row);
-    if(t && t.objectId) return true;
+    if(t && t.objectId) n++;
   }
-  return false;
+  return n;
+}
+/* Het beste stuk van deze rij voor een naam van `needed` vakjes breed: het
+   venster met de minste objecten eronder. Geeft de startkolom terug. */
+function besteVenster(run,needed){
+  const len=Math.max(1,Math.min(needed,run.len));
+  let best=run.start, minObj=Infinity;
+  for(let s=run.start;s<=run.start+run.len-len;s++){
+    let n=0;
+    for(let c=s;c<s+len;c++){
+      const t=M.tiles.get("c"+c+"r"+run.row);
+      if(t && t.objectId) n++;
+    }
+    /* Bij gelijke stand wint het venster dat het dichtst bij het midden van
+       de rij ligt; dan blijft een naam netjes gecentreerd staan. */
+    const mid=Math.abs((s+len/2)-(run.start+run.len/2));
+    const score=n*100+mid;
+    if(score<minObj){ minObj=score; best=s; }
+  }
+  return {start:best, len:len, objecten:Math.floor(minObj/100)};
 }
 
 /* Hoe geschikt is deze rij voor de naam? Hoger is beter. */
@@ -4513,7 +4569,11 @@ function scoreRun(run,needed,cen,b){
   const mid=run.start+(run.len-1)/2;
   const span=Math.max(1,b.cols-1);
   s+=2*(1-Math.min(1,(Math.abs(mid-cen.c)+Math.abs(run.row-cen.r))/span));
-  if(!runHasObject(run)) s+=1;
+  /* Vrij van objecten weegt zwaarder dan alles: een naam over een paard heen
+     is erger dan een naam die een rij lager of wat uit het midden staat.
+     Er wordt naar het beste stuk van de rij gekeken, niet naar de hele rij --
+     een lange rij met één ton aan het eind is nog altijd prima. */
+  s+=8-6*Math.min(1,besteVenster(run,needed).objecten);
   s+=Math.min(3,Math.max(0,run.len-needed));
   return s;
 }
@@ -4586,21 +4646,24 @@ function renderRoomLabels(cell){
 
     /* Binnen het bord houden: een naam die breder is dan zijn rij mag
        uitsteken, maar nooit buiten de contour. */
-    const left=(run.start-b.minC)*cell;
+    /* Binnen de gekozen rij op het stuk gaan staan waar de minste objecten
+       onder liggen; anders zou de naam alsnog midden op een tekening vallen. */
+    const venster=besteVenster(run,Math.max(1,needed));
+    const left=(venster.start-b.minC)*cell;
     el.style.left=left+"px";
     el.style.top=((run.row-b.minR)*cell)+"px";
-    el.style.width=(run.len*cell)+"px";
+    el.style.width=(venster.len*cell)+"px";
     el.style.height=cell+"px";
-    el.dataset.tiles=Array.from({length:run.len},(_,i)=>"c"+(run.start+i)+"r"+run.row).join(" ");
+    el.dataset.tiles=Array.from({length:venster.len},(_,i)=>"c"+(venster.start+i)+"r"+run.row).join(" ");
     host.appendChild(el);
 
     const pill=sp.getBoundingClientRect().width;
     let shift=0;
-    if(pill>run.len*cell){
-      const over=(pill-run.len*cell)/2;
+    if(pill>venster.len*cell){
+      const over=(pill-venster.len*cell)/2;
       const boardW=b.cols*cell;
       if(left-over<0) shift=over-left;
-      else if(left+run.len*cell+over>boardW) shift=boardW-(left+run.len*cell+over);
+      else if(left+venster.len*cell+over>boardW) shift=boardW-(left+venster.len*cell+over);
     }
     el.dataset.shiftX=String(Math.round(shift));
   });
@@ -5664,10 +5727,12 @@ function fitBoard(){
      kolommen dragen, maar ook drie halve muren aan elke kant. */
   const zijlucht = MUUR_PROCENT*3/100;      /* in vakjes, links en rechts samen */
   /* Een boom steekt boven zijn vakje uit, en het venster snijdt alles af wat
-     daarbuiten valt. Daarom rekenen we een vakje extra hoogte mee; het bord
-     staat gecentreerd, dus de helft daarvan komt vanzelf bovenaan te liggen. */
-  const kopLucht = 1;
-  const marge = 20;
+     daarbuiten valt. Daarom rekent het bord wat extra hoogte mee; het staat
+     gecentreerd, dus de helft daarvan komt vanzelf bovenaan te liggen. Een heel
+     vakje was te royaal: bij een bord van elf rijen kostte dat bijna een tiende
+     van de hoogte, en op een telefoon eten de balken er al genoeg vanaf. */
+  const kopLucht = 0.55;
+  const marge = 8;
   const w=vp.clientWidth-6, h=vp.clientHeight-marge;
   if(w<=0||h<=0) return;
   /* Op de werkelijke omvang schalen, niet op het opgegeven raster: anders
@@ -6851,7 +6916,7 @@ function legendaHtml(){
   let html='';
 
   if(M.rooms.size){
-    html+='<div class="legend-sep">Ruimtes</div>';
+    html+='<div class="legend-sep">Ruimtes</div><div class="legend-rooms">';
     M.rooms.forEach(room=>{
       const st=roomWallStyle(room);
       const restricted=room.allowedStandings&&room.allowedStandings.length;
@@ -6872,6 +6937,7 @@ function legendaHtml(){
         +'<div class="legend-wall" style="'+wallSwatchCss(st.colors)+'"></div>'
         +'</div>';
     });
+    html+='</div>';
   }
 
   const occupiable=new Map(), blocked=new Map();
@@ -6891,8 +6957,12 @@ function legendaHtml(){
   const objGrid=(map,type)=>{
     let out='<div class="legend-objgrid">';
     map.forEach((info,kind)=>{
+      /* Bezetbaar wordt niet als vakje getoond maar als een gestippelde
+         cirkel: het gaat erom dat je erop mag staan, niet hoe de tegel
+         eronder eruitziet. */
+      const vlak = type==="occupiable" ? "" : objectSurfaceStyle(kind,type);
       out+='<div class="legend-obj">'
-        +'<div class="legend-chip '+type+'" style="'+objectSurfaceStyle(kind,type)+'">'
+        +'<div class="legend-chip '+type+'" style="'+vlak+'">'
         +'<div class="legend-icon" data-obj-kind="'+esc(kind)+'"'
         +' data-obj-w="'+info.w+'" data-obj-h="'+info.h+'">'+objectIcon(kind)+'</div></div>'
         +'<div class="name">'+esc(info.name)+'</div></div>';
@@ -7222,7 +7292,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.79";
+const PLAYER_APP_VERSION="0.9.81";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8143,19 +8213,6 @@ function zetDesktop(){
   /* Op desktop staat de schakelaar Notitie/Plaats in de kop, links van
      Controleer; op de telefoon onderin de voet. Het is hetzelfde element,
      het verhuist alleen. */
-  /* En de klok en Controleer wisselen van plek: op een groot scherm hoort de
-     knop waarmee je afrondt bij de andere knoppen rechts, en de klok bij de
-     titel. Het zijn dezelfde elementen, ze verhuizen alleen. */
-  { const km=$(".kop-midden"), kr=$(".kop-rechts"), klok=$("#timer"), check=$("#btnCheck");
-    if(km&&kr&&klok&&check){
-      if(aan){
-        if(check.parentNode!==kr) kr.insertBefore(check,kr.firstChild);
-        if(klok.parentNode!==km) km.appendChild(klok);
-      } else {
-        if(klok.parentNode!==kr) kr.insertBefore(klok,kr.firstChild);
-        if(check.parentNode!==km) km.appendChild(check);
-      }
-    } }
   { const mb=$("#modeBar");
     if(mb){
       if(aan){ const km=$(".kop-midden"); if(km && mb.parentNode!==km) km.insertBefore(mb,km.firstChild); }
