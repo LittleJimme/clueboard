@@ -3132,6 +3132,12 @@ body.in-game .clue-card.done::before{background:var(--goud)}
         <span class="ic" data-icon="cross"></span><span class="set-tekst"><b>Auto kruisjes</b></span><span class="schuif"><i></i></span>
       </button>
     </div>
+    <!-- Tijdelijk: de proefstand met het bouwmenu voor de ondergrond. -->
+    <div class="set-duo">
+      <button class="set-row schakel" id="rowProef" type="button" aria-pressed="false">
+        <span class="ic" data-icon="settings"></span><span class="set-tekst"><b>Proefstand</b></span><span class="schuif"><i></i></span>
+      </button>
+    </div>
     <div class="set-kop weergave-kop">Weergave</div>
     <div class="thema-keuze" id="themaKeuze" role="group" aria-label="Licht of donker">
       <button type="button" data-thema="licht"><span class="ic" data-icon="sun"></span>Licht</button>
@@ -7905,6 +7911,8 @@ maatSchuif("tegelKier","tegelKierGetal","clueboard:tegelKier",
   const zet=aan=>{
     document.body.classList.toggle("experimenteel",!!aan);
     try{ localStorage.setItem(SLEUTEL,aan?"1":"0"); }catch(e){}
+    const rij=$("#rowProef");
+    if(rij) rij.setAttribute("aria-pressed",aan?"true":"false");
     if(!aan){
       const p=$("#debugPaneel"); if(p) p.hidden=true;
       const k=$("#btnDebug"); if(k) k.setAttribute("aria-expanded","false");
@@ -7912,6 +7920,10 @@ maatSchuif("tegelKier","tegelKierGetal","clueboard:tegelKier",
   };
   let aan=false; try{ aan=localStorage.getItem(SLEUTEL)==="1"; }catch(e){}
   zet(aan);
+  /* De gewone weg ernaartoe: een schakelaar in de instellingen. De vijf tikken
+     op het merk blijven bestaan als snelle weg. */
+  { const rij=$("#rowProef");
+    if(rij) rij.addEventListener("click",()=>zet(!document.body.classList.contains("experimenteel"))); }
   /* Aan het document gehangen en niet aan het merk zelf: het beginscherm wordt
      tijdens het laden opnieuw opgebouwd, en een luisteraar op de oude knoop
      hoort dan niets meer. */
