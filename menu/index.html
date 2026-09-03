@@ -679,8 +679,8 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
   <div class="vel">
     <button class="sluit" data-sluit aria-label="Sluiten">✕</button>
     <div class="uitleg-keuze" id="uitlegKeuze">
-      <button type="button" data-set="regels" class="aan">Spelregels</button>
-      <button type="button" data-set="spelen">Zo speel je</button>
+      <button type="button" data-set="spelen" class="aan">Zo speel je</button>
+      <button type="button" data-set="regels">Spelregels</button>
     </div>
     <div class="stap-teller" id="stapTeller"></div>
     <div class="vel-kop" id="stapKop"></div>
@@ -949,14 +949,16 @@ const UITLEG_SETS = {
       "Klopt alles, dan wijs je daarna de dader aan en is de zaak gesloten.")
   ]
 };
-let uitlegSet="regels";
+let uitlegSet="spelen";
 /* Eén doorlopende reeks: een titelkaart, de spelregels, een titelkaart, en
    hoe je speelt. De keuze bovenin springt naar de titelkaart van dat deel;
    de knop onderaan loopt er gewoon doorheen en sluit aan het eind. */
-const UITLEG_STAPPEN=[{titel:"De Spelregels",set:"regels"}]
-  .concat(UITLEG_SETS.regels.map(s=>Object.assign({set:"regels"},s)))
-  .concat([{titel:"Zo speel je",set:"spelen"}])
-  .concat(UITLEG_SETS.spelen.map(s=>Object.assign({set:"spelen"},s)));
+/* Eerst hoe je speelt, dan pas de regels: wie voor het eerst opent wil
+   weten wat hij moet doen. */
+const UITLEG_STAPPEN=[{titel:"Zo speel je",set:"spelen"}]
+  .concat(UITLEG_SETS.spelen.map(s=>Object.assign({set:"spelen"},s)))
+  .concat([{titel:"De Spelregels",set:"regels"}])
+  .concat(UITLEG_SETS.regels.map(s=>Object.assign({set:"regels"},s)));
 
 let uitlegStap=0;
 function tekenUitleg(){
@@ -989,7 +991,7 @@ $("#uitlegKeuze").addEventListener("click",e=>{
   const b=e.target.closest("button[data-set]");
   if(b) zetUitlegSet(b.dataset.set);
 });
-$("#btnUitleg").addEventListener("click",()=>{ zetUitlegSet("regels"); openModal("#modalUitleg"); });
+$("#btnUitleg").addEventListener("click",()=>{ zetUitlegSet("spelen"); openModal("#modalUitleg"); });
 $("#stapTerug").addEventListener("click",()=>{ if(uitlegStap>0){ uitlegStap--; tekenUitleg(); } });
 $("#stapVerder").addEventListener("click",()=>{
   if(uitlegStap<UITLEG_STAPPEN.length-1){ uitlegStap++; tekenUitleg(); }
@@ -1369,7 +1371,7 @@ laadLevels();
   let gezien=false; try{ gezien=!!localStorage.getItem(SLEUTEL); }catch(e){}
   if(gezien) return;
   try{ localStorage.setItem(SLEUTEL,"1"); }catch(e){}
-  zetUitlegSet("regels"); openModal("#modalUitleg");
+  zetUitlegSet("spelen"); openModal("#modalUitleg");
 })();
 </script>
 </body>

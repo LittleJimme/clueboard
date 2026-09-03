@@ -1211,6 +1211,14 @@ body.radiaal-open .room-label{opacity:0}
   animation:fadeIn .26s ease both;
 }
 #radial .backdrop{animation:fadeIn .26s ease both}
+/* De vervaging van de sluier moet bij elke beeldbeurt opnieuw berekend worden
+   zolang het bord eronder beweegt; op een groot scherm hapert de inzoom
+   daardoor. Op desktop komt de vervaging pas als het bord stilstaat
+   (openTileMenu zet dan .stil), en de sprong zelf is er wat korter. */
+body.desktop #radial .backdrop{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(21,26,51,.6)}
+body.desktop #radial.stil .backdrop{backdrop-filter:blur(2.5px);-webkit-backdrop-filter:blur(2.5px)}
+body.desktop #boardStage{transition-duration:.34s}
+body.desktop #radial .ring{will-change:transform}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 /* Eén beweging voor het hele menu: alle knoppen komen tegelijk op. Per knop
    een eigen vertraging las rommelig en duurde bij tien personen te lang. */
@@ -1256,6 +1264,11 @@ body.in-game .rbtn[data-standing]{border:0;box-shadow:none}
 .rbtn[data-standing="knight"] .face .ch{width:90%;height:90%;left:5%;top:11%}
 .rbtn[data-standing] .lbl,body.in-game .rbtn[data-standing] .lbl{bottom:calc(var(--rbtn,68px)*-.14)}
 .rbtn.victim{transform:translate(-50%,-50%)}
+/* Met een muis hoort een knop te laten merken dat hij onder je staat: een
+   tikje groter, en weer terug zodra je verder gaat. Alleen op desktop; op
+   een telefoon is er geen "eroverheen". */
+body.desktop #radial .rbtn{transition:transform .14s cubic-bezier(.2,.8,.3,1)}
+body.desktop #radial .rbtn:hover:not([disabled]){transform:translate(-50%,-50%) scale(1.09);z-index:2}
 
 /* De vorm om het poppetje verraadt de stand nog voor je de tekst leest: een
    edele krijgt een kroon om zijn cirkel, een ridder een schild, een monnik een
@@ -2777,8 +2790,8 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="sheet stap-vel" id="helpBody">
     <button class="sluit" data-close aria-label="Sluiten">✕</button>
     <div class="help-keuze" id="helpKeuze">
-      <button type="button" data-set="regels" class="aan">Spelregels</button>
-      <button type="button" data-set="spelen">Zo speel je</button>
+      <button type="button" data-set="spelen" class="aan">Zo speel je</button>
+      <button type="button" data-set="regels">Spelregels</button>
     </div>
     <div class="stap-teller" id="helpTeller"></div>
     <h3 id="helpKop">Hoe speel je?</h3>
@@ -4740,11 +4753,17 @@ function openTileMenu(tileId,el){
   /* Meteen mee, in dezelfde beweging als de zoom. Wachten tot het bord stil
      lag voelde als een hapering tussen je tik en het menu. */
   openRadial(center,tileId);
+  /* Pas als het bord stilstaat mag de sluier vervagen (zie CSS .stil). */
+  $("#radial").classList.remove("stil");
+  clearTimeout(radialStilTimer);
+  radialStilTimer=setTimeout(()=>{ const r=$("#radial"); if(r.classList.contains("open")) r.classList.add("stil"); },380);
 }
+let radialStilTimer=null;
 function closeRadial(){
   clearTimeout(radialOpenTimer);
+  clearTimeout(radialStilTimer);
   radialOverride=null;
-  $("#radial").classList.remove("open");
+  $("#radial").classList.remove("open","stil");
   document.body.classList.remove("radiaal-open");
   /* Het objectlabel hoort bij dít vakje; laat het niet staan voor het volgende. */
   { const o=$("#radialObj"); if(o) o.hidden=true; }
@@ -6055,7 +6074,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.44";
+const PLAYER_APP_VERSION="0.9.45";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6665,16 +6684,18 @@ function helpRollen(){
 
 const HELP_SETS={regels:[],spelen:[]};
 let HELP_STAPPEN=[];
-let helpSet="regels";
+let helpSet="spelen";
 let helpStap=0;
-/* Eén doorlopende reeks: een titelkaart, de spelregels, een titelkaart, en
-   hoe je speelt. De keuze bovenin springt naar de titelkaart van dat deel;
-   de knop onderaan loopt er gewoon doorheen en sluit aan het eind. */
+/* Eén doorlopende reeks: een titelkaart, hoe je speelt, een titelkaart, en
+   de spelregels. Eerst de knoppen, dan pas de regels: wie voor het eerst
+   opent wil weten wat hij moet doen. De keuze bovenin springt naar de
+   titelkaart van dat deel; de knop onderaan loopt er gewoon doorheen en
+   sluit aan het eind. */
 function helpReeks(){
-  return [{titel:"De Spelregels",set:"regels"}]
-    .concat(HELP_SETS.regels.map(s=>Object.assign({set:"regels"},s)))
-    .concat([{titel:"Zo speel je",set:"spelen"}])
-    .concat(HELP_SETS.spelen.map(s=>Object.assign({set:"spelen"},s)));
+  return [{titel:"Zo speel je",set:"spelen"}]
+    .concat(HELP_SETS.spelen.map(s=>Object.assign({set:"spelen"},s)))
+    .concat([{titel:"De Spelregels",set:"regels"}])
+    .concat(HELP_SETS.regels.map(s=>Object.assign({set:"regels"},s)));
 }
 function zetHelpSet(k){
   if(!HELP_SETS[k]) return;
@@ -6707,7 +6728,7 @@ function tekenHelp(){
 function vulHelp(){
   const bak = $("#helpBody");
   if (!bak) return;
-  if (bak.dataset.klaar) { zetHelpSet("regels"); return; }
+  if (bak.dataset.klaar) { zetHelpSet("spelen"); return; }
   bak.dataset.klaar = "1";
 
   /* Twee delen: wat de regels zijn, en hoe je het bedient. Elk deel bladert
@@ -6805,7 +6826,7 @@ function vulHelp(){
     "Staat iedereen op zijn plek? Druk bovenin op <b>Controleer</b>.",
     "Klopt alles, dan wijs je daarna de dader aan en is de zaak gesloten.");
 
-  zetHelpSet("regels");
+  zetHelpSet("spelen");
 }
 
 $("#btnHelp").addEventListener("click",()=>{ vulHelp(); openModal("#modalHelp"); });
