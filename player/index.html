@@ -1846,16 +1846,20 @@ body.desktop.in-game .clue-card .memo-merk{right:10px}
 body.desktop.in-game .clue-card .notitie-merk{right:10px}
 body.desktop.in-game .clue-card.geselecteerd,body.desktop.in-game .clue-row.victim.geselecteerd,body.desktop.in-game .clue-card.board.geselecteerd{box-shadow:0 0 0 2px var(--goud),var(--sch1)}
 /* Midden: het bord met daaronder de werkbalk. */
-body.desktop.in-game #pane-board{grid-column:2;grid-row:2;min-height:0;padding:8px 24px 0}
+/* Het bord hoeft niet tot tegen de kolommen te lopen; met lucht eromheen
+   leest het als een bord op tafel in plaats van als een gevuld vlak. */
+body.desktop.in-game #pane-board{grid-column:2;grid-row:2;min-height:0;padding:18px 46px 4px}
 body.desktop.in-game .tabbar{
   grid-column:2;grid-row:3;grid-template-columns:minmax(0,1fr) auto;
   border-top:0;padding:8px 24px 16px;gap:16px;
 }
 body.desktop.in-game .tabbar .view-switch,body.desktop.in-game .voet-links{display:none}
-/* De schakelaar Notitie/Plaats staat in de kop, links van Controleer, en is
-   even hoog als die knop (38px: 3px rand + 32px knop + 3px). */
+/* Geen schakelaar Notitie/Plaats op desktop. Met een muis wissel je niet van
+   stand: klikken zet een notitie, rechtsklikken plaatst, en N/P doet hetzelfde
+   vanaf het toetsenbord. De schakelaar was daarmee een knop die vertelde wat
+   je toch al deed. Op de telefoon blijft hij, want daar is hij de enige weg. */
 body.desktop.in-game .kop-midden{display:flex;align-items:center;justify-content:flex-end;gap:10px}
-body.desktop.in-game .mode-bar{grid-column:auto;justify-content:flex-start;flex:0 0 auto}
+body.desktop.in-game .mode-bar{display:none}
 body.desktop.in-game .mode-switch{flex:0 0 auto;width:auto;padding:3px}
 body.desktop.in-game .mode-switch .ms-thumb{top:3px;bottom:3px}
 body.desktop.in-game .mode-switch button .lbl{display:inline}
@@ -1946,8 +1950,9 @@ body.desktop.in-end #screen-end .uitslag .uitslag-rij.open,body.desktop.in-end #
 body.desktop.in-end #screen-end .uitslag-rij{border-top:1px solid var(--lijn-zacht)}
 body.desktop.in-end #screen-end .uitslag-rij:nth-child(-n+2){border-top:0}
 body.desktop.in-end #screen-end .uitslag-beeld{margin-top:12px}
-/* De knop hoort bij het einde van de lijst, dus rechts eronder. */
-body.desktop.in-end #screen-end .uitslag-voet{max-width:1040px;border-top:0;padding:0 40px 30px;display:flex;justify-content:flex-end}
+/* Op dezelfde plek als het zegel op de titelpagina: linksonder, aan de kant
+   van de kop. */
+body.desktop.in-end #screen-end .uitslag-voet{max-width:1040px;border-top:0;padding:0 40px 30px;display:flex;justify-content:flex-start}
 body.desktop.in-end #screen-end .uitslag-voet .btn{width:auto;min-width:240px}
 
 /* ══════════════════════════════════════════════════════
@@ -6334,7 +6339,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.57";
+const PLAYER_APP_VERSION="0.9.58";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
