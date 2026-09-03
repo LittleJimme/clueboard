@@ -334,6 +334,10 @@ html[data-thema="licht"] .titelblok h1 em::after{
    vier smallere tegels loopt de volgorde weer gewoon door. */
 @media (min-width:1100px) and (min-height:600px){
   main{max-width:1120px}
+  /* De balk hoort dezelfde breedte te houden als de lijst eronder, anders
+     staan het vraagteken en de knoppen links ergens midden in het scherm in
+     plaats van in lijn met de uiterste zaken. */
+  .balk-in{max-width:1120px}
   .titelblok{padding-bottom:16px}
   .level-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px;align-content:start}
   .level-rij{margin:0}
@@ -1122,13 +1126,20 @@ function levelHref(source){
 }
 function maakLevelRij(entry){
   const raw=entry.raw, c=raw.content||{};
-  const demo=raw.demo===true;
+  const demo=raw.demo===true, test=raw.test===true;
   const a=document.createElement("a");
-  a.className="level-rij"+(demo?" demo":"");
+  a.className="level-rij"+(demo||test?" demo":"");
   a.href=levelHref(entry.source);
 
   const nr=document.createElement("span"); nr.className="zaak-nr";
-  if(demo){
+  if(test){
+    /* Een testzaak heeft ook geen nummer: een kolfje, want hier wordt
+       geprobeerd en niet gespeeld. */
+    nr.classList.add("demo-teken"); nr.title="Testzaak";
+    nr.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+      +'<path d="M9.5 3.5h5M10.5 3.5v6.2L5.6 17.4A2 2 0 0 0 7.3 20.5h9.4a2 2 0 0 0 1.7-3.1l-4.9-7.7V3.5"/>'
+      +'<path d="M8 15.5h8"/></svg>';
+  } else if(demo){
     /* De voorbeeldzaak heeft geen nummer: een speelteken op de plek ervan. */
     nr.classList.add("demo-teken"); nr.title="Voorbeeldzaak";
     /* Een opengeslagen boek: dit is de zaak waarin je het spel leert. */
@@ -1209,7 +1220,9 @@ function tekenFilter(){
   /* Open zaken is een eigen knop naast het niveaufilter, en alleen zichtbaar
      zodra er iets is afgerond. */
   const ok=$("#openKnop");
-  if(ok){ ok.hidden=!ietsAfgerond; ok.classList.toggle("aan",alleenOpen); ok.setAttribute("aria-pressed",alleenOpen?"true":"false"); }
+  /* Altijd zichtbaar: als je hem pas krijgt zodra er iets is afgerond, mis je
+     hem juist op het moment dat je hem zoekt. */
+  if(ok){ ok.hidden=false; ok.classList.toggle("aan",alleenOpen); ok.setAttribute("aria-pressed",alleenOpen?"true":"false"); }
   [{n:0,l:"Alle niveaus"}].concat(aanwezig.map(n=>({n,l:"Niveau "+n}))).forEach(c=>{
     const b=document.createElement("button");
     b.type="button"; b.className=(actieveFilter===c.n?"aan":"");
@@ -1332,6 +1345,10 @@ async function laadLevels(){
   alleLevels=nieuwsteVersies(geladen).sort((a,b)=>{
     const da=a.raw.demo===true, db=b.raw.demo===true;
     if(da!==db) return da?-1:1;
+    /* Een testzaak staat vlak achter de voorbeeldzaak en vóór zaak 1: hij
+       hoort bij het uitproberen, niet bij de reeks. */
+    const sa=a.raw.test===true, sb=b.raw.test===true;
+    if(sa!==sb) return sa?-1:1;
     const ga=(levelGraad(a.raw)||{}).graad||99, gb=(levelGraad(b.raw)||{}).graad||99;
     if(ga!==gb) return ga-gb;
     const ta=(((a.raw.content||{}).title)||"").toLowerCase();
@@ -1342,7 +1359,7 @@ async function laadLevels(){
   let teller=0;
   alleLevels.forEach((e)=>{
     const n = e.raw && e.raw.levelNumber;
-    if(e.raw && e.raw.demo===true){ e.nummer=0; return; }
+    if(e.raw && (e.raw.demo===true || e.raw.test===true)){ e.nummer=0; return; }
     teller++;
     e.nummer = (typeof n === "number" && n > 0) ? Math.floor(n) : teller;
   });

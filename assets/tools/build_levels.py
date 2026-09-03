@@ -58,6 +58,7 @@ def samenvatting(raw, bestand):
     for veld in ("levelId", "levelNumber", "levelVersion"):
         if raw.get(veld) is not None: uit[veld] = raw[veld]
     if raw.get("demo") is True: uit["demo"] = True
+    if raw.get("test") is True: uit["test"] = True
     if d.get("graad"):
         uit["difficulty"] = {"graad": d["graad"]}
         if d.get("uitleg"): uit["difficulty"]["uitleg"] = d["uitleg"]
