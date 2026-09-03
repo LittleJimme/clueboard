@@ -1804,21 +1804,21 @@ body.desktop.in-game #pane-clues{grid-column:1;grid-row:2/4;min-height:0;border-
 /* De regels als dossierkaartjes: portret op zijn rolplaat, naamplaatje,
    daaronder de regel. Drie naast elkaar, alles in één oogopslag; alleen bij
    een uitzonderlijk lang dossier verschijnt er een schuifbalk. */
-body.desktop.in-game #cluesList{flex:1;min-height:0;overflow-y:auto;padding:12px 14px 14px;scrollbar-width:thin;
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-content:start;align-items:stretch}
+body.desktop.in-game #cluesList{flex:1;min-height:0;overflow-y:auto;padding:10px 12px 12px;scrollbar-width:thin;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;align-content:start;align-items:stretch}
 body.desktop.in-game #cluesList>*{flex:none}
 /* min-height:auto, niet 0: met een expliciete nul telt de inhoud niet als
    minimum en verdeelt het raster de rijen over de hoogte, waarna de tekst
    onder de kaart uit loopt. */
-body.desktop.in-game .clue-card{flex-direction:column;align-items:center;text-align:center;gap:5px;padding:10px 8px 10px;min-height:auto;border-radius:14px;order:10}
+body.desktop.in-game .clue-card{flex-direction:column;align-items:center;text-align:center;gap:4px;padding:8px 7px;min-height:auto;border-radius:14px;order:10}
 body.desktop.in-game .clue-card .kop{flex:0 0 auto;width:auto;margin:0;padding:0}
 /* flex:0 0 auto, niet flex:1 uit de mobiele opzet: met flex-basis 0 telt de
    tekst niet mee voor de hoogte van de kaart en maakt het raster de rijen te
    laag, waarna de regel onder de kaart uit loopt. */
-body.desktop.in-game .clue-card .lijf{display:flex;flex:0 0 auto;flex-direction:column;align-items:center;gap:6px;padding:0;width:100%;min-width:0}
-body.desktop.in-game .clue-card .lijf .name{font-size:15px;line-height:1.1;text-align:center;padding:3px 9px;border-radius:7px;background:var(--kaart-2);border:1px solid var(--lijn);letter-spacing:.01em;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.desktop.in-game .clue-card .lijf{display:flex;flex:0 0 auto;flex-direction:column;align-items:center;gap:4px;padding:0;width:100%;min-width:0}
+body.desktop.in-game .clue-card .lijf .name{font-size:19px;line-height:1.15;text-align:center;padding:0;border:0;background:none;border-radius:0;letter-spacing:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 body.desktop.in-game .clue-card .lijf .tag{margin:-2px 0 0}
-body.desktop.in-game .clue-card .txt,body.desktop.in-game .clue-row .txt{font-size:12px;line-height:1.35;text-align:center;width:100%}
+body.desktop.in-game .clue-card .txt,body.desktop.in-game .clue-row .txt{font-size:14px;line-height:1.4;text-align:center;width:100%}
 body.desktop.in-game .clue-card .txt .regel{display:block}
 body.desktop.in-game .clue-card .txt .regel+.regel{margin-top:5px;padding-top:5px;border-top:1px dashed var(--lijn)}
 body.desktop.in-game .clue-card .tick{top:8px;left:8px}
@@ -1834,10 +1834,10 @@ body.desktop.in-game .clue-card.board .kop{display:none}
 body.desktop.in-game .clue-card.board .name{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;background:none;border:0;padding:0;color:var(--goud);gap:6px}
 body.desktop.in-game .clue-card.board .txt{text-align:left;font-size:12.5px}
 /* Het slachtoffer als kaartje in het raster. */
-body.desktop.in-game .clue-row.victim{grid-column:auto;order:98;flex-direction:column;align-items:center;text-align:center;gap:5px;padding:10px 8px 10px;margin:0;min-height:auto}
+body.desktop.in-game .clue-row.victim{grid-column:auto;order:98;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:8px 7px;margin:0;min-height:auto}
 body.desktop.in-game .clue-row.victim .av{width:auto}
 body.desktop.in-game .clue-row .who{flex-direction:column;gap:6px;align-items:center}
-body.desktop.in-game .clue-row .who b{font-size:15px;padding:3px 9px;border-radius:7px;background:var(--kaart-2);border:1px solid var(--lijn)}
+body.desktop.in-game .clue-row .who b{font-size:19px;padding:0;border:0;background:none;border-radius:0}
 /* Een kaart is op desktop één klikvlak; de band rechts en het slepen zijn
    telefoongebaren. De gekozen kaart draagt een gouden rand. */
 body.desktop.in-game .clue-card{cursor:pointer;padding-right:14px}
@@ -1867,7 +1867,7 @@ body.desktop.in-game .bord-tip b{color:var(--inkt-2);font-weight:800}
 /* Op een smaller desktopvenster is er minder ruimte naast de schakelaar. */
 @media (max-width:1360px){
   body.desktop.in-game .bord-tip{font-size:11.5px;line-height:1.35}
-  body.desktop.in-game .clue-card .lijf .name,body.desktop.in-game .clue-row .who b{font-size:14px;padding:3px 7px}
+  body.desktop.in-game .clue-card .lijf .name,body.desktop.in-game .clue-row .who b{font-size:17.5px}
 }
 /* De hintknop staat in de werkbalk, niet zwevend over het bord. */
 /* De hintknop hoort bij het bord, dus links onderin die kolom; hij staat er
@@ -5566,7 +5566,7 @@ function personCard(clues,p,done){
      het introscherm, zodat je een persoon overal op dezelfde manier herkent. */
   const kop=document.createElement("div");
   kop.className="kop";
-  kop.appendChild(personPortrait(p,{size:isDesktop()?64:60}));
+  kop.appendChild(personPortrait(p,{size:isDesktop()?58:60}));
   card.appendChild(kop);
 
   /* Naam, rol en regel staan in één tekstkolom naast het portret; niets
@@ -5738,7 +5738,7 @@ function renderClues(){
     row.className="clue-row victim";
     const av=document.createElement("div");
     av.className="av";
-    av.appendChild(personPortrait(victimBoven,{size:isDesktop()?64:60}));
+    av.appendChild(personPortrait(victimBoven,{size:isDesktop()?58:60}));
     row.appendChild(av);
     const body=document.createElement("div");
     body.className="body";
@@ -6321,7 +6321,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.54";
+const PLAYER_APP_VERSION="0.9.55";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
