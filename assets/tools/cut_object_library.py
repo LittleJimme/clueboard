@@ -29,14 +29,14 @@ import numpy as np
 from PIL import Image
 
 WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-BRON = os.path.join(WORTEL, 'assets', 'art', 'concepts',
-                    'clueboard-medieval-object-library-white-spaced-v2.png')
+CONCEPTEN = os.path.join(WORTEL, 'assets', 'art', 'concepts')
 UIT = os.path.join(WORTEL, 'assets', 'art', 'objects')
 THEMA = os.path.join(UIT, 'medieval')
 
-# De achttien tekeningen in leesvolgorde, met de naam waaronder de player ze
-# zoekt. De Nederlandse naam op het vel staat erachter ter herkenning.
-NAMEN = [
+# De tekeningen in leesvolgorde per vel, met de naam waaronder de player ze
+# zoekt. De Nederlandse naam op het vel staat erachter ter herkenning. Staat er
+# een lijstje, dan wordt dezelfde tekening onder meerdere namen weggeschreven.
+BASIS = [
     'chair',        # STOEL
     'barrel',       # TON
     'shelf',        # BOEKENKAST
@@ -44,8 +44,7 @@ NAMEN = [
     'shrub',        # STRUIK
     'table',        # TAFEL
     'horse',        # PAARD
-    ['rubble', 'stones'],   # ROTSBLOKKEN -- de bank kent Puin en Stenen; deze
-                            #   ronde keien passen bij allebei
+    'stones',       # ROTSBLOKKEN
     'crate',        # KIST
     'vase',         # VAAS
     'statue',       # STANDBEELD
@@ -59,7 +58,34 @@ NAMEN = [
     'bed-1x2',      # BED VERTICAAL
 ]
 
-WIT = 254            # de ondergrond van het vel
+METGEZEL = [
+    'easel',        # SCHILDERSEZEL
+    'loom',         # WEEFGETOUW
+    'boar',         # EVERZWIJN
+    'cow',          # KOE
+    'pig',          # VARKEN
+    'wolf',         # WOLF
+    'plant',        # PLANT IN VAAS
+    'box',          # DOOS
+    'sack',         # ZAK
+    'rubble',       # PUIN
+    'house',        # HUISJE
+    'well',         # WATERPUT
+    'bench-2x1',    # BANKJE HORIZONTAAL
+    'boat-2x1',     # BOOT HORIZONTAAL
+    'catapult-2x1',  # KATAPULT HORIZONTAAL
+    'watermill-2x1',  # WATERRAD HORIZONTAAL
+    'bench-1x2',    # BANKJE VERTICAAL
+    'boat-1x2',     # BOOT VERTICAAL
+    'catapult-1x2',  # KATAPULT VERTICAAL
+    'watermill-1x2',  # WATERRAD VERTICAAL
+]
+
+VELLEN = [
+    ('clueboard-medieval-object-library-white-spaced-v2.png', BASIS),
+    ('clueboard-medieval-object-library-companion-white-v2-diagonal-animals.png', METGEZEL),
+]
+
 KERN = 45            # zoveel donkerder dan wit is zeker tekening
 RAND_VAN = 8         # waar de zachte rand van de tekening begint
 RAND_TOT = 34        # en waar hij dekkend is
@@ -163,11 +189,14 @@ def schrijf(im, pad):
     os.replace(tmp, pad)
 
 
-def main():
-    if not os.path.exists(BRON):
-        print('bron ontbreekt:', BRON)
+def snij(bestand, NAMEN):
+    bron = os.path.join(CONCEPTEN, bestand)
+    if not os.path.exists(bron):
+        print('bron ontbreekt:', bron)
         return 1
-    rgb = np.array(Image.open(BRON).convert('RGB')).astype(np.int16)
+    rgb = np.array(Image.open(bron).convert('RGB')).astype(np.int16)
+    # De ondergrond is bijna wit, maar niet op elk vel even wit.
+    WIT = int(np.median(rgb.reshape(-1, 3).max(axis=1)))
     luma = rgb.mean(axis=2)
 
     # 1. De bijschriften weg: die regels worden gewoon weer wit.
@@ -187,10 +216,12 @@ def main():
     kleur = rgb.astype(np.float32)
     alfa = np.zeros((hoogte, breedte), dtype=np.float32)
 
-    # De tekening: dekkend in het midden, zacht aflopend naar de rand, met het
-    # wit uit die randpixels teruggerekend.
+    # De tekening: binnen de kern altijd volledig dekkend, ook waar de kleur
+    # licht is. Anders zouden lichte partijen -- de hooglichten in een boomkruin
+    # bijvoorbeeld -- doorzichtig worden, en dat leest als een gat in het blad.
+    # Alleen de smalle rand rond de kern loopt zacht af naar niets.
     fel = np.clip((afstand - RAND_VAN) / float(RAND_TOT - RAND_VAN), 0, 1)
-    alfa = np.where(tekening, np.maximum(fel, 0.0), alfa)
+    alfa = np.where(tekening, np.where(kern, 1.0, fel), alfa)
     veilig = np.maximum(alfa, 1e-3)[..., None]
     kleur = np.where(tekening[..., None],
                      np.clip((rgb - WIT * (1 - veilig)) / veilig, 0, 255),
@@ -255,7 +286,16 @@ def main():
         for naam in namen:
             schrijf(deel, os.path.join(UIT, naam + '.png'))
             schrijf(deel, os.path.join(THEMA, naam + '.png'))
-        print('%-24s -> %dx%d' % (', '.join(namen), deel.width, deel.height))
+        print('  %-24s -> %dx%d' % (', '.join(namen), deel.width, deel.height))
+    return 0
+
+
+def main():
+    for bestand, namen in VELLEN:
+        print(bestand)
+        fout = snij(bestand, namen)
+        if fout:
+            return fout
     return 0
 
 
