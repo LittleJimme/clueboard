@@ -207,12 +207,18 @@ body{
   -webkit-text-size-adjust:100%;
   background:var(--grond);
 }
-/* Korrel over alle schermen — houdt witruimtes levend, blokkeert geen input */
+/* Korrel over alle schermen — houdt witruimtes levend, blokkeert geen input.
+   Hij ligt boven alles (ook boven vensters en het radiaal menu), zodat het
+   scherm als één oppervlak leest in plaats van als losse lagen. Daarbij een
+   heel zachte donkere rand, die dezelfde dienst doet als de vignettering op
+   een foto: het midden komt naar voren, de randen vallen terug. */
 body::after{
-  content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
-  background-image:var(--grain);background-size:170px 170px;
-  opacity:.05;
+  content:"";position:fixed;inset:0;z-index:400;pointer-events:none;
+  background-image:var(--grain),radial-gradient(125% 95% at 50% 42%,rgba(0,0,0,0) 52%,rgba(0,0,0,.20) 100%);
+  background-size:170px 170px,cover;
+  opacity:.075;
 }
+html[data-thema="licht"] body::after,html[data-thema="licht"] body.in-game::after,html[data-thema="licht"] body.in-end::after{opacity:.055}
 button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 h1,h2,h3,.display{font-family:var(--font-display);letter-spacing:-.01em}
 
@@ -1619,7 +1625,7 @@ body.in-game .hb-c.licht{box-shadow:0 0 0 2px var(--goud)}
    één vlak en het bord ligt er gewoon op. Regels met een id staan hier met
    id, anders wint de skin op gewicht. */
 body.in-game{background:var(--grond)}
-body.in-game::after{opacity:.045}
+body.in-game::after{opacity:.075}
 body.in-game #screen-game{color:var(--inkt)}
 body.in-game #boardViewport,body.in-game #pane-clues,body.in-game #pane-board{background:none}
 body.in-game #boardViewport::before{display:none}
@@ -1655,8 +1661,11 @@ body.in-game .kop-check{min-width:0;max-width:100%;overflow:hidden}
 body.in-game .kop-rechts{display:flex;align-items:center;justify-content:flex-end;gap:8px}
 body.in-game .kop-rechts{display:flex;align-items:center;gap:8px}
 body.in-game .kop-knop .vraag-ic{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:20px;line-height:1}
+/* Alles wat een knop is, is even hoog: de kop, de voet en de schakelaar
+   daartussen. Op de telefoon stonden de knoppen bovenin op 40 en die onderin
+   op 50, en dan lijkt de bovenrand lichter dan de onderrand. */
 body.in-game .kop-knop{
-  width:40px;height:40px;min-width:40px;padding:0;border-radius:999px;
+  width:50px;height:50px;min-width:50px;padding:0;border-radius:999px;
   border:1px solid var(--lijn);background:var(--kaart);color:var(--inkt);
   box-shadow:var(--sch1);display:inline-flex;align-items:center;justify-content:center;
   transition:border-color .15s,transform .12s;
@@ -1673,7 +1682,7 @@ body.in-game .timer{
 }
 body.in-game .timer svg{width:15px;height:15px;color:var(--dof)}
 body.in-game #btnCheck{
-  position:static;transform:none;width:auto;max-width:none;height:38px;margin:0;
+  position:static;transform:none;width:auto;max-width:none;height:50px;margin:0;
   display:inline-flex;align-items:center;gap:7px;padding:0 20px 0 14px;border-radius:999px;
   background:var(--kaart);color:var(--inkt);border:1px solid var(--lijn);
   font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:0;
@@ -1803,8 +1812,12 @@ body.desktop.in-game #pane-clues{grid-column:1;grid-row:2/4;min-height:0;border-
 /* De regels als dossierkaartjes: portret op zijn rolplaat, naamplaatje,
    daaronder de regel. Drie naast elkaar, alles in één oogopslag; alleen bij
    een uitzonderlijk lang dossier verschijnt er een schuifbalk. */
+/* Twee kolommen leest rustiger en geeft de regels meer breedte. Past het
+   dossier daarmee niet in één beeld, dan gaat het alsnog naar drie: liever
+   iets smaller dan scrollen (zie pasDossierKolommen). */
 body.desktop.in-game #cluesList{flex:1;min-height:0;overflow-y:auto;padding:10px 12px 12px;scrollbar-width:thin;
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;align-content:start;align-items:stretch}
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;align-content:start;align-items:stretch}
+body.desktop.in-game.dossier-breed #cluesList{grid-template-columns:repeat(3,minmax(0,1fr))}
 body.desktop.in-game #cluesList>*{flex:none}
 /* min-height:auto, niet 0: met een expliciete nul telt de inhoud niet als
    minimum en verdeelt het raster de rijen over de hoogte, waarna de tekst
@@ -1858,6 +1871,9 @@ body.desktop.in-game .tabbar .view-switch,body.desktop.in-game .voet-links{displ
    stand: klikken zet een notitie, rechtsklikken plaatst, en N/P doet hetzelfde
    vanaf het toetsenbord. De schakelaar was daarmee een knop die vertelde wat
    je toch al deed. Op de telefoon blijft hij, want daar is hij de enige weg. */
+/* Op desktop hoort de kop juist compact: daar staat de voet niet vol knoppen. */
+body.desktop.in-game .kop-knop{width:40px;height:40px;min-width:40px}
+body.desktop.in-game #btnCheck{height:38px}
 body.desktop.in-game .kop-midden{display:flex;align-items:center;justify-content:flex-end;gap:10px}
 body.desktop.in-game .mode-bar{display:none}
 body.desktop.in-game .mode-switch{flex:0 0 auto;width:auto;padding:3px}
@@ -1950,9 +1966,10 @@ body.desktop.in-end #screen-end .uitslag .uitslag-rij.open,body.desktop.in-end #
 body.desktop.in-end #screen-end .uitslag-rij{border-top:1px solid var(--lijn-zacht)}
 body.desktop.in-end #screen-end .uitslag-rij:nth-child(-n+2){border-top:0}
 body.desktop.in-end #screen-end .uitslag-beeld{margin-top:12px}
-/* Op dezelfde plek als het zegel op de titelpagina: linksonder, aan de kant
-   van de kop. */
-body.desktop.in-end #screen-end .uitslag-voet{max-width:1040px;border-top:0;padding:0 40px 30px;display:flex;justify-content:flex-start}
+/* De knop hoort bij de uitslag zelf, dus vlak onder de cijfers in de
+   linkerkolom -- niet onderaan de bladzijde. zetDesktop schuift hem daarvoor
+   het raster in. */
+body.desktop.in-end #screen-end .uitslag-voet{max-width:none;border-top:0;padding:22px 0 0;display:flex;justify-content:flex-start;background:none;margin:0;width:auto}
 body.desktop.in-end #screen-end .uitslag-voet .btn{width:auto;min-width:240px}
 
 /* ══════════════════════════════════════════════════════
@@ -1960,7 +1977,12 @@ body.desktop.in-end #screen-end .uitslag-voet .btn{width:auto;min-width:240px}
    ══════════════════════════════════════════════════════ */
 /* De rechterkolom is een kantlijn naast het bord: smaller, en alles erin
    leunt tegen de rechterrand. Het bord krijgt de ruimte die vrijkomt. */
-body.desktop.in-game #screen-game{grid-template-columns:minmax(420px,.9fr) minmax(380px,1.5fr) minmax(236px,268px)}
+/* Twee kaarten naast elkaar, even breed als toen het er drie waren: dan moet
+   de kolom zelf smaller. Past het dossier zo niet in één beeld, dan krijgt de
+   kolom zijn oude breedte terug en staan er weer drie naast elkaar
+   (body.dossier-breed, gezet door pasDossierKolommen). */
+body.desktop.in-game #screen-game{grid-template-columns:minmax(340px,.68fr) minmax(380px,1.7fr) minmax(236px,268px)}
+body.desktop.in-game.dossier-breed #screen-game{grid-template-columns:minmax(420px,.9fr) minmax(380px,1.5fr) minmax(236px,268px)}
 body.desktop.in-game #detailBody{padding:14px 18px 24px 14px;text-align:right}
 body.desktop.in-game #detailBody .detail-kop,body.desktop.in-game #detailBody .legend-sep{text-align:right}
 body.desktop.in-game #detailBody .legend-sep{margin:14px 0 6px}
@@ -2018,12 +2040,15 @@ body.desktop.in-game .clue-card.board .txt .regel.algemeen{font-size:12.5px}
 /* Instellingen: geen venstertje midden op het scherm, maar een lade die
    uit de kop over de linkerkolom naar beneden klapt. De breedte van die
    kolom (--links-b) zet toggleSheet bij het openen. */
-/* Minstens 380px: smaller past het instellingenraster niet, en dan mag de
-   lade een stuk over het bord vallen. */
-body.desktop.in-game .sheet-modal.van-boven{left:auto;right:0;width:max(var(--rechts-b,268px),380px);top:var(--kop-h,64px);bottom:0;align-items:flex-start;padding:0}
-body.desktop.in-game .sheet-modal.van-boven .sheet{overflow-x:hidden}
+/* De instellingen klappen uit onder hun eigen knop, net als de legenda
+   rechtsonder: een paneeltje dat bij de knop hoort, geen lade die over het
+   scherm schuift. */
+body.desktop.in-game .sheet-modal.van-boven{left:auto;right:14px;top:calc(var(--kop-h,64px) - 4px);bottom:auto;width:min(392px,calc(100vw - 28px));align-items:flex-start;padding:0}
 body.desktop.in-game .sheet-modal.van-boven .backdrop{background:transparent}
-body.desktop.in-game .sheet-modal.van-boven .sheet{max-width:none;width:100%;max-height:100%;border-radius:0;border:0;border-left:1px solid var(--lijn-zacht);box-shadow:-10px 0 34px rgba(0,0,0,.28);padding:12px 16px 22px;transform:translateY(-100%)}
+body.desktop.in-game .sheet-modal.van-boven .sheet{
+  max-width:none;width:100%;max-height:min(74vh,640px);overflow-x:hidden;
+  border-radius:16px;border:1px solid var(--lijn);box-shadow:var(--sch2);
+  padding:12px 16px 16px;transform:none;animation:legendaPop .18s cubic-bezier(.2,.9,.3,1) both}
 body.desktop.in-game .sheet-modal.van-boven.open .sheet{transform:none}
 
 /* Het introvel als één pagina: links de zaak (merk, titel, zwaarte, intro
@@ -2122,6 +2147,18 @@ body.in-game .set-row.danger{color:#E58472;border-color:rgba(229,132,114,.35)}
 body.in-game .schuif{background:var(--lijn)}
 body.in-game .set-row[aria-pressed="true"] .schuif{background:var(--goud)}
 body.in-game .schuif i{background:var(--kaart)}
+/* Licht of donker hoort niet weggestopt in de instellingen: het is iets wat
+   je onderweg even omzet. Op desktop staat het als schijfje rechtsboven, naast
+   de instellingen. Op de telefoon is de kop daar te smal voor; daar blijft de
+   keuze in het instellingenvel staan. */
+.kop-knop.thema-knop,body.in-game .kop-knop.thema-knop{display:none}
+body.desktop.in-game .kop-knop.thema-knop{display:inline-flex}
+body.desktop.in-game .kop-knop.thema-knop i{
+  width:16px;height:16px;border-radius:50%;display:block;
+  background:linear-gradient(135deg,var(--goud) 50%,var(--inkt) 50%);
+  box-shadow:0 0 0 1px rgba(0,0,0,.12) inset;
+}
+body.desktop.in-game .set-kop.weergave-kop,body.desktop.in-game #themaKeuze{display:none}
 body.in-game .thema-keuze{display:flex;gap:4px;padding:3px;border-radius:999px;background:var(--kaart-2);border:1px solid var(--lijn);margin-bottom:6px}
 body.in-game .thema-keuze button{
   flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;
@@ -2429,7 +2466,7 @@ body.laden .screen,body.laden .modal{visibility:hidden}
 body.in-game #screen-game.active{animation:schermIn .2s ease-out both}
 @keyframes schermIn{from{opacity:0}to{opacity:1}}
 body.in-end{background:var(--grond);color:var(--inkt)}
-body.in-end::after{opacity:.045}
+body.in-end::after{opacity:.075}
 /* Titel en zwaarte staan vast; de rest schuift eronder door, met een zacht
    verloop aan de bovenkant in plaats van een harde snede. */
 
@@ -2787,6 +2824,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       </div>
       <div class="kop-rechts">
         <div class="timer" id="timer"><span class="ic" data-icon="clock"></span><span id="timerVal">0:00</span></div>
+        <button class="kop-knop thema-knop" id="btnThema" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
         <button class="kop-knop icon-btn" id="btnSettings" data-sheet="modalSettings" title="Instellingen" aria-label="Instellingen"><span class="ic" data-icon="settings"></span></button>
         <button class="kop-knop icon-btn" id="btnHelpTop" title="Speluitleg" aria-label="Speluitleg"><span class="vraag-ic">?</span></button>
       </div>
@@ -2897,7 +2935,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
         <span class="ic" data-icon="cross"></span><span class="set-tekst"><b>Auto kruisjes</b></span><span class="schuif"><i></i></span>
       </button>
     </div>
-    <div class="set-kop">Weergave</div>
+    <div class="set-kop weergave-kop">Weergave</div>
     <div class="thema-keuze" id="themaKeuze" role="group" aria-label="Licht of donker">
       <button type="button" data-thema="licht"><span class="ic" data-icon="sun"></span>Licht</button>
       <button type="button" data-thema="donker"><span class="ic" data-icon="moon"></span>Donker</button>
@@ -5772,6 +5810,29 @@ function renderClues(){
     if(isDesktop() && detailSel && detailSel.p && detailSel.p.id===victimBoven.id) row.classList.add("geselecteerd");
     list.appendChild(row);
   }
+  pasDossierKolommen();
+}
+
+/* Twee kolommen als het kan, drie als het moet. We zetten hem eerst op twee
+   en kijken dan of alles in beeld past; zo niet, dan is drie het kleinste
+   kwaad -- het dossier hoort in één oogopslag te lezen te zijn. */
+function pasDossierKolommen(){
+  const l=$("#cluesList");
+  if(!l) return;
+  if(!isDesktop()){ document.body.classList.remove("dossier-breed"); return; }
+  /* Nog geen indeling (het scherm staat er wel maar is nog niet gemeten):
+     dan zegt een meting niets en wachten we op de volgende ronde. */
+  if(l.clientHeight<120) return;
+  const was=document.body.classList.contains("dossier-breed");
+  document.body.classList.remove("dossier-breed");
+  /* Meteen meten, niet in een beeldbeurt: het lezen van scrollHeight dwingt
+     de indeling zelf af, en met requestAnimationFrame gebeurde er niets
+     zolang de pagina niet tekende (achtergrondtabblad). Past het niet, dan
+     krijgt de kolom zijn brede maat terug en hertekent het bord zich naar de
+     ruimte die overblijft. */
+  const past=l.scrollHeight<=l.clientHeight+1;
+  if(!past) document.body.classList.add("dossier-breed");
+  if(past===was) setTimeout(fitBoard,0);
 }
 
 /* Eigen aantekeningen per persoon, bewaard per level. Ze helpen bij het
@@ -6339,7 +6400,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.58";
+const PLAYER_APP_VERSION="0.9.62";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -6852,7 +6913,7 @@ function sluitIntro(){
   introWenkStop();
   closeModal($("#modalIntro"));
   if(!revealed) startTimer();
-  setTimeout(fitBoard,0);
+  setTimeout(()=>{ pasDossierKolommen(); fitBoard(); },0);
 }
 
 function startLevel(raw){
@@ -7259,6 +7320,13 @@ function zetDesktop(){
       if(aan){ const km=$(".kop-midden"); if(km && mb.parentNode!==km) km.insertBefore(mb,$("#btnCheck")); }
       else { const tb=$(".tabbar"); if(tb && mb.parentNode!==tb) tb.insertBefore(mb,$("#bordTip")); }
     } }
+  /* De knop van de uitslag hoort op desktop in de linkerkolom, onder de
+     cijfers; op de telefoon blijft hij de vaste voet onder de lijst. */
+  { const vt=$(".uitslag-voet"), uit=$("#screen-end .uitslag"), scherm=$("#screen-end");
+    if(vt&&uit&&scherm){
+      if(aan){ if(vt.parentNode!==uit) uit.appendChild(vt); }
+      else { if(vt.parentNode!==scherm) scherm.appendChild(vt); }
+    } }
   if(!aan){ const lp=$("#legendaPop"); if(lp) lp.hidden=true; }
   if(!M) return;
   if(aan){
@@ -7375,6 +7443,8 @@ window.addEventListener("orientationchange",()=>{ if(M){ setTimeout(fitBoard,250
 
 hydrateIcons();
 $$("#themaKeuze [data-thema]").forEach(b=>b.addEventListener("click",()=>zetThema(b.dataset.thema)));
+{ const bt=$("#btnThema");
+  if(bt) bt.addEventListener("click",()=>zetThema(document.documentElement.dataset.thema==="licht"?"donker":"licht")); }
 (function(){ let t="donker"; try{ t=localStorage.getItem(THEMA_SLEUTEL)||"donker"; }catch(e){} zetThema(t); })();
 { const v=$("#playerVersieTekst"); if(v) v.textContent=String(PLAYER_APP_VERSION); }
 /* Altijd in beeld, heel licht: op een schermafdruk van een speler is dan
