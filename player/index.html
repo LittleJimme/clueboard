@@ -1903,7 +1903,7 @@ body.in-game #gridWrap.regular{box-shadow:none}
 /* ── De kop ── */
 body.in-game .game-head{
   display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:8px;
-  padding:6px 14px 4px;padding-top:calc(10px + env(safe-area-inset-top));
+  padding:2px 14px 2px;padding-top:calc(2px + env(safe-area-inset-top));
   background:none;border:0;box-shadow:none;
 }
 body.in-game #btnCheck .ic{color:var(--dof)}
@@ -1928,15 +1928,18 @@ body.in-game .kop-midden{display:flex;align-items:center;justify-content:center;
 body.in-game #btnCheck{border-radius:14px}
 @media (max-width:520px){
   body.in-game:not(.desktop) #btnCheck{background:none;border:0;box-shadow:none;padding:0 2px;gap:5px}
-  body.in-game:not(.desktop) #btnCheck .lbl{display:none}
-  body.in-game:not(.desktop) #btnCheck.klaar{background:none;box-shadow:none}
-  body.in-game:not(.desktop) #btnCheck.klaar .ic{color:var(--goud)}
+  body.in-game:not(.desktop) #btnCheck:not(.klaar) .lbl{display:none}
+  body.in-game:not(.desktop) #btnCheck.klaar{
+    background:none;box-shadow:none;border:1.5px solid var(--goud);
+    height:40px;padding:0 13px 0 11px;gap:7px;border-radius:999px;color:var(--goud-diep)}
+  body.in-game:not(.desktop) #btnCheck.klaar .lbl{display:inline;font-size:16px}
+  body.in-game:not(.desktop) #btnCheck.klaar .ic{color:var(--goud-diep)}
   body.in-game:not(.desktop) #btnCheck.klaar .teller{background:var(--goud);color:var(--goud-op)}
 }
 body.in-game .kop-check{min-width:0;max-width:100%;overflow:hidden}
 @media (max-width:420px){
   body.in-game .game-head{gap:6px}
-  body.in-game .game-head #btnCheck .lbl{display:none}
+  body.in-game .game-head #btnCheck:not(.klaar) .lbl{display:none}
   body.in-game .timer .ic{display:none}
 }
 body.in-game .kop-rechts{display:flex;align-items:center;justify-content:flex-end;gap:8px}
@@ -2001,7 +2004,7 @@ body.in-game .tabbar{
   display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:10px;
   /* Bovenlangs zo min mogelijk: die ruimte gaat rechtstreeks van het bord af.
      Onderlangs blijft wat lucht, want daar zit de duim. */
-  padding:4px 14px calc(15px + env(safe-area-inset-bottom));
+  padding:0 14px calc(15px + env(safe-area-inset-bottom));
   background:none;border-top:1px solid var(--lijn-zacht);box-shadow:none;
   backdrop-filter:none;-webkit-backdrop-filter:none;
 }
@@ -5837,7 +5840,7 @@ function fitBoard(){
      vakje was te royaal: bij een bord van elf rijen kostte dat bijna een tiende
      van de hoogte, en op een telefoon eten de balken er al genoeg vanaf. */
   const kopLucht = 0.55;
-  const marge = 8;
+  const marge = 4;
   const w=vp.clientWidth-6, h=vp.clientHeight-marge;
   if(w<=0||h<=0) return;
   /* Op de werkelijke omvang schalen, niet op het opgegeven raster: anders
@@ -7434,7 +7437,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.85";
+const PLAYER_APP_VERSION="0.9.86";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
