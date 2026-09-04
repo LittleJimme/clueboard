@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-04T01:41:01",
+  "gemaakt": "2026-09-04T11:26:23",
   "levels": [
     {
       "file": "1v4 Herberg de Doortocht.json",
@@ -143,6 +143,27 @@
       "levelId": "lvl-mtkjs6belwg3k",
       "levelNumber": 6,
       "levelVersion": 5,
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "7v1 De Troonzaal.json",
+      "content": {
+        "title": "De Troonzaal"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 5,
+          "rows": 7
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtmqoqlw2ucfc",
+      "levelNumber": 7,
+      "levelVersion": 1,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
