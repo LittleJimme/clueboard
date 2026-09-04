@@ -3,8 +3,12 @@
 
 Uit Photoshop komen twee bestanden per object, precies over elkaar geplaatst:
 
-  <Naam>.png          het object, met alpha
+  <Naam>.png          het object bij dag, met alpha
+  <Naam>_donker.png   hetzelfde object bij nacht, koeler en gedempter
   <Naam> Schaduw.png  hetzelfde beeld plat op wit, met de schaduw erin
+
+De schaduw is er maar een: die vermenigvuldigt met de vloer en klopt dus in
+beide standen vanzelf.
 
 De bank krijgt de schaduw niet als wit vlak maar als laag met dekking; waarom
 staat verderop bij schaduwlaag().
@@ -35,21 +39,22 @@ OBJ    = os.path.join(WORTEL, "assets", "art", "objects")
 GROEI  = 2      # pixels dat de alpha uitzet voor het uitrekenen
 DREMPEL = 250   # hierboven is het papier, geen schaduw
 
-# Photoshop-naam -> naam in de bank. De tweede kolom is het schaduwbestand,
-# want die zijn niet allemaal gelijk gespeld.
+# Photoshop-naam -> naam in de bank. De tweede en derde kolom zijn het
+# schaduw- en het nachtbestand, want die zijn niet allemaal gelijk gespeld.
+# Staat er None, dan is er geen nachtversie en blijft die van overdag staan.
 LICHTING = [
-    ("Beeld",     "Beeld Schaduw",             ["statue"]),
-    ("Boom",      "Boom Schaduw",              ["tree"]),
-    ("Kast",      "Kast Schaduw Multiply",     ["shelf"]),
-    ("Kist",      "Kist Schaduw",              ["crate"]),
-    ("Modder",    "Moder Schaduw",             ["puddle"]),
-    ("Paard",     "Paard Schaduw",             ["horse"]),
-    ("Stenen",    "Stenen Schaduw Multiply",   ["stones"]),
-    ("Stoel",     "Stoel Schaduw",             ["chair"]),
-    ("Struik",    "Struik Schaduw",            ["shrub"]),
-    ("Tafel 1x1", "Tafel 1x1 Schaduw",         ["table"]),
-    ("Vaas",      "Vaas Schaduw",              ["vase"]),
-    ("Wapenrek",  "WapenrekSchaduw",           ["weapon-chest", "weapon-rack"]),
+    ("Beeld",     "Beeld Schaduw",             "Beeld_donker",     ["statue"]),
+    ("Boom",      "Boom Schaduw",              "Boom_Donker",      ["tree"]),
+    ("Kast",      "Kast Schaduw Multiply",     "Kast_donker",      ["shelf"]),
+    ("Kist",      "Kist Schaduw",              "Kist_donker",      ["crate"]),
+    ("Modder",    "Moder Schaduw",             None,               ["puddle"]),
+    ("Paard",     "Paard Schaduw",             "Paard_donker",     ["horse"]),
+    ("Stenen",    "Stenen Schaduw Multiply",   "Stenen_donker",    ["stones"]),
+    ("Stoel",     "Stoel Schaduw",             "Stoel_donker",     ["chair"]),
+    ("Struik",    "Struik Schaduw",            "Struik_donker",    ["shrub"]),
+    ("Tafel 1x1", "Tafel 1x1 Schaduw",         "Tafel 1x1_donker", ["table"]),
+    ("Vaas",      "Vaas Schaduw",              "Vaas_donker",      ["vase"]),
+    ("Wapenrek",  "WapenrekSchaduw",           "Wapenrek_donker",  ["weapon-chest", "weapon-rack"]),
 ]
 
 def schrijf(im, pad):
@@ -100,13 +105,20 @@ def main():
     if not os.path.isdir(BRON):
         print("map ontbreekt:", BRON); return 1
     totaal = 0
-    for naam, schaduwnaam, slugs in LICHTING:
+    for naam, schaduwnaam, nachtnaam, slugs in LICHTING:
         o = os.path.join(BRON, naam + ".png")
         p = os.path.join(BRON, schaduwnaam + ".png")
         if not (os.path.exists(o) and os.path.exists(p)):
             print("OVERGESLAGEN %-12s (bestand ontbreekt)" % naam); continue
         obj = Image.open(o).convert("RGBA")
         sch = schaduwlaag(o, p)
+        nacht = None
+        if nachtnaam:
+            n = os.path.join(BRON, nachtnaam + ".png")
+            if os.path.exists(n):
+                nacht = Image.open(n).convert("RGBA")
+            else:
+                print("   geen nachtversie voor %s" % naam)
         for slug in slugs:
             # De themamap wint van de gedeelde map, dus die moet ook mee,
             # anders blijft de oude tekening staan.
@@ -114,9 +126,13 @@ def main():
                          os.path.join(OBJ, "medieval", slug + ".png")):
                 schrijf(obj, doel)
             schrijf(sch, os.path.join(OBJ, "shadows", slug + ".png"))
+            if nacht is not None:
+                schrijf(nacht, os.path.join(OBJ, "dark", slug + ".png"))
             kb = os.path.getsize(os.path.join(OBJ, "shadows", slug + ".png")) // 1024
-            print("%-14s -> %-14s object %3d kB  schaduw %3d kB" % (
-                naam, slug, os.path.getsize(os.path.join(OBJ, slug + ".png")) // 1024, kb))
+            nkb = (os.path.getsize(os.path.join(OBJ, "dark", slug + ".png")) // 1024
+                   if nacht is not None else 0)
+            print("%-14s -> %-14s dag %3d kB  nacht %3d kB  schaduw %3d kB" % (
+                naam, slug, os.path.getsize(os.path.join(OBJ, slug + ".png")) // 1024, nkb, kb))
             totaal += 1
     print("%d tekeningen in de bank" % totaal)
     return 0
