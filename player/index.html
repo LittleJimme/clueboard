@@ -1131,11 +1131,17 @@ body.hide-objsurf .tile .objsurf{display:none}
 /* Het kleed is een vloerkleed en geen vlag: gedempte kleuren, in dezelfde
    aardse familie als de rest van het bord. Fel rood en diep marineblauw
    trokken alle aandacht naar zich toe terwijl het juist ondergrond is. */
-/* Twee kleuren, overgenomen uit het stijlvel. Alleen deze twee regels bepalen
-   hoe een kleed eruitziet; een andere kleur is dus één hex verderop. */
+/* Twee kleuren; alleen deze twee regels bepalen hoe een kleed eruitziet, dus
+   een andere kleur is één hex verderop. Het roze uit het stijlvel botste met
+   het rood van een gekruiste tegel -- op een klein scherm waren ze nauwelijks
+   uit elkaar te houden. Oker staat ver genoeg van dat rood af en hoort bij de
+   gouden familie van het bord, maar is duidelijk donkerder en verzadigder dan
+   de vloer van een edele ruimte (die is een lichte tan), dus een kleed leest
+   niet als een voorbehouden gebied. De lijn is juist lichter dan het veld,
+   zoals in het stijlvel: op een gouden veld zou een gouden lijn wegvallen. */
 #grid{
-  --mat-veld:#D28281;   /* het kleed zelf */
-  --mat-kader:#D7AD77;  /* de dunne gouden lijn er net binnenin */
+  --mat-veld:#C79B3C;   /* het kleed zelf */
+  --mat-kader:#F2E3B8;  /* de dunne lichte lijn er net binnenin */
 }
 /* Boven de vloertextuur van de ruimte en onder alles wat erop staat. De
    volgorde is: tegel, textuur van de tegel, kleed, textuur van het kleed,
@@ -7665,7 +7671,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.92";
+const PLAYER_APP_VERSION="0.9.93";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
