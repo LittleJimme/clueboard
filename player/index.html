@@ -610,9 +610,10 @@ body.vloer-v3 .tile:not(.out-of-bounds)::before{
   /* Drie lagen in één kleur: het materiaal, het microverschil van de ruimte
      en -- als er niemand kan staan -- een tint donkerder. Geen laagje
      eroverheen, want dan zou de tegel zijn eigen kleur verliezen. */
-  background-color:color-mix(in srgb,var(--blok,#000000) var(--blok-deel,0%),
+  background-color:color-mix(in srgb,var(--kruis-mix,#000000) var(--kruis-deel,0%),
+                   color-mix(in srgb,var(--blok,#000000) var(--blok-deel,0%),
                    color-mix(in srgb,var(--edel-mix,#000000) var(--edel-deel,0%),
-                   color-mix(in srgb,var(--kamer-mix,#000000) var(--kamer-deel,0%),var(--vloer-basis,var(--vl-onbekend)))));
+                   color-mix(in srgb,var(--kamer-mix,#000000) var(--kamer-deel,0%),var(--vloer-basis,var(--vl-onbekend))))));
   background-image:none;opacity:1;
   /* Het licht komt uit linksboven: de muur boven en links werpt zijn schaduw
      de ruimte in, de muur onder en rechts werpt hem juist naar buiten. Eén
@@ -635,6 +636,11 @@ body.vloer-v3 .tile[data-floor="water"]{--vloer-basis:var(--vl-water)}
 /* De schaduw die de muren de ruimte in werpen; alleen boven en links. */
 body.vloer-v3 .tile{--sh-x:0px;--sh-y:0px}
 body.vloer-v3 .tile.blocked{--blok-deel:11%}
+/* Een kruisje betekent "hier kan hij niet staan"; dat mag je ook aan de tegel
+   zien. Het rood zit in de kleur van de vloer zelf, dus het ligt onder het
+   kleed, onder het object en onder het kruisje -- het kleurt de grond, het legt
+   er geen waas overheen. */
+body.vloer-v3 .tile.heeft-kruis{--kruis-mix:var(--kruis-rood,#DC4A46);--kruis-deel:calc(var(--kruis-pct,22) * 1%)}
 body.vloer-v3 .tile .blockmask{display:none}
 /* Even lang als de slagschaduw buiten het bord (zie tekenBordSchaduw), zodat
    binnen en buiten hetzelfde licht laten zien. */
@@ -697,7 +703,6 @@ body.vloer-v3.overlays .tile[data-floor]:not(.out-of-bounds)::after{
 body.vloer-v3.overlays.tussen-muren .tile[data-floor]:not(.out-of-bounds)::after{
   inset:var(--mt) var(--mr) var(--mb) var(--ml);
 }
-body.vloer-v3.overlays .tile.heeft-mat::after{content:none}
 body.vloer-v3.overlays .tile[data-floor="stone"]{--ov:url("../assets/art/overlays/stone.png")}
 body.vloer-v3.overlays .tile[data-floor="concrete"]{--ov:url("../assets/art/overlays/concrete.png")}
 body.vloer-v3.overlays .tile[data-floor="tile"]{--ov:url("../assets/art/overlays/tile.png")}
@@ -1126,18 +1131,29 @@ body.hide-objsurf .tile .objsurf{display:none}
 /* Het kleed is een vloerkleed en geen vlag: gedempte kleuren, in dezelfde
    aardse familie als de rest van het bord. Fel rood en diep marineblauw
    trokken alle aandacht naar zich toe terwijl het juist ondergrond is. */
+/* Twee kleuren, overgenomen uit het stijlvel. Alleen deze twee regels bepalen
+   hoe een kleed eruitziet; een andere kleur is dus één hex verderop. */
 #grid{
-  --mat-veld:#B4816C;   /* het kleed zelf */
-  --mat-lijn:#4A4034;   /* de donkere rand eromheen */
-  --mat-kader:#CDB07B;  /* het kader daarbinnen */
+  --mat-veld:#D28281;   /* het kleed zelf */
+  --mat-kader:#D7AD77;  /* de dunne gouden lijn er net binnenin */
 }
-.tile .objmat{position:absolute;inset:0;pointer-events:none;z-index:0}
+/* Boven de vloertextuur van de ruimte en onder alles wat erop staat. De
+   volgorde is: tegel, textuur van de tegel, kleed, textuur van het kleed,
+   schaduw van het object, object. Het kleed is smaller dan het vakje, dus de
+   tegel eromheen houdt gewoon zijn eigen textuur. */
+.tile .objmat{position:absolute;inset:0;pointer-events:none;z-index:1}
 .tile .objmat svg{width:100%;height:100%;display:block;overflow:visible}
+/* De textuur van het kleed ligt in dezelfde tekening als het kleed zelf en
+   mengt daarmee. Standaard vermenigvuldigen; in de proefstand is screen te
+   proberen, dat licht op waar de tekening licht is in plaats van te dempen. */
+.tile .objmat .mat-tex{display:none;mix-blend-mode:multiply}
+body.mat-textuur .tile .objmat .mat-tex{display:block}
+body.mat-screen .tile .objmat .mat-tex{mix-blend-mode:screen}
 /* Het vlak van een gewoon object is een hulplijn en mag verborgen worden.
    Een tapijt is dat niet: dat vlak ís het tapijt. Verberg je het, dan ligt er
    niets meer op de vloer en klopt de regel "stond op een tapijt" nergens mee.
    Het blijft dus staan, ook als de objectvlakken uit staan. */
-.tile .objmat{z-index:0}
+.tile .objmat{z-index:1}
 .tile .objart.mat{z-index:1}
 .tile .objicon{position:absolute;inset:20%;pointer-events:none;color:rgba(21,26,51,.62);opacity:.85}
 .tile .objicon svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 0 rgba(255,255,255,.55))}
@@ -1235,7 +1251,10 @@ body.plat-icoon .objschaduw{display:none}
   box-shadow:0 0 0 2px rgba(201,147,47,.32),0 0 18px 4px rgba(201,147,47,.42),inset 0 0 14px rgba(255,255,255,.4);
 }
 /* Het object op een geblokkeerd vak schudt als je erop tikt. */
-.objart.shake,.objicon.shake{animation:iconShake .32s ease-in-out}
+/* De schaduw schudt met dezelfde slag mee. Het schudden gebruikt translate
+   en niet transform, want dat laatste draagt al de maat en de verschuiving
+   van het object -- die zou er dan tijdens het schudden af vallen. */
+.objart.shake,.objicon.shake,.objschaduw.shake{animation:iconShake .32s ease-in-out}
 @keyframes iconShake{
   0%,100%{translate:0 0}20%{translate:-3px 0}40%{translate:3px 0}60%{translate:-2px 0}80%{translate:2px 0}
 }
@@ -3174,17 +3193,20 @@ body.in-end .uitslag-voet .btn:hover{filter:none;background:var(--goud-diep)}
    streepje dat bij het bronzen zegel hoorde. Hij hoort bij de platte stijl van
    het bord, niet bij een knop uit een ander ontwerp. */
 body.in-game #modalIntro .rij-knoppen .btn{
-  /* Lichter goud met donkere inkt, en in de schreefletter van de titel: de
-     knop hoort bij de bladzijde die je net gelezen hebt. */
-  background:var(--goud-vlak);color:var(--goud-diep);border:1px solid var(--goud-lijn);
+  /* Geen vlak: alleen donkere letters in de schreefletter van de titel, zodat
+     de knop bij de bladzijde hoort die je net gelezen hebt. De omlijning staat
+     er wel, maar doorzichtig -- zo springt bij het aanwijzen alleen de kleur
+     om en verschuift er niets. */
+  background:none;color:var(--inkt);border:1px solid transparent;
   height:54px;border-radius:16px;
   font-family:var(--font-display);font-weight:600;font-size:19px;
   letter-spacing:.01em;text-transform:none;
   box-shadow:none;text-shadow:none;gap:12px;
 }
-body.in-game #modalIntro .rij-knoppen .btn:hover{filter:none;background:var(--goud-zacht)}
 body.in-game #modalIntro .rij-knoppen .btn::after{content:none}
-body.in-game #modalIntro .rij-knoppen .btn:hover{filter:none;background:var(--goud-diep)}
+body.in-game #modalIntro .rij-knoppen .btn:hover{
+  filter:none;background:none;border-color:var(--lijn);
+  color:color-mix(in srgb,var(--inkt) 86%,#000)}
 /* Het duwtje om verder te lezen. Zweeft boven de kolom, dus buiten de
    scrollstroom; [hidden] moet expliciet winnen van de display:flex hierboven. */
 .scroll-wenk{
@@ -3424,8 +3446,11 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <button class="debug-rij schakel" id="rowOverlays" type="button" aria-pressed="false"><b>Materiaaloverlays</b><span class="schuif"><i></i></span></button>
   <button class="debug-rij schakel" id="rowGolf" type="button" aria-pressed="false"><b>Golf op water</b><span class="schuif"><i></i></span></button>
   <button class="debug-rij schakel" id="rowGlans" type="button" aria-pressed="false"><b>Glans op edele vloer</b><span class="schuif"><i></i></span></button>
+  <button class="debug-rij schakel" id="rowMatTex" type="button" aria-pressed="false"><b>Textuur op tapijt</b><span class="schuif"><i></i></span></button>
+  <button class="debug-rij schakel" id="rowMatScreen" type="button" aria-pressed="false"><b>Tapijt op screen (uit = multiply)</b><span class="schuif"><i></i></span></button>
   <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="4" max="22" step="0.5" value="7.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">7.5</span></div>
   <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="4.2" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">4.2</span></div>
+  <div class="debug-rij"><b>Rood bij kruisje</b><input type="range" id="kruisRood" min="0" max="70" step="1" value="22" aria-label="Hoe hard een gekruiste tegel rood kleurt"><span class="debug-getal" id="kruisRoodGetal">22.0</span></div>
   <div class="debug-rij"><b>Textuur</b><input type="range" id="overlaySterkte" min="0" max="100" step="1" value="25" aria-label="Hoe hard de materiaaltekening over de kleur ligt"><span class="debug-getal" id="overlaySterkteGetal">25.0</span></div>
   <div class="debug-rij"><b>Formaat: bezet</b><input type="range" id="objSchaalBezet" min="0.5" max="2" step="0.01" value="1" aria-label="Hoe groot een bezetbaar object in zijn vakje staat"><span class="debug-getal" id="objSchaalBezetGetal">1.00</span></div>
   <div class="debug-rij"><b>Omlaag: bezet</b><input type="range" id="objZakBezet" min="-10" max="15" step="0.5" value="0" aria-label="Hoe ver een bezetbaar object in zijn vakje zakt of stijgt"><span class="debug-getal" id="objZakBezetGetal">0.0</span></div>
@@ -4902,12 +4927,44 @@ function roomFloorArt(room){
 /* Meer vloer om het kleed heen: het is een kleed op een vloer, en dan hoor je
    de tegel eromheen te zien liggen. */
 const MAT_M=24;      /* marge tot de rand van de tegel */
-const MAT_K=8;       /* afstand van het gele kader tot de omtrek */
-const MAT_R=8;       /* ronding van een buitenhoek */
-const MAT_W1=4.5;    /* dikte van de donkere rand */
-const MAT_W2=3;      /* dikte van het gele kader */
+const MAT_K=6;       /* afstand van de gouden lijn tot de omtrek */
+const MAT_R=3;       /* ronding van een buitenhoek: net gebroken, niet rond */
+const MAT_W2=2.2;    /* dikte van de gouden lijn */
 const MAT_EXT=1.5;   /* overlap over de tegelgrens, tegen haarnaden */
-function matVorm(n){
+/* De textuur van het kleed. Hij is getekend voor een gebied van vijf bij vijf
+   vakjes en gaat in zijn geheel over het hele kleed heen, niet per tegel: bij
+   herhaling zou je op elke tegelgrens de naad zien. Elke tegel tekent dus zijn
+   eigen uitsnede van dezelfde afbeelding. Is het kleed groter dan vijf bij
+   vijf, dan wordt de tekening meegeschaald in plaats van herhaald. */
+const MAT_TEX_VAKJES=5;
+function matTextuurUrl(){ return assetUrl("overlays","mat-textuur","jpg"); }
+/* De omvang van een kleed in vakjes, en waar deze tegel daarbinnen ligt. Het
+   antwoord hangt alleen van het kleed af, dus het wordt per kleed onthouden:
+   een kleed van zes tegels zou het anders zes keer uitrekenen. */
+const matOmvang=new Map();
+function matTextuur(matId,c,r,tegelId){
+  let bb=matOmvang.get(matId);
+  if(!bb){
+    const o=M&&M.objects.get(matId);
+    const tegels=(o&&o.tiles)||[];
+    let minC=Infinity,maxC=-Infinity,minR=Infinity,maxR=-Infinity;
+    tegels.forEach(tid=>{
+      const tt=M.tiles.get(tid); if(!tt) return;
+      if(tt.column<minC) minC=tt.column;
+      if(tt.column>maxC) maxC=tt.column;
+      if(tt.row<minR) minR=tt.row;
+      if(tt.row>maxR) maxR=tt.row;
+    });
+    if(!isFinite(minC)) return null;
+    bb={minC,minR,w:maxC-minC+1,h:maxR-minR+1};
+    matOmvang.set(matId,bb);
+  }
+  return {url:matTextuurUrl(), id:tegelId,
+          dx:c-bb.minC, dy:r-bb.minR, w:bb.w, h:bb.h};
+}
+/* n: welke buren hetzelfde kleed dragen. tex: waar deze tegel in het kleed
+   ligt en hoe groot het kleed is, allemaal in vakjes. */
+function matVorm(n,tex){
   const m=MAT_M, e=MAT_EXT;
   const X0=n.l?-e:m, X1=n.r?100+e:100-m;
   const Y0=n.t?-e:m, Y1=n.b?100+e:100-m;
@@ -4959,7 +5016,7 @@ function matVorm(n){
 
   /* De omtrek: alleen de stukken die echt aan de buitenkant liggen, aan
      elkaar geregen tot doorlopende lijnen. */
-  const rand=[], kader=[];
+  const kader=[];
   const normaal=i=>{ /* wijst naar binnen bij een pad met de klok mee */
     const a=pts[i], b=pts[(i+1)%N];
     const dx=b.x-a.x, dy=b.y-a.y, L=Math.hypot(dx,dy)||1;
@@ -4974,14 +5031,7 @@ function matVorm(n){
       /* Een reeks aaneengesloten buitenstukken. */
       const reeks=[];
       while(gedaan<N && !binnen(i)){ reeks.push(i); i=(i+1)%N; gedaan++; }
-      let p="M"+nr(B[reeks[0]].x)+" "+nr(B[reeks[0]].y);
-      reeks.forEach(k=>{
-        const e2=(k+1)%N;
-        p+="L"+nr(A[e2].x)+" "+nr(A[e2].y);
-        if(pts[e2].rond && reeks.indexOf(e2)>=0) p+="A"+MAT_R+" "+MAT_R+" 0 0 1 "+nr(B[e2].x)+" "+nr(B[e2].y);
-      });
-      rand.push(p);
-      /* Het gele kader loopt op vaste afstand binnen dezelfde reeks mee. */
+      /* De gouden lijn loopt op vaste afstand binnen dezelfde reeks mee. */
       const pk=[];
       reeks.forEach((k,ix)=>{
         const nk=normaal(k);
@@ -4996,7 +5046,21 @@ function matVorm(n){
   }
   let svg='<svg viewBox="0 0 100 100" aria-hidden="true">'
     +'<path d="'+d+'" fill="var(--mat-veld)"/>';
-  if(rand.length) svg+='<path d="'+rand.join(" ")+'" fill="none" stroke="var(--mat-lijn)" stroke-width="'+MAT_W1+'" stroke-linejoin="round" stroke-linecap="butt"/>';
+  /* De textuur: hetzelfde vlak nog een keer, maar gevuld met de uitsnede van
+     de grote tekening die bij deze tegel hoort. Als vulling en niet als
+     uitgeknipte afbeelding, want een clip-path maakt een eigen stapellaag en
+     dan heeft het mengen geen ondergrond meer om mee te rekenen. */
+  if(tex){
+    const S=Math.max(MAT_TEX_VAKJES,tex.w,tex.h)*100;   /* maat van de tekening */
+    const X=-(tex.dx*100 + (S-tex.w*100)/2);            /* gecentreerd op het kleed */
+    const Y=-(tex.dy*100 + (S-tex.h*100)/2);
+    const pid="mt-"+tex.id;
+    svg+='<defs><pattern id="'+pid+'" patternUnits="userSpaceOnUse" x="'+nr(X)+'" y="'+nr(Y)
+      +'" width="'+nr(S)+'" height="'+nr(S)+'">'
+      +'<image href="'+tex.url+'" x="0" y="0" width="'+nr(S)+'" height="'+nr(S)
+      +'" preserveAspectRatio="none"/></pattern></defs>'
+      +'<path class="mat-tex" d="'+d+'" fill="url(#'+pid+')"/>';
+  }
   if(kader.length) svg+='<path d="'+kader.join(" ")+'" fill="none" stroke="var(--mat-kader)" stroke-width="'+MAT_W2+'" stroke-linejoin="round" stroke-linecap="butt"/>';
   return svg+'</svg>';
 }
@@ -5265,6 +5329,7 @@ function renderBoard(){
   grid.innerHTML="";
   { const hl=$("#hoogArt"); if(hl) hl.innerHTML=""; }
   { const sl=$("#objSchaduw"); if(sl) sl.innerHTML=""; }
+  matOmvang.clear();
   $("#labels").innerHTML=""; $("#pawns").innerHTML="";
   $("#gridWrap").classList.toggle("regular",b.regular);
   grid.style.gridTemplateColumns="repeat("+b.cols+", var(--cell))";
@@ -5329,14 +5394,11 @@ function renderBoard(){
         const gelijk=(cc,rr)=>{ const n=M.tiles.get("c"+cc+"r"+rr); return !!(n&&n.matId===t.matId); };
         const matsurf=document.createElement("div");
         matsurf.className="objmat";
-        /* Op een kleed hoort geen vloertextuur: het kleed ligt er juist
-           overheen. De tegel houdt zijn vloersoort -- die telt nog voor de
-           regels -- maar de tekening blijft eronder. */
         el.classList.add("heeft-mat");
         matsurf.innerHTML=matVorm({
           t:gelijk(c,r-1), r:gelijk(c+1,r), b:gelijk(c,r+1), l:gelijk(c-1,r),
           tl:gelijk(c-1,r-1), tr:gelijk(c+1,r-1), br:gelijk(c+1,r+1), bl:gelijk(c-1,r+1)
-        });
+        }, matTextuur(t.matId,c,r,id));
         el.appendChild(matsurf);
         /* Geen losse tekening meer over het vlak heen: het vlak zelf draagt
            nu de hele tekening (veld, rand, kader en ruit), en dat past ook op
@@ -5491,6 +5553,8 @@ let OVERLAY_PROCENT = maat("clueboard:overlaySterkte",25);
    hoge, niet-bezetbare soort. Onderling zijn ze wel weer op elkaar
    afgestemd, dus wat hier verandert verandert binnen zijn soort overal
    even veel. */
+/* Hoe hard een gekruiste tegel rood kleurt, in procent van de vloerkleur. */
+let KRUIS_PCT = maat("clueboard:kruisRood",22);
 let OBJ_SCHAAL_BEZET = maat("clueboard:objSchaalBezet",1.0);
 let OBJ_ZAK_BEZET    = maatVrij("clueboard:objZakBezet",0);
 let OBJ_SCHAAL_HOOG  = maat("clueboard:objSchaalHoog",1.7);
@@ -5518,6 +5582,7 @@ function zetMaten(){
   st.setProperty("--glim-duur",GLIM_DUUR+"s");
   st.setProperty("--golf-diep",String(GOLF_DIEP));
   st.setProperty("--golf-duur",String(GOLF_DUUR));
+  st.setProperty("--kruis-pct",String(KRUIS_PCT));
   st.setProperty("--obj-schaal-bezet",String(OBJ_SCHAAL_BEZET));
   st.setProperty("--obj-zak-bezet",String(OBJ_ZAK_BEZET/100));
   st.setProperty("--obj-schaal-hoog",String(OBJ_SCHAAL_HOOG));
@@ -5866,6 +5931,7 @@ function paintBoard(){
   $$("#grid .tile[data-tile]").forEach(el=>{
     const id=el.dataset.tile;
     el.querySelectorAll(".note-marks,.note-cross,.pawn").forEach(n=>n.remove());
+    el.classList.remove("heeft-kruis");
 
     const pid=personOnTile(id);
     el.classList.toggle("has-pawn",!!pid);
@@ -5932,6 +5998,7 @@ function paintBoard(){
           cr.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round">'
             +'<path d="M4 4l16 16M20 4L4 20" stroke="#DC4A46" stroke-width="3.6"/></svg>';
           el.appendChild(cr);
+          el.classList.add("heeft-kruis");
         }
         /* Letters blijven bewaard onder een kruis, maar tonen we niet tegelijk
            -- ook niet als het kruis zelf verborgen staat, want dan zou er iets
@@ -6002,6 +6069,25 @@ const LONGPRESS_MS=420;
    object staat. Een tafel over twee vakjes draagt zijn tekening maar één keer;
    tik je op de andere helft, dan hoort diezelfde tekening te trillen en niet
    het lege vakje eronder. */
+/* De schaduw die bij dit object hoort. Hij hangt in zijn eigen laag over het
+   hele bord, dus hij is niet in de tegel te vinden. */
+function objectSchaduwBeeld(tegelId){
+  const t=M&&M.tiles.get(tegelId);
+  const oid=t&&t.objectId;
+  const tegels=(oid&&M.objects.get(oid)&&M.objects.get(oid).tiles)||[tegelId];
+  for(let i=0;i<tegels.length;i++){
+    const kandidaat=$('#objSchaduw .objschaduw[data-tegel="'+tegels[i]+'"]');
+    if(kandidaat) return kandidaat;
+  }
+  return null;
+}
+/* Tekening en schaduw schudden samen: schudt alleen de tekening, dan blijft
+   de schaduw achter en lijkt het object ervan los te komen. */
+function schudObject(el,tegelId){
+  shakeTile(objectBeeld(el,tegelId));
+  const sch=objectSchaduwBeeld(tegelId);
+  if(sch) shakeTile(sch);
+}
 function objectBeeld(el,tegelId){
   const t=M&&M.tiles.get(tegelId);
   const oid=t&&t.objectId;
@@ -6039,7 +6125,7 @@ function attachTileInput(el,tileId){
        aangekomen. Een kruis komt er wel, maar net als overal pas na lang
        indrukken. */
     if(t&&t.status==="blocked"){
-      shakeTile(objectBeeld(el,tileId));
+      schudObject(el,tileId);
       /* En even zeggen waartegen je tikt, net als bij het plaatsen op een
          vakje waar wel iemand op kan. */
       const o=t.objectId?M.objects.get(t.objectId):null;
@@ -6127,7 +6213,7 @@ function attachTileInput(el,tileId){
     cancel(); veeg=null;
     const t=M.tiles.get(tileId);
     if(t&&t.status==="blocked"){
-      shakeTile(objectBeeld(el,tileId));
+      schudObject(el,tileId);
       /* Even zeggen waar je tegenaan tikt, net als bij het plaatsen op een
          vakje waar wel iemand op kan. */
       const o=t.objectId?M.objects.get(t.objectId):null;
@@ -7579,7 +7665,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.91";
+const PLAYER_APP_VERSION="0.9.92";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8578,7 +8664,9 @@ document.addEventListener("pointerdown",e=>{
  ["rowTussen","tussen-muren","clueboard:tussenMuren",true],
  ["rowOverlays","overlays","clueboard:overlays",true],
  ["rowGolf","golf","clueboard:golf",true],
- ["rowGlans","glans","clueboard:glans",true]].forEach(function(rij){
+ ["rowGlans","glans","clueboard:glans",true],
+ ["rowMatTex","mat-textuur","clueboard:matTextuur",true],
+ ["rowMatScreen","mat-screen","clueboard:matScreen",false]].forEach(function(rij){
   const id=rij[0], klasse=rij[1], sleutel=rij[2], standaard=!!rij[3];
   const knop=$("#"+id);
   const zet=aan=>{
@@ -8625,6 +8713,8 @@ maatSchuif("tegelKier","tegelKierGetal","clueboard:tegelKier",
   ()=>KIER_PROCENT, v=>{ if(v>=0) KIER_PROCENT=v; }, true);
 maatSchuif("overlaySterkte","overlaySterkteGetal","clueboard:overlaySterkte",
   ()=>OVERLAY_PROCENT, v=>{ OVERLAY_PROCENT=v; }, false);
+maatSchuif("kruisRood","kruisRoodGetal","clueboard:kruisRood",
+  ()=>KRUIS_PCT, v=>{ KRUIS_PCT=v; }, false);
 maatSchuif("objSchaalBezet","objSchaalBezetGetal","clueboard:objSchaalBezet",
   ()=>OBJ_SCHAAL_BEZET, v=>{ if(v>0) OBJ_SCHAAL_BEZET=v; }, false, 2);
 maatSchuif("objZakBezet","objZakBezetGetal","clueboard:objZakBezet",
