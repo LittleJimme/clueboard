@@ -1241,33 +1241,29 @@ body.mat-screen .tile .objmat .mat-tex{mix-blend-mode:screen}
    die zit al in de tekening -- en schaalt vanuit het midden met één schuif.
    De schaduw ligt eronder op multiply; #grid is een isolation-groep, dus hij
    mengt met de vloer en niet met de bladzijde eronder. */
-.tile .objart.prod{
-  position:absolute;left:0;top:0;right:0;bottom:0;width:auto;height:auto;
-  pointer-events:none;z-index:2;
-  transform:translateY(calc(var(--cell) * var(--obj-zak-bezet,0))) scale(var(--obj-schaal-bezet,1));
-  transform-origin:50% 50%}
-/* De hoge soort -- boom, struik, standbeeld -- hoort net als de oude
-   uitstekers over de muren heen te vallen. Hij hangt daarom niet in de tegel
-   maar in de laag erboven (#hoogArt), met dezelfde expliciete positie per
-   vakje als de schaduw, want die laag omvat het hele bord in plaats van één
-   tegel. */
-#hoogArt .objart.prod{
-  position:absolute;width:var(--cell);height:var(--cell);
-  pointer-events:none;
-  transform:translateY(calc(var(--cell) * var(--obj-zak-hoog,-0.08))) scale(var(--obj-schaal-hoog,1.7));
-  transform-origin:50% 50%}
+/* Het kader waarin een objecttekening staat. Elke tekening is vierkant en
+   1,6 vakje groot, met de grondlijn -- waar het object de vloer raakt -- op
+   86% van de hoogte. Dat kader wordt zo neergezet dat die grondlijn precies op
+   de onderrand van het vakje valt en het midden van de tekening op het midden
+   van het vakje. Zo staan alle objecten op dezelfde lijn en steekt wat hoog
+   getekend is er vanzelf bovenuit; er hoeft niets meer per soort geschaald te
+   worden, want het maatverschil zit nu in de tekening.
+
+   Van de drie getallen volgen de laatste twee uit het eerste: horizontaal
+   (1,6 - 1) / 2 opzij, verticaal 1 - 0,86 x 1,6 omhoog. */
+#gridWrap{--obj-kader:1.6;--obj-links:-.3;--obj-boven:-.375}
+.tile .objart.prod,#hoogArt .objart.prod,.objschaduw{
+  position:absolute;pointer-events:none;
+  width:calc(var(--cell) * var(--obj-kader));
+  height:calc(var(--cell) * var(--obj-kader))}
+.tile .objart.prod{z-index:2;
+  left:calc(var(--cell) * var(--obj-links));
+  top:calc(var(--cell) * var(--obj-boven))}
 /* Even groot als een vakje en op dezelfde plek, zodat tekening en schaduw
    precies over elkaar liggen -- ze komen zo uit Photoshop. */
-.objschaduw{position:absolute;width:var(--cell);height:var(--cell);
-  pointer-events:none;
-  transform:translateY(calc(var(--cell) * var(--obj-zak-bezet,0))) scale(var(--obj-schaal-bezet,1));
-  transform-origin:50% 50%}
-/* De schaduw van de hoge soort groeit met zijn tekening mee. Hij blijft wel
-   plat op de vloer liggen (#objSchaduw, onder de muren): alleen de tekening
-   valt over de muur heen, de schaduw op de grond niet. */
-.objschaduw.hoog{
-  transform:translateY(calc(var(--cell) * var(--obj-zak-hoog,-0.08))) scale(var(--obj-schaal-hoog,1.7));
-  transform-origin:50% 50%}
+/* De schaduw ligt in hetzelfde kader als de tekening -- ze komen uit hetzelfde
+   bestand -- maar blijft plat op de vloer (#objSchaduw, onder de muren):
+   alleen de tekening valt over een muur heen, de schaduw op de grond niet. */
 .tile .objart.prod img,#hoogArt .objart.prod img,.objschaduw img{
   width:100%;height:100%;display:block;object-fit:contain}
 body.plat-icoon .objschaduw{display:none}
@@ -5265,8 +5261,15 @@ const UITSTEKERS = ["tree","plant","shrub","statue"];
    alleen de schuif "Objectformaat" in de proefstand schaalt ze, allemaal
    tegelijk en vanuit het midden. Vul deze lijst aan zodra er een lichting
    bijkomt; assets/tools/import_production_objects.py zet de bestanden klaar. */
-const PRODUCTIE_OBJECTEN = ["statue","tree","shelf","crate","puddle","horse",
-  "stones","chair","shrub","table","vase","weapon-chest","weapon-rack"];
+const PRODUCTIE_OBJECTEN = ["barrel","boar","box","chair","cow","crate","easel",
+  "horse","house","loom","pig","plant","puddle","rubble","sack","shelf","shrub",
+  "statue","stones","table","treasure","tree","vase","weapon-chest",
+  "weapon-rack","wolf"];
+/* Wie er boven zijn vakje uitsteekt en dus over de muren heen moet vallen.
+   Opgemeten aan de tekeningen zelf: in het kader van 1024 ligt de bovenrand
+   van een vakje op 240, en alleen deze drie komen daarbovenuit. Struik en
+   plant zaten hier vroeger bij, maar zijn nu binnen hun vakje getekend. */
+const PRODUCTIE_BOVEN = ["tree","statue","house"];
 function isProductie(slug,w,h){
   return w===1 && h===1 && PRODUCTIE_OBJECTEN.indexOf(slug)>=0;
 }
@@ -5578,11 +5581,10 @@ function renderBoard(){
              object heen. Ontbreekt hij, dan blijft het pictogram hierboven. */
           const slug=assetSlug(kind);
           const prod = isProductie(slug,plan.w,plan.h);
-          /* Bezetbaar past gewoon in zijn vakje. De hoge, niet-bezetbare
-             soort -- boom, struik, standbeeld -- hoort net als vroeger over
-             de muren heen te vallen; dat is dezelfde lijst (UITSTEKERS) als
-             de oude tekeningen gebruiken. */
-          const prodHoog = prod && UITSTEKERS.indexOf(slug)>=0;
+          /* Wat binnen zijn vakje blijft mag in de tegel; wat erbovenuit
+             steekt hoort over de muren heen te vallen en gaat dus naar de
+             laag daarboven. */
+          const prodHoog = prod && PRODUCTIE_BOVEN.indexOf(slug)>=0;
           /* De schaduw ligt plat op de vloer, onder de tekening, en
              vermenigvuldigt met de tegel eronder: precies zoals de laag in
              Photoshop. Wit doet niets, dus alleen de schaduw kleurt mee. Hij
@@ -5591,10 +5593,10 @@ function renderBoard(){
              van de hoge soort. */
           if(prod){
             const sch=document.createElement("div");
-            sch.className="objschaduw"+(prodHoog?" hoog":"");
+            sch.className="objschaduw";
             sch.dataset.tegel=id;
-            sch.style.left="calc(var(--cell) * "+(c-b.minC)+")";
-            sch.style.top="calc(var(--cell) * "+(r-b.minR)+")";
+            sch.style.left="calc(var(--cell) * "+(c-b.minC)+" + var(--cell) * var(--obj-links))";
+            sch.style.top="calc(var(--cell) * "+(r-b.minR)+" + var(--cell) * var(--obj-boven))";
             ($("#objSchaduw")||el).appendChild(sch);
             mountAsset(sch,[objectSchaduwUrl(slug)],null,null);
           }
@@ -5608,10 +5610,10 @@ function renderBoard(){
             art.dataset.rek=objectRekStijl(slug);
           }
           if(prod && prodHoog){
-            /* Zelfde laag en dezelfde expliciete positie per vakje als de
-               schaduw: #hoogArt omvat het hele bord, niet één tegel. */
-            art.style.left="calc(var(--cell) * "+(c-b.minC)+")";
-            art.style.top="calc(var(--cell) * "+(r-b.minR)+")";
+            /* Zelfde kader, maar in de laag boven de muren; die omvat het hele
+               bord, dus de plek moet er expliciet bij. */
+            art.style.left="calc(var(--cell) * "+(c-b.minC)+" + var(--cell) * var(--obj-links))";
+            art.style.top="calc(var(--cell) * "+(r-b.minR)+" + var(--cell) * var(--obj-boven))";
             ($("#hoogArt")||el).appendChild(art);
           } else if(prod){
             /* Maat en plek staan in de CSS: het hele vakje, geschaald vanuit
@@ -5705,10 +5707,6 @@ const KRUIS_PCT = 25;
    de vloeren liggen tussen L29 en L38, dus hierop leest de muur als een warme
    wand in schemerlicht in plaats van als een zwarte streep. */
 const MUUR_NACHT_L = 30;
-const OBJ_SCHAAL_BEZET = 1.0;
-const OBJ_ZAK_BEZET    = 0;
-const OBJ_SCHAAL_HOOG  = 1.7;
-const OBJ_ZAK_HOOG     = -8;
 /* In de donkere stand mag de textuur zachter: op een donkere tegel valt
    hetzelfde reliëf veel meer op dan op een lichte. */
 const OVERLAY_NACHT = 0.4;
@@ -5733,10 +5731,6 @@ function zetMaten(){
   st.setProperty("--golf-diep",String(GOLF_DIEP));
   st.setProperty("--golf-duur",String(GOLF_DUUR));
   st.setProperty("--kruis-pct",String(KRUIS_PCT));
-  st.setProperty("--obj-schaal-bezet",String(OBJ_SCHAAL_BEZET));
-  st.setProperty("--obj-zak-bezet",String(OBJ_ZAK_BEZET/100));
-  st.setProperty("--obj-schaal-hoog",String(OBJ_SCHAAL_HOOG));
-  st.setProperty("--obj-zak-hoog",String(OBJ_ZAK_HOOG/100));
 }
 /* Welke watertegel wanneer aan de beurt is. De plek van een tegel wordt op de
    looprichting geprojecteerd; hoe verder langs die richting, hoe later hij
@@ -7814,7 +7808,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.104";
+const PLAYER_APP_VERSION="0.9.105";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en

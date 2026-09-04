@@ -41,3 +41,8 @@ assets/art/clueboard-scene-*.png
 # Tijdelijke bestanden van de schermafdrukken.
 player/_*.html
 builder/_*.html
+
+# De PSD naast de Outbox is 52 MB en wordt door niets gelezen; de Outbox zelf
+# is wel de bron waar import_outbox_objects.py uit put, dus die gaat wel mee.
+assets/art/MAIN/*
+!assets/art/MAIN/Outbox/
