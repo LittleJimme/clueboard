@@ -2145,22 +2145,6 @@ body.desktop.in-game .clue-card .notitie-merk{right:10px}
    staat al op de kaart zelf. Het kader is dus gewoon de lijnkleur, en pas de
    gekozen kaart krijgt een ring -- in de kleur van die persoon, want dat is
    precies wat de ring aanwijst. */
-/* Een kader dat er altijd staat, en even zwaar als toen het alleen bij de
-   gekozen kaart hoorde: zo hebben alle kaarten hetzelfde gewicht. */
-body.desktop.in-game .clue-card{border:2px solid var(--lijn)}
-/* Gekozen: het vak loopt helemaal vol met de gedempte kleur van die persoon
-   en de letters worden licht. Zo springt de kaart eruit zonder dat er een ring
-   omheen hoeft. */
-body.desktop.in-game .clue-card.geselecteerd,
-body.desktop.in-game .clue-row.victim.geselecteerd,
-body.desktop.in-game .clue-card.board.geselecteerd{
-  border-color:color-mix(in srgb,var(--pc,var(--goud)) 70%,#2A2620);
-  background:color-mix(in srgb,var(--pc,var(--goud)) 76%,#2A2620)}
-body.desktop.in-game .clue-card.geselecteerd .name,
-body.desktop.in-game .clue-card.geselecteerd .txt,
-body.desktop.in-game .clue-card.geselecteerd .txt b,
-body.desktop.in-game .clue-card.geselecteerd .tag{color:#FBF6EA}
-body.desktop.in-game .clue-card.geselecteerd .txt .regel+.regel{border-top-color:rgba(251,246,234,.28)}
 /* Midden: het bord met daaronder de werkbalk. */
 /* Het bord hoeft niet tot tegen de kolommen te lopen; met lucht eromheen
    leest het als een bord op tafel in plaats van als een gevuld vlak. */
@@ -2201,20 +2185,24 @@ body.desktop.in-game #pane-detail{display:flex;grid-column:3;grid-row:2/4;min-he
 /* Legenda: knop rechtsonder in de kantlijn, het vel klapt erboven uit. */
 .legenda-knop,.legenda-pop{display:none}
 body.desktop.in-game .legenda-knop{display:inline-flex;position:absolute;right:16px;bottom:14px;z-index:5}
-body.desktop.in-game .legenda-pop{display:block;position:absolute;right:16px;bottom:62px;z-index:6;width:min(300px,calc(100% - 24px));max-height:calc(100% - 80px);overflow-y:auto;scrollbar-width:thin;
-  padding:10px 14px 12px;border-radius:14px;background:var(--kaart);border:1px solid var(--lijn);box-shadow:var(--sch2);text-align:right;
+/* Even breed als het instellingenvenster, en hoog genoeg in de stapel: hij
+   klapt over het paneel ernaast heen, dus alles wat daar staat hoort erachter
+   te verdwijnen en niet er doorheen te schemeren. */
+body.desktop.in-game .legenda-pop{display:block;position:absolute;right:16px;bottom:62px;z-index:20;width:min(440px,calc(100vw - 40px));max-height:calc(100% - 80px);overflow-y:auto;scrollbar-width:thin;
+  padding:10px 14px 12px;border-radius:14px;background:var(--kaart);border:1px solid var(--lijn);box-shadow:var(--sch2);text-align:left;
   animation:legendaPop .18s cubic-bezier(.2,.9,.3,1) both}
 body.desktop.in-game .legenda-pop[hidden]{display:none}
 @keyframes legendaPop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-body.desktop.in-game .legenda-pop-kop{font:800 10px var(--font-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--dof);margin:0 0 4px}
+body.desktop.in-game .legenda-pop-kop{font:800 10px var(--font-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--dof);margin:0 0 4px;text-align:left}
 body.desktop.in-game .legenda-pop .legend-sep{font-size:9.5px;margin:10px 0 4px;text-align:left}
 body.desktop.in-game .legenda-pop .legend-row{gap:8px;padding:4px 0;font-size:12px;border-bottom:1px solid var(--lijn-zacht)}
-body.desktop.in-game .legenda-pop .legend-row .name{font-size:12.5px}
+body.desktop.in-game .legenda-pop .legend-row .name{font-size:12.5px;text-align:left}
+body.desktop.in-game .legenda-pop .legend-obj .name{text-align:center}
 body.desktop.in-game .legenda-pop .legend-swatch{width:18px;height:18px;border-radius:5px}
 body.desktop.in-game .legenda-pop .legend-wall{width:20px;height:6px}
-body.desktop.in-game .legenda-pop .legend-tags{justify-content:flex-end;margin-top:2px}
+body.desktop.in-game .legenda-pop .legend-tags{justify-content:flex-start;margin-top:2px}
 body.desktop.in-game .legenda-pop .legend-row .badge.rol{font-size:9.5px;padding:1px 6px}
-body.desktop.in-game .legenda-pop .legend-objgrid{grid-template-columns:repeat(auto-fill,minmax(46px,1fr));direction:rtl;gap:6px 2px}
+body.desktop.in-game .legenda-pop .legend-objgrid{grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px 6px}
 body.desktop.in-game .legenda-pop .legend-obj{direction:ltr}
 body.desktop.in-game .legenda-pop .legend-obj .name{font-size:10px}
 body.desktop.in-game .legenda-pop .legend-chip{width:34px;height:34px}
@@ -2332,6 +2320,30 @@ body.desktop.in-game .clue-card{border:1px solid color-mix(in srgb,var(--pc,var(
 html[data-thema="licht"] body.desktop.in-game .clue-card{border-color:color-mix(in srgb,var(--pc,var(--lijn)) 30%,var(--lijn));background:color-mix(in srgb,var(--pc,var(--lijn)) 9%,var(--kaart))}
 body.desktop.in-game .clue-card.done{background:color-mix(in srgb,var(--pc,var(--lijn)) 5%,var(--kaart-2))}
 body.desktop.in-game .clue-row.victim{border-left-width:1px}
+/* Deze twee staan bewust ná de regels hierboven: die zetten rand en vlak van
+   elke kaart, met evenveel gewicht. Wie het laatst komt wint, en dat moet de
+   dikke rand en de gekozen kaart zijn.
+   Een kader dat er altijd staat en even zwaar is als toen het alleen bij de
+   gekozen kaart hoorde: zo wegen alle kaarten even zwaar. */
+body.desktop.in-game .clue-card{border-width:2px}
+/* Gekozen: het vak loopt helemaal vol met de gedempte kleur van die persoon
+   en de letters worden licht. Zo springt de kaart eruit zonder dat er een ring
+   omheen hoeft. */
+body.desktop.in-game .clue-card.geselecteerd,
+html[data-thema="licht"] body.desktop.in-game .clue-card.geselecteerd,
+body.desktop.in-game .clue-card.board.geselecteerd,
+body.desktop.in-game .clue-row.victim.geselecteerd{
+  border-color:color-mix(in srgb,var(--pc,var(--goud)) 70%,#2A2620);
+  background:color-mix(in srgb,var(--pc,var(--goud)) 76%,#2A2620)}
+body.desktop.in-game .clue-card.geselecteerd .name,
+body.desktop.in-game .clue-card.geselecteerd .txt,
+body.desktop.in-game .clue-card.geselecteerd .txt b,
+body.desktop.in-game .clue-card.geselecteerd .txt .regel,
+body.desktop.in-game .clue-card.geselecteerd .tag,
+body.desktop.in-game .clue-card.geselecteerd .rol{color:#FBF6EA}
+body.desktop.in-game .clue-card.geselecteerd .tag,
+body.desktop.in-game .clue-card.geselecteerd .rol{background:rgba(251,246,234,.16);border-color:rgba(251,246,234,.3)}
+body.desktop.in-game .clue-card.geselecteerd .txt .regel+.regel{border-top-color:rgba(251,246,234,.28)}
 /* Ook in het spel dezelfde vorm als de andere kaarten: alleen het goud
    onderscheidt de bordregels, niet de opmaak. */
 body.in-game .clue-card.board{background:var(--goud-zacht);border-color:var(--goud-lijn);
@@ -2622,9 +2634,7 @@ body.in-game .sheet-modal.van-boven.open .sheet{animation:sheetOmlaag .3s cubic-
 @keyframes sheetOmhoog{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
 @keyframes sheetOmlaag{from{transform:translateY(-40px);opacity:0}to{transform:none;opacity:1}}
 body.in-game #modalLegend .sheet{max-height:82vh;padding:10px 16px calc(16px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0}
-/* Even breed als de instellingen: twee laden die uit dezelfde balk komen
-   horen niet elk een eigen maat te hebben. */
-body.desktop.in-game #modalLegend .sheet{width:var(--links-b,360px);max-width:none}
+
 .sheet-greep{width:38px;height:4px;border-radius:2px;background:var(--lijn);margin:0 auto 10px}
 /* Een paneel dat van boven komt heeft zijn greep onderaan. */
 body.in-game .sheet-modal.van-boven .sheet-greep{order:9;margin:12px auto 0}
@@ -5841,7 +5851,11 @@ function attachTileInput(el,tileId){
        aangekomen. Een kruis komt er wel, maar net als overal pas na lang
        indrukken. */
     if(t&&t.status==="blocked"){
-      shakeTile(objectBeeld(el,id));
+      shakeTile(objectBeeld(el,tileId));
+      /* En even zeggen waartegen je tikt, net als bij het plaatsen op een
+         vakje waar wel iemand op kan. */
+      const o=t.objectId?M.objects.get(t.objectId):null;
+      if(o) toast((o.kindLabel||o.kind||"Dit vak")+" — hier kan niemand staan");
       return;
     }
     openTileMenu(tileId,el);
@@ -5925,7 +5939,7 @@ function attachTileInput(el,tileId){
     cancel(); veeg=null;
     const t=M.tiles.get(tileId);
     if(t&&t.status==="blocked"){
-      shakeTile(objectBeeld(el,id));
+      shakeTile(objectBeeld(el,tileId));
       /* Even zeggen waar je tegenaan tikt, net als bij het plaatsen op een
          vakje waar wel iemand op kan. */
       const o=t.objectId?M.objects.get(t.objectId):null;
@@ -7374,7 +7388,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.82";
+const PLAYER_APP_VERSION="0.9.83";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8350,6 +8364,8 @@ function toonLegendaPop(aan){
   const pop=$("#legendaPop"), knop=$("#btnLegendaDesk");
   if(!pop||!knop) return;
   if(aan){
+    /* Even breed als de instellingenlade: die meet zichzelf op de kolom waar
+       hij overheen klapt, en de legenda hoort in dezelfde maat te staan. */
     pop.innerHTML='<div class="legenda-pop-kop">Legenda</div>'+legendaHtml();
     hydrateLegenda(pop);
   }
