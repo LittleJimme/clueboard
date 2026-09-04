@@ -206,6 +206,22 @@ body[data-skin="medieval"]{
   --mv-blauw:#2E4A78;         /* de knoop-kleur van knoppen, als het schild */
   --mv-blauw-2:#1F3557;
 }
+/* De veilige zone onderaan, afgetopt.
+
+   Als de app echt geïnstalleerd is -- een WebAPK, wat alleen lukt vanaf https
+   met een geldig manifest -- tekent Chrome de pagina onder de veegbalk van
+   Android door. env(safe-area-inset-bottom) is dan ineens veertig tot vijftig
+   pixels, en die strook bleef leeg onderin staan. Vanaf een lokale server over
+   http maakt Chrome geen WebAPK maar een snelkoppeling; daar is de zone nul en
+   was er niets aan de hand. Vandaar dat dezelfde code op twee toestellen
+   anders oogde.
+
+   De zone helemaal negeren kan niet: daar zit de veegbalk, en een knop die er
+   half onder ligt vangt een veeg in plaats van een tik. Aftoppen wel: veertien
+   pixels is genoeg om de knop vrij te houden, en de rest van de hoogte gaat
+   terug naar het bord. Alleen de voetbalk gebruikt dit; een vel dat van onder
+   omhoog komt houdt de volle zone, want daar staat tekst in. */
+:root{ --voet-veilig:min(env(safe-area-inset-bottom, 0px), 14px) }
 html,body{
   margin:0;padding:0;width:100%;height:100%;
   position:fixed;overflow:hidden;overscroll-behavior:none;
@@ -2104,7 +2120,7 @@ body.in-game .tabbar{
      veilige zone staan plus een paar pixels: die zone is er niet voor de sier,
      daar zit op een iPhone de thuisbalk en op Android de veegbalk, en een knop
      die daar half onder ligt is niet meer te raken. */
-  padding:6px 14px calc(10px + env(safe-area-inset-bottom));
+  padding:6px 14px calc(10px + var(--voet-veilig));
   background:none;border-top:0;box-shadow:none;
   backdrop-filter:none;-webkit-backdrop-filter:none;
 }
@@ -7798,7 +7814,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.103";
+const PLAYER_APP_VERSION="0.9.104";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
