@@ -15,3 +15,25 @@ backups/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Bronmateriaal uit Photoshop en de renderaar.
+#
+# Wat een script inleest hoort er wel bij -- dan is de bank opnieuw te maken --
+# maar de PSD's, de model sheets en de losse proeven zijn samen bijna 90 MB en
+# worden nergens door het spel gebruikt. Ze zijn hier ooit per ongeluk in
+# beland; sindsdien staan ze hier zodat dat niet nog eens gebeurt.
+assets/art/production/psd/
+assets/art/production/export from psd/
+assets/art/production/light-mode-model-sheets-v1/
+assets/art/production/light-mode-basis-1x1-pixel-locked-v1/
+assets/art/production/mineral-morning/
+assets/art/production/night-lighting-tests/
+
+# Proefbeelden en stijlvellen: leuk om te bewaren, maar het spel leest ze niet.
+assets/art/concepts/
+assets/art/clueboard-real-ui-*.png
+assets/art/clueboard-scene-*.png
+
+# Tijdelijke bestanden van de schermafdrukken.
+player/_*.html
+builder/_*.html
