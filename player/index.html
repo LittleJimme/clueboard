@@ -1189,15 +1189,31 @@ body.hide-objsurf .tile .objsurf{display:none}
 .tile .objart.prod{
   position:absolute;left:0;top:0;right:0;bottom:0;width:auto;height:auto;
   pointer-events:none;z-index:2;
-  transform:translateY(calc(var(--cell) * var(--obj-zak,0))) scale(var(--obj-schaal,1));
+  transform:translateY(calc(var(--cell) * var(--obj-zak-bezet,0))) scale(var(--obj-schaal-bezet,1));
+  transform-origin:50% 50%}
+/* De hoge soort -- boom, struik, standbeeld -- hoort net als de oude
+   uitstekers over de muren heen te vallen. Hij hangt daarom niet in de tegel
+   maar in de laag erboven (#hoogArt), met dezelfde expliciete positie per
+   vakje als de schaduw, want die laag omvat het hele bord in plaats van één
+   tegel. */
+#hoogArt .objart.prod{
+  position:absolute;width:var(--cell);height:var(--cell);
+  pointer-events:none;
+  transform:translateY(calc(var(--cell) * var(--obj-zak-hoog,-0.08))) scale(var(--obj-schaal-hoog,1.7));
   transform-origin:50% 50%}
 /* Even groot als een vakje en op dezelfde plek, zodat tekening en schaduw
    precies over elkaar liggen -- ze komen zo uit Photoshop. */
 .objschaduw{position:absolute;width:var(--cell);height:var(--cell);
   pointer-events:none;
-  transform:translateY(calc(var(--cell) * var(--obj-zak,0))) scale(var(--obj-schaal,1));
+  transform:translateY(calc(var(--cell) * var(--obj-zak-bezet,0))) scale(var(--obj-schaal-bezet,1));
   transform-origin:50% 50%}
-.tile .objart.prod img,.objschaduw img{
+/* De schaduw van de hoge soort groeit met zijn tekening mee. Hij blijft wel
+   plat op de vloer liggen (#objSchaduw, onder de muren): alleen de tekening
+   valt over de muur heen, de schaduw op de grond niet. */
+.objschaduw.hoog{
+  transform:translateY(calc(var(--cell) * var(--obj-zak-hoog,-0.08))) scale(var(--obj-schaal-hoog,1.7));
+  transform-origin:50% 50%}
+.tile .objart.prod img,#hoogArt .objart.prod img,.objschaduw img{
   width:100%;height:100%;display:block;object-fit:contain}
 body.plat-icoon .objschaduw{display:none}
 /* Groeien en krimpen gebeurt vanaf de voet, zodat een object op zijn plek
@@ -3411,8 +3427,10 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="4" max="22" step="0.5" value="7.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">7.5</span></div>
   <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="4.2" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">4.2</span></div>
   <div class="debug-rij"><b>Textuur</b><input type="range" id="overlaySterkte" min="0" max="100" step="1" value="25" aria-label="Hoe hard de materiaaltekening over de kleur ligt"><span class="debug-getal" id="overlaySterkteGetal">25.0</span></div>
-  <div class="debug-rij"><b>Objectformaat</b><input type="range" id="objSchaal" min="0.5" max="2" step="0.01" value="1.2" aria-label="Hoe groot de objecten in hun vakje staan"><span class="debug-getal" id="objSchaalGetal">1.20</span></div>
-  <div class="debug-rij"><b>Objecten omlaag</b><input type="range" id="objZak" min="-10" max="15" step="0.5" value="0" aria-label="Hoe ver de objecten in hun vakje zakken of stijgen"><span class="debug-getal" id="objZakGetal">0.0</span></div>
+  <div class="debug-rij"><b>Formaat: bezet</b><input type="range" id="objSchaalBezet" min="0.5" max="2" step="0.01" value="1" aria-label="Hoe groot een bezetbaar object in zijn vakje staat"><span class="debug-getal" id="objSchaalBezetGetal">1.00</span></div>
+  <div class="debug-rij"><b>Omlaag: bezet</b><input type="range" id="objZakBezet" min="-10" max="15" step="0.5" value="0" aria-label="Hoe ver een bezetbaar object in zijn vakje zakt of stijgt"><span class="debug-getal" id="objZakBezetGetal">0.0</span></div>
+  <div class="debug-rij"><b>Formaat: hoog</b><input type="range" id="objSchaalHoog" min="0.5" max="3" step="0.01" value="1.7" aria-label="Hoe groot een hoog, niet-bezetbaar object staat"><span class="debug-getal" id="objSchaalHoogGetal">1.70</span></div>
+  <div class="debug-rij"><b>Omlaag: hoog</b><input type="range" id="objZakHoog" min="-25" max="15" step="0.5" value="-8" aria-label="Hoe ver een hoog, niet-bezetbaar object zakt of stijgt"><span class="debug-getal" id="objZakHoogGetal">-8.0</span></div>
 </div>
 
 <div class="modal sheet-modal van-boven" id="modalSettings">
@@ -3699,7 +3717,7 @@ function zetThemaKleur(){
   m.content=THEMA_KLEUR[t]||THEMA_KLEUR.donker;
 }
 function zetObjectThema(){
-  $$('#grid .objart.prod[data-slug]').forEach(el=>{
+  $$('#grid .objart.prod[data-slug], #hoogArt .objart.prod[data-slug]').forEach(el=>{
     const img=el.querySelector("img"); if(!img) return;
     zetBron(img,objectProdCandidates(el.dataset.slug));
   });
@@ -5351,14 +5369,20 @@ function renderBoard(){
              object heen. Ontbreekt hij, dan blijft het pictogram hierboven. */
           const slug=assetSlug(kind);
           const prod = isProductie(slug,plan.w,plan.h);
+          /* Bezetbaar past gewoon in zijn vakje. De hoge, niet-bezetbare
+             soort -- boom, struik, standbeeld -- hoort net als vroeger over
+             de muren heen te vallen; dat is dezelfde lijst (UITSTEKERS) als
+             de oude tekeningen gebruiken. */
+          const prodHoog = prod && UITSTEKERS.indexOf(slug)>=0;
           /* De schaduw ligt plat op de vloer, onder de tekening, en
              vermenigvuldigt met de tegel eronder: precies zoals de laag in
              Photoshop. Wit doet niets, dus alleen de schaduw kleurt mee. Hij
              hangt in de tegel en niet in de laag boven de muren, want een
-             schaduw hoort niet over een muur heen te vallen. */
+             schaduw hoort niet over een muur heen te vallen -- ook niet die
+             van de hoge soort. */
           if(prod){
             const sch=document.createElement("div");
-            sch.className="objschaduw";
+            sch.className="objschaduw"+(prodHoog?" hoog":"");
             sch.dataset.tegel=id;
             sch.style.left="calc(var(--cell) * "+(c-b.minC)+")";
             sch.style.top="calc(var(--cell) * "+(r-b.minR)+")";
@@ -5374,7 +5398,13 @@ function renderBoard(){
             if(pas||hoog) art.style.transform=(hoog?"translateX(-50%) ":"")+pas;
             art.dataset.rek=objectRekStijl(slug);
           }
-          if(prod){
+          if(prod && prodHoog){
+            /* Zelfde laag en dezelfde expliciete positie per vakje als de
+               schaduw: #hoogArt omvat het hele bord, niet één tegel. */
+            art.style.left="calc(var(--cell) * "+(c-b.minC)+")";
+            art.style.top="calc(var(--cell) * "+(r-b.minR)+")";
+            ($("#hoogArt")||el).appendChild(art);
+          } else if(prod){
             /* Maat en plek staan in de CSS: het hele vakje, geschaald vanuit
                het midden. Niets in te vullen vanuit de code. */
             el.appendChild(art);
@@ -5420,10 +5450,11 @@ function renderBoard(){
    ontwerp, dus dat ruimen we één keer op. Het nummer hoogt mee zodra de maten
    opnieuw veranderen. */
 (function(){
-  const SLEUTEL="clueboard:matenVersie", NU="6";
+  const SLEUTEL="clueboard:matenVersie", NU="7";
   try{
     if(localStorage.getItem(SLEUTEL)===NU) return;
-    ["muurDikte","tegelKier","overlaySterkte","tussenMuren","objSchaal","objZak"]
+    ["muurDikte","tegelKier","overlaySterkte","tussenMuren","objSchaal","objZak",
+     "objSchaalBezet","objZakBezet","objSchaalHoog","objZakHoog"]
       .forEach(k=>localStorage.removeItem("clueboard:"+k));
     localStorage.setItem(SLEUTEL,NU);
   }catch(e){}
@@ -5455,13 +5486,15 @@ let KIER_PROCENT = maat("clueboard:tegelKier",4.2);
 /* Hoe hard de materiaaltekening over de kleur ligt. Op nul zie je alleen de
    vlakke kleur, op honderd de tekening zoals hij is getekend. */
 let OVERLAY_PROCENT = maat("clueboard:overlaySterkte",25);
-/* Hoe groot de objecten uit de nieuwe lichting in hun vakje staan. Eén getal
-   voor alle objecten samen: ze zijn onderling al op elkaar afgestemd, dus wat
-   hier verandert verandert overal even veel. */
-let OBJ_SCHAAL = maat("clueboard:objSchaal",1.2);
-/* Hoe ver de objecten in hun vakje zakken, in procent van een vakje. Onder
-   nul schuiven ze omhoog. */
-let OBJ_ZAK = maatVrij("clueboard:objZak",0);
+/* Hoe groot de objecten uit de nieuwe lichting staan, en hoe ver ze in hun
+   vakje zakken (onder nul: stijgen) -- apart voor de bezetbare soort en de
+   hoge, niet-bezetbare soort. Onderling zijn ze wel weer op elkaar
+   afgestemd, dus wat hier verandert verandert binnen zijn soort overal
+   even veel. */
+let OBJ_SCHAAL_BEZET = maat("clueboard:objSchaalBezet",1.0);
+let OBJ_ZAK_BEZET    = maatVrij("clueboard:objZakBezet",0);
+let OBJ_SCHAAL_HOOG  = maat("clueboard:objSchaalHoog",1.7);
+let OBJ_ZAK_HOOG     = maatVrij("clueboard:objZakHoog",-8);
 /* In de donkere stand mag de textuur zachter: op een donkere tegel valt
    hetzelfde reliëf veel meer op dan op een lichte. */
 const OVERLAY_NACHT = 0.4;
@@ -5485,8 +5518,10 @@ function zetMaten(){
   st.setProperty("--glim-duur",GLIM_DUUR+"s");
   st.setProperty("--golf-diep",String(GOLF_DIEP));
   st.setProperty("--golf-duur",String(GOLF_DUUR));
-  st.setProperty("--obj-schaal",String(OBJ_SCHAAL));
-  st.setProperty("--obj-zak",String(OBJ_ZAK/100));
+  st.setProperty("--obj-schaal-bezet",String(OBJ_SCHAAL_BEZET));
+  st.setProperty("--obj-zak-bezet",String(OBJ_ZAK_BEZET/100));
+  st.setProperty("--obj-schaal-hoog",String(OBJ_SCHAAL_HOOG));
+  st.setProperty("--obj-zak-hoog",String(OBJ_ZAK_HOOG/100));
 }
 /* Welke watertegel wanneer aan de beurt is. De plek van een tegel wordt op de
    looprichting geprojecteerd; hoe verder langs die richting, hoe later hij
@@ -7544,7 +7579,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.90";
+const PLAYER_APP_VERSION="0.9.91";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8590,10 +8625,14 @@ maatSchuif("tegelKier","tegelKierGetal","clueboard:tegelKier",
   ()=>KIER_PROCENT, v=>{ if(v>=0) KIER_PROCENT=v; }, true);
 maatSchuif("overlaySterkte","overlaySterkteGetal","clueboard:overlaySterkte",
   ()=>OVERLAY_PROCENT, v=>{ OVERLAY_PROCENT=v; }, false);
-maatSchuif("objSchaal","objSchaalGetal","clueboard:objSchaal",
-  ()=>OBJ_SCHAAL, v=>{ if(v>0) OBJ_SCHAAL=v; }, false, 2);
-maatSchuif("objZak","objZakGetal","clueboard:objZak",
-  ()=>OBJ_ZAK, v=>{ OBJ_ZAK=v; }, false);
+maatSchuif("objSchaalBezet","objSchaalBezetGetal","clueboard:objSchaalBezet",
+  ()=>OBJ_SCHAAL_BEZET, v=>{ if(v>0) OBJ_SCHAAL_BEZET=v; }, false, 2);
+maatSchuif("objZakBezet","objZakBezetGetal","clueboard:objZakBezet",
+  ()=>OBJ_ZAK_BEZET, v=>{ OBJ_ZAK_BEZET=v; }, false);
+maatSchuif("objSchaalHoog","objSchaalHoogGetal","clueboard:objSchaalHoog",
+  ()=>OBJ_SCHAAL_HOOG, v=>{ if(v>0) OBJ_SCHAAL_HOOG=v; }, false, 2);
+maatSchuif("objZakHoog","objZakHoogGetal","clueboard:objZakHoog",
+  ()=>OBJ_ZAK_HOOG, v=>{ OBJ_ZAK_HOOG=v; }, false);
 /* De golf staat afgesteld en heeft geen schuiven meer nodig; de maten staan
    hierboven als vaste waarde. */
 
