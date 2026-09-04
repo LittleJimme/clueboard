@@ -1130,7 +1130,9 @@ body.hide-objsurf .tile .objsurf{display:none}
 .tile .objart.mat{z-index:1}
 .tile .objicon{position:absolute;inset:20%;pointer-events:none;color:rgba(21,26,51,.62);opacity:.85}
 .tile .objicon svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 0 rgba(255,255,255,.55))}
-.tile.occupiable .objicon{color:rgba(21,26,51,.5);opacity:.75}
+/* Op een bezetbaar vakje staat de tekening al; het lijnpictogram eronder was
+   dubbelop en maakte het vakje druk. */
+.tile.occupiable .objicon{display:none}
 /* ---------- Eigen tekeningen uit de Assets-map ---------- */
 /* De tekening ligt over de tegel heen en mag bij objecten van meerdere tegels
    over de buurtegels uitsteken. Laadt hij niet, dan blijft het lijnpictogram. */
@@ -1230,7 +1232,7 @@ body.hide-objsurf .tile .objsurf{display:none}
 .tile.w-l{--nm-l:calc(var(--nm-hoek) + var(--nm-wall))}
 /* Een dun, scherp lichtrandje in plaats van een waas: de letter blijft
    een letter, leesbaar op elke vloer, en wordt geen fiche. */
-.note-marks span{font-size:calc(var(--cell)*.235);font-weight:800;letter-spacing:.01em;
+.note-marks span{font-size:calc(var(--cell)*.265);font-weight:800;letter-spacing:.01em;
   text-shadow:1px 0 0 rgba(255,252,246,.9),-1px 0 0 rgba(255,252,246,.9),0 1px 0 rgba(255,252,246,.9),0 -1px 0 rgba(255,252,246,.9),
               0 1.5px 2px rgba(20,14,8,.28)}
 /* Het kruis ligt onder het object: een tafel of boom blijft gewoon te zien,
@@ -1811,23 +1813,26 @@ body.in-game .hb-c.licht{box-shadow:0 0 0 2px var(--goud)}
 .legend-obj{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;
   padding:0;background:none;border:none;box-shadow:none}
 .legend-obj .legend-icon{width:22px;height:22px;position:relative;z-index:1;color:rgba(21,26,51,.66)}
-.legend-chip.occupiable{background:none;border:2px dashed var(--goud);border-radius:50%;box-shadow:none}
-.legend-chip.occupiable::before,.legend-chip.occupiable::after{content:none}
+/* Bezetbaar: een gestippeld kader om het vak, in de vorm van het vak zelf.
+   Het gaat erom dát je erop mag staan; de ondergrond blijft gewoon zichtbaar. */
+.legend-chip.occupiable{border:2px dashed var(--goud)}
 /* Laadt de eigen tekening uit assets/art/objects/, dan verdwijnt het lijnpictogram
    zodat de legenda exact hetzelfde beeld toont als het bord. */
 .legend-icon img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
   filter:drop-shadow(0 1px 1px rgba(21,26,51,.18))}
 .legend-icon.has-art svg{display:none}
 .legend-chip{
-  position:relative;width:40px;height:40px;border-radius:10px;overflow:hidden;
+  position:relative;width:46px;height:46px;border-radius:11px;overflow:hidden;
   display:flex;align-items:center;justify-content:center;
   background:linear-gradient(158deg,var(--obj-hi),var(--obj-base) 62%,var(--obj-lo));
   border:1px solid var(--obj-edge);
   box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 2px 5px rgba(21,26,51,.16);
 }
 .legend-chip::after{content:"";position:absolute;inset:0;pointer-events:none}
-.legend-chip.blocked::after{background:repeating-linear-gradient(45deg,rgba(21,26,51,.22) 0 2px,rgba(21,26,51,0) 2px 6px)}
-.legend-chip.occupiable::after{inset:3px;border-radius:8px;border:1.4px dashed rgba(255,255,255,.75)}
+/* Geen arcering meer over een vak: met veertien objecten naast elkaar werd
+   dat een druk gordijn van streepjes. */
+.legend-chip.blocked::after{background:none}
+.legend-chip.occupiable::after{content:none}
 .legend-obj .name{font-size:11.5px;font-weight:700;line-height:1.2}
 
 /* Legenda + instellingen als bottom-sheet: schuiven omhoog vanaf de eigen knop,
@@ -1894,7 +1899,7 @@ body.in-game #gridWrap.regular{box-shadow:none}
 
 /* ── De kop ── */
 body.in-game .game-head{
-  display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;
+  display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:8px;
   padding:6px 14px 4px;padding-top:calc(10px + env(safe-area-inset-top));
   background:none;border:0;box-shadow:none;
 }
@@ -1912,11 +1917,19 @@ body.in-game .kop-check .teller:empty{display:none}
 /* De klok staat links, meteen naast de terugknop: hij hoort bij het lezen van
    de bladzijde, niet bij het afronden. Controleer staat rechts bij de andere
    knoppen. */
-/* De klok staat links, meteen naast de terugknop: hij hoort bij het lezen van
-   de bladzijde, niet bij het afronden. Controleer houdt zijn plek in het
-   midden, want dat is de knop waar je naartoe werkt. */
-.kop-links{display:flex;align-items:center;gap:8px;min-width:0}
+/* De klok staat midden boven het bord: hij hoort bij het bord, niet bij de
+   knoppen. Controleer schuift mee naar rechts, bij de andere knoppen. */
 body.in-game .kop-midden{display:flex;align-items:center;justify-content:center;min-width:0}
+/* Op een smal scherm is Controleer alleen nog het poppetje met de stand: het
+   woord past er niet bij, en het kadertje om de stand zegt al genoeg. */
+body.in-game #btnCheck{border-radius:14px}
+@media (max-width:520px){
+  body.in-game:not(.desktop) #btnCheck{background:none;border:0;box-shadow:none;padding:0 2px;gap:5px}
+  body.in-game:not(.desktop) #btnCheck .lbl{display:none}
+  body.in-game:not(.desktop) #btnCheck.klaar{background:none;box-shadow:none}
+  body.in-game:not(.desktop) #btnCheck.klaar .ic{color:var(--goud)}
+  body.in-game:not(.desktop) #btnCheck.klaar .teller{background:var(--goud);color:var(--goud-op)}
+}
 body.in-game .kop-check{min-width:0;max-width:100%;overflow:hidden}
 @media (max-width:420px){
   body.in-game .game-head{gap:6px}
@@ -2030,7 +2043,10 @@ body.in-game .view-switch{
   /* Vaste maat: "Bord" is korter dan "Regels", en zonder deze bodem
      verspringt de hele voetbalk bij elke wissel. */
   width:auto;min-width:128px;justify-content:center;height:50px;padding:0 13px 0 16px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;
-  background:var(--inkt);color:var(--grond);border:1px solid var(--inkt);box-shadow:var(--sch1);
+  /* Dezelfde inkt als de muren op het bord: de knop hoort bij het bord dat
+     hij omschakelt, niet bij de systeemkleur. */
+  background:var(--muur-standard,var(--inkt));color:var(--grond);
+  border:1px solid var(--muur-standard,var(--inkt));box-shadow:var(--sch1);
   font:800 12px var(--font-ui);letter-spacing:.08em;text-transform:uppercase;text-shadow:none;
 }
 body.in-game .view-switch:active{transform:translateY(1px);box-shadow:none}
@@ -2129,11 +2145,22 @@ body.desktop.in-game .clue-card .notitie-merk{right:10px}
    staat al op de kaart zelf. Het kader is dus gewoon de lijnkleur, en pas de
    gekozen kaart krijgt een ring -- in de kleur van die persoon, want dat is
    precies wat de ring aanwijst. */
-body.desktop.in-game .clue-card{border:0}
+/* Een kader dat er altijd staat, en even zwaar als toen het alleen bij de
+   gekozen kaart hoorde: zo hebben alle kaarten hetzelfde gewicht. */
+body.desktop.in-game .clue-card{border:2px solid var(--lijn)}
+/* Gekozen: het vak loopt helemaal vol met de gedempte kleur van die persoon
+   en de letters worden licht. Zo springt de kaart eruit zonder dat er een ring
+   omheen hoeft. */
 body.desktop.in-game .clue-card.geselecteerd,
 body.desktop.in-game .clue-row.victim.geselecteerd,
 body.desktop.in-game .clue-card.board.geselecteerd{
-  box-shadow:0 0 0 2px var(--pc,var(--goud));border-color:var(--pc,var(--goud))}
+  border-color:color-mix(in srgb,var(--pc,var(--goud)) 70%,#2A2620);
+  background:color-mix(in srgb,var(--pc,var(--goud)) 76%,#2A2620)}
+body.desktop.in-game .clue-card.geselecteerd .name,
+body.desktop.in-game .clue-card.geselecteerd .txt,
+body.desktop.in-game .clue-card.geselecteerd .txt b,
+body.desktop.in-game .clue-card.geselecteerd .tag{color:#FBF6EA}
+body.desktop.in-game .clue-card.geselecteerd .txt .regel+.regel{border-top-color:rgba(251,246,234,.28)}
 /* Midden: het bord met daaronder de werkbalk. */
 /* Het bord hoeft niet tot tegen de kolommen te lopen; met lucht eromheen
    leest het als een bord op tafel in plaats van als een gevuld vlak. */
@@ -2180,8 +2207,8 @@ body.desktop.in-game .legenda-pop{display:block;position:absolute;right:16px;bot
 body.desktop.in-game .legenda-pop[hidden]{display:none}
 @keyframes legendaPop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 body.desktop.in-game .legenda-pop-kop{font:800 10px var(--font-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--dof);margin:0 0 4px}
-body.desktop.in-game .legenda-pop .legend-sep{font-size:9.5px;margin:10px 0 4px;text-align:right}
-body.desktop.in-game .legenda-pop .legend-row{flex-direction:row-reverse;gap:8px;padding:4px 0;font-size:12px;border-bottom:1px solid var(--lijn-zacht)}
+body.desktop.in-game .legenda-pop .legend-sep{font-size:9.5px;margin:10px 0 4px;text-align:left}
+body.desktop.in-game .legenda-pop .legend-row{gap:8px;padding:4px 0;font-size:12px;border-bottom:1px solid var(--lijn-zacht)}
 body.desktop.in-game .legenda-pop .legend-row .name{font-size:12.5px}
 body.desktop.in-game .legenda-pop .legend-swatch{width:18px;height:18px;border-radius:5px}
 body.desktop.in-game .legenda-pop .legend-wall{width:20px;height:6px}
@@ -2455,9 +2482,9 @@ body.in-game .set-duo .schuif i{width:15px;height:15px}
 body.in-game .set-duo .set-row[aria-pressed="true"] .schuif i{left:15px;transform:none}
 body.in-game .set-acties{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
 body.in-game .set-actie{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;height:62px;border-radius:12px;
-  background:var(--kaart-2);border:1px solid var(--lijn);color:var(--inkt);font:700 11.5px var(--font-ui)}
-body.in-game .set-actie .ic{width:20px;height:20px;color:var(--inkt-2)}
+  display:flex;align-items:center;justify-content:center;gap:7px;height:44px;border-radius:12px;
+  background:var(--kaart-2);border:1px solid var(--lijn);color:var(--inkt);font:700 12px var(--font-ui)}
+body.in-game .set-actie .ic{width:16px;height:16px;color:var(--inkt-2)}
 body.in-game .set-actie .ic svg{width:100%;height:100%}
 body.in-game .set-actie.danger{color:#E58472;border-color:rgba(229,132,114,.35)}
 body.in-game .set-actie.danger .ic{color:#E58472}
@@ -2467,6 +2494,8 @@ body.in-game .set-row .set-tekst{flex:1;min-width:0;display:flex;flex-direction:
 body.in-game .set-row .set-tekst b{font-size:14px;font-weight:800;color:inherit}
 body.in-game .set-row .set-tekst small{font-size:12px;line-height:1.35;font-weight:600;color:var(--dof)}
 body.in-game .set-row .vraag-ic{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:19px;color:var(--goud)}
+body.in-game .set-row .pijl-rechts{width:14px;height:14px;color:var(--dof);transform:rotate(-90deg);display:flex}
+body.in-game .set-row .pijl-rechts svg{width:100%;height:100%}
 body.in-game .vis-raster{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 body.in-game .vis-raster .vis-row{margin:0;min-height:40px;font-size:12.5px}
 body.in-game .vis-raster .vis-row.breed{grid-column:1 / -1}
@@ -2493,6 +2522,10 @@ body.desktop.in-game .kop-knop.thema-knop i{
   box-shadow:0 0 0 1px rgba(0,0,0,.12) inset;
 }
 body.desktop.in-game .set-kop.weergave-kop,body.desktop.in-game #themaKeuze{display:none}
+/* Op een telefoon staat de uitleg niet meer als los vraagteken in de kop maar
+   onderin de instellingen, waar de rest van de hulp ook staat. */
+body.in-game:not(.desktop) #btnHelpTop{display:none}
+body.desktop.in-game #rowHelp{display:none}
 body.in-game .thema-keuze{display:flex;gap:4px;padding:3px;border-radius:999px;background:var(--kaart-2);border:1px solid var(--lijn);margin-bottom:6px}
 body.in-game .thema-keuze button{
   flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;
@@ -2588,7 +2621,10 @@ body.in-game .sheet-modal.open .sheet{animation:sheetOmhoog .3s cubic-bezier(.2,
 body.in-game .sheet-modal.van-boven.open .sheet{animation:sheetOmlaag .3s cubic-bezier(.2,.8,.3,1) both}
 @keyframes sheetOmhoog{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
 @keyframes sheetOmlaag{from{transform:translateY(-40px);opacity:0}to{transform:none;opacity:1}}
-body.in-game #modalLegend .sheet{max-height:82vh;padding:10px 18px calc(16px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0}
+body.in-game #modalLegend .sheet{max-height:82vh;padding:10px 16px calc(16px + env(safe-area-inset-bottom));border-radius:22px 22px 0 0}
+/* Even breed als de instellingen: twee laden die uit dezelfde balk komen
+   horen niet elk een eigen maat te hebben. */
+body.desktop.in-game #modalLegend .sheet{width:var(--links-b,360px);max-width:none}
 .sheet-greep{width:38px;height:4px;border-radius:2px;background:var(--lijn);margin:0 auto 10px}
 /* Een paneel dat van boven komt heeft zijn greep onderaan. */
 body.in-game .sheet-modal.van-boven .sheet-greep{order:9;margin:12px auto 0}
@@ -2992,8 +3028,10 @@ body.in-game #modalIntro .intro-bordregels:empty + .deelnemers{padding-top:12px}
    en als het uitkomt onderaan weer één (zie deelnemerRijen). Elke naam krijgt
    zo de halve breedte in plaats van een zesde, en de groep blijft compact bij
    elkaar in plaats van een lange sliert. */
-.deelnemers{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 0;
+.deelnemers{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 0;
   padding:40px 0 10px;justify-items:center;max-width:370px;margin:0 auto}
+.deelnemers.breed{grid-template-columns:repeat(6,1fr);max-width:560px}
+.deelnemers .dl-in{margin-top:-10px}
 .deelnemer{display:grid;grid-template-rows:calc(88px*1.22) auto;align-content:start;align-items:center;justify-items:center;gap:6px;min-width:0;width:100%}
 .deelnemer .portret{flex:0 0 auto}
 .dl-tekst{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;max-width:100%;text-align:center}
@@ -3032,26 +3070,22 @@ body.in-game #modalIntro .btn{width:100%;height:50px;font-size:18px}
    "LICHT"). Zo hoort de knop bij de bladzijde in plaats van erop te liggen
    als een knop uit een ander ontwerp. */
 body.in-end .uitslag-voet .btn{
-  background:var(--zegel);color:var(--zegel-op);
-  border:1px solid var(--goud);
-  height:52px;border-radius:999px;
+  background:var(--goud);color:var(--goud-op);
+  border:1px solid var(--goud-diep);
+  height:52px;border-radius:16px;
   font-family:var(--font-ui);font-weight:800;font-size:13px;
   letter-spacing:.18em;text-transform:uppercase;
   box-shadow:0 10px 26px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.14);
   gap:12px;
 }
-body.in-end .uitslag-voet .btn::after{
-  content:"";width:16px;height:1.5px;background:currentColor;opacity:.65;
-  transition:transform .18s cubic-bezier(.2,.8,.3,1);
-}
-body.in-end .uitslag-voet .btn:hover{filter:none;background:#9B6B19}
-body.in-end .uitslag-voet .btn:hover::after{transform:translateX(4px)}
+body.in-end .uitslag-voet .btn::after{content:none}
+body.in-end .uitslag-voet .btn:hover{filter:none;background:var(--goud-diep)}
 /* De knop onder het introvel: plat geel, zonder slagschaduw en zonder het
    streepje dat bij het bronzen zegel hoorde. Hij hoort bij de platte stijl van
    het bord, niet bij een knop uit een ander ontwerp. */
 body.in-game #modalIntro .rij-knoppen .btn{
   background:var(--goud);color:var(--goud-op);border:1px solid var(--goud-diep);
-  height:52px;border-radius:999px;
+  height:52px;border-radius:16px;
   font-family:var(--font-ui);font-weight:800;font-size:13px;
   letter-spacing:.18em;text-transform:uppercase;
   box-shadow:none;text-shadow:none;gap:12px;
@@ -3180,15 +3214,13 @@ body.in-game .clue-card.done::before{background:var(--goud)}
          instellingen rechts. In de stijl van het hoofdmenu; het thema van
          het level kleurt alleen het bord. -->
     <div class="game-head">
-      <div class="kop-links">
-        <button class="kop-knop" id="btnGameBack" aria-label="Terug naar het menu" title="Terug naar het menu"><span class="ic" data-icon="back"></span></button>
-        <div class="timer" id="timer"><span class="ic" data-icon="clock"></span><span id="timerVal">0:00</span></div>
-      </div>
+      <button class="kop-knop" id="btnGameBack" aria-label="Terug naar het menu" title="Terug naar het menu"><span class="ic" data-icon="back"></span></button>
       <div class="kop-titel" id="kopTitel"></div>
       <div class="kop-midden">
-        <button class="kop-check" id="btnCheck" title="Controleer je oplossing"><span class="ic" data-icon="check"></span><span class="lbl">Controleer</span><span class="teller" id="kopStand"></span></button>
+        <div class="timer" id="timer"><span class="ic" data-icon="clock"></span><span id="timerVal">0:00</span></div>
       </div>
       <div class="kop-rechts">
+        <button class="kop-check" id="btnCheck" title="Controleer je oplossing"><span class="ic" data-icon="pawn"></span><span class="lbl">Controleer</span><span class="teller" id="kopStand"></span></button>
         <button class="kop-knop thema-knop" id="btnThema" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
         <button class="kop-knop icon-btn" id="btnSettings" data-sheet="modalSettings" title="Instellingen" aria-label="Instellingen"><span class="ic" data-icon="settings"></span></button>
         <button class="kop-knop icon-btn" id="btnHelpTop" title="Speluitleg" aria-label="Speluitleg"><span class="vraag-ic">?</span></button>
@@ -3333,6 +3365,14 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       <button class="set-actie" id="btnWisKruisjes" type="button"><span class="ic" data-icon="cross"></span><span>Kruisjes</span></button>
       <button class="set-actie" id="btnWisLetters" type="button"><span class="ic" data-icon="pencil"></span><span>Letters</span></button>
       <button class="set-actie danger" id="btnRestart" type="button"><span class="ic" data-icon="undo"></span><span>Opnieuw</span></button>
+    </div>
+    <!-- De uitleg stond als los vraagteken in de kop; op een telefoon hoort hij
+         hier, bij de rest van wat je over het spel kunt opzoeken. -->
+    <div class="set-duo">
+      <button class="set-row" id="rowHelp" type="button">
+        <span class="ic" data-icon="sparkle"></span><span class="set-tekst"><b>Hoe speel je?</b></span>
+        <span class="ic pijl-rechts" data-icon="chevron"></span>
+      </button>
     </div>
   </div>
 </div>
@@ -4581,12 +4621,20 @@ function scoreRun(run,needed,cen,b){
 /* Hoeveel portretten er op elke regel staan: één, dan telkens twee, en als er
    precies één overblijft sluit die de rij weer alleen af. Zo staat de groep
    als een ruitje bij elkaar in plaats van als een lange sliert. */
-function deelnemerRijen(n){
-  if(n<=2) return [n];
-  const rijen=[1];
-  let rest=n-1;
-  while(rest>2){ rijen.push(2); rest-=2; }
-  if(rest>0) rijen.push(rest);
+/* Het slachtoffer staat altijd alleen bovenaan; daaronder gaan de rijen om en
+   om, zodat het een groepje wordt en geen kolom. Op een telefoon twee en een,
+   op een groot scherm drie en twee -- daar is de ruimte er wel voor. */
+function deelnemerRijen(n,breed){
+  const rijen=[];
+  let rest=n;
+  if(rest<=0) return rijen;
+  rijen.push(1); rest-=1;                    /* het slachtoffer, alleen */
+  const beurt=breed?[3,2]:[2,1];
+  let i=0;
+  while(rest>0){
+    const len=Math.min(beurt[i%beurt.length],rest);
+    rijen.push(len); rest-=len; i++;
+  }
   return rijen;
 }
 
@@ -5181,6 +5229,7 @@ function renderBoard(){
           const slug=assetSlug(kind);
           const hoog = plan.w===1 && plan.h===1 && UITSTEKERS.indexOf(slug)>=0;
           const art=document.createElement("div");
+          art.dataset.tegel=id;
           art.className="objart"+((plan.w>1||plan.h>1)?" vullend":"")+(hoog?" uitsteker":"");
           { const pas=objectPasStijl(slug);
             if(pas||hoog) art.style.transform=(hoog?"translateX(-50%) ":"")+pas;
@@ -5690,10 +5739,13 @@ function paintBoard(){
            -- ook niet als het kruis zelf verborgen staat, want dan zou er iets
            anders komen te staan dan wat er genoteerd is. Haal je het kruis weg,
            dan verschijnen ze gewoon weer. */
+        /* Altijd dezelfde volgorde: die van de personen in het dossier, niet
+           die waarin je ze toevallig hebt aangetikt. Waar een letter staat
+           hangt af van hoeveel er staan, maar de rij zelf ligt vast. */
         const marked=[];
-        if(visibility.notes && !n.cross) n.marks.forEach((v,personId)=>{
-          if(placed.has(personId)) return;
-          const p=M.peopleById.get(personId); if(p) marked.push(p);
+        if(visibility.notes && !n.cross) M.people.forEach(p=>{
+          if(!n.marks.has(p.id) || placed.has(p.id)) return;
+          marked.push(p);
         });
         if(marked.length){
           const wrap=document.createElement("div"); wrap.className="note-marks";
@@ -5748,6 +5800,25 @@ function fitBoard(){
    7. Tegel-input: tik = radiaal menu, lang indrukken = kruis
    ============================================================ */
 const LONGPRESS_MS=420;
+/* De tekening van dit object, ook als die op een ander vakje van hetzelfde
+   object staat. Een tafel over twee vakjes draagt zijn tekening maar één keer;
+   tik je op de andere helft, dan hoort diezelfde tekening te trillen en niet
+   het lege vakje eronder. */
+function objectBeeld(el,tegelId){
+  const t=M&&M.tiles.get(tegelId);
+  const oid=t&&t.objectId;
+  if(oid){
+    const o=M.objects.get(oid);
+    const tegels=(o&&o.tiles)||[];
+    for(let i=0;i<tegels.length;i++){
+      const kandidaat=$('#grid .tile[data-tile="'+tegels[i]+'"] .objart')
+        || $('#hoogArt .objart[data-tegel="'+tegels[i]+'"]');
+      if(kandidaat) return kandidaat;
+    }
+  }
+  return el.querySelector(".objart")||el.querySelector(".objicon")||el;
+}
+
 function shakeTile(el){
   haptic(30);
   el.classList.remove("shake");
@@ -5770,7 +5841,7 @@ function attachTileInput(el,tileId){
        aangekomen. Een kruis komt er wel, maar net als overal pas na lang
        indrukken. */
     if(t&&t.status==="blocked"){
-      shakeTile(el.querySelector(".objart")||el.querySelector(".objicon")||el);
+      shakeTile(objectBeeld(el,id));
       return;
     }
     openTileMenu(tileId,el);
@@ -5853,7 +5924,14 @@ function attachTileInput(el,tileId){
     if($("#radial").classList.contains("open")) return;
     cancel(); veeg=null;
     const t=M.tiles.get(tileId);
-    if(t&&t.status==="blocked"){ shakeTile(el.querySelector(".objart")||el.querySelector(".objicon")||el); return; }
+    if(t&&t.status==="blocked"){
+      shakeTile(objectBeeld(el,id));
+      /* Even zeggen waar je tegenaan tikt, net als bij het plaatsen op een
+         vakje waar wel iemand op kan. */
+      const o=t.objectId?M.objects.get(t.objectId):null;
+      if(o) toast((o.kindLabel||o.kind||"Dit vak")+" — hier kan niemand staan");
+      return;
+    }
     radialOverride=(mode==="note")?"place":"note";
     openTileMenu(tileId,el);
   });
@@ -6929,9 +7007,13 @@ function legendaHtml(){
             + AssetBank.roleIcon(r) + esc(roleLabel(r)) + '</span>').join("")
         : "";
       const fl=roomFloor(room);
+      /* Dezelfde kleur als op het bord: die komt uit het palet, niet uit de
+         ruimtekleur van de bouwer. Anders staat er in de legenda een kleur die
+         nergens op het bord voorkomt. */
+      const vlak = fl ? 'var(--vl-'+fl+')' : 'var(--vl-onbekend)';
       html+='<div class="legend-row">'
         +'<div class="legend-swatch"'+(fl?' data-floor="'+fl+'"':'')
-        +' style="background-color:'+(room.color||"#DCE3EF")+'"></div>'
+        +' style="background-color:'+vlak+'"></div>'
         +'<div style="flex:1"><div class="name">'+esc(room.name||room.id)+'</div>'
         +(tags?'<div class="legend-tags">'+tags+'</div>':'')+'</div>'
         +'<div class="legend-wall" style="'+wallSwatchCss(st.colors)+'"></div>'
@@ -6960,7 +7042,7 @@ function legendaHtml(){
       /* Bezetbaar wordt niet als vakje getoond maar als een gestippelde
          cirkel: het gaat erom dat je erop mag staan, niet hoe de tegel
          eronder eruitziet. */
-      const vlak = type==="occupiable" ? "" : objectSurfaceStyle(kind,type);
+      const vlak = objectSurfaceStyle(kind,type);
       out+='<div class="legend-obj">'
         +'<div class="legend-chip '+type+'" style="'+vlak+'">'
         +'<div class="legend-icon" data-obj-kind="'+esc(kind)+'"'
@@ -7292,7 +7374,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.81";
+const PLAYER_APP_VERSION="0.9.82";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -7629,13 +7711,19 @@ function showLevelDetail(levelIndex){
   /* Een ruitje: bovenaan één, daaronder telkens twee, en als het uitkomt
      onderaan weer één. Op vier kolommen staat een enkeling in het midden
      (2/4) en staan twee naast elkaar op 1/3 en 3/5. */
-  const n=allen.length;
-  const rijen=deelnemerRijen(n);
-  const kolommen=[];
-  rijen.forEach(len=>{
-    if(len===1) kolommen.push("2/4");
-    else { kolommen.push("1/3"); kolommen.push("3/5"); }
+  const n=allen.length, breed=isDesktop();
+  const rijen=deelnemerRijen(n,breed);
+  /* Op een telefoon vier kolommen, op een groot scherm zes: een portret beslaat
+     er telkens twee, zodat een rij van een, twee of drie vanzelf gecentreerd
+     uitkomt. */
+  const KOL = breed
+    ? {1:["3/5"], 2:["2/4","4/6"], 3:["1/3","3/5","5/7"]}
+    : {1:["2/4"], 2:["1/3","3/5"]};
+  const kolommen=[], rijNr=[];
+  rijen.forEach((len,r)=>{
+    (KOL[len]||KOL[1]).forEach(k=>{ kolommen.push(k); rijNr.push(r); });
   });
+  host.classList.toggle("breed",breed);
   /* Op desktop staat het hele vel op één pagina; de portretten zijn daar
      wat kleiner, en bij meer dan zes personen nog een maat kleiner. */
   const maat=isDesktop()?(n>6?82:94):88;
@@ -7644,7 +7732,11 @@ function showLevelDetail(levelIndex){
     const isV=pe.id===M.victimId;
     const rij=document.createElement("div");
     rij.className="deelnemer"+(isV?" slachtoffer":"")+(pe.name.length>10?" zeerlang":pe.name.length>7?" lang":"");
-    rij.style.gridColumn=kolommen[ix]||"2/4";
+    rij.style.gridColumn=kolommen[ix]||(breed?"3/5":"2/4");
+    rij.style.gridRow=String((rijNr[ix]||0)+1);
+    /* Om en om een tikje omhoog: dan schuiven de rijen in elkaar en staat de
+       groep bij elkaar in plaats van als losse regels onder elkaar. */
+    if((rijNr[ix]||0)%2===1) rij.classList.add("dl-in");
     rij.appendChild(personPortrait(pe,{size:maat}));
     const tekst=document.createElement("div");
     tekst.className="dl-tekst";
@@ -8070,6 +8162,13 @@ $("#btnHint").addEventListener("click",()=>{
 $("#btnHintJa").addEventListener("click",()=>{ closeModal($("#modalHint")); geefHint(); });
 $("#rowEasy").addEventListener("click",()=>setEasyMode(!easyMode));
 $("#rowAutoKruis").addEventListener("click",()=>setAutoKruis(!autoKruis));
+{ /* Dezelfde uitleg, nu ook vanuit de instellingen. */
+  const rij=$("#rowHelp");
+  if(rij) rij.addEventListener("click",()=>{
+    closeModal($("#modalSettings"));
+    setTimeout(()=>$("#btnHelpTop").click(),120);
+  });
+}
 $("#btnHelpTop").addEventListener("click",()=>{
   $$(".sheet-modal.open").forEach(closeModal);
   vulHelp(); openModal("#modalHelp");
