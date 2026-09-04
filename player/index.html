@@ -1312,7 +1312,8 @@ body.plat-icoon .objschaduw{display:none}
 /* Het kruis draagt zijn eigen lichte onderlaag in de tekening zelf; daar
    overheen één zachte donkere schaduw. Een witte schaduw met een verspringing
    gaf een spookrandje langs de streep. */
-.note-cross svg{width:70%;height:70%;filter:drop-shadow(0 1px 1.5px rgba(26,16,8,.4))}
+.note-cross img{width:74%;height:74%;display:block;object-fit:contain;
+  filter:drop-shadow(0 1px 2px rgba(26,16,8,.28))}
 @keyframes crossIn{from{opacity:0;transform:scale(.55) rotate(-16deg)}to{opacity:1;transform:none}}
 
 /* ---------- Pion: gevulde schijf met witte letter ----------
@@ -3460,6 +3461,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <button class="debug-rij schakel" id="rowGlans" type="button" aria-pressed="false"><b>Glans op edele vloer</b><span class="schuif"><i></i></span></button>
   <button class="debug-rij schakel" id="rowMatTex" type="button" aria-pressed="false"><b>Textuur op tapijt</b><span class="schuif"><i></i></span></button>
   <button class="debug-rij schakel" id="rowMatScreen" type="button" aria-pressed="false"><b>Tapijt op screen (uit = multiply)</b><span class="schuif"><i></i></span></button>
+  <button class="debug-rij schakel" id="rowMuurDonker" type="button" aria-pressed="false"><b>Donkere muren &apos;s nachts</b><span class="schuif"><i></i></span></button>
   <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="4" max="22" step="0.5" value="7.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">7.5</span></div>
   <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="4.2" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">4.2</span></div>
   <div class="debug-rij"><b>Rood bij kruisje</b><input type="range" id="kruisRood" min="0" max="70" step="1" value="22" aria-label="Hoe hard een gekruiste tegel rood kleurt"><span class="debug-getal" id="kruisRoodGetal">22.0</span></div>
@@ -3671,7 +3673,12 @@ function zetVlakPalet(){
      dagwaarde. */
   /* Overdag een haartje bruiner dan zwart: warmer bij het hout en de aarde
      van het bord, maar van een afstand nog altijd zwart. */
-  st.setProperty("--muur-standard",nacht?"#DBD1C9":"#2B2117");
+  /* 's Nachts standaard licht: dat geeft hetzelfde harde contrast als overdag
+     een donkere muur. Sommigen vinden dat te hard oplichten, dus in de
+     proefstand is er een donkere stand. Die ligt op L15, ruim onder elke
+     nachtvloer (L36 tot L48), zodat de muur donker is en toch te zien. */
+  const muurDonker=nacht&&document.body.classList.contains("muur-donker");
+  st.setProperty("--muur-standard",nacht?(muurDonker?"#1E2731":"#DBD1C9"):"#2B2117");
   st.setProperty("--muur-noble",VLAK_PALET.muren.noble.dag);
   /* Het raster: rustig, maar in beide standen te zien. */
   /* De tegels staan los van elkaar; wat je in de kier ziet ís het raster.
@@ -4950,6 +4957,7 @@ const MAT_EXT=1.5;   /* overlap over de tegelgrens, tegen haarnaden */
    vijf, dan wordt de tekening meegeschaald in plaats van herhaald. */
 const MAT_TEX_VAKJES=5;
 function matTextuurUrl(){ return assetUrl("overlays","mat-textuur","jpg"); }
+function kruisUrl(){ return assetUrl("overlays","kruis","png"); }
 /* De omvang van een kleed in vakjes, en waar deze tegel daarbinnen ligt. Het
    antwoord hangt alleen van het kleed af, dus het wordt per kleed onthouden:
    een kleed van zes tegels zou het anders zes keer uitrekenen. */
@@ -6005,10 +6013,9 @@ function paintBoard(){
           cr.className="note-cross"+(kruisEerder.has(id)?" stil":"");
           if(kruisVertraging.has(id)) cr.style.animationDelay=kruisVertraging.get(id)+"ms";
           kruisEerder.add(id);
-          /* Eén streek, geen lichte onderlaag: een groot kruis over het hele
-             vakje is ook op een fors object niet te missen. */
-          cr.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round">'
-            +'<path d="M4 4l16 16M20 4L4 20" stroke="#DC4A46" stroke-width="3.6"/></svg>';
+          /* De uitgesneden tekening in plaats van twee streken: die draagt zijn
+             eigen reliëf en past bij de rest van het bord. */
+          cr.innerHTML='<img src="'+kruisUrl()+'" alt="" aria-hidden="true" decoding="async">';
           el.appendChild(cr);
           el.classList.add("heeft-kruis");
         }
@@ -7677,7 +7684,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.94";
+const PLAYER_APP_VERSION="0.9.95";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8678,7 +8685,8 @@ document.addEventListener("pointerdown",e=>{
  ["rowGolf","golf","clueboard:golf",true],
  ["rowGlans","glans","clueboard:glans",true],
  ["rowMatTex","mat-textuur","clueboard:matTextuur",true],
- ["rowMatScreen","mat-screen","clueboard:matScreen",false]].forEach(function(rij){
+ ["rowMatScreen","mat-screen","clueboard:matScreen",false],
+ ["rowMuurDonker","muur-donker","clueboard:muurDonker",false]].forEach(function(rij){
   const id=rij[0], klasse=rij[1], sleutel=rij[2], standaard=!!rij[3];
   const knop=$("#"+id);
   const zet=aan=>{
@@ -8692,10 +8700,16 @@ document.addEventListener("pointerdown",e=>{
   if(knop) knop.addEventListener("click",()=>{
     zet(!document.body.classList.contains(klasse));
     /* De bocht van een muur hangt ervan af of de tegels ertussen staan, dus
-       na het omzetten het bord even opnieuw opmeten. */
+       na het omzetten het bord even opnieuw opmeten. Het palet gaat mee: de
+       muurkleur leest een klasse op de body. */
+    try{ zetVlakPalet(); }catch(e){}
     try{ fitBoard(); }catch(e){}
   });
 });
+/* De stand van de schakelaars wordt hierboven pas gezet, en het palet is dan
+   al een keer berekend. Wie met donkere muren aan opstart, zou ze anders pas
+   bij de eerste themawissel zien. */
+try{ zetVlakPalet(); }catch(e){}
 
 /* Tijdelijke schuifbalken: de dikte van de muren en de kier tussen de tegels.
    Na elke stap wordt het bord opnieuw opgemeten, waardoor ook de lucht tussen
