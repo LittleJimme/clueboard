@@ -1,6 +1,6 @@
 {
   "format": "clueboard-flat-color-reference",
-  "version": 1,
+  "version": "2",
   "notes": [
     "Color only; no texture, gradients, bevels or baked lighting.",
     "Each floor swatch represents one complete 1x1 gameplay cell.",
@@ -11,67 +11,67 @@
       "id": "stone",
       "label": "STONE / KALKSTEEN",
       "day": "#DDD8CB",
-      "night": "#515B66"
+      "night": "#4F4842"
     },
     {
       "id": "concrete",
       "label": "CONCRETE / PLEISTER",
       "day": "#E7E2D8",
-      "night": "#5D6570"
+      "night": "#554F4A"
     },
     {
       "id": "tile",
       "label": "TILE / PLAAT",
       "day": "#DCDCCF",
-      "night": "#536260"
+      "night": "#4E4B42"
     },
     {
       "id": "marble",
       "label": "MARBLE / MARMER",
       "day": "#EEE9DF",
-      "night": "#69737E"
+      "night": "#5E5953"
     },
     {
       "id": "dirt",
       "label": "DIRT / AARDE",
       "day": "#C9B28E",
-      "night": "#5F5549"
+      "night": "#534134"
     },
     {
       "id": "sand",
       "label": "SAND / ZAND",
       "day": "#DDC9A3",
-      "night": "#716756"
+      "night": "#635240"
     },
     {
       "id": "gravel",
       "label": "GRAVEL / GRIND",
       "day": "#C1BBAF",
-      "night": "#555A60"
+      "night": "#4B4641"
     },
     {
       "id": "wood",
       "label": "WOOD / LICHT HOUT",
       "day": "#D4C4AA",
-      "night": "#685E53"
+      "night": "#5D4739"
     },
     {
       "id": "grass",
       "label": "GRASS / GRAS",
       "day": "#B8C39A",
-      "night": "#465B49"
+      "night": "#444935"
     },
     {
       "id": "carpet",
       "label": "CARPET / LINNEN",
       "day": "#D4C1B2",
-      "night": "#62525B"
+      "night": "#52403C"
     },
     {
       "id": "water",
       "label": "WATER",
       "day": "#B9D1D0",
-      "night": "#406373"
+      "night": "#2F535E"
     }
   ],
   "walls": [
@@ -79,17 +79,17 @@
       "id": "wall-standard",
       "label": "WALL / STANDAARD",
       "day": "#AEB5B3",
-      "night": "#313D49"
+      "night": "#221A15"
     },
     {
       "id": "wall-noble",
       "label": "WALL / EDEL",
       "day": "#D3B45D",
-      "night": "#74643B"
+      "night": "#695733"
     }
   ],
   "contexts": {
     "day": "#F8F4EC",
-    "night": "#252C35"
+    "night": "#29201B"
   }
 }

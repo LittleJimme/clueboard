@@ -2124,10 +2124,12 @@ body.in-game .view-switch{
   /* Vaste maat: "Bord" is korter dan "Regels", en zonder deze bodem
      verspringt de hele voetbalk bij elke wissel. */
   width:auto;min-width:128px;justify-content:center;height:50px;padding:0 13px 0 16px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;
-  /* Dezelfde inkt als de muren op het bord: de knop hoort bij het bord dat
-     hij omschakelt, niet bij de systeemkleur. */
-  background:var(--muur-standard,var(--inkt));color:var(--grond);
-  border:1px solid var(--muur-standard,var(--inkt));box-shadow:var(--sch1);
+  /* De inkt van het thema. Dit stond eerst op de muurkleur van het bord --
+     de knop hoort immers bij het bord dat hij omschakelt -- maar sinds de
+     muur 's nachts donker is, viel de knop weg tegen de ondergrond. De inkt
+     draait wel netjes om: overdag donker, 's nachts licht. */
+  background:var(--inkt);color:var(--grond);
+  border:1px solid var(--inkt);box-shadow:var(--sch1);
   font:800 12px var(--font-ui);letter-spacing:.08em;text-transform:uppercase;text-shadow:none;
 }
 body.in-game .view-switch:active{transform:translateY(1px);box-shadow:none}
@@ -3461,7 +3463,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <button class="debug-rij schakel" id="rowGlans" type="button" aria-pressed="false"><b>Glans op edele vloer</b><span class="schuif"><i></i></span></button>
   <button class="debug-rij schakel" id="rowMatTex" type="button" aria-pressed="false"><b>Textuur op tapijt</b><span class="schuif"><i></i></span></button>
   <button class="debug-rij schakel" id="rowMatScreen" type="button" aria-pressed="false"><b>Tapijt op screen (uit = multiply)</b><span class="schuif"><i></i></span></button>
-  <button class="debug-rij schakel" id="rowMuurDonker" type="button" aria-pressed="false"><b>Donkere muren &apos;s nachts</b><span class="schuif"><i></i></span></button>
+  <button class="debug-rij schakel" id="rowMuurLicht" type="button" aria-pressed="false"><b>Lichte muren &apos;s nachts</b><span class="schuif"><i></i></span></button>
   <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="4" max="22" step="0.5" value="7.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">7.5</span></div>
   <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="4.2" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">4.2</span></div>
   <div class="debug-rij"><b>Muur donkerte</b><input type="range" id="muurNachtL" min="0" max="30" step="0.5" value="8" aria-label="Hoe donker de muur is in de donkere nachtstand"><span class="debug-getal" id="muurNachtLGetal">8.0</span></div>
@@ -3632,25 +3634,25 @@ body.in-game .clue-card.done::before{background:var(--goud)}
    door assets/tools/build_palette.py; met de hand bijwerken hoeft niet. */
 /* @palet-begin */
 const VLAK_PALET = {
-  bron:"clueboard-flat-color-reference v1",
+  bron:"clueboard-flat-color-reference v2",
   vloeren:{
-    stone    :{dag:"#DDD8CB",nacht:"#515B66"},
-    concrete :{dag:"#E7E2D8",nacht:"#5D6570"},
-    tile     :{dag:"#DCDCCF",nacht:"#536260"},
-    marble   :{dag:"#EEE9DF",nacht:"#69737E"},
-    dirt     :{dag:"#C9B28E",nacht:"#5F5549"},
-    sand     :{dag:"#DDC9A3",nacht:"#716756"},
-    gravel   :{dag:"#C1BBAF",nacht:"#555A60"},
-    wood     :{dag:"#D4C4AA",nacht:"#685E53"},
-    grass    :{dag:"#B8C39A",nacht:"#465B49"},
-    carpet   :{dag:"#D4C1B2",nacht:"#62525B"},
-    water    :{dag:"#B9D1D0",nacht:"#406373"},
+    stone    :{dag:"#DDD8CB",nacht:"#4F4842"},
+    concrete :{dag:"#E7E2D8",nacht:"#554F4A"},
+    tile     :{dag:"#DCDCCF",nacht:"#4E4B42"},
+    marble   :{dag:"#EEE9DF",nacht:"#5E5953"},
+    dirt     :{dag:"#C9B28E",nacht:"#534134"},
+    sand     :{dag:"#DDC9A3",nacht:"#635240"},
+    gravel   :{dag:"#C1BBAF",nacht:"#4B4641"},
+    wood     :{dag:"#D4C4AA",nacht:"#5D4739"},
+    grass    :{dag:"#B8C39A",nacht:"#444935"},
+    carpet   :{dag:"#D4C1B2",nacht:"#52403C"},
+    water    :{dag:"#B9D1D0",nacht:"#2F535E"},
   },
   muren:{
-    standard :{dag:"#AEB5B3",nacht:"#313D49"},
-    noble    :{dag:"#D3B45D",nacht:"#74643B"},
+    standard :{dag:"#AEB5B3",nacht:"#221A15"},
+    noble    :{dag:"#D3B45D",nacht:"#695733"},
   },
-  grond:{dag:"#F8F4EC",nacht:"#252C35"},
+  grond:{dag:"#F8F4EC",nacht:"#29201B"},
 };
 /* @palet-eind */
 /* Zet het palet als variabelen op de pagina. Wordt bij elke themawissel
@@ -3689,14 +3691,14 @@ function zetVlakPalet(){
      dagwaarde. */
   /* Overdag een haartje bruiner dan zwart: warmer bij het hout en de aarde
      van het bord, maar van een afstand nog altijd zwart. */
-  /* 's Nachts standaard licht: dat geeft hetzelfde harde contrast als overdag
-     een donkere muur. Dat licht springt er voor sommigen te hard uit, dus in
-     de proefstand is er een donkere stand. Hoe donker staat op een schuif: de
-     nachtvloeren liggen tussen L36 en L48 en de grond eromheen op L18, dus
-     alles daaronder leest als muur. Op L8 is hij bijna zwart en nog altijd van
-     de grond te onderscheiden. */
-  const muurDonker=nacht&&document.body.classList.contains("muur-donker");
-  st.setProperty("--muur-standard",nacht?(muurDonker?labKleur(MUUR_NACHT_L,7,265):"#DBD1C9"):"#2B2117");
+  /* 's Nachts is de muur donker en warm, in dezelfde familie als de vloeren en
+     de objecten: die liggen nu tussen L29 en L38 met een tint rond de 60 tot
+     100. De muur zit daar ruim onder, dus hij leest als muur zonder op te
+     lichten. Hoe donker precies staat op een schuif. De lichte muur van eerst
+     staat nog in de proefstand: die gaf hetzelfde harde contrast als overdag,
+     maar sprong er in een donkere kamer uit. */
+  const muurLicht=nacht&&document.body.classList.contains("muur-licht");
+  st.setProperty("--muur-standard",nacht?(muurLicht?"#DBD1C9":labKleur(MUUR_NACHT_L,6,55)):"#2B2117");
   st.setProperty("--muur-noble",VLAK_PALET.muren.noble.dag);
   /* Het raster: rustig, maar in beide standen te zien. */
   /* De tegels staan los van elkaar; wat je in de kier ziet ís het raster.
@@ -7705,7 +7707,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.96";
+const PLAYER_APP_VERSION="0.9.97";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8707,7 +8709,7 @@ document.addEventListener("pointerdown",e=>{
  ["rowGlans","glans","clueboard:glans",true],
  ["rowMatTex","mat-textuur","clueboard:matTextuur",true],
  ["rowMatScreen","mat-screen","clueboard:matScreen",false],
- ["rowMuurDonker","muur-donker","clueboard:muurDonker",false]].forEach(function(rij){
+ ["rowMuurLicht","muur-licht","clueboard:muurLicht",false]].forEach(function(rij){
   const id=rij[0], klasse=rij[1], sleutel=rij[2], standaard=!!rij[3];
   const knop=$("#"+id);
   const zet=aan=>{

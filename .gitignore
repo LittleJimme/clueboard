@@ -31,6 +31,10 @@ assets/art/production/night-lighting-tests/
 
 # Proefbeelden en stijlvellen: leuk om te bewaren, maar het spel leest ze niet.
 assets/art/concepts/
+# ... op de kleurenbron na: build_palette.py leest die en schrijft er het
+# palet van de speler uit, dus zonder dat bestand is de speler niet opnieuw
+# te maken.
+!assets/art/concepts/clueboard-floor-wall-flat-colors-day-night-v1.json
 assets/art/clueboard-real-ui-*.png
 assets/art/clueboard-scene-*.png
 
