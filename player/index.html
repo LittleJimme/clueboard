@@ -1249,16 +1249,17 @@ body.mat-screen .tile .objmat .mat-tex{mix-blend-mode:screen}
    getekend is er vanzelf bovenuit; er hoeft niets meer per soort geschaald te
    worden, want het maatverschil zit nu in de tekening.
 
-   Van de drie getallen volgen de laatste twee uit het eerste: horizontaal
-   (1,6 - 1) / 2 opzij, verticaal 1 - 0,86 x 1,6 omhoog. */
-#gridWrap{--obj-kader:1.6;--obj-links:-.3;--obj-boven:-.375}
+   De drie getallen worden in zetMaten() uitgerekend uit de maat van het kader
+   en twee verschuivingen; ze staan hier niet, want dan zouden ze die van de
+   schuiven overstemmen. De waardes hieronder zijn alleen een terugval voor het
+   geval zetMaten() nog niet gedraaid heeft. */
 .tile .objart.prod,#hoogArt .objart.prod,.objschaduw{
   position:absolute;pointer-events:none;
-  width:calc(var(--cell) * var(--obj-kader));
-  height:calc(var(--cell) * var(--obj-kader))}
+  width:calc(var(--cell) * var(--obj-kader,1.6));
+  height:calc(var(--cell) * var(--obj-kader,1.6))}
 .tile .objart.prod{z-index:2;
-  left:calc(var(--cell) * var(--obj-links));
-  top:calc(var(--cell) * var(--obj-boven))}
+  left:calc(var(--cell) * var(--obj-links,-.3));
+  top:calc(var(--cell) * var(--obj-boven,-.375))}
 /* Even groot als een vakje en op dezelfde plek, zodat tekening en schaduw
    precies over elkaar liggen -- ze komen zo uit Photoshop. */
 /* De schaduw ligt in hetzelfde kader als de tekening -- ze komen uit hetzelfde
@@ -3519,6 +3520,9 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <button class="debug-rij schakel" id="rowMuurLicht" type="button" aria-pressed="false"><b>Lichte muren &apos;s nachts</b><span class="schuif"><i></i></span></button>
   <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="4" max="22" step="0.5" value="7.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">7.5</span></div>
   <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="4.2" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">4.2</span></div>
+  <div class="debug-rij"><b>Objectformaat</b><input type="range" id="objKader" min="1" max="2.6" step="0.01" value="1.6" aria-label="Hoe groot een objecttekening staat, in vakjes"><span class="debug-getal" id="objKaderGetal">1.60</span></div>
+  <div class="debug-rij"><b>Object opzij</b><input type="range" id="objDx" min="-15" max="15" step="0.5" value="0" aria-label="Hoe ver een object opzij schuift, in procent van een vakje"><span class="debug-getal" id="objDxGetal">0.0</span></div>
+  <div class="debug-rij"><b>Object omlaag</b><input type="range" id="objDy" min="-15" max="15" step="0.5" value="0" aria-label="Hoe ver een object omlaag schuift, in procent van een vakje"><span class="debug-getal" id="objDyGetal">0.0</span></div>
   <div class="debug-rij"><b>Textuur</b><input type="range" id="overlaySterkte" min="0" max="100" step="1" value="25" aria-label="Hoe hard de materiaaltekening over de kleur ligt"><span class="debug-getal" id="overlaySterkteGetal">25.0</span></div>
 </div>
 
@@ -5661,11 +5665,12 @@ function renderBoard(){
    ontwerp, dus dat ruimen we één keer op. Het nummer hoogt mee zodra de maten
    opnieuw veranderen. */
 (function(){
-  const SLEUTEL="clueboard:matenVersie", NU="8";
+  const SLEUTEL="clueboard:matenVersie", NU="9";
   try{
     if(localStorage.getItem(SLEUTEL)===NU) return;
     ["muurDikte","tegelKier","overlaySterkte","tussenMuren","objSchaal","objZak",
-     "objSchaalBezet","objZakBezet","objSchaalHoog","objZakHoog","muurNachtL"]
+     "objSchaalBezet","objZakBezet","objSchaalHoog","objZakHoog","muurNachtL",
+     "objKader","objDx","objDy"]
       .forEach(k=>localStorage.removeItem("clueboard:"+k));
     localStorage.setItem(SLEUTEL,NU);
   }catch(e){}
@@ -5703,6 +5708,17 @@ let OVERLAY_PROCENT = maat("clueboard:overlaySterkte",25);
    vastligt zijn het gewone getallen. */
 /* Hoe hard een gekruiste tegel rood kleurt, in procent van de vloerkleur. */
 const KRUIS_PCT = 25;
+/* Waar de grondlijn in een objecttekening ligt: 880 van de 1024, zoals de
+   renderopdracht voorschrijft. Alleen dit getal weet iets van de tekeningen;
+   de rest volgt eruit. */
+const OBJ_GRONDLIJN = 880/1024;
+/* Hoe groot het kader van een objecttekening is, in vakjes, en hoeveel het
+   daarna nog opzij of omlaag schuift, in procent van een vakje. Het kader
+   schaalt om de grondlijn en het midden van het vakje heen, zodat een object
+   bij het groter maken op zijn plek blijft staan in plaats van weg te lopen. */
+let OBJ_KADER = maat("clueboard:objKader",1.6);
+let OBJ_DX    = maatVrij("clueboard:objDx",0);
+let OBJ_DY    = maatVrij("clueboard:objDy",0);
 /* Hoe donker de muur 's nachts is, als helderheid in Lab. Zie zetVlakPalet();
    de vloeren liggen tussen L29 en L38, dus hierop leest de muur als een warme
    wand in schemerlicht in plaats van als een zwarte streep. */
@@ -5731,6 +5747,9 @@ function zetMaten(){
   st.setProperty("--golf-diep",String(GOLF_DIEP));
   st.setProperty("--golf-duur",String(GOLF_DUUR));
   st.setProperty("--kruis-pct",String(KRUIS_PCT));
+  st.setProperty("--obj-kader",String(OBJ_KADER));
+  st.setProperty("--obj-links",String((1-OBJ_KADER)/2 + OBJ_DX/100));
+  st.setProperty("--obj-boven",String(1 - OBJ_GRONDLIJN*OBJ_KADER + OBJ_DY/100));
 }
 /* Welke watertegel wanneer aan de beurt is. De plek van een tegel wordt op de
    looprichting geprojecteerd; hoe verder langs die richting, hoe later hij
@@ -7808,7 +7827,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.105";
+const PLAYER_APP_VERSION="0.9.106";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8860,6 +8879,10 @@ maatSchuif("tegelKier","tegelKierGetal","clueboard:tegelKier",
   ()=>KIER_PROCENT, v=>{ if(v>=0) KIER_PROCENT=v; }, true);
 maatSchuif("overlaySterkte","overlaySterkteGetal","clueboard:overlaySterkte",
   ()=>OVERLAY_PROCENT, v=>{ OVERLAY_PROCENT=v; }, false);
+maatSchuif("objKader","objKaderGetal","clueboard:objKader",
+  ()=>OBJ_KADER, v=>{ if(v>0) OBJ_KADER=v; }, false, 2);
+maatSchuif("objDx","objDxGetal","clueboard:objDx", ()=>OBJ_DX, v=>{ OBJ_DX=v; }, false);
+maatSchuif("objDy","objDyGetal","clueboard:objDy", ()=>OBJ_DY, v=>{ OBJ_DY=v; }, false);
 
 /* De golf staat afgesteld en heeft geen schuiven meer nodig; de maten staan
    hierboven als vaste waarde. */
