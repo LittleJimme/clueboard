@@ -3464,6 +3464,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <button class="debug-rij schakel" id="rowMuurDonker" type="button" aria-pressed="false"><b>Donkere muren &apos;s nachts</b><span class="schuif"><i></i></span></button>
   <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="4" max="22" step="0.5" value="7.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">7.5</span></div>
   <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="4.2" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">4.2</span></div>
+  <div class="debug-rij"><b>Muur donkerte</b><input type="range" id="muurNachtL" min="0" max="30" step="0.5" value="8" aria-label="Hoe donker de muur is in de donkere nachtstand"><span class="debug-getal" id="muurNachtLGetal">8.0</span></div>
   <div class="debug-rij"><b>Rood bij kruisje</b><input type="range" id="kruisRood" min="0" max="70" step="1" value="22" aria-label="Hoe hard een gekruiste tegel rood kleurt"><span class="debug-getal" id="kruisRoodGetal">22.0</span></div>
   <div class="debug-rij"><b>Textuur</b><input type="range" id="overlaySterkte" min="0" max="100" step="1" value="25" aria-label="Hoe hard de materiaaltekening over de kleur ligt"><span class="debug-getal" id="overlaySterkteGetal">25.0</span></div>
   <div class="debug-rij"><b>Formaat: bezet</b><input type="range" id="objSchaalBezet" min="0.5" max="2" step="0.01" value="1" aria-label="Hoe groot een bezetbaar object in zijn vakje staat"><span class="debug-getal" id="objSchaalBezetGetal">1.00</span></div>
@@ -3656,6 +3657,21 @@ const VLAK_PALET = {
    opnieuw gedaan, zodat alle tegels en muren meteen meekleuren zonder dat het
    bord opnieuw wordt opgebouwd -- de muren verwijzen in hun SVG naar dezelfde
    variabelen. */
+/* Een kleur uit helderheid, verzadiging en tint (Lab/LCh). Zo is "even donker
+   maken" één getal in plaats van drie kanalen op gevoel bijstellen. */
+function labKleur(L,C,H){
+  const a=C*Math.cos(H*Math.PI/180), b=C*Math.sin(H*Math.PI/180);
+  const fy=(L+16)/116, fx=fy+a/500, fz=fy-b/200;
+  const g=t=>{ const t3=t*t*t; return t3>0.008856 ? t3 : (t-16/116)/7.787; };
+  const X=g(fx)*0.95047, Y=g(fy), Z=g(fz)*1.08883;
+  const kan=[X*3.2406+Y*-1.5372+Z*-0.4986,
+             X*-0.9689+Y*1.8758+Z*0.0415,
+             X*0.0557+Y*-0.2040+Z*1.0570].map(c=>{
+    const s=c<=0.0031308 ? 12.92*c : 1.055*Math.pow(Math.max(c,0),1/2.4)-0.055;
+    return Math.round(Math.min(1,Math.max(0,s))*255);
+  });
+  return "#"+kan.map(v=>v.toString(16).padStart(2,"0")).join("");
+}
 function zetVlakPalet(){
   if(typeof VLAK_PALET==="undefined") return;
   const nacht=document.documentElement.dataset.thema!=="licht";
@@ -3674,11 +3690,13 @@ function zetVlakPalet(){
   /* Overdag een haartje bruiner dan zwart: warmer bij het hout en de aarde
      van het bord, maar van een afstand nog altijd zwart. */
   /* 's Nachts standaard licht: dat geeft hetzelfde harde contrast als overdag
-     een donkere muur. Sommigen vinden dat te hard oplichten, dus in de
-     proefstand is er een donkere stand. Die ligt op L15, ruim onder elke
-     nachtvloer (L36 tot L48), zodat de muur donker is en toch te zien. */
+     een donkere muur. Dat licht springt er voor sommigen te hard uit, dus in
+     de proefstand is er een donkere stand. Hoe donker staat op een schuif: de
+     nachtvloeren liggen tussen L36 en L48 en de grond eromheen op L18, dus
+     alles daaronder leest als muur. Op L8 is hij bijna zwart en nog altijd van
+     de grond te onderscheiden. */
   const muurDonker=nacht&&document.body.classList.contains("muur-donker");
-  st.setProperty("--muur-standard",nacht?(muurDonker?"#1E2731":"#DBD1C9"):"#2B2117");
+  st.setProperty("--muur-standard",nacht?(muurDonker?labKleur(MUUR_NACHT_L,7,265):"#DBD1C9"):"#2B2117");
   st.setProperty("--muur-noble",VLAK_PALET.muren.noble.dag);
   /* Het raster: rustig, maar in beide standen te zien. */
   /* De tegels staan los van elkaar; wat je in de kier ziet ís het raster.
@@ -5532,11 +5550,11 @@ function renderBoard(){
    ontwerp, dus dat ruimen we één keer op. Het nummer hoogt mee zodra de maten
    opnieuw veranderen. */
 (function(){
-  const SLEUTEL="clueboard:matenVersie", NU="7";
+  const SLEUTEL="clueboard:matenVersie", NU="8";
   try{
     if(localStorage.getItem(SLEUTEL)===NU) return;
     ["muurDikte","tegelKier","overlaySterkte","tussenMuren","objSchaal","objZak",
-     "objSchaalBezet","objZakBezet","objSchaalHoog","objZakHoog"]
+     "objSchaalBezet","objZakBezet","objSchaalHoog","objZakHoog","muurNachtL"]
       .forEach(k=>localStorage.removeItem("clueboard:"+k));
     localStorage.setItem(SLEUTEL,NU);
   }catch(e){}
@@ -5575,6 +5593,9 @@ let OVERLAY_PROCENT = maat("clueboard:overlaySterkte",25);
    even veel. */
 /* Hoe hard een gekruiste tegel rood kleurt, in procent van de vloerkleur. */
 let KRUIS_PCT = maat("clueboard:kruisRood",22);
+/* Hoe donker de muur 's nachts is als de donkere stand aan staat, als
+   helderheid in Lab. Zie zetVlakPalet(). */
+let MUUR_NACHT_L = maat("clueboard:muurNachtL",8);
 let OBJ_SCHAAL_BEZET = maat("clueboard:objSchaalBezet",1.0);
 let OBJ_ZAK_BEZET    = maatVrij("clueboard:objZakBezet",0);
 let OBJ_SCHAAL_HOOG  = maat("clueboard:objSchaalHoog",1.7);
@@ -7684,7 +7705,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.95";
+const PLAYER_APP_VERSION="0.9.96";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8741,6 +8762,10 @@ maatSchuif("overlaySterkte","overlaySterkteGetal","clueboard:overlaySterkte",
   ()=>OVERLAY_PROCENT, v=>{ OVERLAY_PROCENT=v; }, false);
 maatSchuif("kruisRood","kruisRoodGetal","clueboard:kruisRood",
   ()=>KRUIS_PCT, v=>{ KRUIS_PCT=v; }, false);
+/* De muurkleur zit niet in de CSS-variabelen die zetMaten() zet, maar in het
+   palet; dat moet dus na elke stap opnieuw. */
+maatSchuif("muurNachtL","muurNachtLGetal","clueboard:muurNachtL",
+  ()=>MUUR_NACHT_L, v=>{ MUUR_NACHT_L=v; try{ zetVlakPalet(); }catch(e){} }, false);
 maatSchuif("objSchaalBezet","objSchaalBezetGetal","clueboard:objSchaalBezet",
   ()=>OBJ_SCHAAL_BEZET, v=>{ if(v>0) OBJ_SCHAAL_BEZET=v; }, false, 2);
 maatSchuif("objZakBezet","objZakBezetGetal","clueboard:objZakBezet",
