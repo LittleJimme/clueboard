@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#231819" id="themeColorMeta">
+<meta name="theme-color" content="#251A1B" id="themeColorMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
@@ -24,7 +24,7 @@ try{ var _t=localStorage.getItem("clueboard:menuThema");
      if(_t==="licht"||_t==="donker") document.documentElement.dataset.thema=_t;
      if(_t==="licht"){
        document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').content="default";
-       document.getElementById("themeColorMeta").content="#F1EFE8";
+       document.getElementById("themeColorMeta").content="#F0EEE7";
      }
 }catch(e){}
 
@@ -626,9 +626,10 @@ body.vloer-v3 .tile:not(.out-of-bounds)::before{
      en -- als er niemand kan staan -- een tint donkerder. Geen laagje
      eroverheen, want dan zou de tegel zijn eigen kleur verliezen. */
   background-color:color-mix(in srgb,var(--kruis-mix,#000000) var(--kruis-deel,0%),
+                   color-mix(in srgb,var(--rand-mix,#000000) var(--rand-deel,0%),
                    color-mix(in srgb,var(--blok,#000000) var(--blok-deel,0%),
                    color-mix(in srgb,var(--edel-mix,#000000) var(--edel-deel,0%),
-                   color-mix(in srgb,var(--kamer-mix,#000000) var(--kamer-deel,0%),var(--vloer-basis,var(--vl-onbekend))))));
+                   color-mix(in srgb,var(--kamer-mix,#000000) var(--kamer-deel,0%),var(--vloer-basis,var(--vl-onbekend)))))));
   background-image:none;opacity:1;
   /* Het licht komt uit linksboven: de muur boven en links werpt zijn schaduw
      de ruimte in, de muur onder en rechts werpt hem juist naar buiten. Eén
@@ -650,6 +651,13 @@ body.vloer-v3 .tile[data-floor="carpet"]{--vloer-basis:var(--vl-carpet)}
 body.vloer-v3 .tile[data-floor="water"]{--vloer-basis:var(--vl-water)}
 /* De schaduw die de muren de ruimte in werpen; alleen boven en links. */
 body.vloer-v3 .tile{--sh-x:0px;--sh-y:0px}
+/* Het licht in een ruimte komt uit het hart en zakt naar de wanden toe weg.
+   --verval staat per tegel op de tegel zelf (0 in het midden, 1 op de verste
+   plek); hier staat alleen hoe hard dat aankomt. 's Nachts mag het sterker,
+   want daar valt minder licht te verdelen. */
+body.vloer-v3 .tile{--rand-mix:var(--vloer-diep,#241C14);--verval-max:10;
+  --rand-deel:calc(var(--verval,0) * var(--verval-max) * 1%)}
+html:not([data-thema="licht"]) body.vloer-v3 .tile{--verval-max:16}
 body.vloer-v3 .tile.blocked{--blok-deel:11%}
 /* Een kruisje betekent "hier kan hij niet staan"; dat mag je ook aan de tegel
    zien. Het rood zit in de kleur van de vloer zelf, dus het ligt onder het
@@ -658,9 +666,15 @@ body.vloer-v3 .tile.blocked{--blok-deel:11%}
 body.vloer-v3 .tile.heeft-kruis{--kruis-mix:var(--kruis-rood,#DC4A46);--kruis-deel:calc(var(--kruis-pct,22) * 1%)}
 body.vloer-v3 .tile .blockmask{display:none}
 /* Even lang als de slagschaduw buiten het bord (zie tekenBordSchaduw), zodat
-   binnen en buiten hetzelfde licht laten zien. */
-body.vloer-v3 .tile.w-t{--sh-y:calc(var(--cell) * .26)}
-body.vloer-v3 .tile.w-l{--sh-x:calc(var(--cell) * .26)}
+   binnen en buiten hetzelfde licht laten zien.
+   's Nachts is hij korter. Een lange, harde slagschaduw hoort bij fel en laag
+   zonlicht; bij het zachte licht van een lamp valt een schaduw kort en dicht
+   bij de wand. Bovendien zit er 's nachts al het verval naar de wand toe, en
+   twee lange donkere banden over elkaar maakt de vloer alleen maar vuil. */
+body.vloer-v3 .tile{--sh-diep:.26}
+html:not([data-thema="licht"]) body.vloer-v3 .tile{--sh-diep:.13}
+body.vloer-v3 .tile.w-t{--sh-y:calc(var(--cell) * var(--sh-diep))}
+body.vloer-v3 .tile.w-l{--sh-x:calc(var(--cell) * var(--sh-diep))}
 /* Een edele ruimte is niet een waas over de vloer, maar een eigen vloerkleur:
    de tegels worden geel. Wel zachter dan de muur -- die blijft het helderste
    goud, zodat de grens van het gebied de blikvanger is en de vloer alleen
@@ -1978,7 +1992,7 @@ body.in-game #gridWrap.regular{box-shadow:none}
 /* ── De kop ── */
 body.in-game .game-head{
   display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:8px;
-  padding:2px 14px 2px;padding-top:calc(2px + env(safe-area-inset-top));
+  padding:0 14px 2px;padding-top:calc(0px + env(safe-area-inset-top));
   background:none;border:0;box-shadow:none;
 }
 body.in-game #btnCheck .ic{color:var(--dof)}
@@ -1988,8 +2002,8 @@ body.in-game #btnCheck.klaar{
   animation:checkKlaar .4s cubic-bezier(.2,1.1,.3,1)}
 body.in-game #btnCheck.klaar .ic{color:var(--goud-op)}
 @keyframes checkKlaar{0%{transform:scale(1)}40%{transform:scale(1.06)}100%{transform:scale(1)}}
-body.in-game .kop-check .teller{margin-left:2px;padding:2px 7px;border-radius:999px;background:var(--kaart-2);
-  color:var(--dof);font:800 11px var(--font-ui);letter-spacing:.02em;line-height:1.3}
+body.in-game .kop-check .teller{margin-left:2px;padding:2px 8px;border-radius:999px;background:var(--kaart-2);
+  color:var(--inkt-2);font:800 12.5px var(--font-ui);letter-spacing:.02em;line-height:1.3}
 body.in-game #btnCheck.klaar .teller{background:rgba(0,0,0,.14);color:inherit}
 body.in-game .kop-check .teller:empty{display:none}
 /* De klok staat links, meteen naast de terugknop: hij hoort bij het lezen van
@@ -2033,7 +2047,8 @@ body.in-game .kop-knop{
   transition:color .15s,transform .12s;
 }
 body.in-game .kop-knop:hover{color:var(--inkt)}
-body.in-game .kop-knop.thema-knop{border:1px solid var(--lijn);background:var(--kaart)}
+/* Geen kader: de andere kopknoppen hebben er ook geen, en het schijfje van
+   half goud, half inkt zegt op zichzelf al genoeg dat het een knop is. */
 body.in-game .kop-knop:hover{border-color:var(--goud-lijn)}
 body.in-game .kop-knop:active{transform:translateY(1px)}
 body.in-game .kop-knop .ic{display:flex;width:20px;height:20px;filter:none}
@@ -2077,10 +2092,20 @@ body.in-game .tabbar{
   /* Gelijke buitenkolommen: dan staat de schuif altijd precies in het midden,
      ook als de wisselknop van woord verandert. */
   display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:10px;
-  /* Bovenlangs zo min mogelijk: die ruimte gaat rechtstreeks van het bord af.
-     Onderlangs blijft wat lucht, want daar zit de duim. */
-  padding:0 14px calc(15px + env(safe-area-inset-bottom));
-  background:none;border-top:1px solid var(--lijn-zacht);box-shadow:none;
+  /* Dit was een balk en dat hoort het niet te zijn. Drie dingen maakten hem:
+     een streep erboven, vijftien pixels lucht eronder, en daar bovenop nog de
+     veilige zone van het toestel. Samen kon dat op een telefoon zeventig pixels
+     worden -- een strook waar niets in staat, precies waar de knoppen hadden
+     kunnen zitten.
+
+     De streep is weg: de knoppen liggen nu op dezelfde ondergrond als het bord,
+     dus er valt niets meer af te bakenen. De lucht verhuist van onder naar
+     boven de knoppen, waar hij wel iets doet. Onderlangs blijft alleen de
+     veilige zone staan plus een paar pixels: die zone is er niet voor de sier,
+     daar zit op een iPhone de thuisbalk en op Android de veegbalk, en een knop
+     die daar half onder ligt is niet meer te raken. */
+  padding:6px 14px calc(10px + env(safe-area-inset-bottom));
+  background:none;border-top:0;box-shadow:none;
   backdrop-filter:none;-webkit-backdrop-filter:none;
 }
 body.in-game .voet-links{grid-column:1;display:flex;align-items:center;gap:8px}
@@ -2633,14 +2658,16 @@ body.in-game .schuif i{background:var(--kaart)}
    je onderweg even omzet. Op desktop staat het als schijfje rechtsboven, naast
    de instellingen. Op de telefoon is de kop daar te smal voor; daar blijft de
    keuze in het instellingenvel staan. */
-.kop-knop.thema-knop,body.in-game .kop-knop.thema-knop{display:none}
-body.desktop.in-game .kop-knop.thema-knop{display:inline-flex}
-body.desktop.in-game .kop-knop.thema-knop i{
+.kop-knop.thema-knop{display:none}
+body.in-game .kop-knop.thema-knop{display:inline-flex}
+body.in-game .kop-knop.thema-knop i{
   width:16px;height:16px;border-radius:50%;display:block;
   background:linear-gradient(135deg,var(--goud) 50%,var(--inkt) 50%);
   box-shadow:0 0 0 1px rgba(0,0,0,.12) inset;
 }
-body.desktop.in-game .set-kop.weergave-kop,body.desktop.in-game #themaKeuze{display:none}
+/* De keuze staat nu in de kop, dus in het instellingenvel hoeft hij niet meer
+   -- op de telefoon net zomin als op een groot scherm. */
+body.in-game .set-kop.weergave-kop,body.in-game #themaKeuze{display:none}
 /* Op een telefoon staat de uitleg niet meer als los vraagteken in de kop maar
    onderin de instellingen, waar de rest van de hulp ook staat. */
 body.in-game:not(.desktop) #btnHelpTop{display:none}
@@ -2764,7 +2791,16 @@ body.in-game .legend-obj .name{min-width:0;overflow-wrap:anywhere;line-height:1.
 /* Geen raster maar een gewone kolom: het raster gaf de rijen de
    minimumhoogte van de kaarten in plaats van hun inhoud, waardoor de
    bordregelkaart dichtviel en de kaarten over elkaar heen schoven. */
-body.in-game #cluesList{padding:10px 12px 22px;gap:7px;display:flex;flex-direction:column;align-items:stretch}
+/* De knoppenbalk staat strak tegen de inhoud aan -- dat is voor het bord goed,
+   want elke pixel telt daar, maar een regelkaart die er zomaar tegenaan botst
+   leest rommelig. Onderin dus wat meer lucht, en de laatste centimeter loopt
+   zacht weg. Het masker zit op de scroller zelf, dus het verloop blijft aan de
+   onderrand staan terwijl de kaarten eronderdoor schuiven. De ruimte onderaan
+   is groter dan het verloop, zodat de laatste kaart er helemaal bovenuit komt
+   als je onderaan bent: wegvagen mag, onleesbaar worden niet. */
+body.in-game #cluesList{padding:10px 12px 40px;gap:7px;display:flex;flex-direction:column;align-items:stretch;
+  -webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 30px),transparent 100%);
+          mask-image:linear-gradient(180deg,#000 calc(100% - 30px),transparent 100%)}
 body.in-game #cluesList>*{flex:0 0 auto}
 /* Compact: portret links met de naam eronder, de regel rechts, en rechts
    een dun pijltje dat zegt dat er meer achter zit. Weinig lucht, zodat een
@@ -2983,10 +3019,13 @@ body.in-game #modalIntro .intro-scroll{flex:1;min-height:0;overflow-y:auto;-webk
      dat er meer is. */
   scrollbar-width:none;-ms-overflow-style:none;
   /* De rest van het dossier komt door een verloop in beeld in plaats van
-     langs een harde rand. De knop krijgt hieronder extra ruimte mee, zodat
-     hij bij volledig doorscrollen bóven dit verloop uitkomt. */
-  -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 84px),transparent);
-  mask-image:linear-gradient(to bottom,#000 calc(100% - 84px),transparent)}
+     langs een harde rand. Drie stops in plaats van twee: de eerste helft blijft
+     bijna dekkend, dus je merkt het verloop pas laag in beeld, en daarna loopt
+     het over een langere afstand weg. Eén rechte overgang van 84 pixels begon
+     te hoog en eindigde te abrupt. De knop krijgt hieronder extra ruimte mee,
+     zodat hij bij volledig doorscrollen bóven dit verloop uitkomt. */
+  -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 132px),rgba(0,0,0,.88) calc(100% - 74px),transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 calc(100% - 132px),rgba(0,0,0,.88) calc(100% - 74px),transparent 100%)}
 body.in-game #modalIntro .intro-scroll::-webkit-scrollbar{width:0;height:0;display:none}
 /* ── De cover ──
    De eerste schermvulling draagt alleen de zaak zelf: nummer, titel, niveau
@@ -3210,17 +3249,17 @@ body.in-game #modalIntro .rij-knoppen .btn{
      er wel, maar doorzichtig -- zo springt bij het aanwijzen alleen de kleur
      om en verschuift er niets. */
   background:none;color:var(--inkt);border:1px solid transparent;
-  height:54px;border-radius:16px;
-  font-family:var(--font-display);font-weight:600;font-size:19px;
+  height:68px;border-radius:18px;
+  font-family:var(--font-display);font-weight:600;font-size:27px;
   letter-spacing:.01em;text-transform:none;
-  box-shadow:none;text-shadow:none;gap:12px;
+  box-shadow:none;text-shadow:none;gap:14px;
 }
 body.in-game #modalIntro .rij-knoppen .btn::after{content:none}
 /* Zonder vlak en zonder rand leest de knop als een kop. Een klein gouden
    pijltje zegt dat er iets gebeurt als je erop drukt; bij het aanwijzen loopt
    hij een stukje mee naar rechts. */
 body.in-game #modalIntro .rij-knoppen .btn .beginpijl{
-  display:flex;width:15px;height:15px;color:var(--goud);
+  display:flex;width:21px;height:21px;color:var(--goud);
   transform:rotate(-90deg);transition:translate .18s cubic-bezier(.2,.8,.3,1)}
 body.in-game #modalIntro .rij-knoppen .btn .beginpijl svg{width:100%;height:100%}
 body.in-game #modalIntro .rij-knoppen .btn:hover .beginpijl{translate:4px 0}
@@ -3708,6 +3747,10 @@ function zetVlakPalet(){
      over elkaar heen zouden bij doorzichtigheid een rafelrand geven. */
   st.setProperty("--bord-schaduw",nacht?"#140F10":"#D6CEBD");
   st.setProperty("--muur-schaduw",nacht?"rgba(0,0,0,.14)":"rgba(38,36,25,.075)");
+  /* Waar de vloer naar de wanden toe naartoe zakt. Overdag een warm bruin, dat
+     leest als schaduw op een lichte vloer; 's nachts bijna zwart, want daar
+     zakt de vloer de duisternis in. */
+  st.setProperty("--vloer-diep",nacht?"#0D0906":"#3B2E1F");
   st.setProperty("--plat-icoon",nacht?"rgba(240,232,226,.72)":"rgba(38,36,25,.62)");
   document.documentElement.dataset.stand=nacht?"night":"day";
 }
@@ -3755,7 +3798,12 @@ document.addEventListener("DOMContentLoaded",()=>applySkin(""));
    Het chroom van het spel volgt dezelfde keuze als het hoofdmenu, met
    dezelfde sleutel: wie in het menu donker kiest, speelt donker. */
 const THEMA_SLEUTEL="clueboard:menuThema";
-const THEMA_KLEUR={donker:"#231819",licht:"#F1EFE8"};
+/* De kleur die de statusbalk van de telefoon krijgt. Dit is niet de kale
+   --grond: over alles heen ligt de korrel-en-vignetlaag van body::after, en
+   die verschuift de kleur een paar stappen. Opgemeten aan de bovenrand van het
+   werkelijke scherm, want een verschil van twee stappen is op een donkere
+   telefoon al een zichtbare naad. */
+const THEMA_KLEUR={donker:"#251A1B",licht:"#F0EEE7"};
 function zetThema(naam){
   /* Eerst het thema zetten, dan het palet: zie het slot van deze functie. */
   const t=THEMA_KLEUR[naam]?naam:"donker";
@@ -3772,9 +3820,17 @@ function zetThema(naam){
    binnengaan van het spel niet opnieuw gezet, zodat de bovenbalk in het
    spel niet bij de rest paste. */
 function zetThemaKleur(){
-  const m=$("#themeColorMeta"); if(!m) return;
+  const oud=$("#themeColorMeta"); if(!oud) return;
   const t=document.documentElement.dataset.thema||"donker";
-  m.content=THEMA_KLEUR[t]||THEMA_KLEUR.donker;
+  const kleur=THEMA_KLEUR[t]||THEMA_KLEUR.donker;
+  /* Alleen .content bijwerken is niet genoeg: als webapp leest de browser de
+     balkkleur bij het opstarten uit en kijkt daarna niet meer naar dezelfde
+     tag. Kwam je uit het donkere menu en zette je binnen het spel het licht
+     aan, dan bleef de balk donker. Een nieuwe tag op de plek van de oude wordt
+     wel opgemerkt. */
+  const nieuw=document.createElement("meta");
+  nieuw.name="theme-color"; nieuw.id="themeColorMeta"; nieuw.content=kleur;
+  oud.parentNode.replaceChild(nieuw,oud);
 }
 function zetObjectThema(){
   $$('#grid .objart.prod[data-slug], #hoogArt .objart.prod[data-slug]').forEach(el=>{
@@ -5361,6 +5417,40 @@ function planObjectIcons(tilesVan){
   return plan;
 }
 
+/* Hoe ver elke tegel van het hart van zijn eigen ruimte ligt, van 0 in het
+   midden tot 1 op de verste tegel. Daarmee kan de vloer naar de wanden toe
+   weglopen: dat geeft een ruimte diepte zonder dat er een lamp of een verloop
+   bij hoeft.
+
+   Eerst geteld in ringen vanaf de wand -- rand is 1, een tegel naar binnen is
+   2 -- maar op een bord met smalle ruimtes ligt vrijwel elke tegel aan een
+   rand, en dan wordt alles even donker en zie je niets. De afstand tot het
+   zwaartepunt werkt op elke vorm: in een zaal krijg je een lichte kern, in een
+   gang lopen alleen de uiteinden weg, en een ruimte van één tegel blijft
+   gewoon vlak.
+
+   Het kwadraat, want licht valt niet lineair weg: het midden blijft ruim, en
+   pas tegen de wand aan zakt het echt. */
+function kamerVerval(){
+  const perKamer=new Map();
+  M.tiles.forEach(t=>{
+    if(!perKamer.has(t.roomId)) perKamer.set(t.roomId,[]);
+    perKamer.get(t.roomId).push(t);
+  });
+  const verval=new Map();
+  perKamer.forEach(tegels=>{
+    const n=tegels.length;
+    const mc=tegels.reduce((s,t)=>s+t.column,0)/n;
+    const mr=tegels.reduce((s,t)=>s+t.row,0)/n;
+    const afst=tegels.map(t=>Math.hypot(t.column-mc,t.row-mr));
+    const verst=Math.max.apply(null,afst);
+    tegels.forEach((t,i)=>{
+      const f=verst>0.001 ? afst[i]/verst : 0;
+      verval.set(t.id, f*f);
+    });
+  });
+  return verval;
+}
 function renderBoard(){
   const grid=$("#grid"), b=M.bounds;
   grid.innerHTML="";
@@ -5373,6 +5463,7 @@ function renderBoard(){
   grid.style.gridTemplateRows="repeat("+b.rows+", var(--cell))";
   const tegelsVan=(o,veld)=>(o.tiles||[]).map(id=>M.tiles.get(id)).filter(x=>x&&x[veld]===o.id);
   const iconPlan=planObjectIcons(o=>tegelsVan(o,"objectId"));
+  const verval=kamerVerval();
 
   for(let r=b.minR;r<=b.maxR;r++){
     for(let c=b.minC;c<=b.maxC;c++){
@@ -5408,6 +5499,9 @@ function renderBoard(){
       if(floorArt) el.dataset.floorArt=floorArt;
       /* De kamer erbij, want de vloertekening wordt per kamer gekozen. */
       el.dataset.room=room.id;
+      /* Hoe ver van het hart van de ruimte, van 0 tot 1. Hoeveel de vloer daar
+         donkerder van wordt bepaalt de CSS met --verval-max. */
+      el.style.setProperty("--verval",(verval.get(id)||0).toFixed(3));
       /* Een voorbehouden gebied licht af en toe even op; alle vakjes van
          dezelfde kamer in dezelfde maat, zodat het hele gebied ademt. */
       if(roomWallStyle(room).prio>1){
@@ -7704,7 +7798,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.99";
+const PLAYER_APP_VERSION="0.9.103";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en

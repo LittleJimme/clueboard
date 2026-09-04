@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#231819" id="themeColorMeta">
+<meta name="theme-color" content="#24191A" id="themeColorMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
@@ -14,7 +14,7 @@
 try{
   if(localStorage.getItem("clueboard:menuThema")==="licht"){
     document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').content="default";
-    document.getElementById("themeColorMeta").content="#F1EFE8";
+    document.getElementById("themeColorMeta").content="#F0EEE7";
     document.documentElement.dataset.thema="licht";
   }
 }catch(e){}
@@ -761,7 +761,12 @@ function $(sel){ return document.querySelector(sel); }
    De keuze blijft op dit apparaat bewaard; de titelbalk van de
    geïnstalleerde webapp kleurt mee via de theme-color meta.
    ============================================================ */
-const THEMA_KLEUR = { donker:"#231819", licht:"#F1EFE8" };
+/* De kleur die de statusbalk van de telefoon krijgt. Dit is niet de kale
+   --grond: over alles heen ligt de korrel-en-vignetlaag van body::after, en
+   die verschuift de kleur een paar stappen. Opgemeten aan de bovenrand van het
+   werkelijke scherm, want een verschil van twee stappen is op een donkere
+   telefoon al een zichtbare naad. */
+const THEMA_KLEUR = { donker:"#24191A", licht:"#F0EEE7" };
 const THEMA_STANDAARD = "donker";
 const THEMA_SLEUTEL = "clueboard:menuThema";
 function zetThema(naam){
@@ -770,8 +775,16 @@ function zetThema(naam){
      data-attribuut, zodat er niets omslaat voordat de stijl er is. */
   if (t === "licht") document.documentElement.dataset.thema = "licht";
   else document.documentElement.removeAttribute("data-thema");
+  /* Een nieuwe tag in plaats van de oude bijwerken: als webapp leest de
+     browser de balkkleur bij het opstarten uit en kijkt daarna niet meer naar
+     dezelfde tag, waardoor de balk bij het wisselen bleef staan. */
   const meta = $("#themeColorMeta");
-  if(meta) meta.setAttribute("content", THEMA_KLEUR[t]);
+  if(meta){
+    const nieuw = document.createElement("meta");
+    nieuw.name = "theme-color"; nieuw.id = "themeColorMeta";
+    nieuw.content = THEMA_KLEUR[t];
+    meta.parentNode.replaceChild(nieuw, meta);
+  }
   try{ localStorage.setItem(THEMA_SLEUTEL, t); }catch(e){}
 }
 (function initThema(){
