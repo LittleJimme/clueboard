@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-04T11:26:23",
+  "gemaakt": "2026-09-04T11:41:38",
   "levels": [
     {
       "file": "1v4 Herberg de Doortocht.json",
@@ -163,7 +163,7 @@
       },
       "levelId": "lvl-mtmqoqlw2ucfc",
       "levelNumber": 7,
-      "levelVersion": 1,
+      "levelVersion": 3,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."

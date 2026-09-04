@@ -1,11 +1,11 @@
 {
   "levelNumber": 7,
-  "levelVersion": 1,
+  "levelVersion": 3,
   "levelId": "lvl-mtmqoqlw2ucfc",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-04T09:16:17.968Z",
+  "exportedAt": "2026-09-04T09:40:17.866Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -561,68 +561,7 @@
         }
       }
     ],
-    "walls": [
-      {
-        "id": "wall-2",
-        "kind": "Door",
-        "kindLabel": "Deur",
-        "name": "Deur",
-        "anchorTile": "c1r4",
-        "side": "north",
-        "orientation": "horizontal",
-        "tiles": [
-          "c1r4",
-          "c1r3"
-        ],
-        "occupiable": false,
-        "note": null
-      },
-      {
-        "id": "wall-3",
-        "kind": "Door",
-        "kindLabel": "Deur",
-        "name": "Deur",
-        "anchorTile": "c5r4",
-        "side": "north",
-        "orientation": "horizontal",
-        "tiles": [
-          "c5r4",
-          "c5r3"
-        ],
-        "occupiable": false,
-        "note": null
-      },
-      {
-        "id": "wall-4",
-        "kind": "Door",
-        "kindLabel": "Deur",
-        "name": "Deur",
-        "anchorTile": "c5r6",
-        "side": "north",
-        "orientation": "horizontal",
-        "tiles": [
-          "c5r6",
-          "c5r5"
-        ],
-        "occupiable": false,
-        "note": null
-      },
-      {
-        "id": "wall-5",
-        "kind": "Door",
-        "kindLabel": "Deur",
-        "name": "Deur",
-        "anchorTile": "c1r6",
-        "side": "north",
-        "orientation": "horizontal",
-        "tiles": [
-          "c1r6",
-          "c1r5"
-        ],
-        "occupiable": false,
-        "note": null
-      }
-    ],
+    "walls": [],
     "tiles": [
       {
         "id": "c1r1",
@@ -1422,6 +1361,17 @@
                 }
               }
             ]
+          },
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "same-diagonal-as",
+                "args": {
+                  "person": "p1"
+                }
+              }
+            ]
           }
         ]
       },
@@ -1464,24 +1414,6 @@
                 "atom": "only-one-on-kind",
                 "args": {
                   "objectKind": "Horse"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "clue-7",
-        "scope": "person",
-        "personId": "p5",
-        "terms": [
-          {
-            "not": false,
-            "any": [
-              {
-                "atom": "next-to-kind",
-                "args": {
-                  "objectKind": "Chair"
                 }
               }
             ]
@@ -1556,10 +1488,21 @@
               }
             }
           ]
+        },
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "same-diagonal-as",
+              "args": {
+                "person": "p1"
+              }
+            }
+          ]
         }
       ],
-      "text": "Diederik stond het dichtst bij een weefgetouw.",
-      "generatedText": "Diederik stond het dichtst bij een weefgetouw.",
+      "text": "Diederik stond het dichtst bij een weefgetouw en bevond zich op dezelfde diagonale lijn als Alwin.",
+      "generatedText": "Diederik stond het dichtst bij een weefgetouw en bevond zich op dezelfde diagonale lijn als Alwin.",
       "storyText": null,
       "holds": true
     },
@@ -1615,29 +1558,6 @@
       ],
       "text": "Alwin was de enige die op een paard zat.",
       "generatedText": "Alwin was de enige die op een paard zat.",
-      "storyText": null,
-      "holds": true
-    },
-    {
-      "id": "clue-7",
-      "scope": "person",
-      "personId": "p5",
-      "locked": false,
-      "terms": [
-        {
-          "not": false,
-          "any": [
-            {
-              "atom": "next-to-kind",
-              "args": {
-                "objectKind": "Chair"
-              }
-            }
-          ]
-        }
-      ],
-      "text": "Vastrad bevond zich naast een stoel.",
-      "generatedText": "Vastrad bevond zich naast een stoel.",
       "storyText": null,
       "holds": true
     },
@@ -1698,7 +1618,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 13,
+    "ms": 16,
     "override": null
   }
 }
