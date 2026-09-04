@@ -133,12 +133,15 @@ try{ var _t=localStorage.getItem("clueboard:menuThema");
   /* Het kleed. Overdag zit het in de familie van de vloeren: die hebben in
      Lab een chroma van 5 tot 22, en het eerste oker zat op 54 -- vandaar dat
      het er zo uitsprong. Op 34 blijft het herkenbaar goud maar valt het in de
-     ruimte. 's Nachts hoort een kleed donker te zijn: elke nachtvloer ligt
-     tussen L36 en L48, dit ligt op L28, dus het is echt donker en toch te
-     zien. De lijn is in beide standen lichter dan het veld, want op een gouden
-     veld zou een gouden lijn wegvallen. */
-  --mat-veld:#4D4128;   /* het kleed zelf */
-  --mat-kader:#87764F;  /* de dunne lichte lijn er net binnenin */
+     ruimte. 's Nachts hoort een kleed donker te zijn en in dezelfde warme
+     familie te vallen als de vloeren eromheen. Het lag eerst op tint 85 --
+     geelgroen -- terwijl de nachtvloeren tussen tint 40 en 72 liggen; dat
+     vloekte. Nu op tint 62 en L28: net onder de vloeren (L29 tot L38) en
+     duidelijk verzadigder, precies dezelfde verhouding als overdag. De lijn is
+     in beide standen lichter dan het veld, want op een gouden veld zou een
+     gouden lijn wegvallen. */
+  --mat-veld:#573C29;   /* het kleed zelf */
+  --mat-kader:#84684E;  /* de dunne lichte lijn er net binnenin */
   --sch1:0 1px 2px rgba(0,0,0,.22);
   --sch2:0 2px 6px rgba(0,0,0,.26),0 12px 30px rgba(0,0,0,.28);
 }
@@ -4965,7 +4968,8 @@ function roomFloorArt(room){
    uitgesneden te worden: daar knikt de omtrek naar binnen. */
 /* Meer vloer om het kleed heen: het is een kleed op een vloer, en dan hoor je
    de tegel eromheen te zien liggen. */
-const MAT_M=24;      /* marge tot de rand van de tegel */
+const MAT_M=27;      /* marge tot de rand van de tegel: hoeveel vloer er om
+                        het kleed heen blijft liggen */
 const MAT_K=6;       /* afstand van de gouden lijn tot de omtrek */
 const MAT_R=3;       /* ronding van een buitenhoek: net gebroken, niet rond */
 const MAT_W2=2.2;    /* dikte van de gouden lijn */
@@ -7707,7 +7711,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.97";
+const PLAYER_APP_VERSION="0.9.98";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
