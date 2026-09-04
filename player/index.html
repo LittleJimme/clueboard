@@ -1189,12 +1189,14 @@ body.hide-objsurf .tile .objsurf{display:none}
 .tile .objart.prod{
   position:absolute;left:0;top:0;right:0;bottom:0;width:auto;height:auto;
   pointer-events:none;z-index:2;
-  transform:scale(var(--obj-schaal,1));transform-origin:50% 50%}
+  transform:translateY(calc(var(--cell) * var(--obj-zak,0))) scale(var(--obj-schaal,1));
+  transform-origin:50% 50%}
 /* Even groot als een vakje en op dezelfde plek, zodat tekening en schaduw
    precies over elkaar liggen -- ze komen zo uit Photoshop. */
 .objschaduw{position:absolute;width:var(--cell);height:var(--cell);
   pointer-events:none;
-  transform:scale(var(--obj-schaal,1));transform-origin:50% 50%}
+  transform:translateY(calc(var(--cell) * var(--obj-zak,0))) scale(var(--obj-schaal,1));
+  transform-origin:50% 50%}
 .tile .objart.prod img,.objschaduw img{
   width:100%;height:100%;display:block;object-fit:contain}
 body.plat-icoon .objschaduw{display:none}
@@ -3410,6 +3412,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="4.2" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">4.2</span></div>
   <div class="debug-rij"><b>Textuur</b><input type="range" id="overlaySterkte" min="0" max="100" step="1" value="25" aria-label="Hoe hard de materiaaltekening over de kleur ligt"><span class="debug-getal" id="overlaySterkteGetal">25.0</span></div>
   <div class="debug-rij"><b>Objectformaat</b><input type="range" id="objSchaal" min="0.5" max="2" step="0.01" value="1.2" aria-label="Hoe groot de objecten in hun vakje staan"><span class="debug-getal" id="objSchaalGetal">1.20</span></div>
+  <div class="debug-rij"><b>Objecten omlaag</b><input type="range" id="objZak" min="0" max="15" step="0.5" value="3" aria-label="Hoe ver de objecten in hun vakje zakken"><span class="debug-getal" id="objZakGetal">3.0</span></div>
 </div>
 
 <div class="modal sheet-modal van-boven" id="modalSettings">
@@ -5451,6 +5454,8 @@ let OVERLAY_PROCENT = maat("clueboard:overlaySterkte",25);
    voor alle objecten samen: ze zijn onderling al op elkaar afgestemd, dus wat
    hier verandert verandert overal even veel. */
 let OBJ_SCHAAL = maat("clueboard:objSchaal",1.2);
+/* Hoe ver de objecten in hun vakje zakken, in procent van een vakje. */
+let OBJ_ZAK = maat("clueboard:objZak",3);
 /* In de donkere stand mag de textuur zachter: op een donkere tegel valt
    hetzelfde reliëf veel meer op dan op een lichte. */
 const OVERLAY_NACHT = 0.4;
@@ -5475,6 +5480,7 @@ function zetMaten(){
   st.setProperty("--golf-diep",String(GOLF_DIEP));
   st.setProperty("--golf-duur",String(GOLF_DUUR));
   st.setProperty("--obj-schaal",String(OBJ_SCHAAL));
+  st.setProperty("--obj-zak",String(OBJ_ZAK/100));
 }
 /* Welke watertegel wanneer aan de beurt is. De plek van een tegel wordt op de
    looprichting geprojecteerd; hoe verder langs die richting, hoe later hij
@@ -7532,7 +7538,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.88";
+const PLAYER_APP_VERSION="0.9.89";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8580,6 +8586,8 @@ maatSchuif("overlaySterkte","overlaySterkteGetal","clueboard:overlaySterkte",
   ()=>OVERLAY_PROCENT, v=>{ OVERLAY_PROCENT=v; }, false);
 maatSchuif("objSchaal","objSchaalGetal","clueboard:objSchaal",
   ()=>OBJ_SCHAAL, v=>{ if(v>0) OBJ_SCHAAL=v; }, false, 2);
+maatSchuif("objZak","objZakGetal","clueboard:objZak",
+  ()=>OBJ_ZAK, v=>{ OBJ_ZAK=v; }, false);
 /* De golf staat afgesteld en heeft geen schuiven meer nodig; de maten staan
    hierboven als vaste waarde. */
 

@@ -57,6 +57,19 @@ LICHTING = [
     ("Wapenrek",  "WapenrekSchaduw",           "Wapenrek_donker",  ["weapon-chest", "weapon-rack"]),
 ]
 
+def zoek(naam):
+    """Het bestand met deze naam, ongeacht hoofd- of kleine letters. De namen
+    uit Photoshop wisselen daarin nog weleens (Boom_Donker, Boom_donker), en op
+    Windows valt dat niet op terwijl het elders wel uitmaakt."""
+    pad = os.path.join(BRON, naam + ".png")
+    if os.path.exists(pad):
+        return pad
+    doel = (naam + ".png").lower()
+    for f in os.listdir(BRON):
+        if f.lower() == doel:
+            return os.path.join(BRON, f)
+    return None
+
 def schrijf(im, pad):
     """Eerst naast het doel, dan omzetten: een half geschreven PNG is erger
     dan een oude."""
@@ -106,16 +119,16 @@ def main():
         print("map ontbreekt:", BRON); return 1
     totaal = 0
     for naam, schaduwnaam, nachtnaam, slugs in LICHTING:
-        o = os.path.join(BRON, naam + ".png")
-        p = os.path.join(BRON, schaduwnaam + ".png")
-        if not (os.path.exists(o) and os.path.exists(p)):
+        o = zoek(naam)
+        p = zoek(schaduwnaam)
+        if not (o and p):
             print("OVERGESLAGEN %-12s (bestand ontbreekt)" % naam); continue
         obj = Image.open(o).convert("RGBA")
         sch = schaduwlaag(o, p)
         nacht = None
         if nachtnaam:
-            n = os.path.join(BRON, nachtnaam + ".png")
-            if os.path.exists(n):
+            n = zoek(nachtnaam)
+            if n:
                 nacht = Image.open(n).convert("RGBA")
             else:
                 print("   geen nachtversie voor %s" % naam)
