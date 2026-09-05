@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-05T17:03:15",
+  "gemaakt": "2026-09-05T17:38:04",
   "levels": [
     {
       "file": "1v4 Herberg de Doortocht.json",
@@ -246,6 +246,27 @@
         "themeLabel": "Middeleeuwen"
       },
       "levelId": "lvl-proef-12x12",
+      "levelVersion": 1,
+      "test": true,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Proef 20x20.json",
+      "content": {
+        "title": "Proefbord 20×20"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 20,
+          "rows": 20
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-proef-20x20",
       "levelVersion": 1,
       "test": true,
       "difficulty": {
