@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-04T11:41:38",
+  "gemaakt": "2026-09-05T15:21:33",
   "levels": [
     {
       "file": "1v4 Herberg de Doortocht.json",
@@ -167,6 +167,27 @@
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "8v1 Het Huis van Vastrad.json",
+      "content": {
+        "title": "Het Huis van Vastrad"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 6,
+          "rows": 6
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtoerjfvn40r6",
+      "levelNumber": 8,
+      "levelVersion": 1,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {

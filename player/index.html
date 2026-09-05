@@ -4183,7 +4183,12 @@ function buildModel(raw){
     people:[], peopleById:new Map(),
     victimId:(raw.solution&&raw.solution.victimId)||p.people.victimId||null,
     culpritId:(raw.solution&&raw.solution.culpritId)||null,
-    solution:new Map(), clues:[], boardClues:[], victimClue:null
+    solution:new Map(), clues:[], boardClues:[], victimClue:null,
+    /* Elke regeltekst van dit level bij elkaar, ook de algemene regels die
+       verderop uit boardClues worden gefilterd. Wie wil weten of een rol in
+       dit level iets betekent, moet ook "Ridders kunnen overal staan" kunnen
+       lezen. */
+    alleRegels:[]
   };
   (p.rooms||[]).forEach(r=>M.rooms.set(r.id,r));
   (p.objects||[]).forEach(o=>M.objects.set(o.id,o));
@@ -4214,12 +4219,14 @@ function buildModel(raw){
   const src=(Array.isArray(raw.clues)&&raw.clues.length)?raw.clues:(content.clues||[]);
   src.filter(c=>c&&(c.text||c.storyText)).forEach(c=>{
     const item={id:c.id, personId:c.personId||null, text:c.text||c.storyText};
+    M.alleRegels.push(item.text);
     if(item.personId && item.personId===M.victimId && !M.victimClue) M.victimClue=item;
     else if(item.personId) M.clues.push(item);
     else if(!isAlgemeneRegel(item.text||item.storyText)) M.boardClues.push(item);
   });
   assignGenericObjectIcons(M);
   M.bounds=boardBounds(M);
+  vergeetRollen();
   return M;
 }
 
@@ -6873,7 +6880,8 @@ function fitRing(ring){
 /* Komt deze rol ergens in het level voor als iets waar de speler op moet
    letten? Twee bronnen: een ruimte die alleen voor die rol open is, en een
    aanwijzing die de rol bij naam noemt. */
-const ROL_DOET = {};
+let ROL_DOET = {};
+function vergeetRollen(){ ROL_DOET = {}; }
 function rolDoetErToe(standing){
   if (!standing) return false;
   if (standing in ROL_DOET) return ROL_DOET[standing];
@@ -6886,12 +6894,9 @@ function rolDoetErToe(standing){
     const bank = AssetBank.roles().find(r => r.standing === standing) || {};
     const enkel = String(bank.label || roleLabel(standing) || "").toLowerCase();
     const meer  = String(bank.labelPlural || "").toLowerCase();
-    const alle  = []
-      .concat(M && M.clues ? M.clues : [])
-      .concat(M && M.boardClues ? M.boardClues : [])
-      .concat(M && M.victimClue ? [M.victimClue] : []);
-    raak = alle.some(c => {
-      const t = String((c && c.text) || "").toLowerCase();
+    const alle = (M && M.alleRegels) ? M.alleRegels : [];
+    raak = alle.some(tekst => {
+      const t = String(tekst || "").toLowerCase();
       return (enkel && t.indexOf(enkel) !== -1) || (meer && t.indexOf(meer) !== -1);
     });
   }
@@ -8103,7 +8108,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.111";
+const PLAYER_APP_VERSION="0.9.112";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8401,8 +8406,11 @@ function showLevelDetail(levelIndex){
   /* Zat je hier middenin, dan komen het bord en de klok terug zoals je ze
      achterliet. De geschiedenis begint wel opnieuw: stap terug hoort bij deze
      zitting, niet bij een zitting van gisteren. */
+  let hervat=false;
   { const eerder=herstelBezig(raw);
-    if(eerder!==null){ elapsed=eerder; wisGeschiedenis(); } }
+    if(eerder!==null){ elapsed=eerder; wisGeschiedenis(); hervat=true; } }
+  /* Pak je een zaak weer op, dan begin je niet: je gaat verder. */
+  { const bl=$("#btnBeginLevel span"); if(bl) bl.textContent=hervat?"Ga verder":"Begin de zaak"; }
   stopTimer(); $("#timerVal").textContent=fmtTime(elapsed);
   renderBoard();
   setMode("note"); setTab("board");

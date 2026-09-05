@@ -401,8 +401,8 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 /* Mee bezig: de kaart in zijn geheel in het accent, met witte letters. De
    afgeronde kaart zakt juist een toon terug; samen wijst dat de weg -- wat
    klaar is treedt terug, waar je middenin zit komt naar voren. */
-.level-rij.bezig{background:var(--accent);border-color:var(--accent);
-  box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 38%,transparent)}
+.level-rij.bezig{background:var(--accent-vlak);border-color:var(--accent-vlak);
+  box-shadow:0 6px 18px color-mix(in srgb,var(--accent-vlak) 38%,transparent)}
 .level-rij.bezig h3,.level-rij.bezig .zaak-nr{color:#fff}
 .level-rij.bezig .zaak-nr{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.14)}
 .level-rij.bezig .grid-tag,.level-rij.bezig .demo-tag{background:rgba(255,255,255,.16);color:#fff;border-color:transparent}
@@ -1171,20 +1171,13 @@ function levelHref(source){
 }
 function maakLevelRij(entry){
   const raw=entry.raw, c=raw.content||{};
-  const demo=raw.demo===true, test=raw.test===true;
+  const demo=raw.demo===true;
   const a=document.createElement("a");
-  a.className="level-rij"+(demo||test?" demo":"");
+  a.className="level-rij"+(demo?" demo":"");
   a.href=levelHref(entry.source);
 
   const nr=document.createElement("span"); nr.className="zaak-nr";
-  if(test){
-    /* Een testzaak heeft ook geen nummer: een kolfje, want hier wordt
-       geprobeerd en niet gespeeld. */
-    nr.classList.add("demo-teken"); nr.title="Testzaak";
-    nr.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-      +'<path d="M9.5 3.5h5M10.5 3.5v6.2L5.6 17.4A2 2 0 0 0 7.3 20.5h9.4a2 2 0 0 0 1.7-3.1l-4.9-7.7V3.5"/>'
-      +'<path d="M8 15.5h8"/></svg>';
-  } else if(demo){
+  if(demo){
     /* De voorbeeldzaak heeft geen nummer: een speelteken op de plek ervan. */
     nr.classList.add("demo-teken"); nr.title="Voorbeeldzaak";
     /* Een opengeslagen boek: dit is de zaak waarin je het spel leert. */
@@ -1331,15 +1324,21 @@ document.addEventListener("click",e=>{
 });
 function tekenLijst(){
   const lijst=$("#levelList");
+  /* Waar je middenin zit hoort altijd binnen handbereik: die zaak overleeft
+     elk filter en staat bovenaan, ook als je op niveau of op titel kijkt. */
+  const bezigNu=e=>!voltooidVan(e.raw) && !!bezigVan(e.raw);
   const zichtbaar=alleLevels.filter(e=>{
+    if(bezigNu(e)) return true;
     if(alleenOpen && voltooidVan(e.raw)) return false;
-    if(alleenBezig && !(!voltooidVan(e.raw) && bezigVan(e.raw))) return false;
+    if(alleenBezig) return false;
     if(!actieveFilter) return true;
     const g=levelGraad(e.raw);
     return g && g.graad===actieveFilter;
   });
   /* Sorteren: op vast zaaknummer, of op titel. */
   zichtbaar.sort((a,b)=>{
+    const ba=bezigNu(a), bb=bezigNu(b);
+    if(ba!==bb) return ba?-1:1;
     /* De voorbeeldzaak staat altijd bovenaan, hoe je ook sorteert. */
     const da=a.raw.demo===true, db=b.raw.demo===true;
     if(da!==db) return da?-1:1;
@@ -1416,10 +1415,10 @@ async function laadLevels(){
   alleLevels=nieuwsteVersies(geladen).sort((a,b)=>{
     const da=a.raw.demo===true, db=b.raw.demo===true;
     if(da!==db) return da?-1:1;
-    /* Een testzaak staat vlak achter de voorbeeldzaak en vóór zaak 1: hij
-       hoort bij het uitproberen, niet bij de reeks. */
+    /* Een testzaak ziet eruit als elke andere zaak, maar heeft geen eigen
+       dossiernummer; hij sluit daarom achteraan aan in plaats van vóór zaak 1. */
     const sa=a.raw.test===true, sb=b.raw.test===true;
-    if(sa!==sb) return sa?-1:1;
+    if(sa!==sb) return sa?1:-1;
     const ga=(levelGraad(a.raw)||{}).graad||99, gb=(levelGraad(b.raw)||{}).graad||99;
     if(ga!==gb) return ga-gb;
     const ta=(((a.raw.content||{}).title)||"").toLowerCase();
@@ -1430,7 +1429,7 @@ async function laadLevels(){
   let teller=0;
   alleLevels.forEach((e)=>{
     const n = e.raw && e.raw.levelNumber;
-    if(e.raw && (e.raw.demo===true || e.raw.test===true)){ e.nummer=0; return; }
+    if(e.raw && e.raw.demo===true){ e.nummer=0; return; }
     teller++;
     e.nummer = (typeof n === "number" && n > 0) ? Math.floor(n) : teller;
   });
