@@ -1,0 +1,5841 @@
+{
+  "levelNumber": null,
+  "levelVersion": 1,
+  "format": "clueboard-level",
+  "version": 11,
+  "generator": "Clueboard Builder 11.0",
+  "complete": true,
+  "test": true,
+  "rules": {
+    "onePersonPerRow": true,
+    "onePersonPerColumn": true,
+    "personCountEqualsGridSize": true,
+    "blockedTilesAlwaysEmpty": true,
+    "roomsAreContiguous": true,
+    "victimIsNotCulprit": true,
+    "peopleOnObjectsOnly": false
+  },
+  "puzzle": {
+    "grid": {
+      "columns": 12,
+      "rows": 12,
+      "personCount": 12,
+      "shape": "rectangle"
+    },
+    "theme": "medieval",
+    "themeLabel": "Middeleeuwen",
+    "rooms": [
+      {
+        "id": "room-1",
+        "name": "Grote Hal",
+        "qualifier": null,
+        "kind": "hall",
+        "kindLabel": "Grote Hal",
+        "floor": "stone",
+        "floorLabel": "Steen",
+        "allowedStandings": [
+          "noble"
+        ],
+        "allowedStandingsLabel": "edelen en ridders",
+        "gebiedsklasse": "adellijk",
+        "color": "#CBD9EA",
+        "tileCount": 11,
+        "tiles": [
+          "c11r4",
+          "c12r4",
+          "c11r5",
+          "c12r5",
+          "c12r6",
+          "c11r7",
+          "c12r7",
+          "c12r8",
+          "c12r9",
+          "c12r10",
+          "c12r11"
+        ]
+      },
+      {
+        "id": "room-2",
+        "name": "Eetkamer",
+        "qualifier": null,
+        "kind": "dining-room",
+        "kindLabel": "Eetkamer",
+        "floor": "wood",
+        "floorLabel": "Houten vloer",
+        "allowedStandings": null,
+        "allowedStandingsLabel": null,
+        "gebiedsklasse": null,
+        "color": "#D3CCE6",
+        "tileCount": 14,
+        "tiles": [
+          "c10r4",
+          "c6r5",
+          "c7r5",
+          "c8r5",
+          "c9r5",
+          "c10r5",
+          "c6r6",
+          "c7r6",
+          "c8r6",
+          "c6r7",
+          "c7r7",
+          "c8r7",
+          "c8r8",
+          "c8r9"
+        ]
+      },
+      {
+        "id": "room-3",
+        "name": "Slaapkamer",
+        "qualifier": null,
+        "kind": "bedroom",
+        "kindLabel": "Slaapkamer",
+        "floor": "wood",
+        "floorLabel": "Houten vloer",
+        "allowedStandings": null,
+        "allowedStandingsLabel": null,
+        "gebiedsklasse": null,
+        "color": "#C6DED4",
+        "tileCount": 28,
+        "tiles": [
+          "c1r1",
+          "c2r1",
+          "c3r1",
+          "c4r1",
+          "c5r1",
+          "c6r1",
+          "c1r2",
+          "c2r2",
+          "c3r2",
+          "c4r2",
+          "c5r2",
+          "c6r2",
+          "c1r3",
+          "c2r3",
+          "c3r3",
+          "c4r3",
+          "c6r3",
+          "c1r4",
+          "c2r4",
+          "c3r4",
+          "c4r4",
+          "c6r4",
+          "c1r5",
+          "c2r5",
+          "c3r5",
+          "c1r6",
+          "c2r6",
+          "c1r7"
+        ]
+      },
+      {
+        "id": "room-4",
+        "name": "Keuken",
+        "qualifier": null,
+        "kind": "kitchen",
+        "kindLabel": "Keuken",
+        "floor": "tile",
+        "floorLabel": "Tegelvloer",
+        "allowedStandings": null,
+        "allowedStandingsLabel": null,
+        "gebiedsklasse": null,
+        "color": "#E4D3DC",
+        "tileCount": 15,
+        "tiles": [
+          "c9r6",
+          "c10r6",
+          "c11r6",
+          "c9r7",
+          "c10r7",
+          "c9r8",
+          "c10r8",
+          "c11r8",
+          "c9r9",
+          "c10r9",
+          "c11r9",
+          "c7r10",
+          "c8r10",
+          "c9r10",
+          "c7r11"
+        ]
+      },
+      {
+        "id": "room-5",
+        "name": "Terras",
+        "qualifier": null,
+        "kind": "terrace",
+        "kindLabel": "Terras",
+        "floor": "stone",
+        "floorLabel": "Steen",
+        "allowedStandings": [
+          "noble"
+        ],
+        "allowedStandingsLabel": "edelen en ridders",
+        "gebiedsklasse": "adellijk",
+        "color": "#DCDDC6",
+        "tileCount": 9,
+        "tiles": [
+          "c8r2",
+          "c9r2",
+          "c7r3",
+          "c8r3",
+          "c9r3",
+          "c10r3",
+          "c7r4",
+          "c8r4",
+          "c9r4"
+        ]
+      },
+      {
+        "id": "room-6",
+        "name": "Tuin",
+        "qualifier": null,
+        "kind": "garden",
+        "kindLabel": "Tuin",
+        "floor": "grass",
+        "floorLabel": "Gras",
+        "allowedStandings": null,
+        "allowedStandingsLabel": null,
+        "gebiedsklasse": null,
+        "color": "#E6D8C6",
+        "tileCount": 12,
+        "tiles": [
+          "c7r1",
+          "c8r1",
+          "c9r1",
+          "c10r1",
+          "c11r1",
+          "c12r1",
+          "c7r2",
+          "c10r2",
+          "c11r2",
+          "c12r2",
+          "c11r3",
+          "c12r3"
+        ]
+      },
+      {
+        "id": "room-7",
+        "name": "Binnenplaats",
+        "qualifier": null,
+        "kind": "courtyard",
+        "kindLabel": "Binnenplaats",
+        "floor": "gravel",
+        "floorLabel": "Grind",
+        "allowedStandings": null,
+        "allowedStandingsLabel": null,
+        "gebiedsklasse": null,
+        "color": "#C8D2E6",
+        "tileCount": 27,
+        "tiles": [
+          "c5r3",
+          "c5r4",
+          "c4r5",
+          "c5r5",
+          "c3r6",
+          "c4r6",
+          "c5r6",
+          "c2r7",
+          "c3r7",
+          "c4r7",
+          "c5r7",
+          "c1r8",
+          "c2r8",
+          "c3r8",
+          "c4r8",
+          "c5r8",
+          "c6r8",
+          "c7r8",
+          "c1r9",
+          "c3r9",
+          "c4r9",
+          "c5r9",
+          "c6r9",
+          "c7r9",
+          "c1r10",
+          "c3r10",
+          "c5r10"
+        ]
+      },
+      {
+        "id": "room-8",
+        "name": "Wachtzaal",
+        "qualifier": null,
+        "kind": "barracks",
+        "kindLabel": "Wachtzaal",
+        "floor": "wood",
+        "floorLabel": "Houten vloer",
+        "allowedStandings": null,
+        "allowedStandingsLabel": null,
+        "gebiedsklasse": null,
+        "color": "#D8E2C6",
+        "tileCount": 28,
+        "tiles": [
+          "c2r9",
+          "c2r10",
+          "c4r10",
+          "c6r10",
+          "c10r10",
+          "c11r10",
+          "c1r11",
+          "c2r11",
+          "c3r11",
+          "c4r11",
+          "c5r11",
+          "c6r11",
+          "c8r11",
+          "c9r11",
+          "c10r11",
+          "c11r11",
+          "c1r12",
+          "c2r12",
+          "c3r12",
+          "c4r12",
+          "c5r12",
+          "c6r12",
+          "c7r12",
+          "c8r12",
+          "c9r12",
+          "c10r12",
+          "c11r12",
+          "c12r12"
+        ]
+      }
+    ],
+    "objects": [
+      {
+        "id": "obj-1",
+        "name": "Stoel 1",
+        "kind": "Chair",
+        "kindLabel": "Stoel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c3r3"
+        ],
+        "bounds": {
+          "minColumn": 3,
+          "maxColumn": 3,
+          "minRow": 3,
+          "maxRow": 3
+        }
+      },
+      {
+        "id": "obj-2",
+        "name": "Stoel 2",
+        "kind": "Chair",
+        "kindLabel": "Stoel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-5",
+        "size": 1,
+        "tiles": [
+          "c8r2"
+        ],
+        "bounds": {
+          "minColumn": 8,
+          "maxColumn": 8,
+          "minRow": 2,
+          "maxRow": 2
+        }
+      },
+      {
+        "id": "obj-3",
+        "name": "Stoel 3",
+        "kind": "Chair",
+        "kindLabel": "Stoel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-8",
+        "size": 1,
+        "tiles": [
+          "c10r10"
+        ],
+        "bounds": {
+          "minColumn": 10,
+          "maxColumn": 10,
+          "minRow": 10,
+          "maxRow": 10
+        }
+      },
+      {
+        "id": "obj-4",
+        "name": "Stoel 4",
+        "kind": "Chair",
+        "kindLabel": "Stoel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-1",
+        "size": 1,
+        "tiles": [
+          "c12r5"
+        ],
+        "bounds": {
+          "minColumn": 12,
+          "maxColumn": 12,
+          "minRow": 5,
+          "maxRow": 5
+        }
+      },
+      {
+        "id": "obj-5",
+        "name": "Stoel 5",
+        "kind": "Chair",
+        "kindLabel": "Stoel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-4",
+        "size": 1,
+        "tiles": [
+          "c9r10"
+        ],
+        "bounds": {
+          "minColumn": 9,
+          "maxColumn": 9,
+          "minRow": 10,
+          "maxRow": 10
+        }
+      },
+      {
+        "id": "obj-6",
+        "name": "Stoel 6",
+        "kind": "Chair",
+        "kindLabel": "Stoel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c3r1"
+        ],
+        "bounds": {
+          "minColumn": 3,
+          "maxColumn": 3,
+          "minRow": 1,
+          "maxRow": 1
+        }
+      },
+      {
+        "id": "obj-7",
+        "name": "Stoel 7",
+        "kind": "Chair",
+        "kindLabel": "Stoel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c2r1"
+        ],
+        "bounds": {
+          "minColumn": 2,
+          "maxColumn": 2,
+          "minRow": 1,
+          "maxRow": 1
+        }
+      },
+      {
+        "id": "obj-8",
+        "name": "Stoel 8",
+        "kind": "Chair",
+        "kindLabel": "Stoel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-1",
+        "size": 1,
+        "tiles": [
+          "c12r11"
+        ],
+        "bounds": {
+          "minColumn": 12,
+          "maxColumn": 12,
+          "minRow": 11,
+          "maxRow": 11
+        }
+      },
+      {
+        "id": "obj-9",
+        "name": "Stoel 9",
+        "kind": "Chair",
+        "kindLabel": "Stoel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-7",
+        "size": 1,
+        "tiles": [
+          "c6r9"
+        ],
+        "bounds": {
+          "minColumn": 6,
+          "maxColumn": 6,
+          "minRow": 9,
+          "maxRow": 9
+        }
+      },
+      {
+        "id": "obj-10",
+        "name": "Tapijt 10",
+        "kind": "Carpet",
+        "kindLabel": "Tapijt",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-4",
+        "size": 1,
+        "tiles": [
+          "c9r8"
+        ],
+        "bounds": {
+          "minColumn": 9,
+          "maxColumn": 9,
+          "minRow": 8,
+          "maxRow": 8
+        }
+      },
+      {
+        "id": "obj-11",
+        "name": "Tapijt 11",
+        "kind": "Carpet",
+        "kindLabel": "Tapijt",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-4",
+        "size": 1,
+        "tiles": [
+          "c11r6"
+        ],
+        "bounds": {
+          "minColumn": 11,
+          "maxColumn": 11,
+          "minRow": 6,
+          "maxRow": 6
+        }
+      },
+      {
+        "id": "obj-12",
+        "name": "Tapijt 12",
+        "kind": "Carpet",
+        "kindLabel": "Tapijt",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-8",
+        "size": 1,
+        "tiles": [
+          "c4r11"
+        ],
+        "bounds": {
+          "minColumn": 4,
+          "maxColumn": 4,
+          "minRow": 11,
+          "maxRow": 11
+        }
+      },
+      {
+        "id": "obj-13",
+        "name": "Tapijt 13",
+        "kind": "Carpet",
+        "kindLabel": "Tapijt",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-7",
+        "size": 1,
+        "tiles": [
+          "c7r9"
+        ],
+        "bounds": {
+          "minColumn": 7,
+          "maxColumn": 7,
+          "minRow": 9,
+          "maxRow": 9
+        }
+      },
+      {
+        "id": "obj-14",
+        "name": "Tapijt 14",
+        "kind": "Carpet",
+        "kindLabel": "Tapijt",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-7",
+        "size": 1,
+        "tiles": [
+          "c4r7"
+        ],
+        "bounds": {
+          "minColumn": 4,
+          "maxColumn": 4,
+          "minRow": 7,
+          "maxRow": 7
+        }
+      },
+      {
+        "id": "obj-15",
+        "name": "Tapijt 15",
+        "kind": "Carpet",
+        "kindLabel": "Tapijt",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-2",
+        "size": 1,
+        "tiles": [
+          "c6r5"
+        ],
+        "bounds": {
+          "minColumn": 6,
+          "maxColumn": 6,
+          "minRow": 5,
+          "maxRow": 5
+        }
+      },
+      {
+        "id": "obj-16",
+        "name": "Tapijt 16",
+        "kind": "Carpet",
+        "kindLabel": "Tapijt",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-2",
+        "size": 1,
+        "tiles": [
+          "c7r7"
+        ],
+        "bounds": {
+          "minColumn": 7,
+          "maxColumn": 7,
+          "minRow": 7,
+          "maxRow": 7
+        }
+      },
+      {
+        "id": "obj-17",
+        "name": "Tapijt 17",
+        "kind": "Carpet",
+        "kindLabel": "Tapijt",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-4",
+        "size": 1,
+        "tiles": [
+          "c7r11"
+        ],
+        "bounds": {
+          "minColumn": 7,
+          "maxColumn": 7,
+          "minRow": 11,
+          "maxRow": 11
+        }
+      },
+      {
+        "id": "obj-18",
+        "name": "Tapijt 18",
+        "kind": "Carpet",
+        "kindLabel": "Tapijt",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-8",
+        "size": 1,
+        "tiles": [
+          "c2r11"
+        ],
+        "bounds": {
+          "minColumn": 2,
+          "maxColumn": 2,
+          "minRow": 11,
+          "maxRow": 11
+        }
+      },
+      {
+        "id": "obj-19",
+        "name": "Bed 19",
+        "kind": "Bed",
+        "kindLabel": "Bed",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-7",
+        "size": 1,
+        "tiles": [
+          "c5r7"
+        ],
+        "bounds": {
+          "minColumn": 5,
+          "maxColumn": 5,
+          "minRow": 7,
+          "maxRow": 7
+        }
+      },
+      {
+        "id": "obj-20",
+        "name": "Bed 20",
+        "kind": "Bed",
+        "kindLabel": "Bed",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c1r1"
+        ],
+        "bounds": {
+          "minColumn": 1,
+          "maxColumn": 1,
+          "minRow": 1,
+          "maxRow": 1
+        }
+      },
+      {
+        "id": "obj-21",
+        "name": "Bed 21",
+        "kind": "Bed",
+        "kindLabel": "Bed",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c6r4"
+        ],
+        "bounds": {
+          "minColumn": 6,
+          "maxColumn": 6,
+          "minRow": 4,
+          "maxRow": 4
+        }
+      },
+      {
+        "id": "obj-22",
+        "name": "Bed 22",
+        "kind": "Bed",
+        "kindLabel": "Bed",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-8",
+        "size": 1,
+        "tiles": [
+          "c11r10"
+        ],
+        "bounds": {
+          "minColumn": 11,
+          "maxColumn": 11,
+          "minRow": 10,
+          "maxRow": 10
+        }
+      },
+      {
+        "id": "obj-23",
+        "name": "Bed 23",
+        "kind": "Bed",
+        "kindLabel": "Bed",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-1",
+        "size": 1,
+        "tiles": [
+          "c12r9"
+        ],
+        "bounds": {
+          "minColumn": 12,
+          "maxColumn": 12,
+          "minRow": 9,
+          "maxRow": 9
+        }
+      },
+      {
+        "id": "obj-24",
+        "name": "Bed 24",
+        "kind": "Bed",
+        "kindLabel": "Bed",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "occupiable",
+        "typeLabel": "beloopbaar",
+        "roomId": "room-7",
+        "size": 1,
+        "tiles": [
+          "c4r9"
+        ],
+        "bounds": {
+          "minColumn": 4,
+          "maxColumn": 4,
+          "minRow": 9,
+          "maxRow": 9
+        }
+      },
+      {
+        "id": "obj-25",
+        "name": "Tafel 25",
+        "kind": "Table",
+        "kindLabel": "Tafel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-7",
+        "size": 1,
+        "tiles": [
+          "c3r9"
+        ],
+        "bounds": {
+          "minColumn": 3,
+          "maxColumn": 3,
+          "minRow": 9,
+          "maxRow": 9
+        }
+      },
+      {
+        "id": "obj-26",
+        "name": "Tafel 26",
+        "kind": "Table",
+        "kindLabel": "Tafel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-6",
+        "size": 1,
+        "tiles": [
+          "c11r1"
+        ],
+        "bounds": {
+          "minColumn": 11,
+          "maxColumn": 11,
+          "minRow": 1,
+          "maxRow": 1
+        }
+      },
+      {
+        "id": "obj-27",
+        "name": "Tafel 27",
+        "kind": "Table",
+        "kindLabel": "Tafel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-5",
+        "size": 1,
+        "tiles": [
+          "c8r4"
+        ],
+        "bounds": {
+          "minColumn": 8,
+          "maxColumn": 8,
+          "minRow": 4,
+          "maxRow": 4
+        }
+      },
+      {
+        "id": "obj-28",
+        "name": "Tafel 28",
+        "kind": "Table",
+        "kindLabel": "Tafel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-7",
+        "size": 1,
+        "tiles": [
+          "c1r9"
+        ],
+        "bounds": {
+          "minColumn": 1,
+          "maxColumn": 1,
+          "minRow": 9,
+          "maxRow": 9
+        }
+      },
+      {
+        "id": "obj-29",
+        "name": "Tafel 29",
+        "kind": "Table",
+        "kindLabel": "Tafel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c3r2"
+        ],
+        "bounds": {
+          "minColumn": 3,
+          "maxColumn": 3,
+          "minRow": 2,
+          "maxRow": 2
+        }
+      },
+      {
+        "id": "obj-30",
+        "name": "Tafel 30",
+        "kind": "Table",
+        "kindLabel": "Tafel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-6",
+        "size": 1,
+        "tiles": [
+          "c7r2"
+        ],
+        "bounds": {
+          "minColumn": 7,
+          "maxColumn": 7,
+          "minRow": 2,
+          "maxRow": 2
+        }
+      },
+      {
+        "id": "obj-31",
+        "name": "Tafel 31",
+        "kind": "Table",
+        "kindLabel": "Tafel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-6",
+        "size": 1,
+        "tiles": [
+          "c10r2"
+        ],
+        "bounds": {
+          "minColumn": 10,
+          "maxColumn": 10,
+          "minRow": 2,
+          "maxRow": 2
+        }
+      },
+      {
+        "id": "obj-32",
+        "name": "Tafel 32",
+        "kind": "Table",
+        "kindLabel": "Tafel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-7",
+        "size": 1,
+        "tiles": [
+          "c5r6"
+        ],
+        "bounds": {
+          "minColumn": 5,
+          "maxColumn": 5,
+          "minRow": 6,
+          "maxRow": 6
+        }
+      },
+      {
+        "id": "obj-33",
+        "name": "Tafel 33",
+        "kind": "Table",
+        "kindLabel": "Tafel",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-4",
+        "size": 1,
+        "tiles": [
+          "c9r9"
+        ],
+        "bounds": {
+          "minColumn": 9,
+          "maxColumn": 9,
+          "minRow": 9,
+          "maxRow": 9
+        }
+      },
+      {
+        "id": "obj-34",
+        "name": "Plant 34",
+        "kind": "Plant",
+        "kindLabel": "Plant",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-4",
+        "size": 1,
+        "tiles": [
+          "c8r10"
+        ],
+        "bounds": {
+          "minColumn": 8,
+          "maxColumn": 8,
+          "minRow": 10,
+          "maxRow": 10
+        }
+      },
+      {
+        "id": "obj-35",
+        "name": "Plant 35",
+        "kind": "Plant",
+        "kindLabel": "Plant",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c6r2"
+        ],
+        "bounds": {
+          "minColumn": 6,
+          "maxColumn": 6,
+          "minRow": 2,
+          "maxRow": 2
+        }
+      },
+      {
+        "id": "obj-36",
+        "name": "Plant 36",
+        "kind": "Plant",
+        "kindLabel": "Plant",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-2",
+        "size": 1,
+        "tiles": [
+          "c8r8"
+        ],
+        "bounds": {
+          "minColumn": 8,
+          "maxColumn": 8,
+          "minRow": 8,
+          "maxRow": 8
+        }
+      },
+      {
+        "id": "obj-37",
+        "name": "Plant 37",
+        "kind": "Plant",
+        "kindLabel": "Plant",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-2",
+        "size": 1,
+        "tiles": [
+          "c9r5"
+        ],
+        "bounds": {
+          "minColumn": 9,
+          "maxColumn": 9,
+          "minRow": 5,
+          "maxRow": 5
+        }
+      },
+      {
+        "id": "obj-38",
+        "name": "Plant 38",
+        "kind": "Plant",
+        "kindLabel": "Plant",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c3r4"
+        ],
+        "bounds": {
+          "minColumn": 3,
+          "maxColumn": 3,
+          "minRow": 4,
+          "maxRow": 4
+        }
+      },
+      {
+        "id": "obj-39",
+        "name": "Plant 39",
+        "kind": "Plant",
+        "kindLabel": "Plant",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c3r5"
+        ],
+        "bounds": {
+          "minColumn": 3,
+          "maxColumn": 3,
+          "minRow": 5,
+          "maxRow": 5
+        }
+      },
+      {
+        "id": "obj-40",
+        "name": "Doos 40",
+        "kind": "Box",
+        "kindLabel": "Doos",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-6",
+        "size": 1,
+        "tiles": [
+          "c7r1"
+        ],
+        "bounds": {
+          "minColumn": 7,
+          "maxColumn": 7,
+          "minRow": 1,
+          "maxRow": 1
+        }
+      },
+      {
+        "id": "obj-41",
+        "name": "Doos 41",
+        "kind": "Box",
+        "kindLabel": "Doos",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-1",
+        "size": 1,
+        "tiles": [
+          "c12r6"
+        ],
+        "bounds": {
+          "minColumn": 12,
+          "maxColumn": 12,
+          "minRow": 6,
+          "maxRow": 6
+        }
+      },
+      {
+        "id": "obj-42",
+        "name": "Doos 42",
+        "kind": "Box",
+        "kindLabel": "Doos",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-2",
+        "size": 1,
+        "tiles": [
+          "c7r5"
+        ],
+        "bounds": {
+          "minColumn": 7,
+          "maxColumn": 7,
+          "minRow": 5,
+          "maxRow": 5
+        }
+      },
+      {
+        "id": "obj-43",
+        "name": "Doos 43",
+        "kind": "Box",
+        "kindLabel": "Doos",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c1r7"
+        ],
+        "bounds": {
+          "minColumn": 1,
+          "maxColumn": 1,
+          "minRow": 7,
+          "maxRow": 7
+        }
+      },
+      {
+        "id": "obj-44",
+        "name": "Doos 44",
+        "kind": "Box",
+        "kindLabel": "Doos",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c1r5"
+        ],
+        "bounds": {
+          "minColumn": 1,
+          "maxColumn": 1,
+          "minRow": 5,
+          "maxRow": 5
+        }
+      },
+      {
+        "id": "obj-45",
+        "name": "Doos 45",
+        "kind": "Box",
+        "kindLabel": "Doos",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-1",
+        "size": 1,
+        "tiles": [
+          "c11r7"
+        ],
+        "bounds": {
+          "minColumn": 11,
+          "maxColumn": 11,
+          "minRow": 7,
+          "maxRow": 7
+        }
+      },
+      {
+        "id": "obj-46",
+        "name": "Boom 46",
+        "kind": "Tree",
+        "kindLabel": "Boom",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-8",
+        "size": 1,
+        "tiles": [
+          "c2r9"
+        ],
+        "bounds": {
+          "minColumn": 2,
+          "maxColumn": 2,
+          "minRow": 9,
+          "maxRow": 9
+        }
+      },
+      {
+        "id": "obj-47",
+        "name": "Boom 47",
+        "kind": "Tree",
+        "kindLabel": "Boom",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-8",
+        "size": 1,
+        "tiles": [
+          "c3r12"
+        ],
+        "bounds": {
+          "minColumn": 3,
+          "maxColumn": 3,
+          "minRow": 12,
+          "maxRow": 12
+        }
+      },
+      {
+        "id": "obj-48",
+        "name": "Boom 48",
+        "kind": "Tree",
+        "kindLabel": "Boom",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c1r3"
+        ],
+        "bounds": {
+          "minColumn": 1,
+          "maxColumn": 1,
+          "minRow": 3,
+          "maxRow": 3
+        }
+      },
+      {
+        "id": "obj-49",
+        "name": "Boom 49",
+        "kind": "Tree",
+        "kindLabel": "Boom",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-1",
+        "size": 1,
+        "tiles": [
+          "c12r4"
+        ],
+        "bounds": {
+          "minColumn": 12,
+          "maxColumn": 12,
+          "minRow": 4,
+          "maxRow": 4
+        }
+      },
+      {
+        "id": "obj-50",
+        "name": "Boom 50",
+        "kind": "Tree",
+        "kindLabel": "Boom",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c1r6"
+        ],
+        "bounds": {
+          "minColumn": 1,
+          "maxColumn": 1,
+          "minRow": 6,
+          "maxRow": 6
+        }
+      },
+      {
+        "id": "obj-51",
+        "name": "Boom 51",
+        "kind": "Tree",
+        "kindLabel": "Boom",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-5",
+        "size": 1,
+        "tiles": [
+          "c9r4"
+        ],
+        "bounds": {
+          "minColumn": 9,
+          "maxColumn": 9,
+          "minRow": 4,
+          "maxRow": 4
+        }
+      },
+      {
+        "id": "obj-52",
+        "name": "Boom 52",
+        "kind": "Tree",
+        "kindLabel": "Boom",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c4r4"
+        ],
+        "bounds": {
+          "minColumn": 4,
+          "maxColumn": 4,
+          "minRow": 4,
+          "maxRow": 4
+        }
+      },
+      {
+        "id": "obj-53",
+        "name": "Boom 53",
+        "kind": "Tree",
+        "kindLabel": "Boom",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-8",
+        "size": 1,
+        "tiles": [
+          "c3r11"
+        ],
+        "bounds": {
+          "minColumn": 3,
+          "maxColumn": 3,
+          "minRow": 11,
+          "maxRow": 11
+        }
+      },
+      {
+        "id": "obj-54",
+        "name": "Boom 54",
+        "kind": "Tree",
+        "kindLabel": "Boom",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c6r3"
+        ],
+        "bounds": {
+          "minColumn": 6,
+          "maxColumn": 6,
+          "minRow": 3,
+          "maxRow": 3
+        }
+      },
+      {
+        "id": "obj-55",
+        "name": "Vat 55",
+        "kind": "Barrel",
+        "kindLabel": "Vat",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-5",
+        "size": 1,
+        "tiles": [
+          "c8r3"
+        ],
+        "bounds": {
+          "minColumn": 8,
+          "maxColumn": 8,
+          "minRow": 3,
+          "maxRow": 3
+        }
+      },
+      {
+        "id": "obj-56",
+        "name": "Vat 56",
+        "kind": "Barrel",
+        "kindLabel": "Vat",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-6",
+        "size": 1,
+        "tiles": [
+          "c8r1"
+        ],
+        "bounds": {
+          "minColumn": 8,
+          "maxColumn": 8,
+          "minRow": 1,
+          "maxRow": 1
+        }
+      },
+      {
+        "id": "obj-57",
+        "name": "Vat 57",
+        "kind": "Barrel",
+        "kindLabel": "Vat",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-4",
+        "size": 1,
+        "tiles": [
+          "c10r9"
+        ],
+        "bounds": {
+          "minColumn": 10,
+          "maxColumn": 10,
+          "minRow": 9,
+          "maxRow": 9
+        }
+      },
+      {
+        "id": "obj-58",
+        "name": "Vat 58",
+        "kind": "Barrel",
+        "kindLabel": "Vat",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-6",
+        "size": 1,
+        "tiles": [
+          "c11r3"
+        ],
+        "bounds": {
+          "minColumn": 11,
+          "maxColumn": 11,
+          "minRow": 3,
+          "maxRow": 3
+        }
+      },
+      {
+        "id": "obj-59",
+        "name": "Vat 59",
+        "kind": "Barrel",
+        "kindLabel": "Vat",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-4",
+        "size": 1,
+        "tiles": [
+          "c11r8"
+        ],
+        "bounds": {
+          "minColumn": 11,
+          "maxColumn": 11,
+          "minRow": 8,
+          "maxRow": 8
+        }
+      },
+      {
+        "id": "obj-60",
+        "name": "Vat 60",
+        "kind": "Barrel",
+        "kindLabel": "Vat",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-8",
+        "size": 1,
+        "tiles": [
+          "c5r12"
+        ],
+        "bounds": {
+          "minColumn": 5,
+          "maxColumn": 5,
+          "minRow": 12,
+          "maxRow": 12
+        }
+      },
+      {
+        "id": "obj-61",
+        "name": "Standbeeld 61",
+        "kind": "Statue",
+        "kindLabel": "Standbeeld",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-8",
+        "size": 1,
+        "tiles": [
+          "c11r11"
+        ],
+        "bounds": {
+          "minColumn": 11,
+          "maxColumn": 11,
+          "minRow": 11,
+          "maxRow": 11
+        }
+      },
+      {
+        "id": "obj-62",
+        "name": "Standbeeld 62",
+        "kind": "Statue",
+        "kindLabel": "Standbeeld",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-7",
+        "size": 1,
+        "tiles": [
+          "c3r10"
+        ],
+        "bounds": {
+          "minColumn": 3,
+          "maxColumn": 3,
+          "minRow": 10,
+          "maxRow": 10
+        }
+      },
+      {
+        "id": "obj-63",
+        "name": "Standbeeld 63",
+        "kind": "Statue",
+        "kindLabel": "Standbeeld",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-7",
+        "size": 1,
+        "tiles": [
+          "c5r8"
+        ],
+        "bounds": {
+          "minColumn": 5,
+          "maxColumn": 5,
+          "minRow": 8,
+          "maxRow": 8
+        }
+      },
+      {
+        "id": "obj-64",
+        "name": "Kast 64",
+        "kind": "Shelf",
+        "kindLabel": "Kast",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c4r2"
+        ],
+        "bounds": {
+          "minColumn": 4,
+          "maxColumn": 4,
+          "minRow": 2,
+          "maxRow": 2
+        }
+      },
+      {
+        "id": "obj-65",
+        "name": "Kast 65",
+        "kind": "Shelf",
+        "kindLabel": "Kast",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-4",
+        "size": 1,
+        "tiles": [
+          "c10r7"
+        ],
+        "bounds": {
+          "minColumn": 10,
+          "maxColumn": 10,
+          "minRow": 7,
+          "maxRow": 7
+        }
+      },
+      {
+        "id": "obj-66",
+        "name": "Kast 66",
+        "kind": "Shelf",
+        "kindLabel": "Kast",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-8",
+        "size": 1,
+        "tiles": [
+          "c5r11"
+        ],
+        "bounds": {
+          "minColumn": 5,
+          "maxColumn": 5,
+          "minRow": 11,
+          "maxRow": 11
+        }
+      },
+      {
+        "id": "obj-67",
+        "name": "Kast 67",
+        "kind": "Shelf",
+        "kindLabel": "Kast",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c5r1"
+        ],
+        "bounds": {
+          "minColumn": 5,
+          "maxColumn": 5,
+          "minRow": 1,
+          "maxRow": 1
+        }
+      },
+      {
+        "id": "obj-68",
+        "name": "Kast 68",
+        "kind": "Shelf",
+        "kindLabel": "Kast",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-7",
+        "size": 1,
+        "tiles": [
+          "c1r10"
+        ],
+        "bounds": {
+          "minColumn": 1,
+          "maxColumn": 1,
+          "minRow": 10,
+          "maxRow": 10
+        }
+      },
+      {
+        "id": "obj-69",
+        "name": "Kast 69",
+        "kind": "Shelf",
+        "kindLabel": "Kast",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-8",
+        "size": 1,
+        "tiles": [
+          "c9r12"
+        ],
+        "bounds": {
+          "minColumn": 9,
+          "maxColumn": 9,
+          "minRow": 12,
+          "maxRow": 12
+        }
+      }
+    ],
+    "walls": [],
+    "tiles": [
+      {
+        "id": "c1r1",
+        "column": 1,
+        "row": 1,
+        "roomId": "room-3",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-20",
+        "matId": null,
+        "personId": "p1"
+      },
+      {
+        "id": "c2r1",
+        "column": 2,
+        "row": 1,
+        "roomId": "room-3",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-7",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c3r1",
+        "column": 3,
+        "row": 1,
+        "roomId": "room-3",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-6",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c4r1",
+        "column": 4,
+        "row": 1,
+        "roomId": "room-3",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c5r1",
+        "column": 5,
+        "row": 1,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-67",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c6r1",
+        "column": 6,
+        "row": 1,
+        "roomId": "room-3",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c7r1",
+        "column": 7,
+        "row": 1,
+        "roomId": "room-6",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-40",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c8r1",
+        "column": 8,
+        "row": 1,
+        "roomId": "room-6",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-56",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c9r1",
+        "column": 9,
+        "row": 1,
+        "roomId": "room-6",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c10r1",
+        "column": 10,
+        "row": 1,
+        "roomId": "room-6",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c11r1",
+        "column": 11,
+        "row": 1,
+        "roomId": "room-6",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-26",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c12r1",
+        "column": 12,
+        "row": 1,
+        "roomId": "room-6",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c1r2",
+        "column": 1,
+        "row": 2,
+        "roomId": "room-3",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c2r2",
+        "column": 2,
+        "row": 2,
+        "roomId": "room-3",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c3r2",
+        "column": 3,
+        "row": 2,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-29",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c4r2",
+        "column": 4,
+        "row": 2,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-64",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c5r2",
+        "column": 5,
+        "row": 2,
+        "roomId": "room-3",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c6r2",
+        "column": 6,
+        "row": 2,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-35",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c7r2",
+        "column": 7,
+        "row": 2,
+        "roomId": "room-6",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-30",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c8r2",
+        "column": 8,
+        "row": 2,
+        "roomId": "room-5",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-2",
+        "matId": null,
+        "personId": "p2"
+      },
+      {
+        "id": "c9r2",
+        "column": 9,
+        "row": 2,
+        "roomId": "room-5",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c10r2",
+        "column": 10,
+        "row": 2,
+        "roomId": "room-6",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-31",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c11r2",
+        "column": 11,
+        "row": 2,
+        "roomId": "room-6",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c12r2",
+        "column": 12,
+        "row": 2,
+        "roomId": "room-6",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c1r3",
+        "column": 1,
+        "row": 3,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-48",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c2r3",
+        "column": 2,
+        "row": 3,
+        "roomId": "room-3",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c3r3",
+        "column": 3,
+        "row": 3,
+        "roomId": "room-3",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-1",
+        "matId": null,
+        "personId": "p3"
+      },
+      {
+        "id": "c4r3",
+        "column": 4,
+        "row": 3,
+        "roomId": "room-3",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c5r3",
+        "column": 5,
+        "row": 3,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c6r3",
+        "column": 6,
+        "row": 3,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-54",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c7r3",
+        "column": 7,
+        "row": 3,
+        "roomId": "room-5",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c8r3",
+        "column": 8,
+        "row": 3,
+        "roomId": "room-5",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-55",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c9r3",
+        "column": 9,
+        "row": 3,
+        "roomId": "room-5",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c10r3",
+        "column": 10,
+        "row": 3,
+        "roomId": "room-5",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c11r3",
+        "column": 11,
+        "row": 3,
+        "roomId": "room-6",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-58",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c12r3",
+        "column": 12,
+        "row": 3,
+        "roomId": "room-6",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c1r4",
+        "column": 1,
+        "row": 4,
+        "roomId": "room-3",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c2r4",
+        "column": 2,
+        "row": 4,
+        "roomId": "room-3",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c3r4",
+        "column": 3,
+        "row": 4,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-38",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c4r4",
+        "column": 4,
+        "row": 4,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-52",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c5r4",
+        "column": 5,
+        "row": 4,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c6r4",
+        "column": 6,
+        "row": 4,
+        "roomId": "room-3",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-21",
+        "matId": null,
+        "personId": "p4"
+      },
+      {
+        "id": "c7r4",
+        "column": 7,
+        "row": 4,
+        "roomId": "room-5",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c8r4",
+        "column": 8,
+        "row": 4,
+        "roomId": "room-5",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-27",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c9r4",
+        "column": 9,
+        "row": 4,
+        "roomId": "room-5",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-51",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c10r4",
+        "column": 10,
+        "row": 4,
+        "roomId": "room-2",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c11r4",
+        "column": 11,
+        "row": 4,
+        "roomId": "room-1",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c12r4",
+        "column": 12,
+        "row": 4,
+        "roomId": "room-1",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-49",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c1r5",
+        "column": 1,
+        "row": 5,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-44",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c2r5",
+        "column": 2,
+        "row": 5,
+        "roomId": "room-3",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c3r5",
+        "column": 3,
+        "row": 5,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-39",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c4r5",
+        "column": 4,
+        "row": 5,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c5r5",
+        "column": 5,
+        "row": 5,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c6r5",
+        "column": 6,
+        "row": 5,
+        "roomId": "room-2",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-15",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c7r5",
+        "column": 7,
+        "row": 5,
+        "roomId": "room-2",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-42",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c8r5",
+        "column": 8,
+        "row": 5,
+        "roomId": "room-2",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c9r5",
+        "column": 9,
+        "row": 5,
+        "roomId": "room-2",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-37",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c10r5",
+        "column": 10,
+        "row": 5,
+        "roomId": "room-2",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c11r5",
+        "column": 11,
+        "row": 5,
+        "roomId": "room-1",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c12r5",
+        "column": 12,
+        "row": 5,
+        "roomId": "room-1",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-4",
+        "matId": null,
+        "personId": "p5"
+      },
+      {
+        "id": "c1r6",
+        "column": 1,
+        "row": 6,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-50",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c2r6",
+        "column": 2,
+        "row": 6,
+        "roomId": "room-3",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c3r6",
+        "column": 3,
+        "row": 6,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c4r6",
+        "column": 4,
+        "row": 6,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c5r6",
+        "column": 5,
+        "row": 6,
+        "roomId": "room-7",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-32",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c6r6",
+        "column": 6,
+        "row": 6,
+        "roomId": "room-2",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c7r6",
+        "column": 7,
+        "row": 6,
+        "roomId": "room-2",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c8r6",
+        "column": 8,
+        "row": 6,
+        "roomId": "room-2",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c9r6",
+        "column": 9,
+        "row": 6,
+        "roomId": "room-4",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c10r6",
+        "column": 10,
+        "row": 6,
+        "roomId": "room-4",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c11r6",
+        "column": 11,
+        "row": 6,
+        "roomId": "room-4",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-11",
+        "matId": null,
+        "personId": "p11"
+      },
+      {
+        "id": "c12r6",
+        "column": 12,
+        "row": 6,
+        "roomId": "room-1",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-41",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c1r7",
+        "column": 1,
+        "row": 7,
+        "roomId": "room-3",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-43",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c2r7",
+        "column": 2,
+        "row": 7,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c3r7",
+        "column": 3,
+        "row": 7,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c4r7",
+        "column": 4,
+        "row": 7,
+        "roomId": "room-7",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-14",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c5r7",
+        "column": 5,
+        "row": 7,
+        "roomId": "room-7",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-19",
+        "matId": null,
+        "personId": "p6"
+      },
+      {
+        "id": "c6r7",
+        "column": 6,
+        "row": 7,
+        "roomId": "room-2",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c7r7",
+        "column": 7,
+        "row": 7,
+        "roomId": "room-2",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-16",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c8r7",
+        "column": 8,
+        "row": 7,
+        "roomId": "room-2",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c9r7",
+        "column": 9,
+        "row": 7,
+        "roomId": "room-4",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c10r7",
+        "column": 10,
+        "row": 7,
+        "roomId": "room-4",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-65",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c11r7",
+        "column": 11,
+        "row": 7,
+        "roomId": "room-1",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-45",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c12r7",
+        "column": 12,
+        "row": 7,
+        "roomId": "room-1",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c1r8",
+        "column": 1,
+        "row": 8,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c2r8",
+        "column": 2,
+        "row": 8,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c3r8",
+        "column": 3,
+        "row": 8,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c4r8",
+        "column": 4,
+        "row": 8,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c5r8",
+        "column": 5,
+        "row": 8,
+        "roomId": "room-7",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-63",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c6r8",
+        "column": 6,
+        "row": 8,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c7r8",
+        "column": 7,
+        "row": 8,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c8r8",
+        "column": 8,
+        "row": 8,
+        "roomId": "room-2",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-36",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c9r8",
+        "column": 9,
+        "row": 8,
+        "roomId": "room-4",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-10",
+        "matId": null,
+        "personId": "p12"
+      },
+      {
+        "id": "c10r8",
+        "column": 10,
+        "row": 8,
+        "roomId": "room-4",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c11r8",
+        "column": 11,
+        "row": 8,
+        "roomId": "room-4",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-59",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c12r8",
+        "column": 12,
+        "row": 8,
+        "roomId": "room-1",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c1r9",
+        "column": 1,
+        "row": 9,
+        "roomId": "room-7",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-28",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c2r9",
+        "column": 2,
+        "row": 9,
+        "roomId": "room-8",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-46",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c3r9",
+        "column": 3,
+        "row": 9,
+        "roomId": "room-7",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-25",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c4r9",
+        "column": 4,
+        "row": 9,
+        "roomId": "room-7",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-24",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c5r9",
+        "column": 5,
+        "row": 9,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c6r9",
+        "column": 6,
+        "row": 9,
+        "roomId": "room-7",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-9",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c7r9",
+        "column": 7,
+        "row": 9,
+        "roomId": "room-7",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-13",
+        "matId": null,
+        "personId": "p7"
+      },
+      {
+        "id": "c8r9",
+        "column": 8,
+        "row": 9,
+        "roomId": "room-2",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c9r9",
+        "column": 9,
+        "row": 9,
+        "roomId": "room-4",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-33",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c10r9",
+        "column": 10,
+        "row": 9,
+        "roomId": "room-4",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-57",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c11r9",
+        "column": 11,
+        "row": 9,
+        "roomId": "room-4",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c12r9",
+        "column": 12,
+        "row": 9,
+        "roomId": "room-1",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-23",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c1r10",
+        "column": 1,
+        "row": 10,
+        "roomId": "room-7",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-68",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c2r10",
+        "column": 2,
+        "row": 10,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c3r10",
+        "column": 3,
+        "row": 10,
+        "roomId": "room-7",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-62",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c4r10",
+        "column": 4,
+        "row": 10,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c5r10",
+        "column": 5,
+        "row": 10,
+        "roomId": "room-7",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c6r10",
+        "column": 6,
+        "row": 10,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c7r10",
+        "column": 7,
+        "row": 10,
+        "roomId": "room-4",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c8r10",
+        "column": 8,
+        "row": 10,
+        "roomId": "room-4",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-34",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c9r10",
+        "column": 9,
+        "row": 10,
+        "roomId": "room-4",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-5",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c10r10",
+        "column": 10,
+        "row": 10,
+        "roomId": "room-8",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-3",
+        "matId": null,
+        "personId": "p8"
+      },
+      {
+        "id": "c11r10",
+        "column": 11,
+        "row": 10,
+        "roomId": "room-8",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-22",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c12r10",
+        "column": 12,
+        "row": 10,
+        "roomId": "room-1",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c1r11",
+        "column": 1,
+        "row": 11,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c2r11",
+        "column": 2,
+        "row": 11,
+        "roomId": "room-8",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-18",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c3r11",
+        "column": 3,
+        "row": 11,
+        "roomId": "room-8",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-53",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c4r11",
+        "column": 4,
+        "row": 11,
+        "roomId": "room-8",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-12",
+        "matId": null,
+        "personId": "p9"
+      },
+      {
+        "id": "c5r11",
+        "column": 5,
+        "row": 11,
+        "roomId": "room-8",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-66",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c6r11",
+        "column": 6,
+        "row": 11,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c7r11",
+        "column": 7,
+        "row": 11,
+        "roomId": "room-4",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-17",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c8r11",
+        "column": 8,
+        "row": 11,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c9r11",
+        "column": 9,
+        "row": 11,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c10r11",
+        "column": 10,
+        "row": 11,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c11r11",
+        "column": 11,
+        "row": 11,
+        "roomId": "room-8",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-61",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c12r11",
+        "column": 12,
+        "row": 11,
+        "roomId": "room-1",
+        "status": "occupiable",
+        "statusLabel": "beloopbaar object",
+        "objectId": "obj-8",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c1r12",
+        "column": 1,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c2r12",
+        "column": 2,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": "p10"
+      },
+      {
+        "id": "c3r12",
+        "column": 3,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-47",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c4r12",
+        "column": 4,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c5r12",
+        "column": 5,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-60",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c6r12",
+        "column": 6,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c7r12",
+        "column": 7,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c8r12",
+        "column": 8,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c9r12",
+        "column": 9,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-69",
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c10r12",
+        "column": 10,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c11r12",
+        "column": 11,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      },
+      {
+        "id": "c12r12",
+        "column": 12,
+        "row": 12,
+        "roomId": "room-8",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
+        "matId": null,
+        "personId": null
+      }
+    ],
+    "people": {
+      "count": 12,
+      "victimId": "p11",
+      "culpritId": "p12",
+      "placements": [
+        {
+          "id": "p1",
+          "tileId": "c1r1",
+          "column": 1,
+          "row": 1,
+          "roomId": "room-3",
+          "objectId": "obj-20",
+          "role": "suspect",
+          "roleLabel": "verdachte",
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
+          "gender": "female",
+          "genderLabel": "Vrouw",
+          "roomAccess": {
+            "allowedStandings": null,
+            "allowedStandingsLabel": null,
+            "allowed": true
+          },
+          "name": "Aleid"
+        },
+        {
+          "id": "p2",
+          "tileId": "c8r2",
+          "column": 8,
+          "row": 2,
+          "roomId": "room-5",
+          "objectId": "obj-2",
+          "role": "suspect",
+          "roleLabel": "verdachte",
+          "standing": "noble",
+          "standingLabel": "Edele",
+          "gender": "male",
+          "genderLabel": "Man",
+          "roomAccess": {
+            "allowedStandings": [
+              "noble"
+            ],
+            "allowedStandingsLabel": "edelen en ridders",
+            "allowed": true
+          },
+          "name": "Bertram"
+        },
+        {
+          "id": "p3",
+          "tileId": "c3r3",
+          "column": 3,
+          "row": 3,
+          "roomId": "room-3",
+          "objectId": "obj-1",
+          "role": "suspect",
+          "roleLabel": "verdachte",
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
+          "gender": "female",
+          "genderLabel": "Vrouw",
+          "roomAccess": {
+            "allowedStandings": null,
+            "allowedStandingsLabel": null,
+            "allowed": true
+          },
+          "name": "Cunera"
+        },
+        {
+          "id": "p4",
+          "tileId": "c6r4",
+          "column": 6,
+          "row": 4,
+          "roomId": "room-3",
+          "objectId": "obj-21",
+          "role": "suspect",
+          "roleLabel": "verdachte",
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
+          "gender": "male",
+          "genderLabel": "Man",
+          "roomAccess": {
+            "allowedStandings": null,
+            "allowedStandingsLabel": null,
+            "allowed": true
+          },
+          "name": "Diederik"
+        },
+        {
+          "id": "p5",
+          "tileId": "c12r5",
+          "column": 12,
+          "row": 5,
+          "roomId": "room-1",
+          "objectId": "obj-4",
+          "role": "suspect",
+          "roleLabel": "verdachte",
+          "standing": "noble",
+          "standingLabel": "Edele",
+          "gender": "female",
+          "genderLabel": "Vrouw",
+          "roomAccess": {
+            "allowedStandings": [
+              "noble"
+            ],
+            "allowedStandingsLabel": "edelen en ridders",
+            "allowed": true
+          },
+          "name": "Elske"
+        },
+        {
+          "id": "p6",
+          "tileId": "c5r7",
+          "column": 5,
+          "row": 7,
+          "roomId": "room-7",
+          "objectId": "obj-19",
+          "role": "suspect",
+          "roleLabel": "verdachte",
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
+          "gender": "male",
+          "genderLabel": "Man",
+          "roomAccess": {
+            "allowedStandings": null,
+            "allowedStandingsLabel": null,
+            "allowed": true
+          },
+          "name": "Floris"
+        },
+        {
+          "id": "p7",
+          "tileId": "c7r9",
+          "column": 7,
+          "row": 9,
+          "roomId": "room-7",
+          "objectId": "obj-13",
+          "role": "suspect",
+          "roleLabel": "verdachte",
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
+          "gender": "female",
+          "genderLabel": "Vrouw",
+          "roomAccess": {
+            "allowedStandings": null,
+            "allowedStandingsLabel": null,
+            "allowed": true
+          },
+          "name": "Godfried"
+        },
+        {
+          "id": "p8",
+          "tileId": "c10r10",
+          "column": 10,
+          "row": 10,
+          "roomId": "room-8",
+          "objectId": "obj-3",
+          "role": "suspect",
+          "roleLabel": "verdachte",
+          "standing": "knight",
+          "standingLabel": "Ridder",
+          "gender": "male",
+          "genderLabel": "Man",
+          "roomAccess": {
+            "allowedStandings": null,
+            "allowedStandingsLabel": null,
+            "allowed": true
+          },
+          "name": "Hilde"
+        },
+        {
+          "id": "p9",
+          "tileId": "c4r11",
+          "column": 4,
+          "row": 11,
+          "roomId": "room-8",
+          "objectId": "obj-12",
+          "role": "suspect",
+          "roleLabel": "verdachte",
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
+          "gender": "female",
+          "genderLabel": "Vrouw",
+          "roomAccess": {
+            "allowedStandings": null,
+            "allowedStandingsLabel": null,
+            "allowed": true
+          },
+          "name": "Ivo"
+        },
+        {
+          "id": "p10",
+          "tileId": "c2r12",
+          "column": 2,
+          "row": 12,
+          "roomId": "room-8",
+          "objectId": null,
+          "role": "suspect",
+          "roleLabel": "verdachte",
+          "standing": "knight",
+          "standingLabel": "Ridder",
+          "gender": "male",
+          "genderLabel": "Man",
+          "roomAccess": {
+            "allowedStandings": null,
+            "allowedStandingsLabel": null,
+            "allowed": true
+          },
+          "name": "Jutta"
+        },
+        {
+          "id": "p11",
+          "tileId": "c11r6",
+          "column": 11,
+          "row": 6,
+          "roomId": "room-4",
+          "objectId": "obj-11",
+          "role": "victim",
+          "roleLabel": "slachtoffer",
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
+          "gender": "female",
+          "genderLabel": "Vrouw",
+          "roomAccess": {
+            "allowedStandings": null,
+            "allowedStandingsLabel": null,
+            "allowed": true
+          },
+          "name": "Victor"
+        },
+        {
+          "id": "p12",
+          "tileId": "c9r8",
+          "column": 9,
+          "row": 8,
+          "roomId": "room-4",
+          "objectId": "obj-10",
+          "role": "culprit",
+          "roleLabel": "dader",
+          "standing": "knight",
+          "standingLabel": "Ridder",
+          "gender": "male",
+          "genderLabel": "Man",
+          "roomAccess": {
+            "allowedStandings": null,
+            "allowedStandingsLabel": null,
+            "allowed": true
+          },
+          "name": "Lieve"
+        }
+      ]
+    }
+  },
+  "content": {
+    "title": "Proefbord 12×12",
+    "intro": "Een proefbord van 12×12 met grillige ruimtes, standen en van elke soort meerdere. Geen verhaal, wel een kloppende zaak.",
+    "people": {
+      "p1": {
+        "name": "Aleid",
+        "role": "villager",
+        "gender": "female",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "A",
+        "genderAuto": true
+      },
+      "p2": {
+        "name": "Bertram",
+        "role": "noble",
+        "gender": "male",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "B",
+        "genderAuto": true
+      },
+      "p3": {
+        "name": "Cunera",
+        "role": "villager",
+        "gender": "female",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "C",
+        "genderAuto": true
+      },
+      "p4": {
+        "name": "Diederik",
+        "role": "villager",
+        "gender": "male",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "D",
+        "genderAuto": true
+      },
+      "p5": {
+        "name": "Elske",
+        "role": "noble",
+        "gender": "female",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "E",
+        "genderAuto": true
+      },
+      "p6": {
+        "name": "Floris",
+        "role": "villager",
+        "gender": "male",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "F",
+        "genderAuto": true
+      },
+      "p7": {
+        "name": "Godfried",
+        "role": "villager",
+        "gender": "female",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "G",
+        "genderAuto": true
+      },
+      "p8": {
+        "name": "Hilde",
+        "role": "knight",
+        "gender": "male",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "H",
+        "genderAuto": true
+      },
+      "p9": {
+        "name": "Ivo",
+        "role": "villager",
+        "gender": "female",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "I",
+        "genderAuto": true
+      },
+      "p10": {
+        "name": "Jutta",
+        "role": "knight",
+        "gender": "male",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "J",
+        "genderAuto": true
+      },
+      "p11": {
+        "name": "Victor",
+        "role": "villager",
+        "gender": "female",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "V",
+        "genderAuto": true
+      },
+      "p12": {
+        "name": "Lieve",
+        "role": "knight",
+        "gender": "male",
+        "description": "",
+        "hairAuto": true,
+        "nameLetter": "L",
+        "genderAuto": true
+      }
+    },
+    "rooms": {
+      "room-1": {
+        "name": "",
+        "kind": "hall",
+        "floor": "stone",
+        "note": "",
+        "floorEigen": false,
+        "klasse": "adellijk"
+      },
+      "room-2": {
+        "name": "",
+        "kind": "dining-room",
+        "floor": "wood",
+        "note": "",
+        "floorEigen": false
+      },
+      "room-3": {
+        "name": "",
+        "kind": "bedroom",
+        "floor": "wood",
+        "note": "",
+        "floorEigen": false
+      },
+      "room-4": {
+        "name": "",
+        "kind": "kitchen",
+        "floor": "tile",
+        "note": "",
+        "floorEigen": false
+      },
+      "room-5": {
+        "name": "",
+        "kind": "terrace",
+        "floor": "stone",
+        "note": "",
+        "floorEigen": false,
+        "klasse": "adellijk"
+      },
+      "room-6": {
+        "name": "",
+        "kind": "garden",
+        "floor": "grass",
+        "note": "",
+        "floorEigen": false
+      },
+      "room-7": {
+        "name": "",
+        "kind": "courtyard",
+        "floor": "gravel",
+        "note": "",
+        "floorEigen": false
+      },
+      "room-8": {
+        "name": "",
+        "kind": "barracks",
+        "floor": "wood",
+        "note": "",
+        "floorEigen": false
+      }
+    },
+    "objects": {
+      "obj-1": {
+        "label": "",
+        "name": "Stoel 1",
+        "kind": "Chair",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-2": {
+        "label": "",
+        "name": "Stoel 2",
+        "kind": "Chair",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-3": {
+        "label": "",
+        "name": "Stoel 3",
+        "kind": "Chair",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-4": {
+        "label": "",
+        "name": "Stoel 4",
+        "kind": "Chair",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-5": {
+        "label": "",
+        "name": "Stoel 5",
+        "kind": "Chair",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-6": {
+        "label": "",
+        "name": "Stoel 6",
+        "kind": "Chair",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-7": {
+        "label": "",
+        "name": "Stoel 7",
+        "kind": "Chair",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-8": {
+        "label": "",
+        "name": "Stoel 8",
+        "kind": "Chair",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-9": {
+        "label": "",
+        "name": "Stoel 9",
+        "kind": "Chair",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-10": {
+        "label": "",
+        "name": "Tapijt 10",
+        "kind": "Carpet",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-11": {
+        "label": "",
+        "name": "Tapijt 11",
+        "kind": "Carpet",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-12": {
+        "label": "",
+        "name": "Tapijt 12",
+        "kind": "Carpet",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-13": {
+        "label": "",
+        "name": "Tapijt 13",
+        "kind": "Carpet",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-14": {
+        "label": "",
+        "name": "Tapijt 14",
+        "kind": "Carpet",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-15": {
+        "label": "",
+        "name": "Tapijt 15",
+        "kind": "Carpet",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-16": {
+        "label": "",
+        "name": "Tapijt 16",
+        "kind": "Carpet",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-17": {
+        "label": "",
+        "name": "Tapijt 17",
+        "kind": "Carpet",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-18": {
+        "label": "",
+        "name": "Tapijt 18",
+        "kind": "Carpet",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-19": {
+        "label": "",
+        "name": "Bed 19",
+        "kind": "Bed",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-20": {
+        "label": "",
+        "name": "Bed 20",
+        "kind": "Bed",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-21": {
+        "label": "",
+        "name": "Bed 21",
+        "kind": "Bed",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-22": {
+        "label": "",
+        "name": "Bed 22",
+        "kind": "Bed",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-23": {
+        "label": "",
+        "name": "Bed 23",
+        "kind": "Bed",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-24": {
+        "label": "",
+        "name": "Bed 24",
+        "kind": "Bed",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-25": {
+        "label": "",
+        "name": "Tafel 25",
+        "kind": "Table",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-26": {
+        "label": "",
+        "name": "Tafel 26",
+        "kind": "Table",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-27": {
+        "label": "",
+        "name": "Tafel 27",
+        "kind": "Table",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-28": {
+        "label": "",
+        "name": "Tafel 28",
+        "kind": "Table",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-29": {
+        "label": "",
+        "name": "Tafel 29",
+        "kind": "Table",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-30": {
+        "label": "",
+        "name": "Tafel 30",
+        "kind": "Table",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-31": {
+        "label": "",
+        "name": "Tafel 31",
+        "kind": "Table",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-32": {
+        "label": "",
+        "name": "Tafel 32",
+        "kind": "Table",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-33": {
+        "label": "",
+        "name": "Tafel 33",
+        "kind": "Table",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-34": {
+        "label": "",
+        "name": "Plant 34",
+        "kind": "Plant",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-35": {
+        "label": "",
+        "name": "Plant 35",
+        "kind": "Plant",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-36": {
+        "label": "",
+        "name": "Plant 36",
+        "kind": "Plant",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-37": {
+        "label": "",
+        "name": "Plant 37",
+        "kind": "Plant",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-38": {
+        "label": "",
+        "name": "Plant 38",
+        "kind": "Plant",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-39": {
+        "label": "",
+        "name": "Plant 39",
+        "kind": "Plant",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-40": {
+        "label": "",
+        "name": "Doos 40",
+        "kind": "Box",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-41": {
+        "label": "",
+        "name": "Doos 41",
+        "kind": "Box",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-42": {
+        "label": "",
+        "name": "Doos 42",
+        "kind": "Box",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-43": {
+        "label": "",
+        "name": "Doos 43",
+        "kind": "Box",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-44": {
+        "label": "",
+        "name": "Doos 44",
+        "kind": "Box",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-45": {
+        "label": "",
+        "name": "Doos 45",
+        "kind": "Box",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-46": {
+        "label": "",
+        "name": "Boom 46",
+        "kind": "Tree",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-47": {
+        "label": "",
+        "name": "Boom 47",
+        "kind": "Tree",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-48": {
+        "label": "",
+        "name": "Boom 48",
+        "kind": "Tree",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-49": {
+        "label": "",
+        "name": "Boom 49",
+        "kind": "Tree",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-50": {
+        "label": "",
+        "name": "Boom 50",
+        "kind": "Tree",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-51": {
+        "label": "",
+        "name": "Boom 51",
+        "kind": "Tree",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-52": {
+        "label": "",
+        "name": "Boom 52",
+        "kind": "Tree",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-53": {
+        "label": "",
+        "name": "Boom 53",
+        "kind": "Tree",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-54": {
+        "label": "",
+        "name": "Boom 54",
+        "kind": "Tree",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-55": {
+        "label": "",
+        "name": "Vat 55",
+        "kind": "Barrel",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-56": {
+        "label": "",
+        "name": "Vat 56",
+        "kind": "Barrel",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-57": {
+        "label": "",
+        "name": "Vat 57",
+        "kind": "Barrel",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-58": {
+        "label": "",
+        "name": "Vat 58",
+        "kind": "Barrel",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-59": {
+        "label": "",
+        "name": "Vat 59",
+        "kind": "Barrel",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-60": {
+        "label": "",
+        "name": "Vat 60",
+        "kind": "Barrel",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-61": {
+        "label": "",
+        "name": "Standbeeld 61",
+        "kind": "Statue",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-62": {
+        "label": "",
+        "name": "Standbeeld 62",
+        "kind": "Statue",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-63": {
+        "label": "",
+        "name": "Standbeeld 63",
+        "kind": "Statue",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-64": {
+        "label": "",
+        "name": "Kast 64",
+        "kind": "Shelf",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-65": {
+        "label": "",
+        "name": "Kast 65",
+        "kind": "Shelf",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-66": {
+        "label": "",
+        "name": "Kast 66",
+        "kind": "Shelf",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-67": {
+        "label": "",
+        "name": "Kast 67",
+        "kind": "Shelf",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-68": {
+        "label": "",
+        "name": "Kast 68",
+        "kind": "Shelf",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      },
+      "obj-69": {
+        "label": "",
+        "name": "Kast 69",
+        "kind": "Shelf",
+        "note": "",
+        "quals": [],
+        "ownerId": ""
+      }
+    },
+    "clues": [
+      {
+        "id": "clue-victim",
+        "scope": "person",
+        "personId": "p11",
+        "locked": true,
+        "terms": []
+      },
+      {
+        "id": "clue-adel",
+        "scope": "board",
+        "personId": null,
+        "locked": true,
+        "terms": []
+      },
+      {
+        "id": "clue-1",
+        "scope": "person",
+        "personId": "p1",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "on-object-kind",
+                "args": {
+                  "objectKind": "Bed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-2",
+        "scope": "person",
+        "personId": "p1",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "direction-of",
+                "args": {
+                  "compass": "west",
+                  "person": "p10"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-3",
+        "scope": "person",
+        "personId": "p1",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "in-room",
+                "args": {
+                  "room": "room-3"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-4",
+        "scope": "person",
+        "personId": "p2",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "in-room",
+                "args": {
+                  "room": "room-5"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-5",
+        "scope": "person",
+        "personId": "p2",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "on-object-kind",
+                "args": {
+                  "objectKind": "Chair"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-6",
+        "scope": "person",
+        "personId": "p2",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "exact-offset",
+                "args": {
+                  "step": 1,
+                  "axis": "rows",
+                  "updown": "above",
+                  "person": "p3"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-7",
+        "scope": "person",
+        "personId": "p3",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "exact-offset",
+                "args": {
+                  "step": 1,
+                  "axis": "cols",
+                  "updown": "left",
+                  "person": "p9"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-8",
+        "scope": "person",
+        "personId": "p3",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "on-object-kind",
+                "args": {
+                  "objectKind": "Chair"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-9",
+        "scope": "person",
+        "personId": "p3",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "next-to-kind",
+                "args": {
+                  "objectKind": "Plant"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-10",
+        "scope": "person",
+        "personId": "p4",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "exact-offset",
+                "args": {
+                  "step": 1,
+                  "axis": "rows",
+                  "updown": "above",
+                  "person": "p5"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-11",
+        "scope": "person",
+        "personId": "p4",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "next-to-kind",
+                "args": {
+                  "objectKind": "Tree"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-12",
+        "scope": "person",
+        "personId": "p4",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "in-room",
+                "args": {
+                  "room": "room-3"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-13",
+        "scope": "person",
+        "personId": "p5",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "next-to-kind",
+                "args": {
+                  "objectKind": "Box"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-14",
+        "scope": "person",
+        "personId": "p5",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "same-diagonal-as",
+                "args": {
+                  "person": "p11"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-15",
+        "scope": "person",
+        "personId": "p5",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "in-room-kind",
+                "args": {
+                  "roomKind": "hall"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-16",
+        "scope": "person",
+        "personId": "p6",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "closest-to-kind",
+                "args": {
+                  "objectKind": "Statue"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-17",
+        "scope": "person",
+        "personId": "p6",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "same-diagonal-as",
+                "args": {
+                  "person": "p7"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-18",
+        "scope": "person",
+        "personId": "p6",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "same-col-as-kind",
+                "args": {
+                  "objectKind": "Statue"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-19",
+        "scope": "person",
+        "personId": "p7",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "same-diagonal-as",
+                "args": {
+                  "person": "p6"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-20",
+        "scope": "person",
+        "personId": "p7",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "in-room-kind",
+                "args": {
+                  "roomKind": "courtyard"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-21",
+        "scope": "person",
+        "personId": "p7",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "same-col-as-kind",
+                "args": {
+                  "objectKind": "Box"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-22",
+        "scope": "person",
+        "personId": "p8",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "in-room-kind",
+                "args": {
+                  "roomKind": "barracks"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-23",
+        "scope": "person",
+        "personId": "p8",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "direction-of",
+                "args": {
+                  "compass": "east",
+                  "person": "p12"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-24",
+        "scope": "person",
+        "personId": "p8",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "same-row-as-kind",
+                "args": {
+                  "objectKind": "Statue"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-25",
+        "scope": "person",
+        "personId": "p9",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "closest-to-kind",
+                "args": {
+                  "objectKind": "Shelf"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-26",
+        "scope": "person",
+        "personId": "p9",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "direction-of",
+                "args": {
+                  "compass": "south",
+                  "person": "p8"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-27",
+        "scope": "person",
+        "personId": "p9",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "with-person",
+                "args": {
+                  "person": "p8"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-28",
+        "scope": "person",
+        "personId": "p10",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "below-all-role",
+                "args": {
+                  "rolePl": "villager"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-29",
+        "scope": "person",
+        "personId": "p10",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "with-person",
+                "args": {
+                  "person": "p8"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-30",
+        "scope": "person",
+        "personId": "p10",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "same-row-as-kind",
+                "args": {
+                  "objectKind": "Barrel"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-31",
+        "scope": "person",
+        "personId": "p12",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "alone-with-role",
+                "args": {
+                  "roleP": "villager"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-32",
+        "scope": "person",
+        "personId": "p12",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "same-row-as-kind",
+                "args": {
+                  "objectKind": "Statue"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-33",
+        "scope": "person",
+        "personId": "p12",
+        "locked": false,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "below-all-role",
+                "args": {
+                  "rolePl": "noble"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "clues": [
+    {
+      "id": "clue-victim",
+      "scope": "person",
+      "personId": "p11",
+      "locked": true,
+      "terms": [],
+      "text": "Het slachtoffer was alleen met zijn moordenaar.",
+      "generatedText": "Het slachtoffer was alleen met zijn moordenaar.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-adel",
+      "scope": "board",
+      "personId": null,
+      "locked": true,
+      "terms": [],
+      "text": "Edelen staan altijd in een gebied voor edelen; dorpelingen staan daar nooit. Ridders kunnen overal staan.",
+      "generatedText": "Edelen staan altijd in een gebied voor edelen; dorpelingen staan daar nooit. Ridders kunnen overal staan.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-1",
+      "scope": "person",
+      "personId": "p1",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "on-object-kind",
+              "args": {
+                "objectKind": "Bed"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Aleid lag op een bed.",
+      "generatedText": "Aleid lag op een bed.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-2",
+      "scope": "person",
+      "personId": "p1",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "direction-of",
+              "args": {
+                "compass": "west",
+                "person": "p10"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Aleid bevond zich links van Jutta.",
+      "generatedText": "Aleid bevond zich links van Jutta.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-3",
+      "scope": "person",
+      "personId": "p1",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "in-room",
+              "args": {
+                "room": "room-3"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Aleid was in de Slaapkamer.",
+      "generatedText": "Aleid was in de Slaapkamer.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-4",
+      "scope": "person",
+      "personId": "p2",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "in-room",
+              "args": {
+                "room": "room-5"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Bertram was in het Terras.",
+      "generatedText": "Bertram was in het Terras.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-5",
+      "scope": "person",
+      "personId": "p2",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "on-object-kind",
+              "args": {
+                "objectKind": "Chair"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Bertram zat op een stoel.",
+      "generatedText": "Bertram zat op een stoel.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-6",
+      "scope": "person",
+      "personId": "p2",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "exact-offset",
+              "args": {
+                "step": 1,
+                "axis": "rows",
+                "updown": "above",
+                "person": "p3"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Bertram bevond zich precies één rij boven Cunera.",
+      "generatedText": "Bertram bevond zich precies één rij boven Cunera.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-7",
+      "scope": "person",
+      "personId": "p3",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "exact-offset",
+              "args": {
+                "step": 1,
+                "axis": "cols",
+                "updown": "left",
+                "person": "p9"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Cunera bevond zich precies één kolom links van Ivo.",
+      "generatedText": "Cunera bevond zich precies één kolom links van Ivo.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-8",
+      "scope": "person",
+      "personId": "p3",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "on-object-kind",
+              "args": {
+                "objectKind": "Chair"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Cunera zat op een stoel.",
+      "generatedText": "Cunera zat op een stoel.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-9",
+      "scope": "person",
+      "personId": "p3",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "next-to-kind",
+              "args": {
+                "objectKind": "Plant"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Cunera bevond zich naast een plant.",
+      "generatedText": "Cunera bevond zich naast een plant.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-10",
+      "scope": "person",
+      "personId": "p4",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "exact-offset",
+              "args": {
+                "step": 1,
+                "axis": "rows",
+                "updown": "above",
+                "person": "p5"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Diederik bevond zich precies één rij boven Elske.",
+      "generatedText": "Diederik bevond zich precies één rij boven Elske.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-11",
+      "scope": "person",
+      "personId": "p4",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "next-to-kind",
+              "args": {
+                "objectKind": "Tree"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Diederik bevond zich naast een boom.",
+      "generatedText": "Diederik bevond zich naast een boom.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-12",
+      "scope": "person",
+      "personId": "p4",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "in-room",
+              "args": {
+                "room": "room-3"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Diederik was in de Slaapkamer.",
+      "generatedText": "Diederik was in de Slaapkamer.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-13",
+      "scope": "person",
+      "personId": "p5",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "next-to-kind",
+              "args": {
+                "objectKind": "Box"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Elske bevond zich naast een doos.",
+      "generatedText": "Elske bevond zich naast een doos.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-14",
+      "scope": "person",
+      "personId": "p5",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "same-diagonal-as",
+              "args": {
+                "person": "p11"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Elske bevond zich op dezelfde diagonale lijn als Victor.",
+      "generatedText": "Elske bevond zich op dezelfde diagonale lijn als Victor.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-15",
+      "scope": "person",
+      "personId": "p5",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "in-room-kind",
+              "args": {
+                "roomKind": "hall"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Elske was in een hal.",
+      "generatedText": "Elske was in een hal.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-16",
+      "scope": "person",
+      "personId": "p6",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "closest-to-kind",
+              "args": {
+                "objectKind": "Statue"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Floris stond het dichtst bij een standbeeld.",
+      "generatedText": "Floris stond het dichtst bij een standbeeld.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-17",
+      "scope": "person",
+      "personId": "p6",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "same-diagonal-as",
+              "args": {
+                "person": "p7"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Floris bevond zich op dezelfde diagonale lijn als Godfried.",
+      "generatedText": "Floris bevond zich op dezelfde diagonale lijn als Godfried.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-18",
+      "scope": "person",
+      "personId": "p6",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "same-col-as-kind",
+              "args": {
+                "objectKind": "Statue"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Floris stond in dezelfde kolom als een standbeeld.",
+      "generatedText": "Floris stond in dezelfde kolom als een standbeeld.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-19",
+      "scope": "person",
+      "personId": "p7",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "same-diagonal-as",
+              "args": {
+                "person": "p6"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Godfried bevond zich op dezelfde diagonale lijn als Floris.",
+      "generatedText": "Godfried bevond zich op dezelfde diagonale lijn als Floris.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-20",
+      "scope": "person",
+      "personId": "p7",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "in-room-kind",
+              "args": {
+                "roomKind": "courtyard"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Godfried was in een binnenplaats.",
+      "generatedText": "Godfried was in een binnenplaats.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-21",
+      "scope": "person",
+      "personId": "p7",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "same-col-as-kind",
+              "args": {
+                "objectKind": "Box"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Godfried stond in dezelfde kolom als een doos.",
+      "generatedText": "Godfried stond in dezelfde kolom als een doos.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-22",
+      "scope": "person",
+      "personId": "p8",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "in-room-kind",
+              "args": {
+                "roomKind": "barracks"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Hilde was in een soldatenverblijf.",
+      "generatedText": "Hilde was in een soldatenverblijf.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-23",
+      "scope": "person",
+      "personId": "p8",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "direction-of",
+              "args": {
+                "compass": "east",
+                "person": "p12"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Hilde bevond zich rechts van Lieve.",
+      "generatedText": "Hilde bevond zich rechts van Lieve.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-24",
+      "scope": "person",
+      "personId": "p8",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "same-row-as-kind",
+              "args": {
+                "objectKind": "Statue"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Hilde stond op dezelfde rij als een standbeeld.",
+      "generatedText": "Hilde stond op dezelfde rij als een standbeeld.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-25",
+      "scope": "person",
+      "personId": "p9",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "closest-to-kind",
+              "args": {
+                "objectKind": "Shelf"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Ivo stond het dichtst bij een boekenkast.",
+      "generatedText": "Ivo stond het dichtst bij een boekenkast.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-26",
+      "scope": "person",
+      "personId": "p9",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "direction-of",
+              "args": {
+                "compass": "south",
+                "person": "p8"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Ivo bevond zich onder Hilde.",
+      "generatedText": "Ivo bevond zich onder Hilde.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-27",
+      "scope": "person",
+      "personId": "p9",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "with-person",
+              "args": {
+                "person": "p8"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Ivo was in hetzelfde gebied als Hilde.",
+      "generatedText": "Ivo was in hetzelfde gebied als Hilde.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-28",
+      "scope": "person",
+      "personId": "p10",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "below-all-role",
+              "args": {
+                "rolePl": "villager"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Jutta bevond zich onder alle dorpelingen.",
+      "generatedText": "Jutta bevond zich onder alle dorpelingen.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-29",
+      "scope": "person",
+      "personId": "p10",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "with-person",
+              "args": {
+                "person": "p8"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Jutta was in hetzelfde gebied als Hilde.",
+      "generatedText": "Jutta was in hetzelfde gebied als Hilde.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-30",
+      "scope": "person",
+      "personId": "p10",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "same-row-as-kind",
+              "args": {
+                "objectKind": "Barrel"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Jutta stond op dezelfde rij als een vat.",
+      "generatedText": "Jutta stond op dezelfde rij als een vat.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-31",
+      "scope": "person",
+      "personId": "p12",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "alone-with-role",
+              "args": {
+                "roleP": "villager"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Lieve was alleen met een andere dorpeling.",
+      "generatedText": "Lieve was alleen met een andere dorpeling.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-32",
+      "scope": "person",
+      "personId": "p12",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "same-row-as-kind",
+              "args": {
+                "objectKind": "Statue"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Lieve stond op dezelfde rij als een standbeeld.",
+      "generatedText": "Lieve stond op dezelfde rij als een standbeeld.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-33",
+      "scope": "person",
+      "personId": "p12",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "below-all-role",
+              "args": {
+                "rolePl": "noble"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Lieve bevond zich onder alle edelen.",
+      "generatedText": "Lieve bevond zich onder alle edelen.",
+      "storyText": null,
+      "holds": true
+    }
+  ],
+  "solution": {
+    "placements": [
+      {
+        "personId": "p1",
+        "tileId": "c1r1"
+      },
+      {
+        "personId": "p2",
+        "tileId": "c8r2"
+      },
+      {
+        "personId": "p3",
+        "tileId": "c3r3"
+      },
+      {
+        "personId": "p4",
+        "tileId": "c6r4"
+      },
+      {
+        "personId": "p5",
+        "tileId": "c12r5"
+      },
+      {
+        "personId": "p6",
+        "tileId": "c5r7"
+      },
+      {
+        "personId": "p7",
+        "tileId": "c7r9"
+      },
+      {
+        "personId": "p8",
+        "tileId": "c10r10"
+      },
+      {
+        "personId": "p9",
+        "tileId": "c4r11"
+      },
+      {
+        "personId": "p10",
+        "tileId": "c2r12"
+      },
+      {
+        "personId": "p11",
+        "tileId": "c11r6"
+      },
+      {
+        "personId": "p12",
+        "tileId": "c9r8"
+      }
+    ],
+    "victimId": "p11",
+    "culpritId": "p12"
+  },
+  "difficulty": {
+    "graad": 2,
+    "label": "Niveau 2 van 5",
+    "uitleg": "Aanwijzingen combineren, en soms een vakje proberen.",
+    "sport": 7
+  },
+  "solutionCheck": {
+    "status": "uniek",
+    "solutions": 1,
+    "ms": 2750,
+    "override": null
+  },
+  "levelId": "lvl-proef-12x12",
+  "exportedAt": "2026-09-05T00:00:00.000Z"
+}
