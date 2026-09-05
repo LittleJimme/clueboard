@@ -6271,6 +6271,10 @@ function tekenKopStand(){
 function paintBoard(){
   if(isDesktop()) setTimeout(tekenDetail,0);
   tekenKopStand();
+  /* Na elke tekenbeurt vastleggen waar je bent. Het bord wordt alleen
+     opnieuw getekend als er iets veranderd is, dus dit is precies vaak
+     genoeg en nooit vaker. */
+  bewaarBezig();
   const pawnHost=$("#pawns"); if(pawnHost) pawnHost.innerHTML="";
   const bb=M.bounds;
   $$("#grid .tile[data-tile]").forEach(el=>{
@@ -7868,6 +7872,50 @@ function levelSleutel(raw){
   if(raw && typeof raw.levelId==="string" && raw.levelId) return raw.levelId;
   return (raw && raw.content && raw.content.title) || "level";
 }
+/* ── Waar je gebleven was ──────────────────────────────────
+   Naast wat je hebt uitgespeeld onthoudt de browser ook de zaak waar je
+   middenin zit: de pionnen, de notities en de stand van de klok. Het menu
+   leest dezelfde sleutel en zet er "mee bezig" bij.
+
+   Pas vanaf de eerste zet. Alleen het introvel lezen en weer weggaan is niet
+   "bezig zijn", en een lijst vol kaarten met 0:03 erop zegt niets. Afronden
+   haalt hem weer weg: dan neemt de afgeronde kaart het over.
+
+   Dezelfde afdruk als bij stap-terug, dus de twee kunnen niet uit elkaar
+   lopen. */
+const BEZIG_KEY="cb_bezig";
+function bezigAlles(){
+  try{ return JSON.parse(localStorage.getItem(BEZIG_KEY)||"{}"); }catch(e){ return {}; }
+}
+function bezigSchrijf(alles){
+  try{ localStorage.setItem(BEZIG_KEY,JSON.stringify(alles)); }catch(e){}
+}
+function bewaarBezig(){
+  if(!currentRaw || !M || revealed) return;
+  /* Niets gedaan, niets te bewaren -- en een eerder bewaarde stand die leeg
+     raakt hoort ook weg. */
+  const iets = placed.size>0 || Array.from(notes.values()).some(n=>n.cross||(n.marks&&n.marks.size));
+  const alles=bezigAlles(), k=levelSleutel(currentRaw);
+  if(!iets){ if(alles[k]){ delete alles[k]; bezigSchrijf(alles); } return; }
+  alles[k]={
+    stand:maakAfdruk(),
+    tijd:timerId?(Date.now()-startTime):elapsed,
+    op:new Date().toISOString()
+  };
+  bezigSchrijf(alles);
+}
+function wisBezig(raw){
+  const alles=bezigAlles(), k=levelSleutel(raw||currentRaw);
+  if(alles[k]){ delete alles[k]; bezigSchrijf(alles); }
+}
+/* Terugzetten wat er bewaard was. Levert de verstreken tijd, of null als er
+   niets stond. */
+function herstelBezig(raw){
+  const bewaard=bezigAlles()[levelSleutel(raw)];
+  if(!bewaard || !bewaard.stand) return null;
+  try{ zetAfdruk(bewaard.stand); }catch(e){ return null; }
+  return typeof bewaard.tijd==="number" ? bewaard.tijd : 0;
+}
 function bewaarVoltooid(raw,ms){
   try{
     const alles=JSON.parse(localStorage.getItem(VOLTOOID_KEY)||"{}");
@@ -7888,7 +7936,7 @@ function checkSolution(){
   });
   const total=M.people.length, perfect=(correct===total);
   uitslagPerfect=perfect;
-  if(perfect) bewaarVoltooid(currentRaw,elapsed);
+  if(perfect){ bewaarVoltooid(currentRaw,elapsed); wisBezig(currentRaw); }
   const card=document.querySelector("#screen-end .uitslag");
   if(card){ card.classList.toggle("win",perfect); card.classList.toggle("lose",!perfect); }
   haptic(perfect?[16,60,26,60,40]:[46,70,46]);
@@ -7962,6 +8010,7 @@ function geefHint(){
   },260);
 }
 function restart(){
+  wisBezig(currentRaw);
   notes=new Map(); placed=new Map(); wisGeschiedenis();
   accused=null; accusedResult=null; revealed=false;
   elapsed=0; $("#timerVal").textContent="0:00";
@@ -8054,7 +8103,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.110";
+const PLAYER_APP_VERSION="0.9.111";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8349,7 +8398,12 @@ function showLevelDetail(levelIndex){
   M=buildModel(raw);
   notes=new Map(); placed=new Map(); wisGeschiedenis();
   accused=null; accusedResult=null; revealed=false; elapsed=0;
-  stopTimer(); $("#timerVal").textContent="0:00";
+  /* Zat je hier middenin, dan komen het bord en de klok terug zoals je ze
+     achterliet. De geschiedenis begint wel opnieuw: stap terug hoort bij deze
+     zitting, niet bij een zitting van gisteren. */
+  { const eerder=herstelBezig(raw);
+    if(eerder!==null){ elapsed=eerder; wisGeschiedenis(); } }
+  stopTimer(); $("#timerVal").textContent=fmtTime(elapsed);
   renderBoard();
   setMode("note"); setTab("board");
   showScreen("game");
@@ -8601,7 +8655,9 @@ function startLevel(raw){
   M=buildModel(raw);
   notes=new Map(); placed=new Map(); wisGeschiedenis();
   accused=null; accusedResult=null; revealed=false; elapsed=0;
-  $("#timerVal").textContent="0:00";
+  { const eerder=herstelBezig(raw);
+    if(eerder!==null){ elapsed=eerder; wisGeschiedenis(); } }
+  $("#timerVal").textContent=fmtTime(elapsed);
   renderBoard();
   setMode("note"); setTab("board");
   showScreen("game"); startTimer();

@@ -398,6 +398,19 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .level-rij.voltooid .zaak-nr{background:var(--accent);border-color:var(--accent);color:#fff}
 .level-rij.voltooid .zaak-nr svg{width:22px;height:22px;display:block}
 .level-rij.voltooid .grid-tag{background:transparent}
+/* Mee bezig: de kaart in zijn geheel in het accent, met witte letters. De
+   afgeronde kaart zakt juist een toon terug; samen wijst dat de weg -- wat
+   klaar is treedt terug, waar je middenin zit komt naar voren. */
+.level-rij.bezig{background:var(--accent);border-color:var(--accent);
+  box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 38%,transparent)}
+.level-rij.bezig h3,.level-rij.bezig .zaak-nr{color:#fff}
+.level-rij.bezig .zaak-nr{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.14)}
+.level-rij.bezig .grid-tag,.level-rij.bezig .demo-tag{background:rgba(255,255,255,.16);color:#fff;border-color:transparent}
+.level-rij.bezig .hoek svg{color:#fff;opacity:.85}
+.mee-bezig{display:inline-flex;align-items:center;gap:7px;color:#fff}
+.mee-bezig svg{width:13px;height:13px;flex:0 0 auto}
+.mee-bezig b{font:800 10px var(--font-ui);letter-spacing:.14em;text-transform:uppercase}
+.mee-bezig span{font:700 12px var(--font-ui);font-variant-numeric:tabular-nums;color:rgba(255,255,255,.82)}
 .zaak-nr{border-color:var(--accent);color:var(--accent)}
 /* Op een smal scherm is het vinkje met de tijd genoeg; het woord zou de
    titel te veel ruimte kosten. */
@@ -678,6 +691,12 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
     <button class="mini-knop" id="openKnop" type="button" aria-pressed="false" title="Alleen zaken die nog open staan" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/></svg>
       <span>Open</span>
+    </button>
+    <!-- Alleen te zien zodra er iets is om te hervatten: een filter dat altijd
+         niets oplevert is een dode knop. -->
+    <button class="mini-knop" id="bezigKnop" type="button" aria-pressed="false" title="Alleen zaken waar je middenin zit" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10M7 21h10M8 3v3.2a4 4 0 0 0 1.4 3L12 12l-2.6 2.8A4 4 0 0 0 8 17.8V21M16 3v3.2a4 4 0 0 1-1.4 3L12 12l2.6 2.8a4 4 0 0 1 1.4 3V21"/></svg>
+      <span>Mee bezig</span>
     </button>
     <div class="sorteer" id="sorteerRij" title="Sorteer de lijst">
       <button type="button" class="aan" data-s="nr">Nr</button>
@@ -1114,6 +1133,7 @@ function nieuwsteVersies(items){
 let alleLevels=[];       /* gesorteerd; index+1 = vast zaaknummer */
 let actieveFilter=0;
 let alleenOpen=false;   /* alleen zaken die je nog niet hebt afgerond */
+let alleenBezig=false;  /* alleen zaken waar je middenin zit */
 let sorteer="nr";        /* "nr" (zaaknummer) of "titel" (A–Z) */
 
 /* Wat je van een zaak hebt afgerond staat in de browser van deze telefoon,
@@ -1123,6 +1143,18 @@ const VOLTOOID_KEY="cb_voltooid";
 function levelSleutel(raw){
   if(raw && typeof raw.levelId==="string" && raw.levelId) return raw.levelId;
   return (raw && raw.content && raw.content.title) || "level";
+}
+/* Waar je middenin zit. De speler schrijft hier het bord, de notities en de
+   stand van de klok weg zodra je je eerste zet doet, en haalt het weer weg
+   zodra je de zaak afrondt. Het menu leest alleen; hier wordt nooit
+   geschreven. */
+const BEZIG_KEY="cb_bezig";
+function bezigVan(raw){
+  try{
+    const alles=JSON.parse(localStorage.getItem(BEZIG_KEY)||"{}");
+    const b=alles[levelSleutel(raw)];
+    return (b && b.stand) ? b : null;
+  }catch(e){ return null; }
 }
 function voltooidVan(raw){
   try{
@@ -1172,7 +1204,20 @@ function maakLevelRij(entry){
   const onder=document.createElement("div"); onder.className="onder";
   const g=levelGraad(raw);
   const vt=voltooidVan(raw);
-  if(vt){
+  const bz=vt?null:bezigVan(raw);
+  if(bz){
+    /* Mee bezig: de kaart kleurt helemaal op, want dit is waar je verder wilt.
+       Het zaaknummer blijft staan -- anders raak je kwijt welke zaak het is --
+       en op de plek van de zwaarte komt een zandloper met de tijd die er al op
+       staat. Hoe zwaar hij was doet er even niet toe; dat je erin zit wel. */
+    a.classList.add("bezig");
+    const mb=document.createElement("span"); mb.className="mee-bezig";
+    mb.title="Je bent hiermee bezig — "+tijdTekst(bz.tijd)+" gespeeld";
+    mb.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+      +'<path d="M7 3h10M7 21h10M8 3v3.2a4 4 0 0 0 1.4 3L12 12l-2.6 2.8A4 4 0 0 0 8 17.8V21M16 3v3.2a4 4 0 0 1-1.4 3L12 12l2.6 2.8a4 4 0 0 1 1.4 3V21"/></svg>'
+      +'<b>Mee bezig</b><span>'+tijdTekst(bz.tijd)+'</span>';
+    onder.appendChild(mb);
+  } else if(vt){
     /* Afgerond: het woord en je snelste tijd op de plek van de zwaarte. Hoe
        zwaar hij was doet er niet meer toe; dat je hem hebt opgelost wel. */
     a.classList.add("voltooid");
@@ -1236,6 +1281,17 @@ function tekenFilter(){
   /* Altijd zichtbaar: als je hem pas krijgt zodra er iets is afgerond, mis je
      hem juist op het moment dat je hem zoekt. */
   if(ok){ ok.hidden=false; ok.classList.toggle("aan",alleenOpen); ok.setAttribute("aria-pressed",alleenOpen?"true":"false"); }
+  /* Mee bezig verschijnt pas als er iets te hervatten valt; anders zou de knop
+     altijd een lege lijst opleveren. Staat hij aan terwijl de laatste zaak net
+     is afgerond, dan gaat hij vanzelf weer uit. */
+  { const bk=$("#bezigKnop");
+    const ietsBezig=alleLevels.some(e=>!voltooidVan(e.raw) && bezigVan(e.raw));
+    if(bk){
+      if(!ietsBezig) alleenBezig=false;
+      bk.hidden=!ietsBezig;
+      bk.classList.toggle("aan",alleenBezig);
+      bk.setAttribute("aria-pressed",alleenBezig?"true":"false");
+    } }
   [{n:0,l:"Alle niveaus"}].concat(aanwezig.map(n=>({n,l:"Niveau "+n}))).forEach(c=>{
     const b=document.createElement("button");
     b.type="button"; b.className=(actieveFilter===c.n?"aan":"");
@@ -1260,6 +1316,7 @@ function tekenFilter(){
   label.textContent = actieveFilter ? ("Niveau "+actieveFilter) : "Niveau";
 }
 $("#openKnop").addEventListener("click",()=>{ alleenOpen=!alleenOpen; tekenFilter(); tekenLijst(); });
+$("#bezigKnop").addEventListener("click",()=>{ alleenBezig=!alleenBezig; tekenFilter(); tekenLijst(); });
 $("#filterKnop").addEventListener("click",e=>{
   e.stopPropagation();
   const drop=$("#filterDrop");
@@ -1276,6 +1333,7 @@ function tekenLijst(){
   const lijst=$("#levelList");
   const zichtbaar=alleLevels.filter(e=>{
     if(alleenOpen && voltooidVan(e.raw)) return false;
+    if(alleenBezig && !(!voltooidVan(e.raw) && bezigVan(e.raw))) return false;
     if(!actieveFilter) return true;
     const g=levelGraad(e.raw);
     return g && g.graad===actieveFilter;
