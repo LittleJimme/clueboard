@@ -32,10 +32,6 @@ MAAT = 512      # wat er in de bank komt
 GROEI = 2       # pixels dat de alpha uitzet voor het uitrekenen van de schaduw
 DREMPEL = 250   # hierboven is het papier, geen schaduw
 
-# loom is onvolledig aangeleverd: er is geen -dag, en het bestand dat -shadow
-# heet is geen schaduw maar juist de dagversie (met alpha, geen wit eromheen).
-# Zolang dat zo is nemen we die als dag en krijgt loom geen schaduw.
-UITZONDERING = {"loom": {"dag": "loom-shadow", "shadow": None}}
 
 
 def zoek(naam):
@@ -64,10 +60,21 @@ def lichting():
             if n.lower().endswith(staart):
                 uit.setdefault(n[:-len(staart)], {})[rol] = n
                 break
-    for slug, vast in UITZONDERING.items():
-        if slug in uit:
-            uit[slug].update(vast)
     return uit
+
+
+def is_schaduwbestand(pad):
+    """Staat het object hier op wit, of is er iets anders geëxporteerd?
+
+    Het uitrekenen van de schaduw gaat ervan uit dat de achtergrond wit is.
+    Komt er een keer een bestand langs dat op zwart of transparant staat -- dat
+    is al twee keer gebeurd -- dan zou de som er een zwart vlak van maken en
+    zou je dat pas op het bord zien. Liever hier merken en overslaan. Vier
+    hoeken, want in één hoek kan toevallig nog een stuk schaduw liggen.
+    """
+    a = np.asarray(Image.open(pad).convert("RGB"))
+    hoeken = [a[4, 4], a[4, -5], a[-5, 4], a[-5, -5]]
+    return float(np.median([h.min() for h in hoeken])) >= 200
 
 
 def schrijf(im, pad):
@@ -145,6 +152,9 @@ def main():
             regel += "  nacht %3d kB" % (os.path.getsize(os.path.join(OBJ, "dark", slug + ".png")) // 1024)
         else:
             gemist.append("%s: geen nachtversie" % slug); regel += "  nacht   -  "
+        if schpad and not is_schaduwbestand(schpad):
+            gemist.append("%s: het schaduwbestand staat niet op wit, overgeslagen" % slug)
+            schpad = None
         if schpad:
             schrijf(klein(schaduwlaag(dagpad, schpad)),
                     os.path.join(OBJ, "shadows", slug + ".png"))
