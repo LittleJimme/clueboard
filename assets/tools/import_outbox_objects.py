@@ -122,6 +122,18 @@ def schaduwlaag(objectpad, platpad):
     a = np.asarray(a, dtype=np.float64)[:, :, None] / 255.0
     F = np.asarray(plat, dtype=np.float64) / 255.0
     s = np.clip(F * (1.0 - a) + a, 0.0, 1.0)
+
+    # Het papier is niet altijd precies wit. Bij house kwam er een vel langs
+    # met een lichte crèmetint (249,243,237), en dan leest de hele plaat als
+    # een flauwe schaduw: je krijgt het silhouet als gat in plaats van een
+    # schaduw eronder. De papierkleur wordt daarom aan de rand gemeten en de
+    # schaduw daar tegen afgezet -- precies wat multiply nodig heeft, want het
+    # gaat om hoeveel donkerder dan het papier, niet om de absolute waarde.
+    rand = np.concatenate([s[:6].reshape(-1, 3), s[-6:].reshape(-1, 3),
+                           s[:, :6].reshape(-1, 3), s[:, -6:].reshape(-1, 3)])
+    papier = np.median(rand, axis=0)
+    s = np.clip(s / np.maximum(papier, 1e-6), 0.0, 1.0)
+
     s[s.min(axis=2) >= DREMPEL / 255.0] = 1.0
     d = 1.0 - s.min(axis=2, keepdims=True)
     veilig = np.maximum(d, 1e-6)

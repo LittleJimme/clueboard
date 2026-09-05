@@ -1261,11 +1261,11 @@ body.mat-screen .tile .objmat .mat-tex{mix-blend-mode:screen}
   left:calc(var(--cell) * var(--obj-links,-.2));
   top:calc(var(--cell) * var(--obj-boven,-.353125))}
 .tile .objart.prod.dier,#hoogArt .objart.prod.dier,.objschaduw.dier{
-  width:calc(var(--cell) * var(--dier-kader,1.5));
-  height:calc(var(--cell) * var(--dier-kader,1.5))}
-.tile .objart.prod.dier{
-  left:calc(var(--cell) * var(--dier-links,-.25));
-  top:calc(var(--cell) * var(--dier-boven,-.4790625))}
+  width:calc(var(--cell) * var(--dier-kader,1.8));
+  height:calc(var(--cell) * var(--dier-kader,1.8))}
+.tile .objart.prod.paard,#hoogArt .objart.prod.paard,.objschaduw.paard{
+  width:calc(var(--cell) * var(--paard-kader,2.1));
+  height:calc(var(--cell) * var(--paard-kader,2.1))}
 /* Even groot als een vakje en op dezelfde plek, zodat tekening en schaduw
    precies over elkaar liggen -- ze komen zo uit Photoshop. */
 /* De schaduw ligt in hetzelfde kader als de tekening -- ze komen uit hetzelfde
@@ -2686,7 +2686,7 @@ body.in-game .kop-knop.thema-knop i{
 }
 /* De keuze staat nu in de kop, dus in het instellingenvel hoeft hij niet meer
    -- op de telefoon net zomin als op een groot scherm. */
-body.in-game .set-kop.weergave-kop,body.in-game #themaKeuze{display:none}
+body.in-game #themaKeuze{display:none}
 /* Op een telefoon staat de uitleg niet meer als los vraagteken in de kop maar
    onderin de instellingen, waar de rest van de hulp ook staat. */
 body.in-game:not(.desktop) #btnHelpTop{display:none}
@@ -3520,17 +3520,6 @@ body.in-game .clue-card.done::before{background:var(--goud)}
 <div class="debug-paneel" id="debugPaneel" hidden>
   <div class="debug-kop">Proef: ondergrond</div>
   <button class="debug-rij schakel" id="rowPlat" type="button" aria-pressed="false"><b>Platte pictogrammen</b><span class="schuif"><i></i></span></button>
-  <button class="debug-rij schakel" id="rowTussen" type="button" aria-pressed="false"><b>Tegels tussen de muren</b><span class="schuif"><i></i></span></button>
-  <button class="debug-rij schakel" id="rowMatTex" type="button" aria-pressed="false"><b>Textuur op tapijt</b><span class="schuif"><i></i></span></button>
-  <button class="debug-rij schakel" id="rowMatScreen" type="button" aria-pressed="false"><b>Tapijt op screen (uit = multiply)</b><span class="schuif"><i></i></span></button>
-  <button class="debug-rij schakel" id="rowMuurLicht" type="button" aria-pressed="false"><b>Lichte muren &apos;s nachts</b><span class="schuif"><i></i></span></button>
-  <div class="debug-rij"><b>Muurdikte</b><input type="range" id="muurDikte" min="4" max="22" step="0.5" value="7.5" aria-label="Muurdikte in procent van een vakje"><span class="debug-getal" id="muurDikteGetal">7.5</span></div>
-  <div class="debug-rij"><b>Tegelkier</b><input type="range" id="tegelKier" min="0" max="8" step="0.1" value="4.2" aria-label="Afstand tussen de tegels in procent van een vakje"><span class="debug-getal" id="tegelKierGetal">4.2</span></div>
-  <div class="debug-rij"><b>Objectformaat</b><input type="range" id="objKader" min="1" max="2.6" step="0.01" value="1.4" aria-label="Hoe groot een objecttekening staat, in vakjes"><span class="debug-getal" id="objKaderGetal">1.40</span></div>
-  <div class="debug-rij"><b>Object opzij</b><input type="range" id="objDx" min="-15" max="15" step="0.5" value="0" aria-label="Hoe ver een object opzij schuift, in procent van een vakje"><span class="debug-getal" id="objDxGetal">0.0</span></div>
-  <div class="debug-rij"><b>Object omlaag</b><input type="range" id="objDy" min="-30" max="15" step="0.5" value="-15" aria-label="Hoe ver een object omlaag schuift, in procent van een vakje"><span class="debug-getal" id="objDyGetal">-15.0</span></div>
-  <div class="debug-rij"><b>Dierformaat</b><input type="range" id="dierKader" min="1" max="2.6" step="0.01" value="1.5" aria-label="Hoe groot een diertekening staat, in vakjes"><span class="debug-getal" id="dierKaderGetal">1.50</span></div>
-  <div class="debug-rij"><b>Dier omlaag</b><input type="range" id="dierDy" min="-30" max="15" step="0.5" value="-19" aria-label="Hoe ver een dier omlaag schuift, in procent van een vakje"><span class="debug-getal" id="dierDyGetal">-19.0</span></div>
   <div class="debug-rij"><b>Textuur</b><input type="range" id="overlaySterkte" min="0" max="100" step="1" value="25" aria-label="Hoe hard de materiaaltekening over de kleur ligt"><span class="debug-getal" id="overlaySterkteGetal">25.0</span></div>
 </div>
 
@@ -3551,6 +3540,11 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       <button class="vis-row" id="visCrosses" aria-pressed="true"><span>Kruisjes</span><span class="oog"></span></button>
       <button class="vis-row" id="visRoomLabels" aria-pressed="true"><span>Ruimtenamen</span><span class="oog"></span></button>
       <button class="vis-row" id="visRoles" aria-pressed="true"><span>Rolpicto's</span><span class="oog"></span></button>
+    </div>
+    <div class="set-duo">
+      <button class="set-row schakel" id="rowKleinObject" type="button" aria-pressed="false">
+        <span class="ic" data-icon="dossier"></span><span class="set-tekst"><b>Kleine objecten</b></span><span class="schuif"><i></i></span>
+      </button>
     </div>
     <div class="set-kop">Assistentie</div>
     <div class="set-duo">
@@ -5278,15 +5272,24 @@ const PRODUCTIE_OBJECTEN = ["barrel","boar","box","chair","cow","crate","easel",
   "statue","stones","table","treasure","tree","vase","weapon-chest",
   "weapon-rack","wolf"];
 /* Wie er boven zijn vakje uitsteekt en dus over de muren heen moet vallen.
-   Opgemeten aan de tekeningen zelf: in het kader van 1024 ligt de bovenrand
-   van een vakje op 240, en alleen deze drie komen daarbovenuit. Struik en
-   plant zaten hier vroeger bij, maar zijn nu binnen hun vakje getekend. */
+   Boom, standbeeld en huisje komen boven de bovenrand van hun vakje uit; de
+   dieren zijn zo fors geschaald dat ze dat ook doen, en een dier dat door een
+   muur wordt afgesneden leest als een half dier. */
 const PRODUCTIE_BOVEN = ["tree","statue","house"];
-/* Dieren staan op vier poten en vullen hun kader daardoor anders dan een kast
-   of een kist: even groot getekend lijken ze kleiner en lager. Ze krijgen hun
-   eigen kader, zodat de tekeningen zelf allemaal op dezelfde manier gerenderd
-   kunnen blijven worden. */
-const DIER_OBJECTEN = ["boar","cow","horse","pig","wolf"];
+/* Een dier op vier poten vult zijn kader anders dan een kast of een kist:
+   even groot getekend leest het kleiner en lager. En een paard is nog eens
+   langer dan de rest. Drie soorten dus, elk met een eigen maat, zodat de
+   tekeningen zelf allemaal op dezelfde manier gerenderd kunnen blijven. */
+const DIER_OBJECTEN  = ["boar","cow","pig","wolf"];
+const PAARD_OBJECTEN = ["horse"];
+function objectSoort(slug){
+  if(PAARD_OBJECTEN.indexOf(slug)>=0) return "paard";
+  if(DIER_OBJECTEN.indexOf(slug)>=0)  return "dier";
+  return "gewoon";
+}
+function valtOverMuren(slug){
+  return PRODUCTIE_BOVEN.indexOf(slug)>=0 || objectSoort(slug)!=="gewoon";
+}
 function isProductie(slug,w,h){
   return w===1 && h===1 && PRODUCTIE_OBJECTEN.indexOf(slug)>=0;
 }
@@ -5601,11 +5604,13 @@ function renderBoard(){
           /* Wat binnen zijn vakje blijft mag in de tegel; wat erbovenuit
              steekt hoort over de muren heen te vallen en gaat dus naar de
              laag daarboven. */
-          const prodHoog = prod && PRODUCTIE_BOVEN.indexOf(slug)>=0;
-          /* Een dier rekent met zijn eigen kader; de laag boven het bord kent
-             de plek niet uit de CSS, dus daar moet de goede variabelenaam mee. */
-          const prodDier = prod && DIER_OBJECTEN.indexOf(slug)>=0;
-          const kaderVar = prodDier ? "--dier" : "--obj";
+          /* Elke soort rekent met zijn eigen kader; de laag boven het bord
+             kent de plek niet uit de CSS, dus daar moet de goede
+             variabelenaam mee. */
+          const soort = prod ? objectSoort(slug) : "gewoon";
+          const soortKlasse = soort==="gewoon" ? "" : " "+soort;
+          const kaderVar = soort==="gewoon" ? "--obj" : "--"+soort;
+          const prodHoog = prod && valtOverMuren(slug);
           /* De schaduw ligt plat op de vloer, onder de tekening, en
              vermenigvuldigt met de tegel eronder: precies zoals de laag in
              Photoshop. Wit doet niets, dus alleen de schaduw kleurt mee. Hij
@@ -5614,7 +5619,7 @@ function renderBoard(){
              van de hoge soort. */
           if(prod){
             const sch=document.createElement("div");
-            sch.className="objschaduw"+(prodDier?" dier":"");
+            sch.className="objschaduw"+soortKlasse;
             sch.dataset.tegel=id;
             sch.style.left="calc(var(--cell) * "+(c-b.minC)+" + var(--cell) * var("+kaderVar+"-links))";
             sch.style.top="calc(var(--cell) * "+(r-b.minR)+" + var(--cell) * var("+kaderVar+"-boven))";
@@ -5624,7 +5629,7 @@ function renderBoard(){
           const hoog = !prod && plan.w===1 && plan.h===1 && UITSTEKERS.indexOf(slug)>=0;
           const art=document.createElement("div");
           art.dataset.tegel=id;
-          art.className="objart"+(prod?" prod":"")+(prodDier?" dier":"")+((plan.w>1||plan.h>1)?" vullend":"")+(hoog?" uitsteker":"");
+          art.className="objart"+(prod?" prod":"")+soortKlasse+((plan.w>1||plan.h>1)?" vullend":"")+(hoog?" uitsteker":"");
           if(!prod){
             const pas=objectPasStijl(slug);
             if(pas||hoog) art.style.transform=(hoog?"translateX(-50%) ":"")+pas;
@@ -5682,7 +5687,7 @@ function renderBoard(){
    ontwerp, dus dat ruimen we één keer op. Het nummer hoogt mee zodra de maten
    opnieuw veranderen. */
 (function(){
-  const SLEUTEL="clueboard:matenVersie", NU="11";
+  const SLEUTEL="clueboard:matenVersie", NU="12";
   try{
     if(localStorage.getItem(SLEUTEL)===NU) return;
     ["muurDikte","tegelKier","overlaySterkte","tussenMuren","objSchaal","objZak",
@@ -5695,11 +5700,7 @@ function renderBoard(){
 
 /* Onder de vier procent wordt een muur een haarlijn: dan leest hij niet meer
    als muur en gaan alle maten die eraan hangen scheef staan. */
-const MUUR_MINIMAAL = 4;
-let MUUR_PROCENT = (function(){
-  try{ const v=parseFloat(localStorage.getItem("clueboard:muurDikte")); if(v>0) return Math.max(MUUR_MINIMAAL,v); }catch(e){}
-  return 7.5;
-})();
+const MUUR_PROCENT = 7.5;
 /* De ronding van een tegelhoek, ook in procent van een vakje. De muren nemen
    deze straal over, dus beide staan hier bij elkaar en kunnen niet uit elkaar
    lopen; de CSS krijgt hem als variabele. */
@@ -5715,7 +5716,7 @@ function maatVrij(sleutel,standaard){
 }
 /* De kier tussen twee tegels. Tijdelijk aan een schuifbalk; hij bepaalt ook de
    lucht tot een muur, want elke tussenruimte hoort even breed te zijn. */
-let KIER_PROCENT = maat("clueboard:tegelKier",4.2);
+const KIER_PROCENT = 4.2;
 /* Hoe hard de materiaaltekening over de kleur ligt. Op nul zie je alleen de
    vlakke kleur, op honderd de tekening zoals hij is getekend. */
 let OVERLAY_PROCENT = maat("clueboard:overlaySterkte",25);
@@ -5733,13 +5734,19 @@ const OBJ_GRONDLIJN = 880/1024;
    daarna nog opzij of omlaag schuift, in procent van een vakje. Het kader
    schaalt om de grondlijn en het midden van het vakje heen, zodat een object
    bij het groter maken op zijn plek blijft staan in plaats van weg te lopen. */
-let OBJ_KADER = maat("clueboard:objKader",1.4);
-let OBJ_DX    = maatVrij("clueboard:objDx",0);
-let OBJ_DY    = maatVrij("clueboard:objDy",-15);
-/* Hetzelfde, maar voor de dieren. Opzij delen ze de verschuiving van de rest;
-   alleen de maat en de hoogte staan los. */
-let DIER_KADER = maat("clueboard:dierKader",1.5);
-let DIER_DY    = maatVrij("clueboard:dierDy",-19);
+let OBJ_DX = maatVrij("clueboard:objDx",0);
+/* De maat van het kader per soort, in vakjes, en hoe ver de tekening daarna
+   omlaag schuift in procent van een vakje. Uitgezocht met schuiven in de
+   proefstand. */
+const OBJ_MATEN = {
+  gewoon: {kader:1.40, dy:-15.0},
+  dier:   {kader:1.80, dy:-10.0},
+  paard:  {kader:2.10, dy:-12.5},
+};
+/* Staat "kleine objecten" aan, dan past alles binnen zijn eigen vakje: één
+   maat voor alle soorten. Voorlopig geldt dat alleen voor de objecten van één
+   vakje; die van twee vakjes rekenen nog met hun eigen tekening. */
+const OBJ_MAAT_KLEIN = {kader:1.00, dy:-21.0};
 /* Hoe donker de muur 's nachts is, als helderheid in Lab. Zie zetVlakPalet();
    de vloeren liggen tussen L29 en L38, dus hierop leest de muur als een warme
    wand in schemerlicht in plaats van als een zwarte streep. */
@@ -5768,12 +5775,16 @@ function zetMaten(){
   st.setProperty("--golf-diep",String(GOLF_DIEP));
   st.setProperty("--golf-duur",String(GOLF_DUUR));
   st.setProperty("--kruis-pct",String(KRUIS_PCT));
-  st.setProperty("--obj-kader",String(OBJ_KADER));
-  st.setProperty("--obj-links",String((1-OBJ_KADER)/2 + OBJ_DX/100));
-  st.setProperty("--obj-boven",String(1 - OBJ_GRONDLIJN*OBJ_KADER + OBJ_DY/100));
-  st.setProperty("--dier-kader",String(DIER_KADER));
-  st.setProperty("--dier-links",String((1-DIER_KADER)/2 + OBJ_DX/100));
-  st.setProperty("--dier-boven",String(1 - OBJ_GRONDLIJN*DIER_KADER + DIER_DY/100));
+  /* Per soort dezelfde som: de linkerbovenhoek volgt uit de maat, zodat een
+     object bij het groter maken om de grondlijn en het midden van het vakje
+     heen groeit in plaats van weg te lopen. */
+  const klein=document.body.classList.contains("klein-object");
+  [["obj","gewoon"],["dier","dier"],["paard","paard"]].forEach(([naam,soort])=>{
+    const m = klein ? OBJ_MAAT_KLEIN : OBJ_MATEN[soort];
+    st.setProperty("--"+naam+"-kader",String(m.kader));
+    st.setProperty("--"+naam+"-links",String((1-m.kader)/2 + OBJ_DX/100));
+    st.setProperty("--"+naam+"-boven",String(1 - OBJ_GRONDLIJN*m.kader + m.dy/100));
+  });
 }
 /* Welke watertegel wanneer aan de beurt is. De plek van een tegel wordt op de
    looprichting geprojecteerd; hoe verder langs die richting, hoe later hij
@@ -7851,7 +7862,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.108";
+const PLAYER_APP_VERSION="0.9.109";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8637,6 +8648,22 @@ $("#btnHint").addEventListener("click",()=>{
   openModal("#modalHint");
 });
 $("#btnHintJa").addEventListener("click",()=>{ closeModal($("#modalHint")); geefHint(); });
+/* Kleine objecten: alles past binnen zijn eigen vakje in plaats van eroverheen
+   te vallen. Het verandert alleen maten, geen tekeningen, dus het bord hoeft
+   niet opnieuw opgebouwd te worden -- zetMaten() rekent de kaders opnieuw uit
+   en de CSS doet de rest. */
+{ const knop=$("#rowKleinObject");
+  const zet=aan=>{
+    document.body.classList.toggle("klein-object",!!aan);
+    if(knop) knop.setAttribute("aria-pressed",aan?"true":"false");
+    try{ localStorage.setItem("clueboard:kleinObject",aan?"1":"0"); }catch(e){}
+    zetMaten();
+  };
+  let start=false;
+  try{ start=localStorage.getItem("clueboard:kleinObject")==="1"; }catch(e){}
+  zet(start);
+  if(knop) knop.addEventListener("click",()=>zet(!document.body.classList.contains("klein-object")));
+}
 $("#rowEasy").addEventListener("click",()=>setEasyMode(!easyMode));
 $("#rowAutoKruis").addEventListener("click",()=>setAutoKruis(!autoKruis));
 { /* Dezelfde uitleg, nu ook vanuit de instellingen. */
@@ -8847,10 +8874,7 @@ document.addEventListener("pointerdown",e=>{
    body en onthoudt zijn stand op dit apparaat. Alles hangt aan CSS, dus bij het
    omzetten hoeft er niets opnieuw getekend te worden. */
 [["rowPlat","plat-icoon","clueboard:platIcoon",false],
- ["rowTussen","tussen-muren","clueboard:tussenMuren",true],
- ["rowMatTex","mat-textuur","clueboard:matTextuur",true],
- ["rowMatScreen","mat-screen","clueboard:matScreen",false],
- ["rowMuurLicht","muur-licht","clueboard:muurLicht",false]].forEach(function(rij){
+].forEach(function(rij){
   const id=rij[0], klasse=rij[1], sleutel=rij[2], standaard=!!rij[3];
   const knop=$("#"+id);
   const zet=aan=>{
@@ -8897,19 +8921,8 @@ function maatSchuif(balkId,getalId,sleutel,lees,schrijfMaat,opnieuw,cijfers){
   ["pointerdown","touchstart","touchmove"].forEach(n=>
     balk.addEventListener(n,e=>e.stopPropagation(),{passive:true}));
 }
-maatSchuif("muurDikte","muurDikteGetal","clueboard:muurDikte",
-  ()=>MUUR_PROCENT, v=>{ if(v>0) MUUR_PROCENT=Math.max(MUUR_MINIMAAL,v); }, true);
-maatSchuif("tegelKier","tegelKierGetal","clueboard:tegelKier",
-  ()=>KIER_PROCENT, v=>{ if(v>=0) KIER_PROCENT=v; }, true);
 maatSchuif("overlaySterkte","overlaySterkteGetal","clueboard:overlaySterkte",
   ()=>OVERLAY_PROCENT, v=>{ OVERLAY_PROCENT=v; }, false);
-maatSchuif("objKader","objKaderGetal","clueboard:objKader",
-  ()=>OBJ_KADER, v=>{ if(v>0) OBJ_KADER=v; }, false, 2);
-maatSchuif("objDx","objDxGetal","clueboard:objDx", ()=>OBJ_DX, v=>{ OBJ_DX=v; }, false);
-maatSchuif("objDy","objDyGetal","clueboard:objDy", ()=>OBJ_DY, v=>{ OBJ_DY=v; }, false);
-maatSchuif("dierKader","dierKaderGetal","clueboard:dierKader",
-  ()=>DIER_KADER, v=>{ if(v>0) DIER_KADER=v; }, false, 2);
-maatSchuif("dierDy","dierDyGetal","clueboard:dierDy", ()=>DIER_DY, v=>{ DIER_DY=v; }, false);
 
 /* De golf staat afgesteld en heeft geen schuiven meer nodig; de maten staan
    hierboven als vaste waarde. */
@@ -8926,7 +8939,11 @@ maatSchuif("dierDy","dierDyGetal","clueboard:dierDy", ()=>DIER_DY, v=>{ DIER_DY=
    uitgeprobeerd en horen er gewoon bij; ze stonden aan een schakelaar in de
    proefstand en staan nu vast aan. De klassen blijven wel bestaan, want de
    hele opmaak hangt eraan. */
-["overlays","golf","glans"].forEach(k=>document.body.classList.add(k));
+/* Uitgeprobeerd en klaar: deze horen er gewoon bij. De klassen blijven
+   bestaan, want de hele opmaak hangt eraan, maar er is geen schakelaar meer
+   voor. */
+["overlays","golf","glans","tussen-muren","mat-textuur"]
+  .forEach(k=>document.body.classList.add(k));
 
 /* Het bouwmenu open en dicht. Een tik buiten het paneel sluit het weer. */
 { const knop=$("#btnDebug"), paneel=$("#debugPaneel");
