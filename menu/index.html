@@ -228,6 +228,14 @@ html[data-thema="licht"] img.woordmerk.woordmerk-donker{display:none}
   letter-spacing:-.02em;line-height:1;color:var(--inkt);
 }
 .woordmerk .w1{color:var(--accent)}
+/* Het merk als tikvlak. Geen knopuiterlijk: wie er niets van weet mag er
+   niets van merken. */
+.merk{position:relative;-webkit-tap-highlight-color:transparent;user-select:none}
+.proef-merk{display:none;position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);
+  padding:2px 9px;border-radius:999px;background:var(--accent);color:#fff;
+  font:800 9.5px var(--font-ui);letter-spacing:.16em;text-transform:uppercase;
+  box-shadow:0 2px 6px rgba(0,0,0,.28)}
+body.proefstand .proef-merk{display:block}
 /* haarlijntje dat het merkblok van de zaakregel scheidt */
 .titelblok .scheiding{
   width:56px;height:1px;margin:11px auto 12px;
@@ -266,6 +274,26 @@ html[data-thema="licht"] .titelblok h1 em::after{
 }
 .lijst-teller{flex:1;min-width:0;color:var(--dof);font:800 11px var(--font-ui);
   letter-spacing:.14em;text-transform:uppercase}
+.plak-breuk{display:none}
+/* Op een telefoon passen het aantal, drie filterknoppen en de sortering niet
+   op één regel: de knoppen werden dan smalle stukjes en het aantal viel weg.
+   Daarom twee regels -- aantal en sortering boven, de filters eronder over de
+   volle breedte -- in plaats van alles kleiner maken. De DOM-volgorde blijft
+   zoals hij is; de volgorde op het scherm komt uit order. */
+@media (max-width:640px){
+  .filter-plak{flex-wrap:wrap;gap:7px;row-gap:9px}
+  .lijst-teller{order:1;flex:1 1 auto;font-size:10.5px;letter-spacing:.1em}
+  .sorteer{order:2}
+  .plak-breuk{order:3;display:block;flex:1 0 100%;height:0}
+  .drop{order:4}
+  #openKnop{order:5}
+  #bezigKnop{order:6}
+  .drop,.mini-knop{flex:1 1 0;min-width:0}
+  .mini-knop{justify-content:center;height:34px;padding:0 8px;width:100%}
+  .mini-knop span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* Uitklappen onder de sterknop zelf, niet tegen de rechterrand van de rij. */
+  .drop-menu{right:auto;left:0;min-width:min(72vw,200px)}
+}
 
 /* klein sorteerknopje: op zaaknummer of op titel */
 .sorteer{
@@ -612,21 +640,6 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
   transition:border-color .15s;
 }
 .bouw-rij:hover{border-color:var(--accent-lijn)}
-/* De proefstand: dezelfde rij als "Bouw een level", met een schuifje. */
-.proef-rij{display:flex;align-items:center;gap:12px;width:100%;margin-top:10px;
-  background:var(--kaart-2);border:1px solid var(--lijn);border-radius:14px;
-  padding:11px 14px;text-align:left;color:inherit;cursor:pointer;
-  transition:border-color .15s}
-.proef-rij:hover{border-color:var(--accent-lijn)}
-.proef-rij .tekst{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.proef-rij .tekst b{font:800 14px var(--font-ui)}
-.proef-rij .tekst span{font:600 12px var(--font-ui);color:var(--dof);line-height:1.35}
-.proef-rij .schuif{flex:0 0 auto;position:relative;width:38px;height:22px;border-radius:999px;
-  background:var(--lijn);transition:background .18s}
-.proef-rij .schuif i{position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;
-  background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .18s}
-.proef-rij[aria-pressed="true"] .schuif{background:var(--accent)}
-.proef-rij[aria-pressed="true"] .schuif i{left:19px}
 .bouw-rij .ic{flex:0 0 auto;width:36px;height:36px;border-radius:10px;
   background:var(--kaart);border:1px solid var(--lijn);
   display:flex;align-items:center;justify-content:center;color:var(--inkt-2)}
@@ -672,9 +685,16 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
 
 <main>
   <header class="titelblok">
-    <img class="beeldmerk" src="../assets/brand/icon.png" alt="">
-    <img class="woordmerk woordmerk-donker" src="../assets/brand/logo-dark.png" alt="ClueBoard">
-    <img class="woordmerk woordmerk-licht" src="../assets/brand/logo.png" alt="ClueBoard">
+    <!-- Vijf keer tikken op het merk zet de proefstand aan of uit. Hij hoort
+         bij het bouwen en niet bij het spelen, dus staat hij nergens als knop;
+         wie hem nodig heeft weet hem te vinden. Staat hij aan, dan zegt het
+         merk dat ook. -->
+    <div class="merk" id="merkTik">
+      <img class="beeldmerk" src="../assets/brand/icon.png" alt="">
+      <img class="woordmerk woordmerk-donker" src="../assets/brand/logo-dark.png" alt="ClueBoard">
+      <img class="woordmerk woordmerk-licht" src="../assets/brand/logo.png" alt="ClueBoard">
+      <span class="proef-merk">Proefstand</span>
+    </div>
     <div class="scheiding"></div>
     <h1>De waarheid zit in de <em>details</em></h1>
   </header>
@@ -702,6 +722,9 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
       <button type="button" class="aan" data-s="nr">Nr</button>
       <button type="button" data-s="titel">A–Z</button>
     </div>
+    <!-- Op een telefoon breekt de rij hier: het aantal en de sortering boven,
+         de drie filterknoppen eronder. Op een breed scherm doet dit niets. -->
+    <span class="plak-breuk" aria-hidden="true"></span>
   </div>
 
   <div class="level-list" id="levelList"><p class="leeg-melding">Zaken laden…</p></div>
@@ -755,14 +778,6 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
       <span class="tekst"><b>Bouw een level</b><span>Teken een bord, schrijf aanwijzingen en exporteer je eigen zaak.</span></span>
       <span class="pijl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.6l6.4 6.4L9 18.4"/></svg></span>
     </a>
-    <!-- Tijdelijk, zolang de ondergrond in ontwikkeling is: hiermee komt in de
-         player het bouwmenu voor de vloeren en muren tevoorschijn. Het hoort
-         bij bouwen, niet bij spelen, dus het staat hier en niet bij de
-         instellingen van een zaak. -->
-    <button class="proef-rij" id="btnProef" type="button" aria-pressed="false">
-      <span class="tekst"><b>Proefstand</b><span>Toont in de player het bouwmenu voor vloeren en muren.</span></span>
-      <span class="schuif"><i></i></span>
-    </button>
   </div>
 </div>
 
@@ -1511,16 +1526,26 @@ function initZelf(){
 
 /* De proefstand staat in dezelfde opslag als waar de player hem uitleest;
    beide apps draaien op dezelfde herkomst, dus dit is één schakelaar. */
+/* Vijf keer achter elkaar op het merk tikken zet hem om; een tik telt alleen
+   mee als hij vlot op de vorige volgt, anders is het gewoon iemand die het
+   logo aanraakt. */
 (function(){
   const SLEUTEL="clueboard:experimenteel";
-  const knop=$("#btnProef"); if(!knop) return;
+  const NODIG=5, PAUZE=800;
+  const merk=$("#merkTik"); if(!merk) return;
   const zet=aan=>{
-    knop.setAttribute("aria-pressed",aan?"true":"false");
+    document.body.classList.toggle("proefstand",aan);
     try{ localStorage.setItem(SLEUTEL,aan?"1":"0"); }catch(e){}
   };
   let aan=false; try{ aan=localStorage.getItem(SLEUTEL)==="1"; }catch(e){}
   zet(aan);
-  knop.addEventListener("click",()=>zet(knop.getAttribute("aria-pressed")!=="true"));
+  let tikken=0, laatst=0;
+  merk.addEventListener("click",()=>{
+    const nu=Date.now();
+    tikken = (nu-laatst>PAUZE) ? 1 : tikken+1;
+    laatst = nu;
+    if(tikken>=NODIG){ tikken=0; aan=!aan; zet(aan); }
+  });
 })();
 
 initZelf();

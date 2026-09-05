@@ -2531,14 +2531,31 @@ body.desktop.in-game .clue-card.geselecteerd .info,
 body.desktop.in-game .clue-card.geselecteerd small,
 body.desktop.in-game .clue-card.victim.geselecteerd .name,
 body.desktop.in-game .clue-card.victim.geselecteerd .txt,
-body.desktop.in-game .clue-card.victim.geselecteerd .txt b{color:#FBF6EA}
+body.desktop.in-game .clue-card.victim.geselecteerd .txt b,
+/* De kaart van het slachtoffer is op desktop geen .clue-card maar een
+   .clue-row: hij stond wel in de regel die het vlak vult, maar niet in deze,
+   dus bleef zijn tekst donker op een donker vlak zodra je hem aanklikte. */
+body.desktop.in-game .clue-row.victim.geselecteerd .name,
+body.desktop.in-game .clue-row.victim.geselecteerd .who,
+body.desktop.in-game .clue-row.victim.geselecteerd .who b,
+body.desktop.in-game .clue-row.victim.geselecteerd .txt,
+body.desktop.in-game .clue-row.victim.geselecteerd .txt b,
+body.desktop.in-game .clue-row.victim.geselecteerd .txt i,
+body.desktop.in-game .clue-row.victim.geselecteerd .txt em,
+body.desktop.in-game .clue-row.victim.geselecteerd .txt span,
+body.desktop.in-game .clue-row.victim.geselecteerd .txt .naam,
+body.desktop.in-game .clue-row.victim.geselecteerd small,
+body.desktop.in-game .clue-row.victim.geselecteerd .info{color:#FBF6EA}
 /* De rolbadge draait juist om: een licht vlakje met donkere letters, zodat hij
    op het volle vlak blijft opvallen. */
 body.desktop.in-game .clue-card.geselecteerd .tag,
 body.desktop.in-game .clue-card.geselecteerd .rol,
 body.desktop.in-game .clue-card.geselecteerd .badge,
 body.desktop.in-game .clue-card.victim.geselecteerd .rol,
-body.desktop.in-game .clue-card.victim.geselecteerd .rol.victim{
+body.desktop.in-game .clue-card.victim.geselecteerd .rol.victim,
+body.desktop.in-game .clue-row.victim.geselecteerd .badge,
+body.desktop.in-game .clue-row.victim.geselecteerd .badge.victim,
+body.desktop.in-game .clue-row.victim.geselecteerd .rol{
   background:#FBF6EA;color:#2A2620;border-color:#FBF6EA}
 body.desktop.in-game .clue-card.geselecteerd .badge.rol svg,
 body.desktop.in-game .clue-card.geselecteerd .rol svg{color:#2A2620}
@@ -5484,10 +5501,6 @@ const OBJECT_PAS = {
   "sack":          {s:1.22},
   "crate":         {y:0.06},
   "house":         {s:1.60},
-  "boat-2x1":      {s:1.22},
-  "boat-1x2":      {s:1.22},
-  "catapult-2x1":  {b:1.18},
-  "catapult-1x2":  {s:1.15, b:1.22},
   "plant":         {y:0.05},
   "stones":        {x:0.05, y:0.05},
   "puddle":        {x:-0.04, y:0.05},
@@ -5495,19 +5508,40 @@ const OBJECT_PAS = {
   "vase":          {s:1.10},
   "weapon-chest":  {s:1.10, y:0.05},
   "weapon-rack":   {s:1.10, y:0.05},
-  "table-2x1":     {s:1.10, y:0.10},
-  "table-1x2":     {s:1.10, b:1.18, y:0.10},
-  "bed-1x2":       {s:1.08, b:1.12, y:0.13},
-  "watermill-2x1": {s:1.35},
-  "watermill-1x2": {s:1.35},
+  /* Tekeningen van twee vakjes worden opgerekt tot ze het hele vak vullen
+     (zie .objart.vullend), en daarna met deze getallen bijgesteld. De tafel
+     van twee vakjes breed staat goed en houdt daarom de pasvorm die hij had. */
+  "table-2x1":     {s:1.12, x:0.04, y:0.05},
+  /* Twee vakjes hoog kwam er als een plank uit: het blad moet zo breed zijn
+     als dat van een tafel van één vakje, en het geheel iets lager staan. */
+  "table-1x2":     {s:1.12, x:0.04, y:0.11, b:1.40},
+  /* Het bed mag vooral breder, en een klein stukje langer. */
+  "bed-1x2":       {b:1.25, v:1.06},
+  /* De watermolen is breed goed; alleen de hoogte moest omhoog, tot hij net
+     zo ver boven zijn vakje uitsteekt als een boom (0,19 vakje). */
+  "watermill-2x1": {v:1.44},
+  /* De bootjes allebei een klein stukje groter. */
+  "boat-2x1":      {s:1.08},
+  "boat-1x2":      {s:1.08},
 };
-/* De tabel als transform. Niets opgegeven is niets doen. */
+/* De tabel als transform. Niets opgegeven is niets doen.
+
+   Een object van twee vakjes zoekt eerst zijn eigen maatvariant op
+   ("table-1x2") en pas daarna de gewone soort ("table"). Dat ging mis: de
+   regels voor de brede en hoge tekeningen stonden er wel, maar werden nooit
+   gevonden, want er kwam altijd de kale soortnaam binnen. Zo kreeg een tafel
+   van twee vakjes de pasvorm van een tafel van één vakje. */
+function pasSleutel(slug,w,h){
+  if((w>1||h>1) && OBJECT_PAS[slug+"-"+w+"x"+h]) return slug+"-"+w+"x"+h;
+  return slug;
+}
 function objectPasStijl(slug){
   const p=OBJECT_PAS[slug]; if(!p) return "";
   let uit="";
   if(p.x||p.y) uit+="translate(calc(var(--cell) * "+(p.x||0)+"),calc(var(--cell) * "+(p.y||0)+")) ";
   if(p.s) uit+="scale("+p.s+") ";
-  if(p.b) uit+="scaleX("+p.b+")";
+  if(p.b) uit+="scaleX("+p.b+") ";
+  if(p.v) uit+="scaleY("+p.v+")";
   return uit.trim();
 }
 /* Alleen naar beneden uitrekken: de bovenkant blijft staan en de onderkant
@@ -5785,9 +5819,10 @@ function renderBoard(){
           art.dataset.tegel=id;
           art.className="objart"+(prod?" prod":"")+soortKlasse+((plan.w>1||plan.h>1)?" vullend":"")+(hoog?" uitsteker":"");
           if(!prod){
-            const pas=objectPasStijl(slug);
+            const maatSlug=pasSleutel(slug,plan.w,plan.h);
+            const pas=objectPasStijl(maatSlug);
             if(pas||hoog) art.style.transform=(hoog?"translateX(-50%) ":"")+pas;
-            art.dataset.rek=objectRekStijl(slug);
+            art.dataset.rek=objectRekStijl(maatSlug);
           }
           if(prod && prodHoog){
             /* Zelfde kader, maar in de laag boven de muren; die omvat het hele
@@ -8108,7 +8143,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.112";
+const PLAYER_APP_VERSION="0.9.113";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
