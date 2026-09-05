@@ -1260,6 +1260,12 @@ body.mat-screen .tile .objmat .mat-tex{mix-blend-mode:screen}
 .tile .objart.prod{z-index:2;
   left:calc(var(--cell) * var(--obj-links,-.2));
   top:calc(var(--cell) * var(--obj-boven,-.353125))}
+.tile .objart.prod.dier,#hoogArt .objart.prod.dier,.objschaduw.dier{
+  width:calc(var(--cell) * var(--dier-kader,1.5));
+  height:calc(var(--cell) * var(--dier-kader,1.5))}
+.tile .objart.prod.dier{
+  left:calc(var(--cell) * var(--dier-links,-.25));
+  top:calc(var(--cell) * var(--dier-boven,-.4790625))}
 /* Even groot als een vakje en op dezelfde plek, zodat tekening en schaduw
    precies over elkaar liggen -- ze komen zo uit Photoshop. */
 /* De schaduw ligt in hetzelfde kader als de tekening -- ze komen uit hetzelfde
@@ -3523,6 +3529,8 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="debug-rij"><b>Objectformaat</b><input type="range" id="objKader" min="1" max="2.6" step="0.01" value="1.4" aria-label="Hoe groot een objecttekening staat, in vakjes"><span class="debug-getal" id="objKaderGetal">1.40</span></div>
   <div class="debug-rij"><b>Object opzij</b><input type="range" id="objDx" min="-15" max="15" step="0.5" value="0" aria-label="Hoe ver een object opzij schuift, in procent van een vakje"><span class="debug-getal" id="objDxGetal">0.0</span></div>
   <div class="debug-rij"><b>Object omlaag</b><input type="range" id="objDy" min="-30" max="15" step="0.5" value="-15" aria-label="Hoe ver een object omlaag schuift, in procent van een vakje"><span class="debug-getal" id="objDyGetal">-15.0</span></div>
+  <div class="debug-rij"><b>Dierformaat</b><input type="range" id="dierKader" min="1" max="2.6" step="0.01" value="1.5" aria-label="Hoe groot een diertekening staat, in vakjes"><span class="debug-getal" id="dierKaderGetal">1.50</span></div>
+  <div class="debug-rij"><b>Dier omlaag</b><input type="range" id="dierDy" min="-30" max="15" step="0.5" value="-19" aria-label="Hoe ver een dier omlaag schuift, in procent van een vakje"><span class="debug-getal" id="dierDyGetal">-19.0</span></div>
   <div class="debug-rij"><b>Textuur</b><input type="range" id="overlaySterkte" min="0" max="100" step="1" value="25" aria-label="Hoe hard de materiaaltekening over de kleur ligt"><span class="debug-getal" id="overlaySterkteGetal">25.0</span></div>
 </div>
 
@@ -5274,6 +5282,11 @@ const PRODUCTIE_OBJECTEN = ["barrel","boar","box","chair","cow","crate","easel",
    van een vakje op 240, en alleen deze drie komen daarbovenuit. Struik en
    plant zaten hier vroeger bij, maar zijn nu binnen hun vakje getekend. */
 const PRODUCTIE_BOVEN = ["tree","statue","house"];
+/* Dieren staan op vier poten en vullen hun kader daardoor anders dan een kast
+   of een kist: even groot getekend lijken ze kleiner en lager. Ze krijgen hun
+   eigen kader, zodat de tekeningen zelf allemaal op dezelfde manier gerenderd
+   kunnen blijven worden. */
+const DIER_OBJECTEN = ["boar","cow","horse","pig","wolf"];
 function isProductie(slug,w,h){
   return w===1 && h===1 && PRODUCTIE_OBJECTEN.indexOf(slug)>=0;
 }
@@ -5589,6 +5602,10 @@ function renderBoard(){
              steekt hoort over de muren heen te vallen en gaat dus naar de
              laag daarboven. */
           const prodHoog = prod && PRODUCTIE_BOVEN.indexOf(slug)>=0;
+          /* Een dier rekent met zijn eigen kader; de laag boven het bord kent
+             de plek niet uit de CSS, dus daar moet de goede variabelenaam mee. */
+          const prodDier = prod && DIER_OBJECTEN.indexOf(slug)>=0;
+          const kaderVar = prodDier ? "--dier" : "--obj";
           /* De schaduw ligt plat op de vloer, onder de tekening, en
              vermenigvuldigt met de tegel eronder: precies zoals de laag in
              Photoshop. Wit doet niets, dus alleen de schaduw kleurt mee. Hij
@@ -5597,17 +5614,17 @@ function renderBoard(){
              van de hoge soort. */
           if(prod){
             const sch=document.createElement("div");
-            sch.className="objschaduw";
+            sch.className="objschaduw"+(prodDier?" dier":"");
             sch.dataset.tegel=id;
-            sch.style.left="calc(var(--cell) * "+(c-b.minC)+" + var(--cell) * var(--obj-links))";
-            sch.style.top="calc(var(--cell) * "+(r-b.minR)+" + var(--cell) * var(--obj-boven))";
+            sch.style.left="calc(var(--cell) * "+(c-b.minC)+" + var(--cell) * var("+kaderVar+"-links))";
+            sch.style.top="calc(var(--cell) * "+(r-b.minR)+" + var(--cell) * var("+kaderVar+"-boven))";
             ($("#objSchaduw")||el).appendChild(sch);
             mountAsset(sch,[objectSchaduwUrl(slug)],null,null);
           }
           const hoog = !prod && plan.w===1 && plan.h===1 && UITSTEKERS.indexOf(slug)>=0;
           const art=document.createElement("div");
           art.dataset.tegel=id;
-          art.className="objart"+(prod?" prod":"")+((plan.w>1||plan.h>1)?" vullend":"")+(hoog?" uitsteker":"");
+          art.className="objart"+(prod?" prod":"")+(prodDier?" dier":"")+((plan.w>1||plan.h>1)?" vullend":"")+(hoog?" uitsteker":"");
           if(!prod){
             const pas=objectPasStijl(slug);
             if(pas||hoog) art.style.transform=(hoog?"translateX(-50%) ":"")+pas;
@@ -5616,8 +5633,8 @@ function renderBoard(){
           if(prod && prodHoog){
             /* Zelfde kader, maar in de laag boven de muren; die omvat het hele
                bord, dus de plek moet er expliciet bij. */
-            art.style.left="calc(var(--cell) * "+(c-b.minC)+" + var(--cell) * var(--obj-links))";
-            art.style.top="calc(var(--cell) * "+(r-b.minR)+" + var(--cell) * var(--obj-boven))";
+            art.style.left="calc(var(--cell) * "+(c-b.minC)+" + var(--cell) * var("+kaderVar+"-links))";
+            art.style.top="calc(var(--cell) * "+(r-b.minR)+" + var(--cell) * var("+kaderVar+"-boven))";
             ($("#hoogArt")||el).appendChild(art);
           } else if(prod){
             /* Maat en plek staan in de CSS: het hele vakje, geschaald vanuit
@@ -5665,12 +5682,12 @@ function renderBoard(){
    ontwerp, dus dat ruimen we één keer op. Het nummer hoogt mee zodra de maten
    opnieuw veranderen. */
 (function(){
-  const SLEUTEL="clueboard:matenVersie", NU="10";
+  const SLEUTEL="clueboard:matenVersie", NU="11";
   try{
     if(localStorage.getItem(SLEUTEL)===NU) return;
     ["muurDikte","tegelKier","overlaySterkte","tussenMuren","objSchaal","objZak",
      "objSchaalBezet","objZakBezet","objSchaalHoog","objZakHoog","muurNachtL",
-     "objKader","objDx","objDy"]
+     "objKader","objDx","objDy","dierKader","dierDy"]
       .forEach(k=>localStorage.removeItem("clueboard:"+k));
     localStorage.setItem(SLEUTEL,NU);
   }catch(e){}
@@ -5719,6 +5736,10 @@ const OBJ_GRONDLIJN = 880/1024;
 let OBJ_KADER = maat("clueboard:objKader",1.4);
 let OBJ_DX    = maatVrij("clueboard:objDx",0);
 let OBJ_DY    = maatVrij("clueboard:objDy",-15);
+/* Hetzelfde, maar voor de dieren. Opzij delen ze de verschuiving van de rest;
+   alleen de maat en de hoogte staan los. */
+let DIER_KADER = maat("clueboard:dierKader",1.5);
+let DIER_DY    = maatVrij("clueboard:dierDy",-19);
 /* Hoe donker de muur 's nachts is, als helderheid in Lab. Zie zetVlakPalet();
    de vloeren liggen tussen L29 en L38, dus hierop leest de muur als een warme
    wand in schemerlicht in plaats van als een zwarte streep. */
@@ -5750,6 +5771,9 @@ function zetMaten(){
   st.setProperty("--obj-kader",String(OBJ_KADER));
   st.setProperty("--obj-links",String((1-OBJ_KADER)/2 + OBJ_DX/100));
   st.setProperty("--obj-boven",String(1 - OBJ_GRONDLIJN*OBJ_KADER + OBJ_DY/100));
+  st.setProperty("--dier-kader",String(DIER_KADER));
+  st.setProperty("--dier-links",String((1-DIER_KADER)/2 + OBJ_DX/100));
+  st.setProperty("--dier-boven",String(1 - OBJ_GRONDLIJN*DIER_KADER + DIER_DY/100));
 }
 /* Welke watertegel wanneer aan de beurt is. De plek van een tegel wordt op de
    looprichting geprojecteerd; hoe verder langs die richting, hoe later hij
@@ -7827,7 +7851,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.107";
+const PLAYER_APP_VERSION="0.9.108";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8883,6 +8907,9 @@ maatSchuif("objKader","objKaderGetal","clueboard:objKader",
   ()=>OBJ_KADER, v=>{ if(v>0) OBJ_KADER=v; }, false, 2);
 maatSchuif("objDx","objDxGetal","clueboard:objDx", ()=>OBJ_DX, v=>{ OBJ_DX=v; }, false);
 maatSchuif("objDy","objDyGetal","clueboard:objDy", ()=>OBJ_DY, v=>{ OBJ_DY=v; }, false);
+maatSchuif("dierKader","dierKaderGetal","clueboard:dierKader",
+  ()=>DIER_KADER, v=>{ if(v>0) DIER_KADER=v; }, false, 2);
+maatSchuif("dierDy","dierDyGetal","clueboard:dierDy", ()=>DIER_DY, v=>{ DIER_DY=v; }, false);
 
 /* De golf staat afgesteld en heeft geen schuiven meer nodig; de maten staan
    hierboven als vaste waarde. */
