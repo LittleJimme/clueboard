@@ -1648,6 +1648,11 @@ body.desktop #radial .ring{will-change:transform}
 body.in-game .rbtn[data-standing]{border:0;box-shadow:none}
 .rbtn[data-standing] .rc{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
 .rbtn[data-standing] .face{border-radius:0;background:none;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%}
+/* Staat hij op dit vakje, dan is de knop geen keuze meer maar een weghaal-
+   knop. Hij blijft gedempt zoals elke geplaatste pion, maar krijgt de gouden
+   ring van "hier gebeurt iets" terug. */
+#radial .rbtn.taken.hier{opacity:1;filter:none}
+#radial .rbtn.taken.hier .face{box-shadow:0 0 0 2px var(--goud)}
 .rbtn[data-standing="noble"] .face{-webkit-mask-image:url("../assets/characters/ui/masker-banier.png");mask-image:url("../assets/characters/ui/masker-banier.png")}
 .rbtn[data-standing="knight"] .face{-webkit-mask-image:url("../assets/characters/ui/masker-schild.png");mask-image:url("../assets/characters/ui/masker-schild.png")}
 .rbtn[data-standing="noble"] .face .ch{width:92%;height:92%;left:4%;top:6.4%}
@@ -2030,6 +2035,7 @@ body.in-game .kop-check .teller:empty{display:none}
    knoppen. */
 /* De klok staat midden boven het bord: hij hoort bij het bord, niet bij de
    knoppen. Controleer schuift mee naar rechts, bij de andere knoppen. */
+body.in-game .kop-links{display:flex;align-items:center;min-width:0}
 body.in-game .kop-midden{display:flex;align-items:center;justify-content:center;min-width:0}
 /* Op een smal scherm is Controleer alleen nog het poppetje met de stand: het
    woord past er niet bij, en het kadertje om de stand zegt al genoeg. */
@@ -2050,6 +2056,21 @@ body.in-game .kop-check{min-width:0;max-width:100%;overflow:hidden}
   body.in-game .game-head #btnCheck:not(.klaar) .lbl{display:none}
   body.in-game .timer .ic{display:none}
 }
+/* Terug en vooruit staan naast elkaar, links van de klok. Alleen op een groot
+   scherm: in de kop van een telefoon is er geen ruimte voor, daar staan ze in
+   de instellingen. */
+body.in-game .stap-knoppen{display:none}
+body.desktop.in-game .stap-knoppen{display:flex;align-items:center;gap:2px}
+body.in-game .stap-vooruit .ic{transform:scaleX(-1)}
+/* Vooruit bestaat alleen ná een stap terug. Hij blijft staan maar gedempt: een
+   knop die verschijnt en verdwijnt laat de balk springen. */
+body.in-game .kop-knop.leeg{opacity:.28}
+body.in-game .kop-knop[disabled]{pointer-events:none}
+body.in-game .kop-knop.stap-terug[disabled]{opacity:.28}
+/* In de instellingen naast elkaar, met het vooruit-pijltje gespiegeld. */
+body.in-game .stap-duo{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+body.in-game .stap-duo .set-row{justify-content:flex-start}
+body.in-game .stap-duo .set-row[disabled]{opacity:.4;pointer-events:none}
 body.in-game .kop-rechts{display:flex;align-items:center;justify-content:flex-end;gap:8px}
 body.in-game .kop-rechts{display:flex;align-items:center;gap:8px}
 body.in-game .kop-knop .vraag-ic{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:20px;line-height:1}
@@ -2215,11 +2236,38 @@ body.desktop.in-game #screen-game{
   align-items:stretch;
 }
 /* Kop over de volle breedte: terug, de zaak, Controleer, klok en knoppen. */
-body.desktop.in-game .game-head{grid-column:1/4;grid-row:1;grid-template-columns:40px minmax(0,1fr) auto auto;padding:14px 22px 10px;gap:14px;opacity:1;color:var(--inkt)}
+/* De kop neemt de kolommen van het scherm eronder over, zodat zijn middelste
+   cel samenvalt met de kolom waar het bord in staat: dan hangt Controleer echt
+   boven het midden van het bord. Gecentreerd in de hele balk voelde scheef,
+   want links staat een titel en rechts een rij knoppen die niet even breed
+   zijn.
+
+   Met subgrid, niet met een kopie van de kolommen: die kolommen wisselen
+   verderop nog van maat (zie dossier-breed), en een kopie loopt daar
+   onherroepelijk uit de pas. De zijmarge verhuist naar de cellen zelf, want
+   marge op het raster zou de kolommen weer verschuiven. */
+body.desktop.in-game .game-head{
+  grid-column:1/4;grid-row:1;
+  grid-template-columns:subgrid;
+  padding:14px 0 10px;gap:0;opacity:1;color:var(--inkt)}
+/* De cel van de titel is nu zo breed als de kolom met de regels, en dat is
+   krap voor "De Troonzaal — ZAAK 7 — GEMIDDELD". Tussen die kolom en de knop
+   Controleer zit ruime lege balk; daar mag de titel in doorlopen. De limiet
+   houdt hem ook op een smal venster ruim van de knop vandaan. */
+body.desktop.in-game .kop-links{padding-left:22px;gap:14px;overflow:visible}
+/* Niet meekrimpen met de cel, maar zijn eigen breedte houden en buiten de cel
+   doorlopen. De limiet is een deel van het venster, zodat de titel ook op een
+   smal scherm ruim voor Controleer stopt; wat er dan niet meer bij past valt
+   weg met een beletselteken. */
+body.desktop.in-game .kop-titel{flex:0 0 auto;max-width:34vw}
+body.desktop.in-game .kop-rechts{justify-content:flex-end;padding-right:22px}
 body.desktop.in-game .kop-titel{display:flex;align-items:baseline;gap:12px;min-width:0;padding-left:4px}
-body.desktop.in-game .kop-titel b{font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--inkt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-body.desktop.in-game .kop-titel span{font:800 11px var(--font-ui);letter-spacing:.2em;text-transform:uppercase;color:var(--goud);white-space:nowrap}
-body.desktop.in-game .kop-midden{justify-content:flex-end}
+/* Wordt het krap, dan wijkt de ondertitel en niet de naam van de zaak: het
+   zaaknummer en de graad staan ook op het introvel, de naam nergens anders in
+   beeld. Vandaar dat de ondertitel vijftig keer zo hard krimpt. */
+body.desktop.in-game .kop-titel b{flex:0 1 auto;font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--inkt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.desktop.in-game .kop-titel span{flex:0 50 auto;min-width:0;overflow:hidden;font:800 11px var(--font-ui);letter-spacing:.2em;text-transform:uppercase;color:var(--goud);white-space:nowrap}
+body.desktop.in-game .kop-midden{justify-content:center}
 body.desktop.in-game .game-head .kop-check{max-width:none}
 body.desktop.in-game .pane{display:flex;animation:none}
 /* Links: de regels, met een eigen schuifbalk. */
@@ -2293,7 +2341,7 @@ body.desktop.in-game .tabbar .view-switch,body.desktop.in-game .voet-links{displ
 /* Op desktop hoort de kop juist compact: daar staat de voet niet vol knoppen. */
 body.desktop.in-game .kop-knop{width:40px;height:40px;min-width:40px}
 body.desktop.in-game #btnCheck{height:38px}
-body.desktop.in-game .kop-midden{display:flex;align-items:center;justify-content:flex-end;gap:10px}
+body.desktop.in-game .kop-midden{display:flex;align-items:center;justify-content:center;gap:10px}
 body.desktop.in-game .mode-bar{display:none}
 body.desktop.in-game .mode-switch{flex:0 0 auto;width:auto;padding:3px}
 body.desktop.in-game .mode-switch .ms-thumb{top:3px;bottom:3px}
@@ -2757,6 +2805,18 @@ body.in-game .radial-obj{
 /* Zonder deze regel wint de display hierboven van [hidden] en blijft het
    label van het vorige object staan bij een tegel zonder object. */
 body.in-game .radial-obj[hidden]{display:none}
+/* Onder de kring: in welke stand hij open staat. Kleiner en rustiger dan het
+   objectlabel erboven -- het is een geheugensteun, geen mededeling. */
+body.in-game .radial-wat{
+  position:absolute;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:7px;
+  z-index:2;pointer-events:none;padding:6px 13px 6px 10px;border-radius:999px;
+  background:var(--kaart);color:var(--inkt-2);border:1px solid var(--lijn);box-shadow:var(--sch1);
+  white-space:nowrap;animation:objIn .22s cubic-bezier(.2,.8,.3,1) both}
+body.in-game .radial-wat[hidden]{display:none}
+body.in-game .radial-wat .ic{width:15px;height:15px;display:flex;color:var(--goud)}
+body.in-game .radial-wat.noteer .ic{color:var(--inkt-2)}
+body.in-game .radial-wat .ic svg{width:100%;height:100%}
+body.in-game .radial-wat b{font:800 10.5px var(--font-ui);letter-spacing:.14em;text-transform:uppercase}
 body.in-game .radial-obj .ic{width:26px;height:26px;color:var(--inkt-2)}
 body.in-game .radial-obj .ic svg{width:100%;height:100%}
 body.in-game .radial-obj .wat{display:flex;flex-direction:column;line-height:1.12;min-width:0}
@@ -3407,12 +3467,20 @@ body.in-game .clue-card.done::before{background:var(--goud)}
          instellingen rechts. In de stijl van het hoofdmenu; het thema van
          het level kleurt alleen het bord. -->
     <div class="game-head">
-      <button class="kop-knop" id="btnGameBack" aria-label="Terug naar het menu" title="Terug naar het menu"><span class="ic" data-icon="back"></span></button>
-      <div class="kop-titel" id="kopTitel"></div>
+      <div class="kop-links">
+        <button class="kop-knop" id="btnGameBack" aria-label="Terug naar het menu" title="Terug naar het menu"><span class="ic" data-icon="back"></span></button>
+        <div class="kop-titel" id="kopTitel"></div>
+      </div>
       <div class="kop-midden">
         <button class="kop-check" id="btnCheck" title="Controleer je oplossing"><span class="ic" data-icon="pawn"></span><span class="lbl">Controleer</span><span class="teller" id="kopStand"></span></button>
       </div>
       <div class="kop-rechts">
+        <!-- Terug en vooruit, alleen op een groot scherm: op een telefoon is
+             hier geen ruimte en staan ze in de instellingen. -->
+        <div class="stap-knoppen">
+          <button class="kop-knop stap-terug" type="button" title="Stap terug" aria-label="Stap terug"><span class="ic" data-icon="undo"></span></button>
+          <button class="kop-knop stap-vooruit leeg" type="button" title="Stap vooruit" aria-label="Stap vooruit"><span class="ic" data-icon="undo"></span></button>
+        </div>
         <div class="timer" id="timer"><span class="ic" data-icon="clock"></span><span id="timerVal">0:00</span></div>
         <button class="kop-knop thema-knop" id="btnThema" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
         <button class="kop-knop icon-btn" id="btnSettings" data-sheet="modalSettings" title="Instellingen" aria-label="Instellingen"><span class="ic" data-icon="settings"></span></button>
@@ -3489,6 +3557,10 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="bd-kader" id="radialKader"></div>
   <div class="ring" id="radialRing"></div>
   <div class="radial-obj" id="radialObj" hidden></div>
+  <!-- Onder de kring: in welke stand hij open staat. De kring zelf ziet er in
+       beide standen bijna hetzelfde uit, en na een rechtermuisklik of op een
+       bezet vakje is de stand niet die van de schakelaar onderin. -->
+  <div class="radial-wat" id="radialWat" hidden></div>
 </div>
 
 <!-- Modals -->
@@ -3530,6 +3602,15 @@ body.in-game .clue-card.done::before{background:var(--goud)}
     <div class="sheet-kop"><h3>Instellingen</h3><button class="sheet-sluit" type="button" data-close aria-label="Sluiten"><span class="ic" data-icon="cross"></span></button></div>
     <!-- Weergave bovenaan: dat is waar je het vaakst voor terugkomt. Daarna
          wat je van het spel gedaan wilt krijgen, en onderaan de uitleg. -->
+    <div class="set-kop">Stappen</div>
+    <div class="set-duo stap-duo">
+      <button class="set-row stap-terug" type="button">
+        <span class="ic" data-icon="undo"></span><span class="set-tekst"><b>Stap terug</b></span>
+      </button>
+      <button class="set-row stap-vooruit" type="button">
+        <span class="ic" data-icon="undo"></span><span class="set-tekst"><b>Stap vooruit</b></span>
+      </button>
+    </div>
     <div class="set-kop weergave-kop">Weergave</div>
     <div class="thema-keuze" id="themaKeuze" role="group" aria-label="Dag of nacht">
       <button type="button" data-thema="licht"><span class="ic" data-icon="sun"></span>Dag</button>
@@ -4643,6 +4724,72 @@ let startTime=0, elapsed=0, timerId=null;
 function noteFor(tileId){
   if(!notes.has(tileId)) notes.set(tileId,{marks:new Map(),cross:false});
   return notes.get(tileId);
+}
+
+/* ── Stap terug en vooruit ──────────────────────────────────
+   Alles wat je op het bord doet zit in twee dingen: waar de pionnen staan en
+   wat er aan notities op de vakjes ligt. Een stap is dus gewoon een afdruk van
+   die twee. Dat is grover dan per handeling bijhouden wát er veranderde, maar
+   het kan nooit uit de pas lopen met de werkelijkheid -- en dat is bij een
+   ongedaan-maken precies wat telt.
+
+   Tien stappen is genoeg om een verkeerde gedachte terug te draaien zonder dat
+   je je hele redenering kwijtraakt. Meer bewaren zou van "even terug" een
+   tweede manier van spelen maken. */
+const STAPPEN_MAX=10;
+let historie=[], toekomst=[];
+function maakAfdruk(){
+  return JSON.stringify({
+    p:Array.from(placed),
+    n:Array.from(notes).map(([id,n])=>[id,{c:!!n.cross,m:Array.from(n.marks||[])}])
+  });
+}
+function zetAfdruk(s){
+  const d=JSON.parse(s);
+  placed=new Map(d.p);
+  notes=new Map(d.n.map(([id,n])=>[id,{cross:!!n.c,marks:new Map(n.m)}]));
+}
+/* Vóór elke verandering aanroepen, niet erna: wat je bewaart is de stand
+   waar je naartoe terug wilt kunnen. */
+function onthoudStap(){
+  historie.push(maakAfdruk());
+  if(historie.length>STAPPEN_MAX) historie.shift();
+  toekomst.length=0;
+  tekenStapKnoppen();
+}
+function stapTerug(){
+  if(!historie.length) return;
+  toekomst.push(maakAfdruk());
+  zetAfdruk(historie.pop());
+  naStap();
+}
+function stapVooruit(){
+  if(!toekomst.length) return;
+  historie.push(maakAfdruk());
+  zetAfdruk(toekomst.pop());
+  naStap();
+}
+function naStap(){
+  /* De aankomst-animatie hoort bij het zetten van een pion, niet bij het
+     terugdraaien ervan. */
+  justPlaced=null;
+  kruisEerder=new Set(notes.keys());
+  haptic(12);
+  paintBoard();
+  tekenStapKnoppen();
+}
+function wisGeschiedenis(){
+  historie.length=0; toekomst.length=0;
+  tekenStapKnoppen();
+}
+function tekenStapKnoppen(){
+  $$(".stap-terug").forEach(b=>{ b.disabled=!historie.length; });
+  $$(".stap-vooruit").forEach(b=>{
+    b.disabled=!toekomst.length;
+    /* Vooruit bestaat alleen ná een stap terug. Hij blijft wel staan, maar
+       gedempt: een knop die verschijnt en verdwijnt laat de balk springen. */
+    b.classList.toggle("leeg",!toekomst.length);
+  });
 }
 function personOnTile(tileId){
   for(const [pid,tid] of placed) if(tid===tileId) return pid;
@@ -6424,10 +6571,19 @@ function attachTileInput(el,tileId){
 /* De stand waarin de kring open staat: meestal de gewone stand, na een
    rechtermuisklik tijdelijk de andere. */
 let radialOverride=null;
-function radialMode(){ return radialOverride||mode; }
+let radialTegel=null;
+function radialMode(){
+  /* Op een vakje waar al iemand staat kun je niets noteren -- een pion dekt de
+     letters af -- dus daar heeft de notitiestand niets te bieden. Wie op een
+     bezette tegel klikt wil die pion weghalen of vervangen, en krijgt dus
+     altijd de plaatsstand. */
+  if(radialTegel && personOnTile(radialTegel)) return "place";
+  return radialOverride||mode;
+}
 
 function toggleCross(tileId){
   if(!M.tiles.get(tileId)) return;
+  onthoudStap();
   const n=noteFor(tileId);
   n.cross=!n.cross;
   haptic(14);
@@ -6492,6 +6648,7 @@ function zoomToTile(tileEl){
 
 function openTileMenu(tileId,el){
   if(!M.tiles.get(tileId)) return;
+  radialTegel=tileId;
   clearTimeout(radialOpenTimer);
   $$("#grid .tile").forEach(x=>x.classList.remove("selected"));
   el.classList.add("selected");
@@ -6513,11 +6670,12 @@ let radialStilTimer=null;
 function closeRadial(){
   clearTimeout(radialOpenTimer);
   clearTimeout(radialStilTimer);
-  radialOverride=null;
+  radialOverride=null; radialTegel=null;
   $("#radial").classList.remove("open","stil");
   document.body.classList.remove("radiaal-open");
   /* Het objectlabel hoort bij dít vakje; laat het niet staan voor het volgende. */
   { const o=$("#radialObj"); if(o) o.hidden=true; }
+  { const w=$("#radialWat"); if(w) w.hidden=true; }
   $("#radialRing").classList.remove("crowded");
   $("#radialRing").innerHTML="";
   $$("#grid .tile").forEach(x=>x.classList.remove("selected"));
@@ -6621,6 +6779,18 @@ function openRadial(center,tileId){
     } else objEl.hidden=true;
   }
 
+  /* Het bordje onder de kring, net onder de opening waar de hulpknop staat. */
+  const watEl=$("#radialWat");
+  if(watEl){
+    const plaatsen=radialMode()==="place";
+    watEl.hidden=false;
+    watEl.classList.toggle("noteer",!plaatsen);
+    watEl.innerHTML='<span class="ic">'+icon(plaatsen?"pawn":"note",{sw:2})+'</span>'
+      +'<b>'+(plaatsen?"Plaatsen":"Notitie")+'</b>';
+    watEl.style.left=center.x+"px";
+    watEl.style.top=(center.y+radius+btnSize/2+34)+"px";
+  }
+
   persons.forEach((p,i)=>{
     const ang=(N===1)? -Math.PI/2 : (-Math.PI/2 - SPAN/2 + (i/(N-1))*SPAN);
     ring.appendChild(personButton(p,tileId,t,Math.cos(ang)*radius,Math.sin(ang)*radius));
@@ -6634,7 +6804,7 @@ function openRadial(center,tileId){
     util.className="rbtn util remove";
     util.innerHTML=icon("trash",{sw:2.1});
     if(!occ) util.setAttribute("disabled","");
-    util.addEventListener("click",()=>{ if(!occ) return; placed.delete(occ); if(easyMode||autoKruis) kruisjesWeg(tileId); haptic(22); paintBoard(); closeRadial(); });
+    util.addEventListener("click",()=>{ if(!occ) return; verwijderVanVakje(tileId); paintBoard(); closeRadial(); });
   } else {
     util.className="rbtn util";
     util.innerHTML=icon("chevron",{sw:2.3});
@@ -6895,6 +7065,7 @@ function personButton(p,tileId,t,x,y){
     const marked=!!(notes.get(tileId)||{marks:new Map()}).marks.get(p.id);
     if(marked||placed.get(p.id)) b.classList.add("taken");
     b.addEventListener("click",()=>{
+      onthoudStap();
       const n=noteFor(tileId);
       if(n.marks.get(p.id)) n.marks.delete(p.id);
       else { n.marks.set(p.id,1); n.cross=false; }
@@ -6902,10 +7073,20 @@ function personButton(p,tileId,t,x,y){
       paintBoard(); closeRadial();
     });
   } else {
+    /* Staat hij hier al, dan is nog eens aantikken de kortste weg om hem weg
+       te halen -- korter dan de prullenbak zoeken, en die valt op een klein
+       scherm weleens buiten beeld. */
+    const staatHier = placed.get(p.id)===tileId;
     if(placed.get(p.id)) b.classList.add("taken");
+    if(staatHier){ b.classList.add("hier"); b.title=p.name+" staat hier — nog eens aantikken haalt hem weg"; }
     const hard=hardBlock(t);
-    if(hard){ b.setAttribute("disabled",""); b.title=hard; }
+    if(hard && !staatHier){ b.setAttribute("disabled",""); b.title=hard; }
     b.addEventListener("click",()=>{
+      if(staatHier){
+        verwijderVanVakje(tileId);
+        paintBoard(); closeRadial();
+        return;
+      }
       if(hard) return;
       if(easyMode && M.solution.get(p.id)!==tileId){
         haptic([40,60,40]);
@@ -6951,7 +7132,18 @@ function softIssue(p,tileId){
   }
   return null;
 }
+/* Iemand van een vakje halen. Staat op één plek, want het gebeurt vanuit de
+   prullenbak in de kring én door de pion nog eens aan te tikken. */
+function verwijderVanVakje(tileId){
+  const wie=personOnTile(tileId); if(!wie) return false;
+  onthoudStap();
+  placed.delete(wie);
+  if(easyMode||autoKruis) kruisjesWeg(tileId);
+  haptic(22);
+  return true;
+}
 function placePerson(personId,tileId){
+  onthoudStap();
   const cur=personOnTile(tileId);
   if(cur && cur!==personId) placed.delete(cur);
   const oud=placed.get(personId);
@@ -7770,7 +7962,7 @@ function geefHint(){
   },260);
 }
 function restart(){
-  notes=new Map(); placed=new Map();
+  notes=new Map(); placed=new Map(); wisGeschiedenis();
   accused=null; accusedResult=null; revealed=false;
   elapsed=0; $("#timerVal").textContent="0:00";
   startTimer(); setMode("note"); setTab("board");
@@ -7862,7 +8054,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.109";
+const PLAYER_APP_VERSION="0.9.110";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8155,7 +8347,7 @@ function showLevelDetail(levelIndex){
   applySkin(raw.puzzle && raw.puzzle.theme);
   pendingLevel=raw; currentRaw=raw;
   M=buildModel(raw);
-  notes=new Map(); placed=new Map();
+  notes=new Map(); placed=new Map(); wisGeschiedenis();
   accused=null; accusedResult=null; revealed=false; elapsed=0;
   stopTimer(); $("#timerVal").textContent="0:00";
   renderBoard();
@@ -8407,7 +8599,7 @@ function startLevel(raw){
   }
   currentRaw=raw;
   M=buildModel(raw);
-  notes=new Map(); placed=new Map();
+  notes=new Map(); placed=new Map(); wisGeschiedenis();
   accused=null; accusedResult=null; revealed=false; elapsed=0;
   $("#timerVal").textContent="0:00";
   renderBoard();
@@ -8664,6 +8856,9 @@ $("#btnHintJa").addEventListener("click",()=>{ closeModal($("#modalHint")); geef
   zet(start);
   if(knop) knop.addEventListener("click",()=>zet(!document.body.classList.contains("klein-object")));
 }
+$$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
+$$(".stap-vooruit").forEach(b=>b.addEventListener("click",stapVooruit));
+tekenStapKnoppen();
 $("#rowEasy").addEventListener("click",()=>setEasyMode(!easyMode));
 $("#rowAutoKruis").addEventListener("click",()=>setAutoKruis(!autoKruis));
 { /* Dezelfde uitleg, nu ook vanuit de instellingen. */
@@ -8984,6 +9179,7 @@ $("#btnWisKruisjes").addEventListener("click",()=>{
   let n=0; notes.forEach(x=>{ if(x.cross) n++; });
   if(!n){ toast("Er staan geen kruisjes."); return; }
   bevestig("Kruisjes wissen?", n===1?"Het kruisje op het bord gaat weg.":"Alle "+n+" kruisjes op het bord gaan weg.",()=>{
+    onthoudStap();
     notes.forEach(x=>{ x.cross=false; });
     paintBoard(); haptic(12); toast(n===1?"1 kruisje gewist.":n+" kruisjes gewist.");
   });
@@ -8992,6 +9188,7 @@ $("#btnWisLetters").addEventListener("click",()=>{
   let n=0; notes.forEach(x=>{ if(x.marks&&x.marks.size) n+=x.marks.size; });
   if(!n){ toast("Er staan geen letters."); return; }
   bevestig("Letters wissen?", n===1?"De letter die je genoteerd hebt gaat weg.":"Alle "+n+" genoteerde letters gaan weg.",()=>{
+    onthoudStap();
     notes.forEach(x=>{ if(x.marks) x.marks.clear(); });
     paintBoard(); haptic(12); toast(n===1?"1 letter gewist.":n+" letters gewist.");
   });
