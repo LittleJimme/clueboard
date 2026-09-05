@@ -1337,12 +1337,16 @@ document.addEventListener("click",e=>{
     $("#filterKnop").setAttribute("aria-expanded","false");
   }
 });
+function proefAan(){ return document.body.classList.contains("proefstand"); }
 function tekenLijst(){
   const lijst=$("#levelList");
   /* Waar je middenin zit hoort altijd binnen handbereik: die zaak overleeft
      elk filter en staat bovenaan, ook als je op niveau of op titel kijkt. */
   const bezigNu=e=>!voltooidVan(e.raw) && !!bezigVan(e.raw);
-  const zichtbaar=alleLevels.filter(e=>{
+  /* Testzaken zijn er om mee te proberen, niet om te spelen: buiten de
+     proefstand bestaan ze voor de speler niet. */
+  const inLijst=alleLevels.filter(e=>!(e.raw && e.raw.test===true) || proefAan());
+  const zichtbaar=inLijst.filter(e=>{
     if(bezigNu(e)) return true;
     if(alleenOpen && voltooidVan(e.raw)) return false;
     if(alleenBezig) return false;
@@ -1372,7 +1376,7 @@ function tekenLijst(){
   } else {
     zichtbaar.forEach(e=>lijst.appendChild(maakLevelRij(e)));
   }
-  const n=zichtbaar.length, tot=alleLevels.length;
+  const n=zichtbaar.length, tot=inLijst.length;
   /* Zonder filter draagt deze regel de belofte van het spel; zodra je
      filtert wordt hij functioneel en telt hij wat je overhoudt. */
   /* Geen slogan meer boven de lijst; alleen als je filtert telt hij mee. */
@@ -1533,9 +1537,11 @@ function initZelf(){
   const SLEUTEL="clueboard:experimenteel";
   const NODIG=5, PAUZE=800;
   const merk=$("#merkTik"); if(!merk) return;
-  const zet=aan=>{
+  const zet=(aan,teken)=>{
     document.body.classList.toggle("proefstand",aan);
     try{ localStorage.setItem(SLEUTEL,aan?"1":"0"); }catch(e){}
+    /* De testzaken komen of gaan; de lijst moet dat meteen laten zien. */
+    if(teken && alleLevels.length){ tekenFilter(); tekenLijst(); }
   };
   let aan=false; try{ aan=localStorage.getItem(SLEUTEL)==="1"; }catch(e){}
   zet(aan);
@@ -1544,7 +1550,7 @@ function initZelf(){
     const nu=Date.now();
     tikken = (nu-laatst>PAUZE) ? 1 : tikken+1;
     laatst = nu;
-    if(tikken>=NODIG){ tikken=0; aan=!aan; zet(aan); }
+    if(tikken>=NODIG){ tikken=0; aan=!aan; zet(aan,true); }
   });
 })();
 

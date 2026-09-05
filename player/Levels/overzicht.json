@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-05T15:21:33",
+  "gemaakt": "2026-09-05T16:23:47",
   "levels": [
     {
       "file": "1v4 Herberg de Doortocht.json",
@@ -185,6 +185,153 @@
       "levelId": "lvl-mtoerjfvn40r6",
       "levelNumber": 8,
       "levelVersion": 1,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Proef 3x3.json",
+      "content": {
+        "title": "Proefbord 3×3"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 3,
+          "rows": 3
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-proef-3x3",
+      "levelVersion": 1,
+      "test": true,
+      "difficulty": {
+        "graad": 1,
+        "uitleg": "Elke stap volgt rechtstreeks uit één aanwijzing."
+      }
+    },
+    {
+      "file": "Proef 3x5.json",
+      "content": {
+        "title": "Proefbord 3×5"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 3,
+          "rows": 5
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-proef-3x5",
+      "levelVersion": 1,
+      "test": true,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Proef 5x5.json",
+      "content": {
+        "title": "Proefbord 5×5"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 5,
+          "rows": 5
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-proef-5x5",
+      "levelVersion": 1,
+      "test": true,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Proef 5x8.json",
+      "content": {
+        "title": "Proefbord 5×8"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 5,
+          "rows": 8
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-proef-5x8",
+      "levelVersion": 1,
+      "test": true,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Proef 6x9.json",
+      "content": {
+        "title": "Proefbord 6×9"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 6,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-proef-6x9",
+      "levelVersion": 1,
+      "test": true,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Proef 7x7.json",
+      "content": {
+        "title": "Proefbord 7×7"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 7,
+          "rows": 7
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-proef-7x7",
+      "levelVersion": 1,
+      "test": true,
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Proef 9x9.json",
+      "content": {
+        "title": "Proefbord 9×9"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-proef-9x9",
+      "levelVersion": 1,
+      "test": true,
       "difficulty": {
         "graad": 2,
         "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
