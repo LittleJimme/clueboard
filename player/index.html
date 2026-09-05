@@ -1213,7 +1213,10 @@ body.mat-screen .tile .objmat .mat-tex{mix-blend-mode:screen}
   pointer-events:none;z-index:2}
 /* Geen CSS-schaduw meer: de tekeningen dragen hun eigen slagschaduw mee.
    Twee schaduwen over elkaar maakt het beeld vuil. */
-.tile .objart img{width:100%;height:100%;display:block;object-fit:contain}
+/* Ook in de laag boven de muren: daar gold alleen de regel voor het kader,
+   niet die voor de tekening erin, dus tekende de browser hem op zijn eigen
+   pixelmaat en stond de watermolen los en veel te groot naast het bord. */
+.tile .objart img,#hoogArt .objart img{width:100%;height:100%;display:block;object-fit:contain}
 /* Een object over meer dan één tegel hoort ook echt over die tegels te
    liggen. De tekeningen die er nu zijn, zijn nauwelijks breder dan hoog: een
    tafel van twee tegels meet 174 bij 152, terwijl het vak 2 bij 1 tegel is.
@@ -1222,7 +1225,7 @@ body.mat-screen .tile .objmat .mat-tex{mix-blend-mode:screen}
    deze vakken rekken we de tekening daarom op tot het hele vak. Komt er later
    een tekening in de juiste verhouding, dan verandert er niets aan het beeld:
    uitrekken naar een vak dat al dezelfde verhouding heeft doet niets. */
-.tile .objart.vullend img{object-fit:fill}
+.tile .objart.vullend img,#hoogArt .objart.vullend img{object-fit:fill}
 /* Een boom is hoger dan zijn vakje. Hem kleiner schalen tot hij past maakt
    hem een plantje; daarom houdt hij de breedte van het vakje en steekt hij met
    zijn kruin over de tegel erboven heen. Zijn voet blijft op zijn eigen tegel
@@ -8161,7 +8164,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.115";
+const PLAYER_APP_VERSION="0.9.116";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
