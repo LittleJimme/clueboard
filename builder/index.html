@@ -1442,7 +1442,21 @@ textarea.inp{min-height:58px;resize:vertical}
 .btn-add:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);border-style:solid}
 
 /* ── Doorzoekbaar keuzemenu ────────────────────────────── */
-.search-menu{width:300px;max-height:360px;display:flex;flex-direction:column;overflow:hidden}
+.search-menu{width:320px;max-height:420px;display:flex;flex-direction:column;overflow:hidden}
+/* De groepen als kiesbare kopjes boven de lijst: één klik en je ziet alleen
+   die groep, in plaats van door één lange lijst te scrollen. */
+.sm-chips{display:flex;flex-wrap:wrap;gap:4px;padding:6px 9px;border-bottom:1.5px solid var(--edge);background:var(--tint);flex:0 0 auto}
+.sm-chip{
+  border:1.5px solid var(--edge);border-radius:999px;background:var(--panel);cursor:pointer;
+  padding:3px 9px;font:700 10.5px var(--ui);color:var(--muted);white-space:nowrap;
+}
+.sm-chip b{font:800 10px var(--mono);color:var(--faint);margin-left:3px}
+.sm-chip:hover{border-color:var(--accent);color:var(--accent)}
+.sm-chip.aan{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+.sm-chip.aan b{color:var(--panel);opacity:.7}
+/* Het kopje van een groep blijft boven in beeld zolang je in die groep scrolt. */
+.sm-body .sm-group{position:sticky;top:0;background:var(--panel);z-index:1;padding-top:9px;
+  border-bottom:1px solid var(--line)}
 .sm-search{padding:9px;border-bottom:1.5px solid var(--edge);background:var(--tint);flex:0 0 auto}
 .sm-search input{
   width:100%;padding:7px 10px;border:1.5px solid var(--edge);border-radius:9px;
@@ -4154,6 +4168,22 @@ const ALLEEN_ONDERWERP = ['pos','personMayEnter','personRoleOf','personGenderOf'
 
 const AFHANKELIJKHEID = {};
 const BRON_LEEST = {};
+/* Regels waarvan de broncode wél iedereen langsloopt, maar die uiteenvallen
+   in een eis aan het onderwerp en losse eisen aan de anderen. "Was de enige
+   die op een paard zat" is "zat op een paard" plus "niemand anders zat op een
+   paard": met alleen het onderwerp op het bord is de test precies dat eerste
+   stuk, en elke latere plaatsing kan hem alleen nog van waar naar onwaar
+   brengen. De ladder mag daar dus al op sport 1 mee snoeien -- zoals een
+   mens dat ook doet -- en de zwaarte telt hem als licht.
+
+   De oplossingenteller mag dat NIET: die kijkt een regel maar één keer na,
+   zodra de genoemde personen staan, en neemt aan dat het oordeel dan
+   definitief is. Voor deze regels is het dat pas bij een vol bord. Vandaar
+   een aparte lijst naast atomAfhankelijkheid, die voor de teller gewoon
+   "iedereen" blijft zeggen. Wie hier iets bijzet moet het kunnen bewijzen:
+   "het dichtst bij" of "naast de meeste" horen er niet in, want daar kan een
+   latere plaatsing het oordeel ook van onwaar naar waar draaien. */
+const ONTLEEDBAAR = { 'only-one-on-kind':'zelf' };
 
 /* Leest deze broncode iets over waar andere mensen staan? Kijkt één niveau
    diep in de hulpjes die worden aangeroepen, zodat een atoom dat emptyRooms()
@@ -4185,12 +4215,18 @@ function atomAfhankelijkheid(id){
   let bron = String(def.test || '');
   if (typeof ATOM_CANON !== 'undefined' && ATOM_CANON[id]) bron += String(ATOM_CANON[id]);
   const slots = Object.keys(def.slots || {});
-  const rolSlot = ['role','roleP','rolePl','gender','persons'].some(s => slots.indexOf(s) !== -1);
-  if (!rolSlot && !bronLeestAnderen(bron, 2)) return (AFHANKELIJKHEID[id] = 'zelf');
-  /* Gaat het over één met naam genoemde persoon, dan is die ene genoeg. */
+  /* Vroeger gold een rol- of geslachtsslot meteen als "over anderen". Maar
+     "was in een ruimte die alleen voor ridders was" en "was ridder" kijken
+     alleen naar het onderwerp zelf; de bron zegt dat ook, dus die beslist.
+     Regels die wél anderen met die rol langslopen (peopleWithRole, een
+     who-blok met standing of gender) vallen hieronder vanzelf door. */
+  if (!bronLeestAnderen(bron, 2)) return (AFHANKELIJKHEID[id] = 'zelf');
+  /* Gaat het over één met naam genoemde persoon, dan is die ene genoeg. Dat
+     die persoon ergens op moet staan ("had Vastrad op een stoel boven zich")
+     maakt hem niet afhankelijk van derden: het object staat vast. */
   const whos = bron.match(/who:\s*\{[^}]*\}?/g) || [];
-  const alleenNaam = !rolSlot && slots.indexOf('person') !== -1 && whos.length > 0 &&
-    whos.every(w => /personId/.test(w) && !/standing|gender|inRoom|alone|on\s*:/.test(w));
+  const alleenNaam = slots.indexOf('person') !== -1 && whos.length > 0 &&
+    whos.every(w => /personId/.test(w) && !/standing|gender|inRoom|alone/.test(w));
   return (AFHANKELIJKHEID[id] = alleenNaam ? 'paar' : 'iedereen');
 }
 
@@ -4462,7 +4498,11 @@ function nieuweStaat(){
   personen.forEach(p => {
     kand[p] = new Set(vrij.filter(t => personMayEnter(p, t.room)).map(t => z(t.x, t.y)));
   });
+  /* vastRonde en vastSport: in welke ronde iemand vast kwam te staan, en het
+     zwaarste gereedschap dat daarvoor nodig was. Daar leest de zwaarte van
+     een regel over die persoon aan af hoe diep hij in de ketting zit. */
   return { personen, kand, vast:{}, stappen:0, aannames:0, verworpen:0, zwaarste:0,
+           vastRonde:{}, vastSport:{},
            regels:(S.content.clues || []).map(clueBenodigden) };
 }
 
@@ -4505,8 +4545,11 @@ function staatKlopt(st){
 /* ── Sport 1: de eigen aanwijzingen van één persoon ──── */
 function alleenEigen(clue){
   if (clue.scope !== 'person' || !clue.personId) return false;
+  /* Een ontleedbare regel telt alleen mee zolang hij niet ontkend is: "niet
+     de enige op een stoel" is met alleen het onderwerp op het bord nog
+     onbeslist, en zou anders zijn stoelvakjes ten onrechte kwijtraken. */
   return (clue.terms || []).every(t => (t.any || []).every(a =>
-    !a.over && atomAfhankelijkheid(a.atom) === 'zelf'));
+    !a.over && (atomAfhankelijkheid(a.atom) === 'zelf' || (!t.not && ONTLEEDBAAR[a.atom] === 'zelf'))));
 }
 
 function sportEigen(st){
@@ -4742,6 +4785,9 @@ function propageer(st, tot){
       if (SPORTEN[n](st)){
         iets = true;
         if (n > st.zwaarste) st.zwaarste = n;
+        st.personen.forEach(p => {
+          if (st.vast[p] && st.vastRonde[p] === undefined){ st.vastRonde[p] = ronde + 1; st.vastSport[p] = st.zwaarste; }
+        });
         break;                       /* altijd zo licht mogelijk verder */
       }
     }
@@ -5480,15 +5526,31 @@ function syncVictimClue(){
 function openSearchMenu(anchor, groups, onPick, placeholder){
   const dd = openFixedMenu(anchor, (box, close) => {
     box.classList.add('search-menu');
+    /* Met drie of meer groepen krijgt de lijst kiesbare kopjes; met minder is
+       de lijst zelf kort genoeg. */
+    const metChips = groups.filter(g => g.label).length >= 3;
     box.innerHTML = '<div class="sm-search"><input type="search" placeholder="'+e(placeholder||'Zoeken...')+'" spellcheck="false"></div>'+
+                    (metChips ? '<div class="sm-chips"><button class="sm-chip aan" data-groep="">Alle</button>'+
+                      groups.filter(g => g.label).map(g =>
+                        '<button class="sm-chip" data-groep="'+e(g.label)+'">'+e(g.label)+'<b>'+g.items.length+'</b></button>').join('')+
+                      '</div>' : '')+
                     '<div class="sm-body"></div>';
     const input = box.querySelector('input');
     const body  = box.querySelector('.sm-body');
+    let groep = '';
+    box.querySelectorAll('.sm-chip').forEach(ch => ch.onclick = ev => {
+      ev.stopPropagation();
+      groep = ch.dataset.groep;
+      box.querySelectorAll('.sm-chip').forEach(c => c.classList.toggle('aan', c === ch));
+      paint(input.value);
+      body.scrollTop = 0;
+    });
 
     const paint = q => {
       q = (q||'').trim().toLowerCase();
       let html = '', hits = 0;
       groups.forEach(g => {
+        if (groep && g.label !== groep) return;
         const items = [];
         g.items.forEach(it => {
           if (!q || it.l.toLowerCase().indexOf(q) !== -1){ items.push(it); return; }
@@ -5509,7 +5571,7 @@ function openSearchMenu(anchor, groups, onPick, placeholder){
           html += '<div class="sm-item'+(it.on?' on':'')+'" data-v="'+e(String(it.v))+'">'+
                   (it.ok === undefined ? '' : '<span class="sm-ok">'+(it.ok?uiIcon('check'):'')+'</span>')+
                   '<span>'+(it.lh !== undefined ? it.lh : e(it.l))+'</span>'+
-                  (it.zw === undefined ? '' : zwaarteHtml(it.zw))+'</div>';
+                  (it.zw === undefined ? '' : zwaarteHtml(it.zw, it.zwr))+'</div>';
         });
       });
       body.innerHTML = hits ? html : '<div class="sm-empty">Niets gevonden.</div>';
@@ -5789,11 +5851,28 @@ function miniBord(personId){
 
    Drie standen: 1 licht, 2 gemiddeld, 3 zwaar. Fijner is de meting niet. */
 const ZWAARTE_WOORD = { 1:'licht', 2:'gemiddeld', 3:'zwaar' };
-const ZWAARTE_UITLEG = {
-  1:'Streept meteen vakjes weg, alleen uit deze regel.',
-  2:'Werkt pas samen met een andere regel of persoon.',
-  3:'Pas bruikbaar door aannemen en verwerpen.'
-};
+
+/* ── De ketting ──────────────────────────────────────
+   Een regel over een ander ("precies één rij onder Dierik") is zo licht als
+   het werk om Dierik te vinden: staat hij na zijn eigen regels al vast, dan
+   streept deze regel meteen weg; valt hij pas na aannemen, dan is dit ook pas
+   dan bruikbaar. Daarvoor draait dezelfde ladder als voor het levelniveau
+   één keer zonder aannemen, en onthoudt wie wanneer vast kwam te staan.
+   Onthouden zolang de regels en het bord niet veranderen. */
+let KETTING_CACHE = { sleutel:null, st:null };
+function kettingStaat(){
+  const sleutel = JSON.stringify([S.people, S.content && S.content.clues, S.victim, S.culprit]);
+  if (KETTING_CACHE.sleutel === sleutel) return KETTING_CACHE.st;
+  let st = null;
+  try { st = nieuweStaat(); propageer(st, 6); } catch (err){ st = { vast:{}, vastRonde:{}, vastSport:{} }; }
+  KETTING_CACHE = { sleutel, st };
+  return st;
+}
+/* De ander die een regel bij naam noemt, als die op het bord staat. */
+function regelPartner(args, personId){
+  return Object.keys(args || {}).map(k => args[k])
+    .find(v => typeof v === 'string' && S.people[v] && v !== personId) || null;
+}
 /* Bordregels hebben geen persoon om vakjes voor te tellen; daar geldt het
    soort regel. Wie iets moet tellen (lege rijen, precies twee personen op
    een stoel) rekent zwaarder dan wie iets moet nakijken (geen lege ruimte). */
@@ -5819,22 +5898,40 @@ function regelSnoeiMeet(id, args, personId){
                                         () => atomTrue(id, args, personId))).length;
   return over / kand.length;
 }
-function regelZwaarte(id, args, personId){
+/* Zwaarte plus de reden, in één zin, voor de zweeftekst. */
+function regelZwaarteInfo(id, args, personId){
   const def = ATOMS[id];
-  if (!def) return 2;
+  if (!def) return { zw:2, reden:'' };
   if (def.scope !== 'person' || !personId){
     /* "Er waren geen lege kolommen" telt niets: dat is nakijken, geen tellen. */
     const nul = args && ['count','persons'].some(k => k in args && +args[k] === 0);
-    return BORD_TELT.has(id) && !nul ? 3 : 2;
+    return BORD_TELT.has(id) && !nul
+      ? { zw:3, reden:'Een bordregel die telt: pas te gebruiken als het bord al bijna vol staat.' }
+      : { zw:2, reden:'Een bordregel om na te kijken zodra een ruimte, rij of kolom in beeld komt.' };
   }
-  const afh = atomAfhankelijkheid(id);
-  if (afh === 'iedereen') return 3;
-  const basis = afh === 'paar' ? 2 : 1;
-  return Math.min(3, basis + (regelSnoei(id, args, personId) > 0.5 ? 1 : 0));
+  const afh = ONTLEEDBAAR[id] || atomAfhankelijkheid(id);
+  if (afh === 'iedereen') return { zw:3, reden:'Gaat over iedereen tegelijk: pas bruikbaar door aannemen en verwerpen.' };
+  let basis = 1, reden = 'Streept meteen vakjes weg, alleen uit deze regel.';
+  if (afh === 'paar'){
+    const q = regelPartner(args, personId);
+    const naam = q ? personName(q) : 'de ander';
+    const st = kettingStaat();
+    if (!q || !st.vast[q])
+      return { zw:3, reden:naam+' staat met de huidige regels niet vast zonder aannemen; deze regel is pas daarna bruikbaar.' };
+    if ((st.vastSport[q] || 0) <= 4){
+      basis = 1; reden = naam+' staat al vast uit '+(personGenderOf(q)==='female'?'haar':'zijn')+' eigen regels; daarna streept dit meteen weg.';
+    } else {
+      basis = 2; reden = naam+' staat pas vast na het combineren van regels; dan pas werkt deze.';
+    }
+  }
+  const ruim = regelSnoei(id, args, personId) > 0.5;
+  if (ruim) reden += ' Laat wel meer dan de helft van de vakjes staan.';
+  return { zw: Math.min(3, basis + (ruim ? 1 : 0)), reden };
 }
-function zwaarteHtml(zw){
+function regelZwaarte(id, args, personId){ return regelZwaarteInfo(id, args, personId).zw; }
+function zwaarteHtml(zw, reden){
   const n = Math.max(1, Math.min(3, zw || 2));
-  return '<span class="zw" title="'+e(ZWAARTE_WOORD[n]+': '+ZWAARTE_UITLEG[n])+'">'+
+  return '<span class="zw" title="'+e(ZWAARTE_WOORD[n]+(reden ? ': '+reden : ''))+'">'+
     [1,2,3].map(i => '<i class="'+(i<=n?'aan':'')+'"></i>').join('')+'</span>';
 }
 
@@ -5856,8 +5953,9 @@ function regelVoorstellen(personId, perKant){
       if (raak) args = raak;
     }
     if (!args) return;
+    const info = regelZwaarteInfo(id, args, personId);
     alles.push({ id, args, cat: ATOMS[id].cat, tekst: atomText(id, args, ctx),
-                 zw: regelZwaarte(id, args, personId) });
+                 zw: info.zw, reden: info.reden });
   });
   alles.sort(() => Math.random() - 0.5);
   const n = perKant || 2;
@@ -5872,8 +5970,11 @@ function regelVoorstellen(personId, perKant){
   };
   const gebruikt = new Set();
   const licht = kies(alles.slice().sort((a,b) => a.zw - b.zw), gebruikt);
-  const zwaar = kies(alles.slice().sort((a,b) => b.zw - a.zw), gebruikt);
-  return { licht, zwaar };
+  /* "Lastig" belooft zware regels; zijn die er niet, dan heten de zwaarste
+     die er wel zijn eerlijk "minder makkelijk". */
+  let zwaar = kies(alles.filter(v => v.zw === 3), gebruikt), kop = 'Lastig';
+  if (!zwaar.length){ zwaar = kies(alles.filter(v => v.zw === 2), gebruikt); kop = 'Minder makkelijk'; }
+  return { licht, zwaar, kop };
 }
 
 function tekenVoorstellen(personId, scrim){
@@ -5887,10 +5988,10 @@ function tekenVoorstellen(personId, scrim){
   const tip = (r, i) =>
     '<button class="regel-tip" data-tip="'+i+'">'+uiIcon('plus')+
     '<span>'+e(personId ? personName(personId) + ' ' + r.tekst : r.tekst)+'</span>'+
-    zwaarteHtml(r.zw)+'</button>';
+    zwaarteHtml(r.zw, r.reden)+'</button>';
   let html = '';
   if (v.licht.length) html += '<div class="opl-sep">Makkelijk</div>' + v.licht.map((r,i) => tip(r, i)).join('');
-  if (v.zwaar.length) html += '<div class="opl-sep">Lastig</div>' + v.zwaar.map((r,i) => tip(r, v.licht.length + i)).join('');
+  if (v.zwaar.length) html += '<div class="opl-sep">'+e(v.kop)+'</div>' + v.zwaar.map((r,i) => tip(r, v.licht.length + i)).join('');
   bak.innerHTML = html;
   bak.querySelectorAll('[data-tip]').forEach(b => b.onclick = () => {
     const r = lijst[+b.dataset.tip];
@@ -6172,9 +6273,10 @@ function openAtomPicker(anchor, scope, personId, onPick){
     /* De zwaarte meet elk vakje van het bord door en wordt daarom pas
        berekend als de regel ook echt in beeld komt: bij het zoeken lopen
        er honderden varianten langs waarvan er maar een wordt getoond. */
-    let zw;
-    Object.defineProperty(it, 'zw', { enumerable:true,
-      get: () => (zw === undefined ? (zw = regelZwaarte(id, args, personId)) : zw) });
+    let info;
+    const haal = () => info || (info = regelZwaarteInfo(id, args, personId));
+    Object.defineProperty(it, 'zw',  { enumerable:true, get: () => haal().zw });
+    Object.defineProperty(it, 'zwr', { enumerable:true, get: () => haal().reden });
     return it;
   };
 
