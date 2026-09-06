@@ -477,6 +477,40 @@ body.in-game #pane-clues.active{animation:paneVanRechts .22s cubic-bezier(.2,.8,
 /* Korter dan voorheen, en met dezelfde curve als het menu: de twee bewegingen
    lopen zo samen op in plaats van na elkaar. */
 #boardStage{transition:transform .42s cubic-bezier(.22,.9,.26,1);transform-origin:50% 50%;will-change:transform}
+/* ── Kijkstand ────────────────────────────────────────
+   De speler als bordtekenaar voor een ander scherm: de builder zet deze
+   pagina in een venstertje en stuurt er een level naartoe. Alleen het bord
+   blijft over -- geen balk, geen kaarten, geen achtergrond -- en er valt niets
+   aan te klikken; de builder legt zijn eigen klikbare vakjes eroverheen.
+   Zo staat de tekenaar op één plek in plaats van twee, en ziet de bouwer
+   letterlijk wat de speler straks ziet. */
+/* Het verloop staat op het canvas (html), niet op body: dat moet hier dus
+   ook weg, anders ligt er een gekleurd vlak achter het bord. */
+html.kijkstand,body.kijkstand{background:none!important}
+body.kijkstand::after{display:none}
+/* Het meetlatje voor de ruimtenamen hangt aan de body en moet blijven staan:
+   op display:none meet het nul en past elke naam ineens op één regel. */
+body.kijkstand > *:not(#app):not(#labelMeter){display:none!important}
+body.kijkstand #app{background:none;display:block;height:auto}
+body.kijkstand .screen:not(#screen-game){display:none!important}
+body.kijkstand #screen-game{display:block;height:auto;padding:0;background:none;animation:none}
+body.kijkstand #screen-game > *:not(#pane-board){display:none!important}
+body.kijkstand #pane-board{display:block;padding:0;height:auto;animation:none}
+/* Het gestreepte vlak achter het bord hoort bij het spelscherm, niet bij het
+   bord: in een venstertje zou dat een gekleurde rand om alles heen leggen.
+   Met kracht, want de skin zet datzelfde vlak verderop in het bestand en die
+   regel weegt even zwaar; wie later staat wint dan. */
+body.kijkstand #boardViewport{overflow:visible;height:auto;padding:0;background:none!important}
+body.kijkstand #boardViewport::before{display:none}
+/* Lucht rondom: muren staan op de rand van het bord en steken een halve
+   dikte naar buiten, een boom groeit over de bovenrand heen en een ruimtenaam
+   mag buiten zijn ruimte uitsteken. Zonder deze marge sneed het venstertje
+   dat allemaal af. Hoeveel het is geeft de kijkstand terug, zodat de builder
+   zijn vakjes op de goede plek legt. */
+body.kijkstand #boardStage{transition:none;display:inline-block;
+  padding:calc(var(--cell) * .75) calc(var(--cell) * .6)}
+body.kijkstand #pawns,body.kijkstand #noteLaag{display:none}
+body.kijkstand{pointer-events:none;overflow:hidden}
 #gridWrap{position:relative}
 /* Een rechthoekig bord houdt zijn zachte slagschaduw. Bij een onregelmatig
    bord zou die schaduw om een rechthoek vallen die er niet is; daar doet de
@@ -3935,7 +3969,13 @@ function zetThema(naam){
   /* Eerst het thema zetten, dan het palet: zie het slot van deze functie. */
   const t=THEMA_KLEUR[naam]?naam:"donker";
   document.documentElement.dataset.thema=t;
-  try{ localStorage.setItem(THEMA_SLEUTEL,t); }catch(e){}
+  /* In de kijkstand komt de stand van buiten: de builder geeft door of hij
+     licht of donker staat. Die keuze is niet die van de speler, dus hij mag
+     hier ook niet worden opgeslagen -- anders zet het bouwen van een level de
+     nachtstand van het spel uit. */
+  if(!document.body.classList.contains("kijkstand")){
+    try{ localStorage.setItem(THEMA_SLEUTEL,t); }catch(e){}
+  }
   $$("#themaKeuze [data-thema]").forEach(b=>b.classList.toggle("aan",b.dataset.thema===t));
   zetVlakPalet();
   zetMaten();
@@ -4680,6 +4720,10 @@ const $=s=>document.querySelector(s);
 const $$=s=>Array.prototype.slice.call(document.querySelectorAll(s));
 
 let M=null, pendingLevel=null, currentRaw=null;
+/* De maat van een vakje die de builder oplegt als hij dit bord in een
+   venstertje toont. Buiten die kijkstand altijd nul, en dan gedraagt alles
+   zich als vanouds. */
+let KIJK_CEL=0;
 let mode="note", tab="board";
 const ICON_SWITCH_BOARD=icon("grid",{sw:2});
 const ICON_SWITCH_CLUES=icon("list",{sw:2});
@@ -6442,6 +6486,9 @@ function tekenKopStand(){
   }
 }
 function paintBoard(){
+  /* De builder tekent zijn eigen pionnen en heeft niets aan een bewaarde
+     partij; hier zou dat alleen maar een half spel wegschrijven. */
+  if(KIJK_CEL) return;
   if(isDesktop()) setTimeout(tekenDetail,0);
   tekenKopStand();
   /* Na elke tekenbeurt vastleggen waar je bent. Het bord wordt alleen
@@ -6564,6 +6611,15 @@ function paintBoard(){
 
 function fitBoard(){
   if(!M) return;
+  /* In de kijkstand bepaalt de builder de maat van een vakje: zijn eigen
+     vakjes liggen er precies overheen, dus het bord mag zich niet naar het
+     venster voegen. */
+  if(KIJK_CEL){
+    document.documentElement.style.setProperty("--cell",KIJK_CEL+"px");
+    renderWalls(KIJK_CEL);
+    renderRoomLabels(KIJK_CEL);
+    return;
+  }
   const vp=$("#boardViewport");
   /* Wat lucht om het bord. De contourmuur wordt op de rand van het bord
      getekend en steekt dus een halve dikte naar buiten; daar komt opzij nog
@@ -8269,7 +8325,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.137";
+const PLAYER_APP_VERSION="0.9.138";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8360,8 +8416,53 @@ const UPLOAD_HANDOFF_KEY="clueboard:uploadLevel";
    speler zijn eigen lijst over en opent meteen dat ene level, alsof je net
    op die kaart had geklikt. Zonder zo'n vlag verandert er niets: de speler
    toont gewoon zijn eigen lijst, precies als vanouds. */
+/* Het bord tekenen voor wie erom vraagt. Eén bericht per tekening: het level
+   zoals de builder het zou exporteren, de maat van een vakje en de stand van
+   het licht. Terug komt de omvang, zodat de builder zijn venstertje precies
+   om het bord heen kan leggen -- muren en bomen steken over de rand heen. */
+function startKijkstand(){
+  document.body.classList.add("kijkstand");
+  document.documentElement.classList.add("kijkstand");
+  document.body.classList.remove("laden");
+  const antwoord=(bron,bericht)=>{ try{ (bron||window.parent).postMessage(bericht,"*"); }catch(e){} };
+  window.addEventListener("message",ev=>{
+    const d=ev.data;
+    if(!d||d.type!=="clueboard:bord") return;
+    try{
+      /* Geen volledige keuring: een bord in aanbouw heeft nog geen personen en
+         geen aanwijzingen, en dat hoeft ook niet -- er wordt alleen getekend.
+         Wat de tekenaar wél verwacht vullen we aan. */
+      const lvl=d.level;
+      if(!lvl||!lvl.puzzle||!lvl.puzzle.tiles){ antwoord(ev.source,{type:"clueboard:bordfout",fout:"geen bord"}); return; }
+      if(!lvl.puzzle.rooms||!lvl.puzzle.rooms.length){ antwoord(ev.source,{type:"clueboard:bordfout",fout:"nog geen ruimtes"}); return; }
+      lvl.puzzle.people=lvl.puzzle.people||{};
+      if(!Array.isArray(lvl.puzzle.people.placements)) lvl.puzzle.people.placements=[];
+      lvl.clues=lvl.clues||[];
+      if(d.thema) zetThema(d.thema==="licht"?"licht":"donker");
+      KIJK_CEL=Math.max(8,+d.cell||60);
+      M=buildModel(d.level);
+      currentRaw=d.level;
+      applySkin((d.level.puzzle&&d.level.puzzle.theme)||"");
+      renderBoard();
+      const wrap=$("#gridWrap"), r=wrap.getBoundingClientRect();
+      const stage=$("#boardStage").getBoundingClientRect();
+      antwoord(ev.source,{type:"clueboard:bordklaar",
+        breedte:Math.ceil(stage.width), hoogte:Math.ceil(stage.height),
+        bordBreedte:Math.round(r.width), bordHoogte:Math.round(r.height),
+        bordLinks:Math.round(r.left-stage.left), bordBoven:Math.round(r.top-stage.top),
+        kolommen:M.bounds.cols, rijen:M.bounds.rows,
+        minKolom:M.bounds.minC, minRij:M.bounds.minR});
+    }catch(err){
+      antwoord(ev.source,{type:"clueboard:bordfout",fout:String(err&&err.message||err)});
+    }
+  });
+  antwoord(null,{type:"clueboard:kijkklaar"});
+}
+
 async function bootVanUrl(){
   const qs=new URLSearchParams(location.search);
+  /* Kijkstand: geen level uit een link, maar wachten tot er een binnenkomt. */
+  if(qs.get("kijk")==="1"){ startKijkstand(); return true; }
   const upload=qs.get("upload");
   const id=qs.get("level");
   /* Geen level in de link? Dan hoort de levelkeuze in het menu, niet hier.

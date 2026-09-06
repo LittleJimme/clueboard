@@ -826,10 +826,56 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .rail-left{grid-template-rows:repeat(var(--rows),1fr)}
 .rail span{display:flex;align-items:center;justify-content:center}
 .grid{
+  position:relative;
   aspect-ratio:var(--cols) / var(--rows);display:grid;grid-template-columns:repeat(var(--cols),1fr);
   border:5px solid var(--stroke);border-radius:11px;overflow:hidden;background:#DDE3EE;
   touch-action:none;box-shadow:0 26px 50px -26px rgba(30,28,18,.55);
 }
+/* ── Spelweergave ─────────────────────────────────────
+   Het bord zoals de speler het ziet, met echte muren, vloeren en
+   objecttekeningen. Niet nagebouwd: dit is de speler zelf, in een venstertje
+   en in zijn kijkstand, gevoed met het level dat deze builder zou exporteren.
+   Zo staat de bordtekenaar op één plek in plaats van twee.
+
+   De klikbare vakjes van de builder blijven er gewoon overheen liggen; ze
+   worden alleen doorzichtig. Alles wat de speler zelf al tekent -- muren,
+   objecten, tapijten, ruimtenamen, het kruis op een geblokkeerd vak -- gaat
+   uit, zodat er niets dubbel staat. Wat blijft is wat de builder erover te
+   zeggen heeft: de pion, de selectie en de foutmarkering. */
+#spelbord{
+  position:absolute;left:0;top:0;z-index:0;border:0;display:block;
+  pointer-events:none;background:none;opacity:0;transition:opacity .18s;
+}
+#spelbord.aan{opacity:1}
+body.spelweergave .grid{background:transparent;border-color:transparent;
+  overflow:visible;box-shadow:none;border-radius:0}
+/* Het spelbord is iets groter dan het raster: een muur staat op de rand, een
+   boom groeit over de bovenrand heen en een ruimtenaam mag uitsteken. Daar
+   houdt het bord in deze stand ruimte voor vrij, anders valt de onderste rij
+   buiten beeld of komt er een schuifbalk. */
+body.spelweergave .board{width:min(100%, calc((100vh - 392px) * var(--cols) / var(--rows)))}
+body.spelweergave .cell{background:transparent!important;box-shadow:none!important;z-index:1}
+body.spelweergave .cell:hover{filter:none;background:rgba(255,255,255,.14)!important}
+body.spelweergave .cell .obj,
+body.spelweergave .cell .mat,
+body.spelweergave .cell .mark,
+body.spelweergave .cell .obj-icon,
+body.spelweergave .cell .hoekje,
+body.spelweergave .cell .wall,
+body.spelweergave .rlabel{display:none!important}
+body.spelweergave .grid[data-step="3"] .cell.empty,
+body.spelweergave .grid[data-step="4"] .cell.no{opacity:1}
+/* De pion staat op een getekende vloer in plaats van op een vlakke kleur;
+   een randje eromheen houdt hem leesbaar. */
+body.spelweergave .cell .pawn{filter:drop-shadow(0 2px 3px rgba(10,8,4,.5))}
+.bord-knop{
+  width:34px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;
+  border:1.5px solid var(--edge);border-radius:9px;background:var(--panel);color:var(--muted);
+  cursor:pointer;
+}
+.bord-knop:hover{border-color:var(--accent);color:var(--accent)}
+.bord-knop.aan{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+.bord-knop svg{width:15px;height:15px}
 /* Bij een uitgesneden vorm tekenen de tegelmuren zelf de omtrek. */
 .grid.irregular{border-color:transparent;background:transparent;box-shadow:none;border-radius:0;overflow:visible}
 .cell.off{background:transparent!important;box-shadow:none!important;cursor:default}
@@ -1858,12 +1904,13 @@ body[data-skin="donker"] .stage{background:transparent}
     <button id="exportBtn" class="btn-export"><span data-ui-icon="upload"></span> <span id="exportLabel">Exporteer concept</span></button>
     <button id="newBoardBtn" class="btn-settings" title="Nieuw bord" data-ui-icon="sparkle"></button>
     <button id="importBtn" class="btn-settings" title="Level importeren" data-ui-icon="download"></button>
+    <button id="bordBtn" class="bord-knop" type="button" title="Toon het bord zoals in het spel" aria-label="Toon het bord zoals in het spel" data-ui-icon="eye"></button>
     <button id="skinBtn" class="skin-knop" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
     <button id="hulpBtn" class="hulp-knop" type="button" title="Hoe bouw je een zaak?" aria-label="Hoe bouw je een zaak?">?</button>
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v23</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v24</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -3477,6 +3524,9 @@ const WALL = '#14162E';
 function buildBoard(){
   const grid = $('grid');
   grid.innerHTML = ''; cells = {};
+  /* Het venstertje met het spelbord hoort vóór de vakjes in de opbouw: dan
+     tekent de browser het eronder, zonder dat er ergens een z-index bij hoeft. */
+  if (typeof spelbordInvoegen === 'function') spelbordInvoegen();
   const board = $('board');
   board.style.setProperty('--cols', S.cols);
   board.style.setProperty('--rows', S.rows);
@@ -8064,7 +8114,12 @@ function migrateLegacyObjectIds(oldObjects, oldClues){
   return result;
 }
 
-const oldExport=buildExport;buildExport=function(){saveCurrentInspector();initContent();let d=oldExport();d.format='clueboard-level';d.version=11;d.generator='Clueboard Builder 11.0';d.content=JSON.parse(JSON.stringify(S.content));d.clues=(S.content.clues||[]).map(c => ({
+const oldExport=buildExport;
+/* voorbeeld=true levert hetzelfde bestand op, maar laat de identiteit met
+   rust: geen nieuw versienummer, geen levelnummer dat wordt uitgedeeld. De
+   spelweergave vraagt er tientallen keren per minuut om, en zou het level
+   anders bij elke penseelstreek een versie verder zetten. */
+buildExport=function(voorbeeld){saveCurrentInspector();initContent();let d=oldExport();d.format='clueboard-level';d.version=11;d.generator='Clueboard Builder 11.0';d.content=JSON.parse(JSON.stringify(S.content));d.clues=(S.content.clues||[]).map(c => ({
     id: c.id,
     scope: c.scope,
     personId: c.personId || null,
@@ -8101,6 +8156,15 @@ const oldExport=buildExport;buildExport=function(){saveCurrentInspector();initCo
      het cijfer op. Een vers bord (of een bestand zonder dit ID) begint
      gewoon bij 1. Zo kan de speler straks van meerdere bestanden van
      hetzelfde level herkennen welke het nieuwst is. */
+  if (voorbeeld){
+    /* Kijken telt niet mee. Wat er nog niet is krijgt alleen in dit ene
+       bestand een waarde, zodat het geldig blijft voor de speler. */
+    d.levelNumber = S.levelNumber || 1;
+    d.levelId = S.levelId || 'voorbeeld';
+    d.levelVersion = S.levelVersion || 1;
+    d.solution={placements:d.puzzle.people.placements.map(x=>({personId:x.id,tileId:x.tileId})),victimId:d.puzzle.people.victimId,culpritId:d.puzzle.people.culpritId};
+    return Object.assign({ levelNumber:d.levelNumber, levelVersion:d.levelVersion, levelId:d.levelId }, d);
+  }
   if (!S.levelId) S.levelId = maakLevelId();
   if (!S.levelNumber) S.levelNumber = volgendLevelNummer();
   S.levelVersion = (S.levelVersion || 0) + 1;
@@ -9845,6 +9909,139 @@ renderAll(true);
 
 </script>
 <script>
+/* ══════════════════════════════════════════════════════
+   Spelweergave
+   ------------------------------------------------------
+   Kijken naar het bord zoals de speler het straks ziet, midden onder het
+   bouwen door. Niet nagetekend: de speler zelf staat in een venstertje achter
+   de vakjes, in zijn kijkstand (player/index.html?kijk=1). Hij krijgt precies
+   het level dat deze builder zou exporteren en tekent daar zijn bord van --
+   vloeren, muren, objecttekeningen, schaduwen, ruimtenamen.
+
+   Daarmee is er maar één bordtekenaar. Verandert er iets aan het spelbord,
+   dan verandert de builder mee zonder dat hier iets hoeft te gebeuren.
+
+   Wat de builder zelf blijft tekenen ligt eroverheen: de pionnen, de
+   selectie, de foutmarkering. De rest wordt in de CSS uitgezet.
+   ══════════════════════════════════════════════════════ */
+const SPELWEERGAVE_SLEUTEL = 'clueboard:builderSpelbord';
+/* Ophogen zodra de kijkstand van de speler verandert; anders houdt de browser
+   de oude pagina in zijn buffer. */
+const SPELBORD_VERSIE = '6';
+let spelbordAan = false;
+let spelbordEl = null;      /* het venstertje */
+let spelbordKlaar = false;  /* de kijkstand heeft zich gemeld */
+let spelbordWacht = false;  /* er staat een tekenopdracht klaar */
+let spelbordBezig = false;  /* tegen kringverwijzing via buildExport */
+
+function spelbordVenster(){
+  if (spelbordEl) return spelbordEl;
+  spelbordEl = document.createElement('iframe');
+  spelbordEl.id = 'spelbord';
+  spelbordEl.setAttribute('aria-hidden', 'true');
+  spelbordEl.setAttribute('scrolling', 'no');
+  spelbordEl.setAttribute('tabindex', '-1');
+  spelbordEl.title = 'Voorbeeld van het bord';
+  return spelbordEl;
+}
+/* Het venstertje hoort vooraan in het raster te staan. Het bord wordt bij
+   elke maatwijziging opnieuw opgebouwd en dan is het weg, en bij het laden van
+   de pagina staat het er nog helemaal niet: dit script draait later dan het
+   eerste bord. Vandaar één plek die hem terugzet waar hij hoort. */
+function spelbordInvoegen(){
+  const g = $('grid'), el = spelbordVenster();
+  if (g && el.parentElement !== g) g.insertBefore(el, g.firstChild);
+  return el;
+}
+/* Pas laden als er om gevraagd wordt: wie nooit op de knop drukt, haalt ook
+   nooit een tweede pagina op. */
+function spelbordLaad(){
+  const el = spelbordInvoegen();
+  if (el.dataset.geladen) return;
+  el.dataset.geladen = '1';
+  el.src = '../player/index.html?kijk=1&v=' + encodeURIComponent(SPELBORD_VERSIE);
+}
+/* De maat van één vakje, zoals het raster hem nu toont. */
+function spelbordCel(){
+  const g = $('grid');
+  return g && S.cols ? g.clientWidth / S.cols : 0;
+}
+function spelbordBijwerken(){
+  if (!spelbordAan || !spelbordKlaar || spelbordBezig) return;
+  if (spelbordWacht) return;
+  spelbordWacht = true;
+  /* Eén tekening per beurt: tijdens het slepen over het bord komen er
+     tientallen wijzigingen achter elkaar en die hoeven niet allemaal. */
+  setTimeout(spelbordStuur, 90);
+}
+function spelbordStuur(){
+  spelbordWacht = false;
+  if (!spelbordAan || !spelbordKlaar) return;
+  const cel = spelbordCel();
+  if (!cel) return;
+  let level = null;
+  spelbordBezig = true;
+  try { level = buildExport(true); }
+  catch (err){ level = null; }
+  finally { spelbordBezig = false; }
+  if (!level) return;
+  const donker = document.body.dataset.skin === 'donker';
+  try {
+    spelbordEl.contentWindow.postMessage(
+      { type:'clueboard:bord', level:level, cell:cel, thema: donker ? 'donker' : 'licht' }, '*');
+  } catch (err){}
+}
+/* Het venstertje precies over het raster leggen. De speler tekent alleen de
+   vakjes die er zijn, en hij houdt lucht rondom voor muren en bomen; allebei
+   staat in zijn antwoord, dus daar rekenen we de plek uit. */
+function spelbordPlaats(d){
+  if (!spelbordEl) return;
+  const cel = spelbordCel();
+  spelbordEl.width = d.breedte;
+  spelbordEl.height = d.hoogte;
+  spelbordEl.style.left = Math.round((d.minKolom - 1) * cel - d.bordLinks) + 'px';
+  spelbordEl.style.top  = Math.round((d.minRij   - 1) * cel - d.bordBoven) + 'px';
+  spelbordEl.classList.add('aan');
+}
+function zetSpelweergave(aan, bewaren){
+  spelbordAan = !!aan;
+  document.body.classList.toggle('spelweergave', spelbordAan);
+  const knop = $('bordBtn');
+  if (knop){
+    knop.classList.toggle('aan', spelbordAan);
+    knop.title = spelbordAan ? 'Terug naar de eenvoudige weergave' : 'Toon het bord zoals in het spel';
+    knop.setAttribute('aria-pressed', spelbordAan ? 'true' : 'false');
+  }
+  if (spelbordEl && !spelbordAan) spelbordEl.classList.remove('aan');
+  if (spelbordAan){ spelbordLaad(); spelbordBijwerken(); }
+  if (bewaren !== false){
+    try { localStorage.setItem(SPELWEERGAVE_SLEUTEL, spelbordAan ? '1' : '0'); } catch (e){}
+  }
+}
+
+window.addEventListener('message', ev => {
+  const d = ev.data;
+  if (!d || typeof d !== 'object') return;
+  if (d.type === 'clueboard:kijkklaar'){ spelbordKlaar = true; spelbordStuur(); }
+  else if (d.type === 'clueboard:bordklaar'){ document.body.classList.add('spelweergave'); spelbordPlaats(d); }
+  else if (d.type === 'clueboard:bordfout'){
+    /* Valt er nog niets te tekenen -- een vers bord zonder ruimtes -- dan
+       staat de builder er niet leeg bij: even terug naar de eigen vakjes,
+       en zodra er wel een bord is komt de spelweergave vanzelf terug. */
+    document.body.classList.remove('spelweergave');
+    if (spelbordEl) spelbordEl.classList.remove('aan');
+  }
+});
+
+/* Het bord verandert op talloze plekken; in plaats van overal een regel bij
+   te zetten hangen we ons aan de twee tekenaars die de builder al gebruikt. */
+(function(){
+  const oudAlles = renderBoardCells, oudEen = renderCell;
+  renderBoardCells = function(){ const r = oudAlles.apply(this, arguments); spelbordBijwerken(); return r; };
+  renderCell = function(){ const r = oudEen.apply(this, arguments); spelbordBijwerken(); return r; };
+})();
+window.addEventListener('resize', () => { if (spelbordAan) spelbordBijwerken(); });
+
 /* ── Licht of donker ───────────────────────────────────
    Twee skins met exact dezelfde opbouw; alleen de kleuren verschillen.
    De keuze blijft op dit apparaat bewaard. */
@@ -9859,8 +10056,17 @@ renderAll(true);
   try { start = localStorage.getItem(SLEUTEL) || 'licht'; } catch (e) {}
   zet(start);
   const knop = document.getElementById('skinBtn');
-  if (knop) knop.onclick = () =>
+  if (knop) knop.onclick = () => {
     zet(document.body.dataset.skin === 'donker' ? 'licht' : 'donker');
+    /* Het venstertje kent de stand van het licht niet uit zichzelf. */
+    if (typeof spelbordBijwerken === 'function') spelbordBijwerken();
+  };
+  const bord = document.getElementById('bordBtn');
+  if (bord) bord.onclick = () => zetSpelweergave(!spelbordAan);
+  /* Bouwen begint schematisch; wie de spelweergave aanzet houdt hem. */
+  let bordStart = false;
+  try { bordStart = localStorage.getItem(SPELWEERGAVE_SLEUTEL) === '1'; } catch (e) {}
+  zetSpelweergave(bordStart, false);
   const hulp = document.getElementById('hulpBtn');
   if (hulp) hulp.onclick = () => hulpVenster();
 })();
