@@ -789,14 +789,17 @@ body.vloer-v3.tussen-muren .tile .glans{inset:var(--mt) var(--mr) var(--mb) var(
    verloop over het bord is dus een golf die er rustig overheen loopt.
    De diepte en het tempo zitten in de animatie zelf; welke tegel wanneer aan
    de beurt is staat per tegel in --golf-fase (zie zetGolfFase). */
+/* De slag loopt van iets kleiner (--golf-diep) naar iets groter (--golf-hoog)
+   en weer terug. Een sinusachtige versnelling in plaats van ease-in-out: die
+   remt aan beide kanten even zacht af, zodat er geen knik in de deining zit. */
 @keyframes golfSlag{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(calc(1 - var(--golf-diep,3) / 100))}
+  0%,100%{transform:scale(calc(1 - var(--golf-diep,3) / 100))}
+  50%{transform:scale(calc(1 + var(--golf-hoog,3) / 100))}
 }
 body.golf .tile[data-floor="water"]:not(.out-of-bounds)::before,
 body.golf .tile[data-floor="water"]:not(.out-of-bounds)::after{
   transform-origin:50% 50%;
-  animation:golfSlag calc(var(--golf-duur,6) * 1s) ease-in-out infinite;
+  animation:golfSlag calc(var(--golf-duur,6) * 1s) cubic-bezier(.45,0,.55,1) infinite;
   animation-delay:var(--golf-fase,0s);
 }
 @media (prefers-reduced-motion:reduce){
@@ -3601,6 +3604,11 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="debug-kop">Proef: ondergrond</div>
   <button class="debug-rij schakel" id="rowPlat" type="button" aria-pressed="false"><b>Platte pictogrammen</b><span class="schuif"><i></i></span></button>
   <div class="debug-rij"><b>Textuur</b><input type="range" id="overlaySterkte" min="0" max="100" step="1" value="25" aria-label="Hoe hard de materiaaltekening over de kleur ligt"><span class="debug-getal" id="overlaySterkteGetal">25.0</span></div>
+  <div class="debug-kop">Proef: golf op het water</div>
+  <div class="debug-rij"><b>Slag (s)</b><input type="range" id="golfDuur" min="1" max="14" step="0.5" value="6" aria-label="Seconden per slag"><span class="debug-getal" id="golfDuurGetal">6.0</span></div>
+  <div class="debug-rij"><b>Golflengte</b><input type="range" id="golfLengte" min="1" max="14" step="0.5" value="5" aria-label="Tegels per golf"><span class="debug-getal" id="golfLengteGetal">5.0</span></div>
+  <div class="debug-rij"><b>Kleiner %</b><input type="range" id="golfDiep" min="0" max="25" step="0.5" value="6" aria-label="Procent kleiner in het dal"><span class="debug-getal" id="golfDiepGetal">6.0</span></div>
+  <div class="debug-rij"><b>Groter %</b><input type="range" id="golfHoog" min="0" max="25" step="0.5" value="6" aria-label="Procent groter op de top"><span class="debug-getal" id="golfHoogGetal">6.0</span></div>
 </div>
 
 <div class="modal sheet-modal van-boven" id="modalSettings">
@@ -5889,12 +5897,14 @@ const MUUR_NACHT_L = 30;
 /* In de donkere stand mag de textuur zachter: op een donkere tegel valt
    hetzelfde reliëf veel meer op dan op een lichte. */
 const OVERLAY_NACHT = 0.4;
-/* De golf over het water: hoe diep hij gaat, hoe lang een slag duurt, om de
-   hoeveel tegels hij zich herhaalt en onder welke hoek hij over het bord
-   loopt. Alle vier tijdelijk aan een schuifbalk. */
-const GOLF_DIEP   = 10;    /* procent kleiner */
-const GOLF_DUUR   = 5;     /* seconden per slag */
-const GOLF_LENGTE = 5;     /* tegels per golf */
+/* De golf over het water: hoeveel kleiner en hoeveel groter een tegel wordt,
+   hoe lang een slag duurt, om de hoeveel tegels hij zich herhaalt en onder
+   welke hoek hij over het bord loopt. De eerste vier aan een schuif in de
+   proefstand; de hoek ligt vast. */
+let GOLF_DIEP   = maat("clueboard:golfDiep",6);      /* procent kleiner */
+let GOLF_HOOG   = maat("clueboard:golfHoog",6);      /* procent groter */
+let GOLF_DUUR   = maat("clueboard:golfDuur",6);      /* seconden per slag */
+let GOLF_LENGTE = maat("clueboard:golfLengte",5);    /* tegels per golf */
 const GOLF_HOEK   = 35;    /* graden */
 /* De glans over een edele ruimte: hoe lang een hele ronde duurt, en over
    hoeveel tegels de baan zich uitsmeert. */
@@ -5908,6 +5918,7 @@ function zetMaten(){
   st.setProperty("--ov-pct",String(OVERLAY_PROCENT*(nacht?OVERLAY_NACHT:1)));
   st.setProperty("--glim-duur",GLIM_DUUR+"s");
   st.setProperty("--golf-diep",String(GOLF_DIEP));
+  st.setProperty("--golf-hoog",String(GOLF_HOOG));
   st.setProperty("--golf-duur",String(GOLF_DUUR));
   st.setProperty("--kruis-pct",String(KRUIS_PCT));
   /* Per soort dezelfde som: de linkerbovenhoek volgt uit de maat, zodat een
@@ -8095,7 +8106,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.120";
+const PLAYER_APP_VERSION="0.9.121";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9119,8 +9130,17 @@ function maatSchuif(balkId,getalId,sleutel,lees,schrijfMaat,opnieuw,cijfers){
 maatSchuif("overlaySterkte","overlaySterkteGetal","clueboard:overlaySterkte",
   ()=>OVERLAY_PROCENT, v=>{ OVERLAY_PROCENT=v; }, false);
 
-/* De golf staat afgesteld en heeft geen schuiven meer nodig; de maten staan
-   hierboven als vaste waarde. */
+/* De golf: tempo en lengte veranderen de fase per tegel, dus die rekenen
+   zetGolfFase opnieuw; de twee maten lopen via zetMaten in de CSS. */
+maatSchuif("golfDuur","golfDuurGetal","clueboard:golfDuur",
+  ()=>GOLF_DUUR, v=>{ GOLF_DUUR=v; zetGolfFase(); }, false);
+maatSchuif("golfLengte","golfLengteGetal","clueboard:golfLengte",
+  ()=>GOLF_LENGTE, v=>{ GOLF_LENGTE=v; zetGolfFase(); }, false);
+maatSchuif("golfDiep","golfDiepGetal","clueboard:golfDiep",
+  ()=>GOLF_DIEP, v=>{ GOLF_DIEP=v; }, false);
+maatSchuif("golfHoog","golfHoogGetal","clueboard:golfHoog",
+  ()=>GOLF_HOOG, v=>{ GOLF_HOOG=v; }, false);
+
 
 
 /* De proefstand hoort niet bij het spel maar bij het bouwen, en staat daarom
