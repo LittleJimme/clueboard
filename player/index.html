@@ -1349,6 +1349,11 @@ body.plat-icoon .objschaduw{display:none}
    gaf een spookrandje langs de streep. */
 .note-cross img{width:74%;height:74%;display:block;object-fit:contain;
   filter:drop-shadow(0 1px 2px rgba(26,16,8,.28))}
+/* Overdag is het kruis donkerder dan de vloer en leest het als inkt; 's nachts
+   is het lichter dan de vloer en gaat het gloeien. Dan is het het eerste wat je
+   ziet, terwijl het maar een notitie is. Een stap zachter, en het roept 's
+   nachts even hard als overdag. */
+html:not([data-thema="licht"]) .note-cross img{opacity:.74}
 @keyframes crossIn{from{opacity:0;transform:scale(.55) rotate(-16deg)}to{opacity:1;transform:none}}
 
 /* ---------- Pion: gevulde schijf met witte letter ----------
@@ -5987,8 +5992,12 @@ let OVERLAY_PROCENT = maat("clueboard:overlaySterkte",25);
    vakje zakken (onder nul: stijgen) -- apart voor de bezetbare soort en de
    hoge, niet-bezetbare soort. Uitgezocht met schuiven in de proefstand; nu het
    vastligt zijn het gewone getallen. */
-/* Hoe hard een gekruiste tegel rood kleurt, in procent van de vloerkleur. */
+/* Hoe hard een gekruiste tegel rood kleurt, in procent van de vloerkleur.
+   's Nachts minder: op een donkere vloer springt hetzelfde rood er veel
+   verder uit dan op een lichte. Zelfde reden als het verval en de slagschaduw
+   hierboven, die 's nachts ook een andere maat hebben. */
 const KRUIS_PCT = 25;
+const KRUIS_PCT_NACHT = 16;
 /* Waar de grondlijn in een objecttekening ligt: 880 van de 1024, zoals de
    renderopdracht voorschrijft. Alleen dit getal weet iets van de tekeningen;
    de rest volgt eruit. */
@@ -6068,7 +6077,7 @@ function zetMaten(){
   st.setProperty("--glim-duur",GLIM_DUUR+"s");
   st.setProperty("--golf-duur",String(golfPeriode()));
   zetGolfSlag();
-  st.setProperty("--kruis-pct",String(KRUIS_PCT));
+  st.setProperty("--kruis-pct",String(nacht?KRUIS_PCT_NACHT:KRUIS_PCT));
   /* Per soort dezelfde som: de linkerbovenhoek volgt uit de maat, zodat een
      object bij het groter maken om de grondlijn en het midden van het vakje
      heen groeit in plaats van weg te lopen. */
@@ -8260,7 +8269,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.136";
+const PLAYER_APP_VERSION="0.9.137";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
