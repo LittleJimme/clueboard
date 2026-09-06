@@ -7021,6 +7021,16 @@ function slotLabel(type, value, ctx){
    het onderwerp bóven de ander staat. Bij een enkelvoudige richting doet de
    andere as niet mee — "rechts van haar" is elke kolom rechts van haar,
    ongeacht de rij. Bij een samengestelde richting tellen beide assen. */
+/* Een richting omkeren. Nodig zodra de zin de ander plaatst ten opzichte van
+   het onderwerp ("X had Y boven zich") in plaats van andersom ("X bevond zich
+   boven Y"): relationHolds rekent altijd vanuit het onderwerp. */
+const RICHTING_OM = {
+  north:'south', south:'north', west:'east', east:'west',
+  'north-west':'south-east', 'north-east':'south-west',
+  'south-west':'north-east', 'south-east':'north-west'
+};
+function keerRichting(d){ return RICHTING_OM[d] || d; }
+
 function directionHolds(rel, dx, dy){
   const stap = rel.adjacency === 'adjacent';
   const enkel = (waarde, ander, teken) => {
@@ -7443,9 +7453,13 @@ const ATOMS = {
   'person-on-kind-dir':{ scope:'person', cat:'Personen',
                       text:'had {person} op {objectKind} {dir8} zich',
                       slots:{person:'person', objectKind:'objectKind', dir8:'dir8'},
+                      /* "Dina had Femke boven zich" zegt waar Femke ligt, niet waar
+                         Dina ligt -- dus de richting omgekeerd de motor in. Zonder dat
+                         keek de regel of Dina boven Femke stond en kreeg een kloppende
+                         regel een kruisje. Dezelfde valkuil als bij gender-row-offset. */
                       test:(p,a)=>evalCanon({atom:'person-relation',
                         args:{quant:'exists', who:{personId:a.person, on:{objectKind:a.objectKind}},
-                              where:{kind:'direction', direction:a.dir8, adjacency:'any'}}}, p) },
+                              where:{kind:'direction', direction:keerRichting(a.dir8), adjacency:'any'}}}, p) },
 
   'next-to-room-other':{ scope:'person', cat:'Ruimtes',
                       text:'bevond zich naast {room}, in een ander gebied',
