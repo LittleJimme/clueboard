@@ -1339,8 +1339,8 @@ body.plat-icoon .objschaduw{display:none}
    de laag boven de muren en de schaduw eronder op de vloer. Gespiegeld als de
    deur de andere kant op moet draaien -- de plaat is maar één kant op
    getekend. */
-.deurart,.deurschaduw{position:absolute;pointer-events:none}
-.deurart img,.deurschaduw img{width:100%;height:100%;display:block}
+.deurart,.deurschaduw,.deurknop{position:absolute;pointer-events:none}
+.deurart img,.deurschaduw img,.deurknop img{width:100%;height:100%;display:block}
 .deurart.h.spiegel img,.deurschaduw.h.spiegel img{transform:scaleY(-1)}
 .deurart.v.spiegel img,.deurschaduw.v.spiegel img{transform:scaleX(-1)}
 body.plat-icoon .deurschaduw{display:none}
@@ -1954,7 +1954,7 @@ body.in-game .hb-c.licht{box-shadow:0 0 0 2px var(--goud)}
 }
 .vis-row .oog svg{width:22px;height:22px;display:block}
 .vis-row.uit .oog{color:var(--faint);opacity:.75}
-.vis-row.uit>span:first-child{color:var(--faint)}
+.vis-row.uit .vis-naam{color:var(--faint)}
 .vis-row{display:flex;align-items:center;gap:9px;padding:7px 10px;
   border:1px solid var(--line);border-radius:12px;margin-bottom:6px;
   background:linear-gradient(180deg,#fff,var(--panel-2));
@@ -2791,13 +2791,33 @@ body.in-game .set-duo .schuif i{width:15px;height:15px}
    bijstellen, niet er nog een transform overheen leggen. */
 body.in-game .set-duo .set-row[aria-pressed="true"] .schuif i{left:15px;transform:none}
 body.in-game .set-acties{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+/* Wissen: een kaartje per actie, met het plaatje van wat weggaat en hoeveel
+   er nu van op het bord staat. Niets te wissen? Dan ligt het kaartje gedoofd. */
 body.in-game .set-actie{
-  display:flex;align-items:center;justify-content:center;gap:7px;height:44px;border-radius:12px;
-  background:var(--kaart-2);border:1px solid var(--lijn);color:var(--inkt);font:700 12px var(--font-ui)}
-body.in-game .set-actie .ic{width:16px;height:16px;color:var(--inkt-2)}
-body.in-game .set-actie .ic svg{width:100%;height:100%}
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  padding:9px 6px 8px;border-radius:12px;
+  background:var(--kaart-2);border:1px solid var(--lijn);color:var(--inkt);font:800 12.5px var(--font-ui)}
+body.in-game .set-actie b{font-weight:800}
+body.in-game .set-actie small{font-size:11px;font-weight:600;color:var(--dof);white-space:nowrap}
+body.in-game .set-actie .set-mini{color:var(--inkt-2);margin-bottom:2px}
+body.in-game .set-actie[disabled]{opacity:.45;pointer-events:none}
 body.in-game .set-actie.danger{color:#E58472;border-color:rgba(229,132,114,.35)}
-body.in-game .set-actie.danger .ic{color:#E58472}
+body.in-game .set-actie.danger .set-mini{color:#E58472}
+/* De plaatjes bij de keuzes: een vakje met wat de keuze aan- of uitzet. Uit
+   is gedoofd én doorgestreept, net als het oog ernaast. */
+body.in-game .set-mini{flex:0 0 auto;width:30px;height:30px;position:relative;color:var(--goud);display:flex;transition:opacity .15s,color .15s}
+body.in-game .set-mini svg{width:100%;height:100%;display:block;overflow:visible}
+body.in-game .set-mini .vak{fill:none;stroke:currentColor;stroke-width:1.6;opacity:.5}
+body.in-game .set-mini text{font-family:var(--font-ui)}
+body.in-game .vis-row.uit .set-mini,body.in-game .set-row.keuze-rij[aria-pressed="false"] .set-mini{color:var(--dof);opacity:.6}
+body.in-game .vis-row.uit .set-mini::after{content:"";position:absolute;left:2px;right:2px;top:50%;height:2px;margin-top:-1px;background:currentColor;transform:rotate(-40deg);border-radius:1px}
+body.in-game .vis-raster{margin-bottom:6px}
+body.in-game .vis-raster .vis-row{gap:8px;padding:6px 9px 6px 7px;min-height:46px}
+body.in-game .vis-row .vis-naam{flex:1;min-width:0}
+body.in-game .set-row.keuze-rij{gap:9px;padding:8px 10px 8px 8px;min-height:54px}
+body.in-game .set-row.keuze-rij .set-tekst small{font-size:11.5px;line-height:1.3}
+/* Stappen en uitleg zitten op desktop al in de kop; daar blijven ze hier weg. */
+body.desktop.in-game .stappen-blok,body.desktop.in-game .uitleg-blok{display:none}
 body.in-game #modalSettings .sheet{padding:10px 16px calc(16px + env(safe-area-inset-bottom));max-height:86vh}
 body.in-game #modalSettings .sheet-kop h3{font-size:22px}
 body.in-game .set-row .set-tekst{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;text-align:left}
@@ -2814,8 +2834,8 @@ body.in-game .vis-row .oog{color:var(--goud)}
 /* Uit is duidelijk zonder het oogje te hoeven lezen: vlak weg, streepjesrand,
    naam doorgehaald. */
 body.in-game .vis-row.uit{background:none;border:1px dashed var(--lijn);opacity:.75}
-body.in-game .vis-row.uit>span:first-child{text-decoration:line-through;text-decoration-thickness:1px}
-body.in-game .vis-row.uit .oog,body.in-game .vis-row.uit>span:first-child{color:var(--dof)}
+body.in-game .vis-row.uit .vis-naam{text-decoration:line-through;text-decoration-thickness:1px}
+body.in-game .vis-row.uit .oog,body.in-game .vis-row.uit .vis-naam{color:var(--dof)}
 body.in-game .set-row.danger{color:#E58472;border-color:rgba(229,132,114,.35)}
 body.in-game .schuif{background:var(--lijn)}
 body.in-game .set-row[aria-pressed="true"] .schuif{background:var(--goud)}
@@ -2831,20 +2851,9 @@ body.in-game .kop-knop.thema-knop i{
   background:linear-gradient(135deg,var(--goud) 50%,var(--inkt) 50%);
   box-shadow:0 0 0 1px rgba(0,0,0,.12) inset;
 }
-/* De keuze staat nu in de kop, dus in het instellingenvel hoeft hij niet meer
-   -- op de telefoon net zomin als op een groot scherm. */
-body.in-game #themaKeuze{display:none}
 /* Op een telefoon staat de uitleg niet meer als los vraagteken in de kop maar
    onderin de instellingen, waar de rest van de hulp ook staat. */
 body.in-game:not(.desktop) #btnHelpTop{display:none}
-body.desktop.in-game #rowHelp{display:none}
-body.in-game .thema-keuze{display:flex;gap:4px;padding:3px;border-radius:999px;background:var(--kaart-2);border:1px solid var(--lijn);margin-bottom:6px}
-body.in-game .thema-keuze button{
-  flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;
-  border:0;border-radius:999px;background:none;color:var(--dof);font:700 12.5px var(--font-ui);letter-spacing:.04em;
-}
-body.in-game .thema-keuze button svg{width:16px;height:16px}
-body.in-game .thema-keuze button.aan{background:var(--inkt);color:var(--grond)}
 body.in-game .modal .backdrop{background:rgba(0,0,0,.42)}
 /* Meldingen en de hintvraag: hetzelfde papier, dezelfde gouden knop als de
    rest van het spel. Het oude zegel is weg. */
@@ -3700,56 +3709,55 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="sheet compact">
     <div class="sheet-greep"></div>
     <div class="sheet-kop"><h3>Instellingen</h3><button class="sheet-sluit" type="button" data-close aria-label="Sluiten"><span class="ic" data-icon="cross"></span></button></div>
-    <!-- Weergave bovenaan: dat is waar je het vaakst voor terugkomt. Daarna
-         wat je van het spel gedaan wilt krijgen, en onderaan de uitleg. -->
-    <div class="set-kop">Stappen</div>
-    <div class="set-duo stap-duo">
-      <button class="set-row stap-terug" type="button">
-        <span class="ic" data-icon="undo"></span><span class="set-tekst"><b>Stap terug</b></span>
-      </button>
-      <button class="set-row stap-vooruit" type="button">
-        <span class="ic" data-icon="undo"></span><span class="set-tekst"><b>Stap vooruit</b></span>
-      </button>
+    <!-- Stappen en uitleg zitten op desktop al in de kop van het spel; daar
+         blijven die blokken hier weg. Weergave bovenaan: daar kom je het
+         vaakst voor terug. Elke keuze heeft een plaatje van wat hij aan- of
+         uitzet, zodat je niet hoeft te lezen om te zien wat er gebeurt. -->
+    <div class="set-blok stappen-blok">
+      <div class="set-kop">Stappen</div>
+      <div class="set-duo stap-duo">
+        <button class="set-row stap-terug" type="button">
+          <span class="ic" data-icon="undo"></span><span class="set-tekst"><b>Stap terug</b></span>
+        </button>
+        <button class="set-row stap-vooruit" type="button">
+          <span class="ic" data-icon="undo"></span><span class="set-tekst"><b>Stap vooruit</b></span>
+        </button>
+      </div>
     </div>
     <div class="set-kop weergave-kop">Weergave</div>
-    <div class="thema-keuze" id="themaKeuze" role="group" aria-label="Dag of nacht">
-      <button type="button" data-thema="licht"><span class="ic" data-icon="sun"></span>Dag</button>
-      <button type="button" data-thema="donker"><span class="ic" data-icon="moon"></span>Nacht</button>
-    </div>
     <div class="vis-raster">
-      <button class="vis-row" id="visNotes" aria-pressed="true"><span>Letters</span><span class="oog"></span></button>
-      <button class="vis-row" id="visCrosses" aria-pressed="true"><span>Kruisjes</span><span class="oog"></span></button>
-      <button class="vis-row" id="visRoomLabels" aria-pressed="true"><span>Ruimtenamen</span><span class="oog"></span></button>
-      <button class="vis-row" id="visRoles" aria-pressed="true"><span>Rolpicto's</span><span class="oog"></span></button>
+      <button class="vis-row" id="visNotes" aria-pressed="true"><span class="set-mini" data-mini="letters"></span><span class="vis-naam">Letters</span><span class="oog"></span></button>
+      <button class="vis-row" id="visCrosses" aria-pressed="true"><span class="set-mini" data-mini="kruisjes"></span><span class="vis-naam">Kruisjes</span><span class="oog"></span></button>
+      <button class="vis-row" id="visRoomLabels" aria-pressed="true"><span class="set-mini" data-mini="ruimtenamen"></span><span class="vis-naam">Ruimtenamen</span><span class="oog"></span></button>
+      <button class="vis-row" id="visRoles" aria-pressed="true"><span class="set-mini" data-mini="rolpictos"></span><span class="vis-naam">Rolpicto's</span><span class="oog"></span></button>
     </div>
-    <div class="set-duo">
-      <button class="set-row schakel" id="rowKleinObject" type="button" aria-pressed="false">
-        <span class="ic" data-icon="dossier"></span><span class="set-tekst"><b>Kleine objecten</b></span><span class="schuif"><i></i></span>
-      </button>
-    </div>
+    <button class="set-row schakel keuze-rij" id="rowKleinObject" type="button" aria-pressed="false">
+      <span class="set-mini" data-mini="klein"></span>
+      <span class="set-tekst"><b>Kleine objecten</b><small>Alles blijft binnen zijn eigen vakje.</small></span>
+      <span class="schuif"><i></i></span>
+    </button>
     <div class="set-kop">Assistentie</div>
-    <div class="set-duo">
-      <button class="set-row schakel" id="rowEasy" type="button" aria-pressed="false">
-        <span class="ic" data-icon="sparkle"></span><span class="set-tekst"><b>Easy mode</b></span><span class="schuif"><i></i></span>
-      </button>
-      <button class="set-row schakel" id="rowAutoKruis" type="button" aria-pressed="false">
-        <span class="ic" data-icon="cross"></span><span class="set-tekst"><b>Auto kruisjes</b></span><span class="schuif"><i></i></span>
-      </button>
-    </div>
+    <button class="set-row schakel keuze-rij" id="rowEasy" type="button" aria-pressed="false">
+      <span class="set-mini" data-mini="easy"></span>
+      <span class="set-tekst"><b>Easy mode</b><small>Alleen juiste plaatsingen, en een hint als je vastzit.</small></span>
+      <span class="schuif"><i></i></span>
+    </button>
     <div class="set-kop">Wissen</div>
     <div class="set-acties">
-      <button class="set-actie" id="btnWisKruisjes" type="button"><span class="ic" data-icon="cross"></span><span>Kruisjes</span></button>
-      <button class="set-actie" id="btnWisLetters" type="button"><span class="ic" data-icon="pencil"></span><span>Letters</span></button>
-      <button class="set-actie danger" id="btnRestart" type="button"><span class="ic" data-icon="undo"></span><span>Opnieuw</span></button>
+      <button class="set-actie" id="btnWisKruisjes" type="button"><span class="set-mini" data-mini="kruisjes"></span><b>Kruisjes</b><small id="wisKruisjesN">—</small></button>
+      <button class="set-actie" id="btnWisLetters" type="button"><span class="set-mini" data-mini="letters"></span><b>Letters</b><small id="wisLettersN">—</small></button>
+      <button class="set-actie danger" id="btnRestart" type="button"><span class="set-mini" data-mini="opnieuw"></span><b>Opnieuw</b><small id="wisAllesN">—</small></button>
     </div>
     <!-- De uitleg stond als los vraagteken in de kop; op een telefoon hoort hij
          hier, bij de rest van wat je over het spel kunt opzoeken. -->
-    <div class="set-kop">Uitleg</div>
-    <div class="set-duo">
-      <button class="set-row" id="rowHelp" type="button">
-        <span class="ic" data-icon="sparkle"></span><span class="set-tekst"><b>Hoe speel je?</b></span>
-        <span class="ic pijl-rechts" data-icon="chevron"></span>
-      </button>
+    <div class="set-blok uitleg-blok">
+      <div class="set-kop">Uitleg</div>
+      <div class="set-duo">
+        <button class="set-row" id="rowHelp" type="button">
+          <span class="ic" data-icon="sparkle"></span><span class="set-tekst"><b>Hoe speel je?</b></span>
+          <span class="ic pijl-rechts" data-icon="chevron"></span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -4013,7 +4021,6 @@ function zetThema(naam){
   if(!document.body.classList.contains("kijkstand")){
     try{ localStorage.setItem(THEMA_SLEUTEL,t); }catch(e){}
   }
-  $$("#themaKeuze [data-thema]").forEach(b=>b.classList.toggle("aan",b.dataset.thema===t));
   zetVlakPalet();
   zetMaten();
   zetThemaKleur();
@@ -4773,7 +4780,7 @@ const ICON_SWITCH_BOARD=icon("grid",{sw:2});
 const ICON_SWITCH_CLUES=icon("list",{sw:2});
 let radialOpenTimer=null;
 let notes=new Map();     // tileId -> {marks:Map(personId->1|2), cross:bool}
-/* Easy mode: alleen juiste plaatsingen, en kruisjes vanzelf. Onthouden
+/* Easy mode: alleen juiste plaatsingen, en de hintknop erbij. Onthouden
    over sessies heen. */
 let easyMode=false;
 try{ easyMode=localStorage.getItem("cb_easy")==="1"; }catch(e){}
@@ -4783,17 +4790,9 @@ function setEasyMode(aan){
   const r=$("#rowEasy"); if(r) r.setAttribute("aria-pressed",easyMode?"true":"false");
   const hb=$("#btnHint"); if(hb) hb.hidden=!easyMode;
 }
-/* Auto-kruisjes staat los van easy mode: je mag iedereen overal neerzetten,
-   maar na elke plaatsing gaan de rij en de kolom wel vanzelf dicht. */
-/* Standaard aan: de eerste keer helpt het meer dan het stoort. Alleen wie
-   hem zelf uitzet, houdt hem uit. */
-let autoKruis=true;
-try{ autoKruis=localStorage.getItem("cb_autokruis")!=="0"; }catch(e){}
-function setAutoKruis(aan){
-  autoKruis=!!aan;
-  try{ localStorage.setItem("cb_autokruis",autoKruis?"1":"0"); }catch(e){}
-  const r=$("#rowAutoKruis"); if(r) r.setAttribute("aria-pressed",autoKruis?"true":"false");
-}
+/* Na elke plaatsing gaan de rij en de kolom vanzelf dicht met kruisjes, en
+   bij het weghalen gaan ze weer open. Dat was een keuze (auto-kruisjes),
+   maar niemand zette hem uit: het hoort gewoon bij hoe het spel werkt. */
 /* Eigen melding in de stijl van het spel; moet echt worden weggeklikt. */
 function meld(titel, tekst, opt){
   const o=opt||{};
@@ -5635,17 +5634,18 @@ const MEERVAKS_BOVEN = ["watermill-2x1"];
      midden     waar het midden tussen de knoppen ligt (langs de muur)
      span       hoe breed de pilaren buitenom staan, langs de muur
      knoppen    hoe ver de knoppen uit elkaar liggen; tot daar loopt de muur
+     knop       de zijde van het vierkant om één knop (de losse gouden knop)
      hoogte     hoogte gedeeld door breedte van de plaat
    De plaat voor een liggende muur draait naar beneden open, die voor een
    staande naar rechts; de andere kant op is een spiegeling. */
 const DEUR_PLAAT = {
-  h:{scharnier:0.295, midden:0.491, span:0.919, knoppen:0.783, hoogte:0.496},
-  v:{scharnier:0.293, midden:0.479, span:0.886, knoppen:0.739, hoogte:2.124}
+  h:{scharnier:0.293, midden:0.478, span:0.918, knoppen:0.677, knop:0.245, hoogte:0.496},
+  v:{scharnier:0.288, midden:0.467, span:0.885, knoppen:0.652, knop:0.237, hoogte:2.124}
 };
 /* Hoe breed een deur op het bord staat, van pilaar tot pilaar, in vakjes:
-   bijna een heel vak, met net genoeg over om twee deuren naast elkaar te
-   zetten zonder dat hun pilaren elkaar raken. */
-const DEUR_BREEDTE = 0.88;
+   ruim de helft van een vak. Een heel vak was te veel van het goede, een
+   derde te schriel. */
+const DEUR_BREEDTE = 0.64;
 /* Meervakstekeningen uit de nieuwe lichting: gerenderd op een doek dat precies
    zo breed is als hun vak, met de marges er al in en met een eigen nacht- en
    schaduwplaat ernaast. Niet oprekken en niets bijstellen dus -- de tekening
@@ -6381,7 +6381,13 @@ function renderWalls(cell){
      muur en het blad naar de tegel toe open. */
   const deuren=deurenOpBord(cell);
   if(deuren.length){
-    let masker='<defs><mask id="muurGaten"><rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#fff"/>';
+    /* Het masker reikt een vak buiten het bord: de contourmuur steekt een
+       halve dikte naar buiten, en wat buiten het masker valt verdwijnt. Met
+       een masker dat precies het bord besloeg, stonden de buitenhoeken
+       ingedeukt. */
+    const rand=cell;
+    let masker='<defs><mask id="muurGaten" maskUnits="userSpaceOnUse" x="'+(-rand)+'" y="'+(-rand)+'" width="'+(W+2*rand)+'" height="'+(H+2*rand)+'">'
+      +'<rect x="'+(-rand)+'" y="'+(-rand)+'" width="'+(W+2*rand)+'" height="'+(H+2*rand)+'" fill="#fff"/>';
     deuren.forEach(d=>{
       /* Van knop tot knop valt de muur weg; de knoppen zelf dekken de einden.
          Ruim dik, want de contourmuur is breder dan de muren binnenin. */
@@ -6405,15 +6411,24 @@ function renderWalls(cell){
    boven, en zo ook opzij. */
 function deurenOpBord(cell){
   const bb=M.bounds, uit=[];
+  /* Een muur is goud zodra een van de twee ruimtes erlangs edel is: de
+     gouden omtrek wordt als laatste getekend en ligt dus bovenop. */
+  const edelVak=(c,r)=>{
+    const tl=M.tiles.get("c"+c+"r"+r); if(!tl) return false;
+    const room=M.rooms.get(tl.roomId);
+    return !!(room && roomWallStyle(room).edel);
+  };
   (M.walls||[]).forEach(w=>{
     if(!w || w.kind!=="Door" || !w.anchorTile) return;
     const t=M.tiles.get(w.anchorTile); if(!t) return;
     const x0=(t.column-bb.minC)*cell, y0=(t.row-bb.minR)*cell;
     const kant=String(w.side||"").toLowerCase();
-    if(kant==="north")      uit.push({h:true,  x:x0,      y:y0,      flip:false});
-    else if(kant==="south") uit.push({h:true,  x:x0,      y:y0+cell, flip:true});
-    else if(kant==="west")  uit.push({h:false, x:x0,      y:y0,      flip:false});
-    else if(kant==="east")  uit.push({h:false, x:x0+cell, y:y0,      flip:true});
+    const buur={north:[0,-1],south:[0,1],west:[-1,0],east:[1,0]}[kant]; if(!buur) return;
+    const edel=edelVak(t.column,t.row)||edelVak(t.column+buur[0],t.row+buur[1]);
+    if(kant==="north")      uit.push({h:true,  x:x0,      y:y0,      flip:false, edel:edel});
+    else if(kant==="south") uit.push({h:true,  x:x0,      y:y0+cell, flip:true,  edel:edel});
+    else if(kant==="west")  uit.push({h:false, x:x0,      y:y0,      flip:false, edel:edel});
+    else if(kant==="east")  uit.push({h:false, x:x0+cell, y:y0,      flip:true,  edel:edel});
   });
   return uit;
 }
@@ -6449,7 +6464,7 @@ function deurKandidaten(bron){
    Ze worden bij elke maatwijziging opnieuw gezet, dus eerst de oude weg. */
 function tekenDeuren(deuren,cell){
   const hoog=$("#hoogArt"), schaduw=$("#objSchaduw");
-  [hoog,schaduw].forEach(l=>{ if(l) l.querySelectorAll(".deurart,.deurschaduw").forEach(e=>e.remove()); });
+  [hoog,schaduw].forEach(l=>{ if(l) l.querySelectorAll(".deurart,.deurschaduw,.deurknop").forEach(e=>e.remove()); });
   if(!hoog||!schaduw) return;
   deuren.forEach(d=>{
     const naam=d.h?"door-h":"door-v", g=deurMaten(d,cell);
@@ -6464,6 +6479,23 @@ function tekenDeuren(deuren,cell){
     };
     zet(schaduw,"deurschaduw",[assetUrl("walls","shadows/"+naam,"webp"),assetUrl("walls","shadows/"+naam,"png")]);
     zet(hoog,"deurart",deurKandidaten(naam)).dataset.deur=naam;
+    /* In een gouden muur kleuren de pilaren mee: dezelfde knop, in goud,
+       precies over de stalen knop van de plaat heen. Op beide knoppen, want
+       ze staan op dezelfde lijn en hebben dezelfde maat. */
+    if(d.edel){
+      const m=d.h?DEUR_PLAAT.h:DEUR_PLAAT.v;
+      const langs=d.h?g.w:g.h, zijde=m.knop*langs;
+      [-1,1].forEach(kant=>{
+        const mid=cell/2+kant*m.knoppen*langs/2;
+        const el=document.createElement("div");
+        el.className="deurknop";
+        el.style.left=((d.h?d.x+mid:d.x)-zijde/2).toFixed(1)+"px";
+        el.style.top =((d.h?d.y:d.y+mid)-zijde/2).toFixed(1)+"px";
+        el.style.width=zijde.toFixed(1)+"px"; el.style.height=zijde.toFixed(1)+"px";
+        hoog.appendChild(el);
+        mountAsset(el,[assetUrl("walls",naam+"-knop-edel","webp"),assetUrl("walls",naam+"-knop-edel","png")],null,null);
+      });
+    }
   });
 }
 /* Welke kleur hoort bij een edele ruimte; alleen om de muur een naam te geven
@@ -7510,7 +7542,7 @@ function personButton(p,tileId,t,x,y){
       closeRadial();
       setTimeout(()=>{
         placePerson(p.id,tileId);
-        if(easyMode||autoKruis) easyKruisjes(tileId);
+        easyKruisjes(tileId);
         paintBoard();
       },130);
     });
@@ -7529,7 +7561,7 @@ function verwijderVanVakje(tileId){
   const wie=personOnTile(tileId); if(!wie) return false;
   onthoudStap();
   placed.delete(wie);
-  if(easyMode||autoKruis) kruisjesWeg(tileId);
+  kruisjesWeg(tileId);
   haptic(22);
   return true;
 }
@@ -7538,7 +7570,7 @@ function placePerson(personId,tileId){
   const cur=personOnTile(tileId);
   if(cur && cur!==personId) placed.delete(cur);
   const oud=placed.get(personId);
-  if(oud && oud!==tileId && (easyMode||autoKruis)) kruisjesWeg(oud);
+  if(oud && oud!==tileId) kruisjesWeg(oud);
   placed.set(personId,tileId);
   justPlaced=personId;
   haptic([10,26,14]);
@@ -8024,9 +8056,9 @@ function tekenDetail(){
     if(terug) terug.addEventListener("click",()=>{ detailSel=null; tekenDetail(); renderClues(); });
     return;
   }
-  /* Niets gekozen: alleen een aanwijzing. Easy mode en auto-kruisjes staan
-     in de instellingen, de legenda achter de knop rechtsonder; die hoorden
-     niet als vast blok in een kolom die over de verdachte gaat. */
+  /* Niets gekozen: alleen een aanwijzing. Easy mode staat in de
+     instellingen, de legenda achter de knop rechtsonder; die hoorden niet
+     als vast blok in een kolom die over de verdachte gaat. */
   box.innerHTML='<div class="detail-wacht">'
     +'<span class="ic">'+AssetBank.ui("badge")+'</span>'
     +'<b>Nog niemand gekozen</b>'
@@ -8141,6 +8173,7 @@ function toggleSheet(id){
      paneel op dat moment is. */
   if(isDesktop()){ const pd=$("#pane-detail"); if(pd) document.documentElement.style.setProperty("--rechts-b",pd.getBoundingClientRect().width+"px"); }
   if(id==="modalLegend") showLegend();
+  if(id==="modalSettings") vulWissen();
   openModal("#"+id);
   if(btn) btn.classList.add("active");
 }
@@ -8486,7 +8519,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.144";
+const PLAYER_APP_VERSION="0.9.145";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9360,7 +9393,6 @@ $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
 $$(".stap-vooruit").forEach(b=>b.addEventListener("click",stapVooruit));
 tekenStapKnoppen();
 $("#rowEasy").addEventListener("click",()=>setEasyMode(!easyMode));
-$("#rowAutoKruis").addEventListener("click",()=>setAutoKruis(!autoKruis));
 { /* Dezelfde uitleg, nu ook vanuit de instellingen. */
   const rij=$("#rowHelp");
   if(rij) rij.addEventListener("click",()=>{
@@ -9678,6 +9710,30 @@ maatSchuif("golfHoog","golfHoogGetal","clueboard:golfHoog",
   if(el) el.addEventListener("click",()=>setVisibility(key,!visibility[key]));
 });
 
+/* De plaatjes in het instellingenvel: elk laat zien wat de keuze ernaast
+   aan- of uitzet -- een vakje met een letter, met een kruisje, een
+   naambordje, een pion met zijn rolteken, een klein object in zijn vakje. */
+const SET_MINI={
+  letters:'<svg viewBox="0 0 28 28"><rect x="3" y="3" width="22" height="22" rx="6" class="vak"/><text x="14" y="19.5" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">A</text></svg>',
+  kruisjes:'<svg viewBox="0 0 28 28"><rect x="3" y="3" width="22" height="22" rx="6" class="vak"/><path d="M9.5 9.5l9 9M18.5 9.5l-9 9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>',
+  ruimtenamen:'<svg viewBox="0 0 28 28"><rect x="1.5" y="8.5" width="25" height="11" rx="5.5" fill="currentColor"/><text x="14" y="16.9" text-anchor="middle" font-size="6.4" font-weight="800" letter-spacing=".06em" fill="var(--kaart)">GANG</text></svg>',
+  rolpictos:'<svg viewBox="0 0 28 28"><circle cx="11.5" cy="8.5" r="4.4" fill="currentColor"/><path d="M4.5 24c0-5.2 3-8.2 7-8.2s7 3 7 8.2z" fill="currentColor"/><circle cx="21" cy="19.5" r="5.2" fill="var(--kaart)" stroke="currentColor" stroke-width="1.8"/><path d="M21 16.7v5.6M18.2 19.5h5.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  klein:'<svg viewBox="0 0 28 28"><rect x="3" y="3" width="22" height="22" rx="6" class="vak"/><rect x="9" y="9" width="10" height="10" rx="2.2" fill="currentColor"/></svg>',
+  easy:'<svg viewBox="0 0 28 28"><rect x="3" y="3" width="22" height="22" rx="6" class="vak"/><path d="M8.5 14.5l4 4 7-8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+  opnieuw:'<svg viewBox="0 0 28 28"><rect x="3" y="3" width="9.5" height="9.5" rx="2.5" class="vak"/><rect x="15.5" y="3" width="9.5" height="9.5" rx="2.5" class="vak"/><rect x="3" y="15.5" width="9.5" height="9.5" rx="2.5" class="vak"/><rect x="15.5" y="15.5" width="9.5" height="9.5" rx="2.5" class="vak"/></svg>'
+};
+$$("#modalSettings .set-mini[data-mini]").forEach(el=>{ el.innerHTML=SET_MINI[el.dataset.mini]||""; });
+/* Bij elk wiskaartje hoeveel er nu op het bord staat; is er niets, dan ligt
+   het kaartje gedoofd. Wordt ververst bij het openen van het vel en na elke
+   wisactie. */
+function vulWissen(){
+  let k=0,l=0; notes.forEach(x=>{ if(x.cross) k++; if(x.marks) l+=x.marks.size; });
+  const p=placed.size;
+  const zet=(id,knop,n,tekst)=>{ const el=$("#"+id); if(el) el.textContent=tekst; const b=$("#"+knop); if(b) b.disabled=!n; };
+  zet("wisKruisjesN","btnWisKruisjes",k, k ? (k===1?"1 op het bord":k+" op het bord") : "geen");
+  zet("wisLettersN","btnWisLetters",l, l ? (l===1?"1 genoteerd":l+" genoteerd") : "geen");
+  zet("wisAllesN","btnRestart",p+k+l, p ? (p===1?"1 pion op het bord":p+" pionnen op het bord") : (k+l ? "alleen notities" : "leeg bord"));
+}
 /* Wissen kan niet ongedaan gemaakt worden, dus er komt altijd een vraag
    tussen. Eerst tellen wat er weggaat, dan pas vragen. */
 function bevestig(titel,tekst,doen){
@@ -9695,7 +9751,7 @@ $("#btnWisKruisjes").addEventListener("click",()=>{
   bevestig("Kruisjes wissen?", n===1?"Het kruisje op het bord gaat weg.":"Alle "+n+" kruisjes op het bord gaan weg.",()=>{
     onthoudStap();
     notes.forEach(x=>{ x.cross=false; });
-    paintBoard(); haptic(12); toast(n===1?"1 kruisje gewist.":n+" kruisjes gewist.");
+    paintBoard(); vulWissen(); haptic(12); toast(n===1?"1 kruisje gewist.":n+" kruisjes gewist.");
   });
 });
 $("#btnWisLetters").addEventListener("click",()=>{
@@ -9704,7 +9760,7 @@ $("#btnWisLetters").addEventListener("click",()=>{
   bevestig("Letters wissen?", n===1?"De letter die je genoteerd hebt gaat weg.":"Alle "+n+" genoteerde letters gaan weg.",()=>{
     onthoudStap();
     notes.forEach(x=>{ if(x.marks) x.marks.clear(); });
-    paintBoard(); haptic(12); toast(n===1?"1 letter gewist.":n+" letters gewist.");
+    paintBoard(); vulWissen(); haptic(12); toast(n===1?"1 letter gewist.":n+" letters gewist.");
   });
 });
 $("#btnRestart").addEventListener("click",()=>{
@@ -9753,7 +9809,6 @@ window.addEventListener("resize",()=>{ if(M){ fitBoard(); closeRadial(); } });
 window.addEventListener("orientationchange",()=>{ if(M){ setTimeout(fitBoard,250); } });
 
 hydrateIcons();
-$$("#themaKeuze [data-thema]").forEach(b=>b.addEventListener("click",()=>zetThema(b.dataset.thema)));
 { const bt=$("#btnThema");
   if(bt) bt.addEventListener("click",()=>zetThema(document.documentElement.dataset.thema==="licht"?"donker":"licht")); }
 (function(){ let t="licht"; try{ t=localStorage.getItem(THEMA_SLEUTEL)||"licht"; }catch(e){} zetThema(t); })();
@@ -9762,7 +9817,6 @@ $$("#themaKeuze [data-thema]").forEach(b=>b.addEventListener("click",()=>zetThem
    meteen te zien met welke versie hij speelde. */
 { const vv=$("#versieVoet"); if(vv) vv.textContent="v"+PLAYER_APP_VERSION; }
 setEasyMode(easyMode);
-setAutoKruis(autoKruis);
 loadVisibility();
 applyVisibility();
 /* Vanuit het menu: niets tonen tot het level er is. Anders flitst eerst de
