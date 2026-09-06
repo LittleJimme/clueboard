@@ -2516,7 +2516,7 @@
       "name": "warning"
     }
   ],
-  "version": 34,
+  "version": 35,
   "floorArt": {
     "note": "Vroeger het aantal geschilderde vloeren per soort in art/backgrounds/<thema>/; die vloeren staan nu buiten de repo (Design Department/60 Repo Sources/backgrounds) en de speler tekent de vloer uit CSS. Het getal doet niets meer. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.",
     "variants": {
