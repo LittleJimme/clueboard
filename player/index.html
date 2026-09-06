@@ -2510,8 +2510,11 @@ body.desktop.in-end #screen-end .uitslag-beeld{margin-top:12px}
 /* De knop hoort bij de uitslag zelf, dus vlak onder de cijfers in de
    linkerkolom -- niet onderaan de bladzijde. zetDesktop schuift hem daarvoor
    het raster in. */
-body.desktop.in-end #screen-end .uitslag-voet{max-width:none;border-top:0;padding:22px 0 0;display:flex;justify-content:flex-start;background:none;margin:0;width:auto}
-body.desktop.in-end #screen-end .uitslag-voet .btn{width:auto;min-width:240px}
+body.desktop.in-end #screen-end .uitslag-voet{max-width:340px;border-top:0;padding:22px 0 0;display:flex;flex-wrap:wrap;justify-content:flex-start;background:none;margin:0;width:auto}
+/* Twee knoppen naast elkaar pasten niet in de kolom van 340 en liepen over de
+   namen ernaast heen. Ze krimpen nu mee en zakken onder elkaar zodra ze te
+   krap komen te staan. */
+body.desktop.in-end #screen-end .uitslag-voet .btn{width:auto;min-width:0;flex:1 1 150px}
 
 /* ══════════════════════════════════════════════════════
    Desktop, tweede ronde.
@@ -3445,7 +3448,33 @@ body.in-game #modalIntro .rij-knoppen .btn:hover{
 }
 
 /* ── Eindscherm als slide ── */
-body.in-end #screen-end{padding:0;justify-content:flex-start;overflow:hidden;display:flex;flex-direction:column}
+body.in-end #screen-end{padding:0;justify-content:flex-start;overflow:hidden;display:flex;flex-direction:column;position:relative}
+/* Het bord van de zaak, heel licht achter de uitslag: je ziet waar je zojuist
+   in rondliep, zonder dat het de tekst in de weg zit. Het vakje van de dader
+   krijgt goud, dat van het slachtoffer rood -- alleen als de zaak klopt, want
+   anders zou de achtergrond het antwoord verklappen. */
+.eind-achtergrond{
+  position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;animation:eindBordOp 1.4s ease .5s forwards;
+}
+@keyframes eindBordOp{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){ .eind-achtergrond{animation:none;opacity:1} }
+.eind-bord{
+  display:grid;gap:calc(var(--eb-vak) * .07);
+  grid-template-columns:repeat(var(--eb-kolommen),1fr);
+  grid-template-rows:repeat(var(--eb-rijen),1fr);
+  width:calc(var(--eb-vak) * var(--eb-kolommen));
+  height:calc(var(--eb-vak) * var(--eb-rijen));
+}
+.eind-bord i{border-radius:calc(var(--eb-vak) * .13);background:var(--eb-vloer);opacity:.16}
+.eind-bord i.buiten{background:none}
+.eind-bord i.blok{opacity:.09}
+/* De twee vakjes die het verhaal dragen mogen wat sterker aan, anders vallen
+   ze in dezelfde waas weg als de rest. */
+.eind-bord i.dader{background:var(--goud);opacity:.30}
+.eind-bord i.slachtoffer{background:var(--role-victim);opacity:.30}
+.uitslag,.uitslag-voet{position:relative;z-index:1}
 .uitslag{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
   max-width:520px;width:100%;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 22px 18px;
   text-align:center;animation:uitslagIn .5s cubic-bezier(.2,.8,.3,1) both}
@@ -8228,8 +8257,38 @@ function checkSolution(){
       +'<span class="wie"><b>Dader</b><small>nog niet beschuldigd</small></span></div>';
   }
   $("#endDetails").innerHTML=html;
+  { const oud=$("#screen-end .eind-achtergrond"); if(oud) oud.remove();
+    const scherm=$("#screen-end");
+    if(scherm) scherm.insertAdjacentHTML("afterbegin", eindBordHtml(perfect)); }
   showScreen("end");
 }
+/* Het bord van deze zaak als achtergrond voor het eindscherm: één vakje per
+   tegel, in de kleur van zijn ruimte. Geen objecten, geen namen -- het gaat om
+   de plattegrond, niet om de details. Klopt de oplossing, dan lichten het
+   vakje van de dader en dat van het slachtoffer op. */
+function eindBordHtml(metRollen){
+  if(!M||!M.bounds) return "";
+  const b=M.bounds;
+  const daderVak = (metRollen && M.culpritId && M.solution) ? M.solution.get(M.culpritId) : null;
+  const dodeVak  = (metRollen && M.victimId  && M.solution) ? M.solution.get(M.victimId)  : null;
+  /* Het vakje leest af aan de kortste kant, zodat een lang bord niet buiten
+     het scherm valt. */
+  let h='<div class="eind-achtergrond" aria-hidden="true"><div class="eind-bord" style="'
+    +'--eb-kolommen:'+b.cols+';--eb-rijen:'+b.rows+';'
+    +'--eb-vak:min(min(64vw,520px) / '+b.cols+', min(58vh,560px) / '+b.rows+')">';
+  for(let r=b.minR;r<=b.maxR;r++) for(let c=b.minC;c<=b.maxC;c++){
+    const id="c"+c+"r"+r, t=M.tiles.get(id);
+    if(!t){ h+='<i class="buiten"></i>'; continue; }
+    const room=M.rooms.get(t.roomId);
+    let cls="";
+    if(id===daderVak) cls=" dader";
+    else if(id===dodeVak) cls=" slachtoffer";
+    else if(t.status==="blocked") cls=" blok";
+    h+='<i class="'+cls.trim()+'" style="--eb-vloer:'+esc((room&&room.color)||"#DCE3EF")+'"></i>';
+  }
+  return h+"</div></div>";
+}
+
 function tileLabel(tileId){
   const t=M.tiles.get(tileId); if(!t) return tileId;
   const room=M.rooms.get(t.roomId);
@@ -8357,7 +8416,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.141";
+const PLAYER_APP_VERSION="0.9.142";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
