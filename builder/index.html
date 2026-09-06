@@ -2189,6 +2189,14 @@ function personRoleLabel(id){
 }
 function personRoleOf(p){ initContent(); return (S.content.people[p] || {}).role || ''; }
 function peopleWithRole(id){ return Object.keys(S.people).filter(q => personRoleOf(q) === id); }
+/* Is er in dit level nog iemand anders met deze rol? Gekeken in de inhoud,
+   niet op het bord: tijdens het zoeken staat nog niet iedereen, en een regel
+   "boven alle ridders" mag niet even onwaar worden omdat de andere ridder
+   nog niet is neergezet. */
+function andereMetRol(p, rol){
+  initContent();
+  return Object.keys(S.content.people || {}).some(q => q !== p && (S.content.people[q] || {}).role === rol);
+}
 
 /* Geslacht van een persoon: 'male', 'female', of '' als nog niet gekozen.
    Puur voor de speler (bv. voornaamwoorden in tekst) — geen puzzellogica. */
@@ -7642,12 +7650,16 @@ const ATOMS = {
                       slots:{}, test:p=>{ const t=pos(p);
                         return roomCorners(t.room).some(x=>x.x===t.x && x.y===t.y); } },
 
+  /* "Boven alle ridders" zonder een andere ridder is leeg, en leeg was hier
+     waar: de enige ridder stond dan zowel boven als onder alle ridders. Een
+     speler leest er een vergelijking in, dus zonder iemand om mee te
+     vergelijken is de regel onwaar. */
   'above-all-role': { scope:'person', cat:'Rollen', text:'bevond zich boven alle {rolePl}',
-                      slots:{rolePl:'rolePl'}, test:(p,a)=>evalCanon({atom:'person-relation',
+                      slots:{rolePl:'rolePl'}, test:(p,a)=>andereMetRol(p, a.rolePl) && evalCanon({atom:'person-relation',
                         args:{quant:'none', who:{standing:a.rolePl},
                               where:{kind:'direction', direction:'south', adjacency:'any'}}}, p) },
   'below-all-role': { scope:'person', cat:'Rollen', text:'bevond zich onder alle {rolePl}',
-                      slots:{rolePl:'rolePl'}, test:(p,a)=>evalCanon({atom:'person-relation',
+                      slots:{rolePl:'rolePl'}, test:(p,a)=>andereMetRol(p, a.rolePl) && evalCanon({atom:'person-relation',
                         args:{quant:'none', who:{standing:a.rolePl},
                               where:{kind:'direction', direction:'north', adjacency:'any'}}}, p) },
 
