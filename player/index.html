@@ -5,7 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#251A1B" id="themeColorMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Vast op "default": iOS leest deze stijl bij het starten van de webapp en
+     past een wijziging pas bij de volgende navigatie toe. Zetten we hem
+     onderweg om, dan loopt de opmaak een laadbeurt achter: de pagina liep
+     nog onder de statusbalk door terwijl env(safe-area-inset-top) al nul
+     teruggaf, en dan schuift alles -- ook een open venster -- omhoog onder
+     de balk. Met "default" begint de pagina altijd onder de statusbalk en
+     valt er niets te compenseren. -->
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="icon" href="../menu/icon-192.png" type="image/png">
@@ -15,17 +22,13 @@
    Hier al gezet, vóór de eerste tekening, zodat wie licht koos geen donkere
    flits ziet.
 
-   iOS leest de statusbalk-stijl één keer, bij het laden, dus die moet hier
-   om — niet in zetThema(). "black-translucent" laat de pagina onder de
-   statusbalk doorlopen, waardoor de balk altijd de eigen achtergrond toont;
-   in het lichte thema zou witte balktekst onleesbaar zijn, dus dan terug
-   naar "default". Zelfde constructie als in het menu. */
+   Alleen de balkkleur gaat mee; de statusbalk-stijl blijft staan waar hij
+   in de meta hierboven staat. Zelfde constructie als in het menu. */
 try{ var _t=localStorage.getItem("clueboard:menuThema");
      /* Licht is de stand waarin het spel opengaat; donker is een keuze. */
      if(_t!=="donker") _t="licht";
      document.documentElement.dataset.thema=_t;
      if(_t==="licht"){
-       document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').content="default";
        document.getElementById("themeColorMeta").content="#F0EEE7";
      }
 }catch(e){}
@@ -8221,7 +8224,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.132";
+const PLAYER_APP_VERSION="0.9.133";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
