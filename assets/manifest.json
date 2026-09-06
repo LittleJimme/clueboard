@@ -1908,6 +1908,16 @@
     },
     {
       "article": "de",
+      "floor": "wood",
+      "group": "Dorp",
+      "id": "hunting-lodge",
+      "label": "Jachthut",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
+      "article": "de",
       "floor": "gravel",
       "group": "Markt",
       "id": "stall-jewels",
