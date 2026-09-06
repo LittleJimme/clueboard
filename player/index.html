@@ -1665,7 +1665,7 @@ body.radiaal-open .room-label{opacity:0}
 #stapRadiaal{position:fixed;inset:0;z-index:61;display:none;--rbtn:60px;--pc:#FBFAF6;--pc-tekst:#231819}
 #stapRadiaal.open{display:block}
 #stapRadiaal .sr-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.26)}
-#stapRadiaal .sr-stip{position:absolute;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%);
+#stapRadiaal .sr-stip{position:absolute;width:18px;height:18px;border-radius:50%;transform:translate(-50%,-50%);will-change:transform;
   background:#FBFAF6;box-shadow:0 0 0 5px rgba(251,250,246,.28),0 2px 8px rgba(0,0,0,.3)}
 #stapRadiaal .sr-knop{background:#FBFAF6;color:#231819;border:1px solid rgba(0,0,0,.08);
   box-shadow:0 8px 22px rgba(0,0,0,.30),0 0 0 2px rgba(255,255,255,.35);transition:box-shadow .15s;will-change:transform}
@@ -8603,7 +8603,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.148";
+const PLAYER_APP_VERSION="0.9.149";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9481,17 +9481,21 @@ $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
    lang drukken al van de tegels. De handlers zitten op het document in de
    vangfase, zodat het loslaten boven een tegel die tegel niet raakt.
 
-   De beweging vertelt wat er gaat gebeuren: de knop aan de kant waar je heen
-   sleept groeit en schuift met je vinger mee, de andere krimpt en dooft. Bij
-   het loslaten schiet de gekozen knop nog een stukje door terwijl hij
-   vervaagt -- alsof je hem een zetje gaf -- en de stap is dan al gezet. */
+   Je vinger ligt op de plek waar je drukt, dus daar staat alleen een bolletje;
+   de twee knoppen staan een stuk erboven, links en rechts. Sleep je opzij,
+   dan glijdt het bolletje over een onzichtbare boog -- eerst opzij, dan
+   omhoog -- naar de knop aan die kant, de knoppen wijken uit elkaar, de
+   gekozen groeit en de andere dooft. Is het bolletje ver genoeg, dan krijgt
+   de knop een gouden ring: loslaten zet die stap. Bij het loslaten schiet de
+   knop nog een stukje door langs de boog terwijl hij vervaagt. */
 (function(){
   const laag=$("#stapRadiaal"); if(!laag) return;
-  const HOUD=420, WIEBEL=9, KIES=26, AFSTAND=78, REIK=130;
+  const HOUD=420, WIEBEL=9, REIK=120, KIES=.42;   /* houdtijd, wiebelruimte, sleep tot vol, vanaf waar het telt */
+  const AFSTAND=74, HOOGTE=70, SPREID=26;         /* knoppen: opzij, erboven, hoe ver ze wijken */
   const knop={terug:laag.querySelector(".terug"), vooruit:laag.querySelector(".vooruit")};
   const stip=laag.querySelector(".sr-stip"), sluier=laag.querySelector(".sr-backdrop");
   const alles=[knop.terug,knop.vooruit,stip,sluier];
-  let timer=null, start=null, open=false, kant=0, rek=0;
+  let timer=null, start=null, open=false, kant=0, rek=0, mid=0, py=0, px=0;
   const mag=()=>document.body.classList.contains("in-game")
     && !document.querySelector(".modal.open") && !$("#radial").classList.contains("open");
   const buiten=t=>{
@@ -9500,45 +9504,60 @@ $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
     return !!t.closest("#boardViewport, #pane-board");
   };
   const stopAnimaties=()=>alles.forEach(el=>el.getAnimations().forEach(a=>a.cancel()));
-  const zet=(el,dx,schaal,dim)=>{
-    el.style.transform="translate(calc(-50% + "+dx.toFixed(1)+"px),-50%) scale("+schaal.toFixed(3)+")";
-    el.style.opacity=el.disabled?"":String(dim);
+  const tr=(dx,dy,schaal)=>"translate(calc(-50% + "+dx.toFixed(1)+"px),calc(-50% + "+dy.toFixed(1)+"px)) scale("+schaal.toFixed(3)+")";
+  const zet=(el,dx,dy,schaal,dim)=>{ el.style.transform=tr(dx,dy,schaal); el.style.opacity=el.disabled?"":String(dim); };
+  /* Waar een knop hoort bij een sleep van f (0..1) naar richting r: de
+     eigen kant wijkt het verst. */
+  const knopPlek=(k,f,r)=>{
+    const eigen = (k==="terug"&&r<0)||(k==="vooruit"&&r>0);
+    const uit = f*SPREID*(eigen?1:.6);
+    return {x: mid + (k==="terug"?-1:1)*(AFSTAND+uit), y: py-HOOGTE};
+  };
+  /* Het bolletje op de boog van de drukplek naar de gekozen knop: een
+     kwadratische kromme die eerst opzij gaat en dan omhoog buigt. */
+  const boog=(f,r)=>{
+    const doel=knopPlek(r<0?"terug":"vooruit",f,r);
+    const c={x: px + (doel.x-px)*.6, y: py - HOOGTE*.1};
+    const t=f, u=1-f;
+    return {x: u*u*px + 2*u*t*c.x + t*t*doel.x, y: u*u*py + 2*u*t*c.y + t*t*doel.y};
   };
   function toon(x,y){
     stopAnimaties();
-    open=true; kant=0; rek=0;
-    stip.style.left=x+"px"; stip.style.top=y+"px"; stip.style.transform="";
+    open=true; kant=0; rek=0; px=x; py=y;
     /* Dicht bij een zijkant schuift het paar op, zodat beide knoppen in beeld
-       blijven. */
-    const mid=Math.max(AFSTAND+36, Math.min(window.innerWidth-AFSTAND-36, x));
-    const plek={terug:mid-AFSTAND, vooruit:mid+AFSTAND};
+       blijven; het bolletje blijft waar je drukte. */
+    mid=Math.max(AFSTAND+SPREID+36, Math.min(window.innerWidth-AFSTAND-SPREID-36, x));
+    stip.style.left=x+"px"; stip.style.top=y+"px"; stip.style.transform="";
     ["terug","vooruit"].forEach(k=>{
-      const el=knop[k];
-      el.style.left=plek[k]+"px"; el.style.top=y+"px";
+      const el=knop[k], plek=knopPlek(k,0,0);
+      el.style.left=plek.x+"px"; el.style.top=plek.y+"px";
       el.disabled = k==="terug" ? !historie.length : !toekomst.length;
       el.classList.remove("kies");
-      zet(el,0,1,1);
-      /* Ze komen uit het stipje tevoorschijn. */
+      zet(el,0,0,1,1);
+      /* Ze komen uit het bolletje tevoorschijn. */
       el.animate([
-        {transform:"translate(calc(-50% + "+(x-plek[k])+"px),-50%) scale(.5)",opacity:0},
-        {transform:"translate(-50%,-50%) scale(1)",opacity:el.disabled?.35:1}
-      ],{duration:230,easing:"cubic-bezier(.2,.8,.3,1)"});
+        {transform:tr(x-plek.x,y-plek.y,.5),opacity:0},
+        {transform:tr(0,0,1),opacity:el.disabled?.35:1}
+      ],{duration:240,easing:"cubic-bezier(.2,.8,.3,1)"});
     });
     sluier.animate([{opacity:0},{opacity:1}],{duration:160,easing:"ease-out"});
-    stip.animate([{transform:"translate(-50%,-50%) scale(.4)",opacity:0},{transform:"translate(-50%,-50%) scale(1)",opacity:1}],{duration:180,easing:"ease-out"});
+    stip.animate([{transform:tr(0,0,.4),opacity:0},{transform:tr(0,0,1),opacity:1}],{duration:180,easing:"ease-out"});
     laag.classList.add("open");
     haptic(14);
   }
   function volg(dx){
     rek=dx;
-    const f=Math.min(1,Math.abs(dx)/REIK), richting=dx<0?-1:1;
-    const voor = richting<0 ? knop.terug : knop.vooruit;
-    const achter = richting<0 ? knop.vooruit : knop.terug;
-    const mee=richting*f*34;
-    if(!voor.disabled){ zet(voor,mee,1+f*.28,1); zet(achter,mee*.25,1-f*.12,1-f*.55); }
-    else { zet(voor,mee*.3,1,1); zet(achter,mee*.25,1,1); }
-    stip.style.transform="translate(calc(-50% + "+(dx*.18).toFixed(1)+"px),-50%)";
-    const k = dx<-KIES?-1 : dx>KIES?1 : 0;
+    const f=Math.min(1,Math.abs(dx)/REIK), r=dx<0?-1:1;
+    const voor = r<0 ? knop.terug : knop.vooruit, achter = r<0 ? knop.vooruit : knop.terug;
+    ["terug","vooruit"].forEach(k=>{
+      const el=knop[k], plek=knopPlek(k,f,r), rust=knopPlek(k,0,0);
+      const eigen = el===voor && !voor.disabled;
+      zet(el, plek.x-rust.x, plek.y-rust.y, eigen ? 1+f*.28 : (el===achter && !voor.disabled ? 1-f*.1 : 1),
+          el===achter && !voor.disabled ? 1-f*.55 : 1);
+    });
+    const b=boog(f,r);
+    stip.style.transform=tr(b.x-px, b.y-py, 1-f*.35);
+    const k = f>=KIES ? r : 0;
     if(k!==kant){
       kant=k;
       knop.terug.classList.toggle("kies",k===-1&&!knop.terug.disabled);
@@ -9555,11 +9574,16 @@ $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
     const kan = !!gekozen && !gekozen.disabled;
     const uit={duration:kan?320:170,easing:"cubic-bezier(.2,.6,.2,1)",fill:"forwards"};
     const klaar=[];
+    const f=Math.min(1,Math.abs(dx)/REIK), r=dx<0?-1:1;
     [knop.terug,knop.vooruit].forEach(el=>{
-      const nu=el.style.transform||"translate(-50%,-50%)";
-      const zetje = (el===gekozen && kan)
-        ? "translate(calc(-50% + "+(Math.sign(dx)*(Math.abs(dx)*.3+58)).toFixed(1)+"px),-50%) scale(1.42)"
-        : nu;
+      const nu=el.style.transform||tr(0,0,1);
+      let zetje=nu;
+      if(el===gekozen && kan){
+        /* Door langs de boog: in de richting waarin hij al lag. */
+        const naam = el===knop.terug ? "terug" : "vooruit";
+        const plek=knopPlek(naam,f,r), rust=knopPlek(naam,0,0);
+        zetje=tr(plek.x-rust.x + r*54, plek.y-rust.y - 22, 1.42);
+      }
       klaar.push(el.animate([{transform:nu,opacity:getComputedStyle(el).opacity},{transform:zetje,opacity:0}],uit).finished);
     });
     klaar.push(stip.animate([{opacity:1},{opacity:0}],uit).finished);
