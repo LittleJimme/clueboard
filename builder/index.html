@@ -6983,8 +6983,11 @@ SLOTS.objectKindPl = { options: () => kindsOnBoard().map(k => ({ v:k, l:objectPl
 SLOTS.wallKind = { options: () => wallKindsOnBoard().map(k => ({ v:k, l:objectArticle(k)==='het'?'een '+objectLabel(k).toLowerCase():'een '+objectLabel(k).toLowerCase() })) };
 SLOTS.wall = { options: () => Object.keys(S.walls||{}).sort((a,b)=>S.walls[a].num-S.walls[b].num)
   .map(key => ({ v:key, l:wallNameArt(key) + ' bij ' + tileId(S.tiles[String(key).split('|')[0]]) })) };
+/* Tot zoveel mensen als er op het bord staan: op een groot bord kan een
+   ruimte er meer dan zes herbergen, en dan hoort dat aantal er ook bij. */
 SLOTS.persons = { options: () => { const o=[{v:0,l:'niemand'}];
-  for(let i=1;i<=6;i++) o.push({v:i,l:'precies '+countNL(i)+' '+(i===1?'persoon':'personen')}); return o; } };
+  const max=Math.max(6, Object.keys(S.people).length);
+  for(let i=1;i<=max;i++) o.push({v:i,l:'precies '+countNL(i)+' '+(i===1?'persoon':'personen')}); return o; } };
 function slotLabel(type, value, ctx){
   const hit = slotOptions(type, ctx).find(o => String(o.v) === String(value));
   if (hit) return hit.l;
@@ -7337,6 +7340,13 @@ const ATOMS = {
                         return eig.length>0 && eig.every(x => pos(x.p).room === x.room); } },
   'empty-room-count':{scope:'board', cat:'Bezetting', text:'Er waren {count} lege gebieden.',
                       slots:{count:'count'}, test:(_,a)=>emptyRooms().length===+a.count },
+  /* Hoeveel mensen er in een bepaald gebied stonden: niemand, precies een,
+     precies twee ... Het werkwoord volgt het aantal (stond/stonden), net als
+     bij count-on-kind; zonder objectsoort valt het terug op "stond". */
+  'room-person-total':{scope:'board', cat:'Bezetting',
+                      text:'In {room} {wwm} {persons}.', slots:{room:'room', persons:'persons'},
+                      test:(_,a)=>{ const i=+String(a.room).split('-')[1]-1;
+                        return roomPeople(i).length === +a.persons; } },
   'empty-column-count':{scope:'board', cat:'Bezetting', text:'Er waren {count} lege kolommen.',
                       slots:{count:'count'}, test:(_,a)=>emptyColumns().length===+a.count },
   'empty-row-count':{ scope:'board', cat:'Bezetting', text:'Er waren {count} lege rijen.',
