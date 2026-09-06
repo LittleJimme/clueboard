@@ -1419,6 +1419,10 @@ body.hide-roles .pawn .role-badge{display:none}
    verschuiving; die worden in JS tot één transform samengevoegd, zodat ze
    elkaar niet overschrijven. Hier staat alleen nog het uiterlijk. */
 .room-label.floating-top span,.room-label.floating-down span{background:rgba(255,255,255,.96)}
+/* Staand: de pil blijft gewoon een pil en draait als geheel een kwartslag.
+   Het draaien gebeurt na de opmaak, dus de brede pil wordt vanzelf om zijn
+   eigen midden gedraaid en staat netjes in de smalle kolom. */
+.room-label.staand span{max-width:none;white-space:nowrap;transform:rotate(-90deg)}
 body.hide-room-labels .room-label{display:none}
 .room-label{transition:opacity .18s ease}
 body.radiaal-open .room-label{opacity:0}
@@ -4960,6 +4964,29 @@ function roomRuns(room){
   });
   return runs;
 }
+/* Hetzelfde, maar dan de verticale stroken. Een ruimte van één tegel breed --
+   een brug, een gang, een binnenplaats tussen twee muren -- heeft nergens een
+   rij die breed genoeg is voor zijn naam. In zijn eigen kolom is die ruimte er
+   wel, mits de naam een kwartslag draait. */
+function roomRunsStaand(room){
+  const byCol=new Map();
+  (room.tiles||[]).forEach(tid=>{
+    const t=M.tiles.get(tid); if(!t) return;
+    if(!byCol.has(t.column)) byCol.set(t.column,[]);
+    byCol.get(t.column).push(t.row);
+  });
+  const runs=[];
+  byCol.forEach((rows,col)=>{
+    rows.sort((a,b)=>a-b);
+    let start=rows[0], prev=rows[0];
+    for(let i=1;i<rows.length;i++){
+      if(rows[i]!==prev+1){ runs.push({col,start,len:prev-start+1}); start=rows[i]; }
+      prev=rows[i];
+    }
+    runs.push({col,start,len:prev-start+1});
+  });
+  return runs;
+}
 
 function roomCentroid(room){
   let sc=0, sr=0, n=0;
@@ -5046,7 +5073,8 @@ function renderRoomLabels(cell){
     /* Eerst op de normale grootte proberen, dan kleiner, dan over twee regels.
        Past het dan nog niet, dan gaat hij op de langste rij en klemmen we hem
        binnen het bord. */
-    let px=LABEL_FONT_PX, lines=[name], run=null, needed=0;
+    let px=LABEL_FONT_PX, lines=[name], run=null, needed=0, staand=false;
+    const nodig=()=>Math.ceil(Math.max.apply(null,lines.map(l=>measureLabel(l,px)))/cell);
     const pick=()=>{
       const wide=Math.max.apply(null,lines.map(l=>measureLabel(l,px)));
       needed=Math.ceil(wide/cell);
@@ -5073,6 +5101,28 @@ function renderRoomLabels(cell){
         }
       }
     }
+    /* Geen rij die breed genoeg is: dan staand in een kolom. */
+    if(!run){
+      const kolommen=roomRunsStaand(room);
+      lines=[name];
+      for(const proef of [LABEL_FONT_PX, LABEL_FONT_PX*0.82]){
+        px=proef; needed=nodig();
+        const fit=kolommen.filter(k=>k.len>=needed);
+        if(!fit.length) continue;
+        fit.sort((x,y)=>y.len-x.len || x.col-y.col || x.start-y.start);
+        run=fit[0]; staand=true; break;
+      }
+      /* Ook staand te lang? Dan toch staand, zolang de ruimte hoger is dan
+         breed: uitsteken in de eigen kolom valt minder op dan een naam die
+         over de buurruimtes heen ligt. */
+      if(!run && kolommen.length){
+        const hoogste=kolommen.slice().sort((x,y)=>y.len-x.len || x.col-y.col)[0];
+        const breedste=runs.slice().sort((x,y)=>y.len-x.len)[0];
+        if(hoogste.len>breedste.len){
+          run=hoogste; staand=true; px=LABEL_FONT_PX*0.82; needed=nodig();
+        }
+      }
+    }
     if(!run){
       run=runs.slice().sort((x,y)=>y.len-x.len || x.row-y.row || x.start-y.start)[0];
     }
@@ -5090,6 +5140,29 @@ function renderRoomLabels(cell){
        uitsteken, maar nooit buiten de contour. */
     /* Binnen de gekozen rij op het stuk gaan staan waar de minste objecten
        onder liggen; anders zou de naam alsnog midden op een tekening vallen. */
+    if(staand){
+      /* Het vak is de kolomstrook; de pil zelf draait in de CSS. */
+      el.classList.add("staand");
+      const top=(run.start-b.minR)*cell;
+      el.style.left=((run.col-b.minC)*cell)+"px";
+      el.style.top=top+"px";
+      el.style.width=cell+"px";
+      el.style.height=(run.len*cell)+"px";
+      el.dataset.tiles=Array.from({length:run.len},(_,i)=>"c"+run.col+"r"+(run.start+i)).join(" ");
+      host.appendChild(el);
+      /* offsetWidth, niet de omhullende rechthoek: die is na het draaien juist
+         de smalle kant. */
+      const pil=sp.offsetWidth, vak=run.len*cell, boardH=b.rows*cell;
+      let schuif=0;
+      if(pil>vak){
+        const over=(pil-vak)/2;
+        if(top-over<0) schuif=over-top;
+        else if(top+vak+over>boardH) schuif=boardH-(top+vak+over);
+      }
+      el.dataset.shiftX="0";
+      el.dataset.shiftY=String(Math.round(schuif));
+      return;
+    }
     const venster=besteVenster(run,Math.max(1,needed));
     const left=(venster.start-b.minC)*cell;
     el.style.left=left+"px";
@@ -5108,6 +5181,7 @@ function renderRoomLabels(cell){
       else if(left+venster.len*cell+over>boardW) shift=boardW-(left+venster.len*cell+over);
     }
     el.dataset.shiftX=String(Math.round(shift));
+    el.dataset.shiftY="0";
   });
   updateLabelFloat();
 }
@@ -5126,10 +5200,14 @@ function updateLabelFloat(){
     el.classList.toggle("floating-down",bezet && !omhoog);
     /* 58% van de tegel: een pion beslaat er 80% van, dus de helft opschuiven
        is net niet genoeg om er helemaal onderuit te komen. */
-    const h=el.offsetHeight||0;
-    const dy=bezet ? (omhoog ? -0.58*h : 0.58*h) : 0;
-    const dx=parseFloat(el.dataset.shiftX||"0");
-    el.style.transform=(dx||dy) ? ("translate("+dx+"px,"+Math.round(dy)+"px)") : "";
+    const staand=el.classList.contains("staand");
+    /* Een staande naam ligt in zijn eigen kolom; die wijkt opzij uit voor een
+       pion in plaats van omhoog, anders schuift hij de ruimte uit. */
+    const maat=staand ? (el.offsetWidth||0) : (el.offsetHeight||0);
+    const uit=bezet ? (omhoog ? -0.58*maat : 0.58*maat) : 0;
+    const dx=parseFloat(el.dataset.shiftX||"0") + (staand ? uit : 0);
+    const dy=parseFloat(el.dataset.shiftY||"0") + (staand ? 0 : uit);
+    el.style.transform=(dx||dy) ? ("translate("+Math.round(dx)+"px,"+Math.round(dy)+"px)") : "";
   });
 }
 
@@ -8139,7 +8217,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.130";
+const PLAYER_APP_VERSION="0.9.131";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en

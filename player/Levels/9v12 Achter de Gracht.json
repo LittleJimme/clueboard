@@ -1,11 +1,11 @@
 {
   "levelNumber": 9,
-  "levelVersion": 11,
+  "levelVersion": 12,
   "levelId": "lvl-mtpsczg45i82s",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-06T13:08:41.974Z",
+  "exportedAt": "2026-09-06T13:30:46.892Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -2290,6 +2290,7 @@
         "id": "clue-14",
         "scope": "board",
         "personId": null,
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -2310,6 +2311,7 @@
         "id": "clue-18",
         "scope": "person",
         "personId": "p2",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -2334,7 +2336,7 @@
         ]
       },
       {
-        "id": "clue-19",
+        "id": "clue-20",
         "scope": "person",
         "personId": "p5",
         "terms": [
@@ -2342,9 +2344,9 @@
             "not": false,
             "any": [
               {
-                "atom": "closest-to-kind",
+                "atom": "only-one-on-kind",
                 "args": {
-                  "objectKind": "Treasure"
+                  "objectKind": "Chair"
                 }
               }
             ]
@@ -2353,9 +2355,9 @@
             "not": false,
             "any": [
               {
-                "atom": "on-object-kind",
+                "atom": "closest-to-kind",
                 "args": {
-                  "objectKind": "Chair"
+                  "objectKind": "Treasure"
                 }
               }
             ]
@@ -2587,11 +2589,22 @@
       "holds": true
     },
     {
-      "id": "clue-19",
+      "id": "clue-20",
       "scope": "person",
       "personId": "p5",
       "locked": false,
       "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "only-one-on-kind",
+              "args": {
+                "objectKind": "Chair"
+              }
+            }
+          ]
+        },
         {
           "not": false,
           "any": [
@@ -2602,21 +2615,10 @@
               }
             }
           ]
-        },
-        {
-          "not": false,
-          "any": [
-            {
-              "atom": "on-object-kind",
-              "args": {
-                "objectKind": "Chair"
-              }
-            }
-          ]
         }
       ],
-      "text": "Dina stond het dichtst bij een schat en zat op een stoel.",
-      "generatedText": "Dina stond het dichtst bij een schat en zat op een stoel.",
+      "text": "Dina was de enige die op een stoel zat en stond het dichtst bij een schat.",
+      "generatedText": "Dina was de enige die op een stoel zat en stond het dichtst bij een schat.",
       "storyText": null,
       "holds": true
     }
@@ -2664,7 +2666,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 55,
+    "ms": 48,
     "override": null
   }
 }
