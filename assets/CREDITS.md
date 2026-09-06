@@ -12,7 +12,7 @@ domein): vrij te gebruiken, aan te passen en te verspreiden, ook commercieel,
 zonder verplichte naamsvermelding. Vermelding blijft netjes, vandaar dit
 bestand.
 
-Overgenomen (inmiddels verplaatst naar `_archief/assets/kenney/`) zijn acht middeleeuws bruikbare kits:
+Overgenomen (inmiddels verplaatst naar `Design Department/90 Archive/_archief/assets/kenney/`) zijn acht middeleeuws bruikbare kits:
 furniture-kit, nature-kit, mini-dungeon, mini-forest, mini-market,
 mini-characters, mini-arena en graveyard-kit &mdash; per model één preview en de
 GLB.

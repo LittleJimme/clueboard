@@ -27,7 +27,7 @@ import numpy as np
 from PIL import Image
 
 WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-BRON = os.path.join(WORTEL, 'assets', 'art', 'concepts',
+BRON = os.path.join(WORTEL, 'Design Department', '60 Repo Sources', 'concepts',
                     'clueboard-neutral-overlays-and-objects-transparent-v4.png')
 UIT_OVERLAY = os.path.join(WORTEL, 'assets', 'art', 'overlays')
 

@@ -1,7 +1,7 @@
 """Zet het vlakke kleurenpalet uit de JSON in de player.
 
 Bron van waarheid:
-  assets/art/concepts/clueboard-floor-wall-flat-colors-day-night-v1.json
+  assets/tools/clueboard-floor-wall-flat-colors-day-night-v1.json
 
 De kleuren staan daar één keer. Dit script schrijft ze als één blok in
 player/index.html, tussen de twee merktekens hieronder. Nergens anders in de
@@ -13,7 +13,7 @@ Draaien na een wijziging in de JSON:
 import io, json, os, time
 
 WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-BRON = os.path.join(WORTEL, "assets", "art", "concepts",
+BRON = os.path.join(WORTEL, "assets", "tools",
                     "clueboard-floor-wall-flat-colors-day-night-v1.json")
 DOEL = os.path.join(WORTEL, "player", "index.html")
 START = "/* @palet-begin */"

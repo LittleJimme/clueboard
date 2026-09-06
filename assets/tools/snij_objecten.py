@@ -30,7 +30,7 @@ from PIL import Image
 
 HIER = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.dirname(HIER)
-BRON = os.path.join(ASSETS, "render", "inbox", "objecten-vrijgesteld.png")
+BRON = os.path.join(os.path.dirname(ASSETS), "Design Department", "60 Repo Sources", "render", "inbox", "objecten-vrijgesteld.png")
 DOEL = os.path.join(ASSETS, "art", "objects", "medieval")
 
 MARGE = 20          # lucht rond het object, zodat de schaduw meekomt

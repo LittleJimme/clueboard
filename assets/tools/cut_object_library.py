@@ -29,7 +29,7 @@ import numpy as np
 from PIL import Image
 
 WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-CONCEPTEN = os.path.join(WORTEL, 'assets', 'art', 'concepts')
+CONCEPTEN = os.path.join(WORTEL, 'Design Department', '60 Repo Sources', 'concepts')
 UIT = os.path.join(WORTEL, 'assets', 'art', 'objects')
 THEMA = os.path.join(UIT, 'medieval')
 

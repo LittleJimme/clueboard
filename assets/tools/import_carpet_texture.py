@@ -12,7 +12,7 @@ import io, os, sys, time
 from PIL import Image
 
 WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-BRON = os.path.join(WORTEL, "assets", "art", "production", "carpet-light-mode",
+BRON = os.path.join(WORTEL, "Design Department", "60 Repo Sources", "production", "carpet-light-mode",
                     "carpet-overlay-5x5-multiply-light-v1.png")
 DOEL = os.path.join(WORTEL, "assets", "art", "overlays", "mat-textuur.jpg")
 MAAT = 768      # vijf vakjes breed; op een telefoon is een vakje zelden 75 pixels

@@ -169,22 +169,8 @@ body[data-skin="medieval"]{
   --skin-display:'Grenze','Averia Serif Libre',Georgia,serif;
   --skin-caps:'Alegreya SC','Averia Serif Libre',Georgia,serif;
 
-  /* De sierstukken. Nu eigen SVG-invalbeelden; een gerenderde PNG uit
-     assets/render/inbox/ vervangt een stuk door alleen deze url om te
-     zetten. */
-  /* Echte, uitgeknipte sprites uit de stijlbladen; de getekende standins
-     blijven in assets/art/ui/medieval als terugval bewaard. */
-  --ui-titelbord:url("../assets/themes/medieval/ui/nameplate.png");
-  --ui-schild-breed:url("../assets/themes/medieval/ui/shield-crown.png");
-  --ui-knopje:url("../assets/themes/medieval/ui/shield-small.png");
-  --ui-tab:url("../assets/themes/medieval/ui/plank.png");
-  --ui-tab-actief:url("../assets/themes/medieval/ui/paper.png");
-  --ui-timer:url("../assets/themes/medieval/ui/scroll.png");
-  --ui-lint-blauw:url("../assets/themes/medieval/ui/ribbon-tassel.png");
-  --ui-lint-groen:url("../assets/themes/medieval/ui/ribbon-tassel-groen.png");
-  --ui-lint-paars:url("../assets/themes/medieval/ui/ribbon-tassel-paars.png");
-  --ui-plaquette:url("../assets/themes/medieval/ui/plaque.png");
-  --ui-zegel:url("../assets/themes/medieval/ui/seal.png");
+  /* De perkament-sprites (assets/themes) zijn weg: de in-game opmaak
+     overstemde alle regels die ernaar wezen, dus geen ervan laadde ooit. */
 
   --mv-perk:#F3E7CC;          /* perkament */
   --mv-perk-2:#EADCBB;
@@ -529,6 +515,12 @@ body.in-game #pane-clues.active{animation:paneVanRechts .22s cubic-bezier(.2,.8,
   mix-blend-mode:multiply}
 #hoogArt{position:absolute;inset:0;pointer-events:none;z-index:3}
 #labels{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:3}
+/* De letters van een notitie horen altijd te lezen, ook op een vakje met een
+   hoog object (paard, boom) dat in de laag boven de muren getekend wordt. In
+   de tegel vielen ze daaronder; daarom een eigen laag, na #hoogArt in de
+   volgorde en dus erbovenop. Het kruis blijft in de tegel, onder het object. */
+#noteLaag{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:3}
+.note-slot{position:absolute;width:var(--cell);height:var(--cell)}
 #pawns{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:4}
 .pawn-slot{position:absolute;width:var(--cell);height:var(--cell);
   display:flex;align-items:center;justify-content:center}
@@ -623,7 +615,7 @@ body.in-game #pane-clues.active{animation:paneVanRechts .22s cubic-bezier(.2,.8,
    verandert niet van maat, dus raken en klikken blijven precies hetzelfde.
 
    De kleuren komen uit één bron: het blok VLAK_PALET verderop, gemaakt uit
-   assets/art/concepts/clueboard-floor-wall-flat-colors-day-night-v1.json door
+   assets/tools/clueboard-floor-wall-flat-colors-day-night-v1.json door
    assets/tools/build_palette.py. */
 /* De kier en de ronding komen uit zetMaten(); zo rekenen de tegels en de
    muren met dezelfde getallen. */
@@ -748,17 +740,17 @@ body.vloer-v3.overlays .tile[data-floor]:not(.out-of-bounds)::after{
 body.vloer-v3.overlays.tussen-muren .tile[data-floor]:not(.out-of-bounds)::after{
   inset:var(--mt) var(--mr) var(--mb) var(--ml);
 }
-body.vloer-v3.overlays .tile[data-floor="stone"]{--ov:url("../assets/art/overlays/stone.png")}
-body.vloer-v3.overlays .tile[data-floor="concrete"]{--ov:url("../assets/art/overlays/concrete.png")}
-body.vloer-v3.overlays .tile[data-floor="tile"]{--ov:url("../assets/art/overlays/tile.png")}
-body.vloer-v3.overlays .tile[data-floor="marble"]{--ov:url("../assets/art/overlays/marble.png")}
-body.vloer-v3.overlays .tile[data-floor="dirt"]{--ov:url("../assets/art/overlays/dirt.png")}
-body.vloer-v3.overlays .tile[data-floor="sand"]{--ov:url("../assets/art/overlays/sand.png")}
-body.vloer-v3.overlays .tile[data-floor="gravel"]{--ov:url("../assets/art/overlays/gravel.png")}
-body.vloer-v3.overlays .tile[data-floor="wood"]{--ov:url("../assets/art/overlays/wood.png")}
-body.vloer-v3.overlays .tile[data-floor="grass"]{--ov:url("../assets/art/overlays/grass.png")}
-body.vloer-v3.overlays .tile[data-floor="carpet"]{--ov:url("../assets/art/overlays/carpet.png")}
-body.vloer-v3.overlays .tile[data-floor="water"]{--ov:url("../assets/art/overlays/water.png")}
+body.vloer-v3.overlays .tile[data-floor="stone"]{--ov:url("../assets/art/overlays/stone.webp")}
+body.vloer-v3.overlays .tile[data-floor="concrete"]{--ov:url("../assets/art/overlays/concrete.webp")}
+body.vloer-v3.overlays .tile[data-floor="tile"]{--ov:url("../assets/art/overlays/tile.webp")}
+body.vloer-v3.overlays .tile[data-floor="marble"]{--ov:url("../assets/art/overlays/marble.webp")}
+body.vloer-v3.overlays .tile[data-floor="dirt"]{--ov:url("../assets/art/overlays/dirt.webp")}
+body.vloer-v3.overlays .tile[data-floor="sand"]{--ov:url("../assets/art/overlays/sand.webp")}
+body.vloer-v3.overlays .tile[data-floor="gravel"]{--ov:url("../assets/art/overlays/gravel.webp")}
+body.vloer-v3.overlays .tile[data-floor="wood"]{--ov:url("../assets/art/overlays/wood.webp")}
+body.vloer-v3.overlays .tile[data-floor="grass"]{--ov:url("../assets/art/overlays/grass.webp")}
+body.vloer-v3.overlays .tile[data-floor="carpet"]{--ov:url("../assets/art/overlays/carpet.webp")}
+body.vloer-v3.overlays .tile[data-floor="water"]{--ov:url("../assets/art/overlays/water.webp")}
 /* ══════ Tijdelijke proefstanden voor de ondergrond ══════
    Twee schuifjes in het bouwmenu om varianten naast elkaar te zien. Ze zetten
    alleen een klasse op de body en raken het bord zelf niet aan.
@@ -878,7 +870,6 @@ body[data-skin="medieval"]{background:#1B2A21}
 /* Meldingen: gecentreerd, met het zegel als beeldmerk. */
 .sheet.melding{text-align:center;max-width:360px;padding:24px 22px 20px}
 .sheet.melding .melding-beeld{width:66px;height:66px;margin:0 auto 10px;
-  background:var(--ui-zegel) center/contain no-repeat;
   filter:drop-shadow(0 4px 10px rgba(120,30,30,.25))}
 .sheet.melding h3{margin:0 0 8px}
 .sheet.melding p{margin:0 0 6px;font-size:14.5px;line-height:1.55;color:var(--ink-2)}
@@ -937,7 +928,6 @@ body[data-skin="medieval"] .list-sep::after{background:linear-gradient(90deg,#C9
 /* Het vinkje op een geplaatste kaart wordt een lakzegel. */
 body[data-skin="medieval"] .clue-card.done .tick{
   width:30px;height:30px;transform:rotate(-8deg);
-  background:var(--ui-zegel) center/contain no-repeat;
   border:none;box-shadow:none;border-radius:0;
 }
 body[data-skin="medieval"] .clue-card.done .tick svg{display:none}
@@ -963,7 +953,7 @@ body[data-skin="medieval"] .head-title{display:flex;justify-content:center;min-w
 /* De terugknop als donker houten schildje met een crème pijl. */
 body[data-skin="medieval"] .head-brand{
   width:44px;height:48px;border:0;border-radius:0;position:relative;
-  background:var(--ui-knopje) center/contain no-repeat;box-shadow:none;
+  box-shadow:none;
 }
 body[data-skin="medieval"] .head-brand svg{display:none}
 body[data-skin="medieval"] .head-brand::before{
@@ -974,7 +964,6 @@ body[data-skin="medieval"] .head-brand::before{
 
 /* De klok als perkamentrolletje; de rol is de sprite zelf. */
 body[data-skin="medieval"] .timer{
-  background:var(--ui-timer) center/100% 100% no-repeat;
   border:0;box-shadow:none;border-radius:0;margin:0;
   color:#4A3826;padding:13px 24px 15px;font-size:16px;
   font-family:var(--skin-caps);font-weight:700;
@@ -986,7 +975,6 @@ body[data-skin="medieval"] .timer{
 body[data-skin="medieval"] #btnCheck{
   position:absolute;left:50%;top:auto;bottom:6px;transform:translateX(-50%);
   width:100px;max-width:none;height:104px;margin:0;
-  background:var(--ui-schild-breed) center/contain no-repeat;
   border:0;box-shadow:none;border-radius:0;padding:27px 8px 0;
   font-family:var(--skin-caps);font-weight:700;font-size:15px;color:#F6ECD3;
   letter-spacing:.09em;text-shadow:0 1.5px 0 rgba(10,16,26,.75);
@@ -1009,13 +997,11 @@ body[data-skin="medieval"] .mode-switch{
 body[data-skin="medieval"] .mode-switch .ms-thumb{display:none}
 body[data-skin="medieval"] .mode-switch button{
   flex:1;height:46px;border-radius:0;
-  background:var(--ui-tab) center/100% 100% no-repeat;
   text-shadow:0 1px 0 rgba(246,236,211,.55);
   color:#EAD9B0;font-family:var(--skin-caps);font-weight:700;letter-spacing:.06em;
   text-shadow:0 1.5px 0 rgba(20,12,4,.6);
 }
 body[data-skin="medieval"] .mode-switch button.active{
-  background-image:var(--ui-tab-actief);
   color:#4A3826;text-shadow:0 1px 0 rgba(255,255,255,.5);
 }
 
@@ -1042,7 +1028,6 @@ body[data-skin="medieval"] .icon-btn.active{
   color:#F0D77A;filter:drop-shadow(0 0 6px rgba(240,215,122,.6));
 }
 body[data-skin="medieval"] .view-switch{
-  background:var(--ui-plaquette) center/100% 100% no-repeat;
   border:0;box-shadow:none;border-radius:0;height:52px;
   min-width:0;width:auto;padding:0 11px 2px 9px;
   font-family:var(--skin-caps);letter-spacing:.04em;
@@ -1124,14 +1109,13 @@ body[data-skin="medieval"]:not(.vloer-v3) .room-label span{
   backdrop-filter:none;-webkit-backdrop-filter:none;
 }
 
-/* De pion als muntje: een dun gouden randje om de eigen kleur heen. */
+/* Geen gouden randje meer om de pion: dat verscheen pas na de landing, als
+   de animatieklasse eraf ging, en las als een storing. Alleen de schaduw. */
 body[data-skin="medieval"] .pawn{
-  box-shadow:0 2px 6px rgba(10,14,10,.45),0 0 0 1.5px var(--mv-goud),
-             0 0 0 2.5px rgba(36,21,5,.55);
+  box-shadow:0 2px 6px rgba(10,14,10,.45);
 }
 body[data-skin="medieval"] .pawn.victim{
-  box-shadow:0 2px 6px rgba(10,14,10,.45),0 0 0 1.5px var(--mv-goud),
-             0 0 0 4px rgba(192,57,43,.30);
+  box-shadow:0 2px 6px rgba(10,14,10,.45),0 0 0 4px rgba(192,57,43,.30);
 }
 
 /* objectvlak: eigen materiaal bovenop de vloer, met open zijdes waar het object doorloopt */
@@ -1282,14 +1266,15 @@ body.mat-screen .tile .objmat .mat-tex{mix-blend-mode:screen}
 body.plat-icoon .objschaduw{display:none}
 /* Groeien en krimpen gebeurt vanaf de voet, zodat een object op zijn plek
    blijft staan. */
-.objart{transform-origin:50% 100%}
+.objart,.objschaduw{transform-origin:50% 100%}
+/* Het huis zat net te groot en te ver naar rechts in zijn kader: een tikje
+   kleiner en naar links, vanuit de voet, en de schaduw precies zo. */
+.objart.prod[data-slug="house"],.objschaduw[data-slug="house"]{transform:translateX(-3.5%) scale(.965)}
 .objart[data-rek]:not([data-rek=""]) img{transform:var(--rek);transform-origin:50% 0}
 .tile.has-art{z-index:2}
 .tile.has-art .objicon{display:none}
 .tile.has-pawn{z-index:1}
 /* Eigen vloertegel vervangt de ingebouwde vloertextuur. */
-.tile.has-floor-art{background-repeat:repeat;background-size:var(--cell) var(--cell)}
-.tile.has-floor-art::before{display:none}
 .pawn .face img{width:100%;height:100%;display:block;object-fit:cover}
 .pawn .face.has-art svg{display:none}
 .tile.selected{z-index:3}
@@ -1336,13 +1321,13 @@ body.plat-icoon .objschaduw{display:none}
    hoek waar de vloer al terugloopt en waar de schaduw van de muur valt. Daarom
    springt de eerste letter daar verder naar binnen dan aan de andere twee
    kanten, waar de rij gewoon mag doorlopen tot vlak bij de rand. */
-.tile{--nm-pad:calc(var(--cell) * .06);--nm-hoek:calc(var(--cell) * .115);
+.tile,.note-slot{--nm-pad:calc(var(--cell) * .06);--nm-hoek:calc(var(--cell) * .115);
   --nm-wall:calc(var(--wall-w,3px) * .75);
   --nm-t:var(--nm-hoek);--nm-r:var(--nm-pad);--nm-b:var(--nm-pad);--nm-l:var(--nm-hoek)}
-.tile.w-t{--nm-t:calc(var(--nm-hoek) + var(--nm-wall))}
-.tile.w-r{--nm-r:calc(var(--nm-pad) + var(--nm-wall))}
-.tile.w-b{--nm-b:calc(var(--nm-pad) + var(--nm-wall))}
-.tile.w-l{--nm-l:calc(var(--nm-hoek) + var(--nm-wall))}
+.tile.w-t,.note-slot.w-t{--nm-t:calc(var(--nm-hoek) + var(--nm-wall))}
+.tile.w-r,.note-slot.w-r{--nm-r:calc(var(--nm-pad) + var(--nm-wall))}
+.tile.w-b,.note-slot.w-b{--nm-b:calc(var(--nm-pad) + var(--nm-wall))}
+.tile.w-l,.note-slot.w-l{--nm-l:calc(var(--nm-hoek) + var(--nm-wall))}
 /* Een dun, scherp lichtrandje in plaats van een waas: de letter blijft
    een letter, leesbaar op elke vloer, en wordt geen fiche. */
 .note-marks span{font-size:calc(var(--cell)*.265);font-weight:800;letter-spacing:.01em;
@@ -1371,7 +1356,7 @@ body.plat-icoon .objschaduw{display:none}
   display:flex;align-items:center;justify-content:center;
   background:var(--pc);
   border:max(1.5px,calc(var(--cell)*.05)) solid var(--board-ink);
-  box-shadow:0 2px 6px rgba(21,26,51,.34),0 0 0 1.5px rgba(255,255,255,.35);
+  box-shadow:0 2px 6px rgba(21,26,51,.34);
 }
 .pawn .init{
   font-size:calc(var(--cell)*.42);line-height:1;font-weight:700;
@@ -1401,14 +1386,15 @@ body.hide-roles .pawn .role-badge{display:none}
 .pawn .mark svg{width:66%;height:66%}
 /* Het slachtoffer staat er net iets scheef bij, met een rode gloed eromheen. */
 .pawn.victim{
-  box-shadow:0 2px 6px rgba(21,26,51,.30),0 0 0 1.5px rgba(255,255,255,.35),
-             0 0 0 4px rgba(192,57,43,.24)}
+  box-shadow:0 2px 6px rgba(21,26,51,.30),0 0 0 4px rgba(192,57,43,.24)}
 .pawn.land{animation:pawnLand .62s cubic-bezier(.18,1.25,.32,1) both;border-radius:999px}
+/* Alleen beweging: de schaduw deed eerst mee in de animatie, waardoor de
+   pion zijn gewone rand pas kreeg als de klasse er een beurt later af ging. */
 @keyframes pawnLand{
-  0%{opacity:0;transform:translateY(-70%) scale(.5);box-shadow:0 0 0 0 rgba(201,147,47,0)}
-  50%{opacity:1;transform:translateY(0) scale(1.14);box-shadow:0 0 0 0 rgba(201,147,47,.55)}
+  0%{opacity:0;transform:translateY(-70%) scale(.5)}
+  50%{opacity:1;transform:translateY(0) scale(1.14)}
   70%{transform:scale(.94)}
-  100%{transform:none;box-shadow:0 0 0 18px rgba(201,147,47,0)}
+  100%{transform:none}
 }
 
 /* ---------- Ruimtenaam ----------
@@ -1659,8 +1645,8 @@ body.in-game .rbtn[data-standing]{border:0;box-shadow:none}
    ring van "hier gebeurt iets" terug. */
 #radial .rbtn.taken.hier{opacity:1;filter:none}
 #radial .rbtn.taken.hier .face{box-shadow:0 0 0 2px var(--goud)}
-.rbtn[data-standing="noble"] .face{-webkit-mask-image:url("../assets/characters/ui/masker-banier.png");mask-image:url("../assets/characters/ui/masker-banier.png")}
-.rbtn[data-standing="knight"] .face{-webkit-mask-image:url("../assets/characters/ui/masker-schild.png");mask-image:url("../assets/characters/ui/masker-schild.png")}
+.rbtn[data-standing="noble"] .face{-webkit-mask-image:url("../assets/characters/ui/masker-banier.webp");mask-image:url("../assets/characters/ui/masker-banier.webp")}
+.rbtn[data-standing="knight"] .face{-webkit-mask-image:url("../assets/characters/ui/masker-schild.webp");mask-image:url("../assets/characters/ui/masker-schild.webp")}
 .rbtn[data-standing="noble"] .face .ch{width:92%;height:92%;left:4%;top:6.4%}
 .rbtn[data-standing="knight"] .face .ch{width:90%;height:90%;left:5%;top:11%}
 .rbtn[data-standing] .lbl,body.in-game .rbtn[data-standing] .lbl{bottom:calc(var(--rbtn,68px)*-.14)}
@@ -1698,8 +1684,8 @@ body.desktop #radial .rbtn:hover:not([disabled]){transform:translate(-50%,-50%) 
 .portret[data-standing="noble"] .gezicht,.portret[data-standing="knight"] .gezicht{
   inset:0;border-radius:0;border:0;box-shadow:none;background:none;overflow:hidden;
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%}
-.portret[data-standing="noble"] .gezicht{-webkit-mask-image:url("../assets/characters/ui/masker-banier.png");mask-image:url("../assets/characters/ui/masker-banier.png")}
-.portret[data-standing="knight"] .gezicht{-webkit-mask-image:url("../assets/characters/ui/masker-schild.png");mask-image:url("../assets/characters/ui/masker-schild.png")}
+.portret[data-standing="noble"] .gezicht{-webkit-mask-image:url("../assets/characters/ui/masker-banier.webp");mask-image:url("../assets/characters/ui/masker-banier.webp")}
+.portret[data-standing="knight"] .gezicht{-webkit-mask-image:url("../assets/characters/ui/masker-schild.webp");mask-image:url("../assets/characters/ui/masker-schild.webp")}
 .portret[data-standing="noble"] .gezicht .ch{width:92%;height:92%;left:4%;top:6.4%}
 .portret[data-standing="knight"] .gezicht .ch{width:90%;height:90%;left:5%;top:11%}
 /* Het character: vier lagen 1:1 op een vierkant, van achter naar voor. */
@@ -2049,12 +2035,16 @@ body.in-game #btnCheck{border-radius:14px}
 @media (max-width:520px){
   body.in-game:not(.desktop) #btnCheck{background:none;border:0;box-shadow:none;padding:0 2px;gap:5px}
   body.in-game:not(.desktop) #btnCheck:not(.klaar) .lbl{display:none}
+  /* Staat iedereen, dan is de knop een volle gele pil -- ook hier, net als op
+     desktop. Iets compacter dan daar, zodat woord en stand naast de klok en
+     de knoppen passen op een smal scherm. */
   body.in-game:not(.desktop) #btnCheck.klaar{
-    background:none;box-shadow:none;border:1.5px solid var(--goud);
-    height:40px;padding:0 13px 0 11px;gap:7px;border-radius:999px;color:var(--goud-diep)}
-  body.in-game:not(.desktop) #btnCheck.klaar .lbl{display:inline;font-size:16px}
-  body.in-game:not(.desktop) #btnCheck.klaar .ic{color:var(--goud-diep)}
-  body.in-game:not(.desktop) #btnCheck.klaar .teller{background:var(--goud);color:var(--goud-op)}
+    background:var(--goud);color:var(--goud-op);border:1px solid var(--goud-diep);
+    box-shadow:0 4px 14px rgba(201,147,47,.28);
+    height:38px;padding:0 11px 0 10px;gap:6px;border-radius:999px;max-width:100%}
+  body.in-game:not(.desktop) #btnCheck.klaar .lbl{display:inline;font-size:14px}
+  body.in-game:not(.desktop) #btnCheck.klaar .ic{color:var(--goud-op)}
+  body.in-game:not(.desktop) #btnCheck.klaar .teller{background:rgba(0,0,0,.16);color:inherit;font-size:12px;padding:2px 7px}
 }
 body.in-game .kop-check{min-width:0;max-width:100%;overflow:hidden}
 @media (max-width:420px){
@@ -2159,10 +2149,10 @@ body.in-game .tabbar .voet-knop{width:50px;height:50px;min-width:50px}
 body.in-game .tabbar .voet-knop .ic,body.in-game .tabbar .voet-knop svg{width:22px;height:22px}
 body.in-game .hint-knop{
   position:absolute;left:14px;z-index:20;
-  bottom:calc(96px + env(safe-area-inset-bottom));
+  bottom:calc(86px + env(safe-area-inset-bottom));
   width:52px;height:52px;border-radius:999px;padding:0;
   display:flex;align-items:center;justify-content:center;
-  background:var(--goud);color:var(--goud-op);border:1px solid var(--goud-diep);
+  background:var(--goud);color:#fff;border:1px solid var(--goud-diep);
   box-shadow:0 6px 18px rgba(0,0,0,.28),0 2px 6px rgba(0,0,0,.2);
   transition:transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .2s;
   animation:hintOp .28s cubic-bezier(.2,1.1,.3,1) both;
@@ -3308,18 +3298,6 @@ body.in-game #modalIntro .intro-bordregels:empty + .deelnemers{padding-top:12px}
 .dl-tekst .rol.victim{color:#E58472}
 html[data-thema="licht"] .dl-tekst .rol.noble,html[data-thema="licht"] body.in-game .badge.tag.noble{color:#8A6A12}
 html[data-thema="licht"] .dl-tekst .rol.knight,html[data-thema="licht"] body.in-game .badge.tag.knight{color:#4C5A73}
-.bord-fiche{
-  position:relative;width:46px;height:46px;border-radius:999px;flex:0 0 auto;
-  display:flex;align-items:center;justify-content:center;background:var(--pc);
-  border:2.5px solid var(--board-ink);
-  box-shadow:0 2px 6px rgba(21,26,51,.34),0 0 0 1.5px rgba(255,255,255,.35);
-}
-.bord-fiche .init{font:700 20px var(--font-display);line-height:1;letter-spacing:-.01em}
-.bord-fiche .init[data-len="2"]{font-size:15px}
-.bord-fiche .init[data-len="3"]{font-size:12px}
-.bord-fiche .role-badge{position:absolute;right:-15%;bottom:-13%;width:22px;height:22px;
-  display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 1px 2px rgba(21,26,51,.35))}
-.bord-fiche .role-badge svg,.bord-fiche .role-badge img{width:100%;height:100%;display:block;overflow:visible}
 /* De knop hangt niet meer vast onder het vel maar staat onderaan IN de
    schuifkolom: je leest eerst het dossier en pakt de zaak daarna op. */
 /* Onderaan doorgescrold hoort de knop niet tegen de rand te plakken: deze
@@ -3342,6 +3320,9 @@ body.in-end .uitslag-voet .btn{
 }
 body.in-end .uitslag-voet .btn::after{content:none}
 body.in-end .uitslag-voet .btn:hover{filter:none;background:var(--goud-diep)}
+/* De weg naar het menu is de rustige knop; terug naar het bord de gele. */
+body.in-end .uitslag-voet .btn.ghost{background:var(--panel-2);color:var(--ink);border-color:var(--lijn);box-shadow:none}
+body.in-end .uitslag-voet .btn.ghost:hover{background:var(--panel-2);filter:brightness(1.04)}
 /* De knop onder het introvel: plat geel, zonder slagschaduw en zonder het
    streepje dat bij het bronzen zegel hoorde. Hij hoort bij de platte stijl van
    het bord, niet bij een knop uit een ander ontwerp. */
@@ -3399,7 +3380,9 @@ body.in-end #screen-end{padding:0;justify-content:flex-start;overflow:hidden;dis
 .uitslag-voet{flex:0 0 auto;max-width:520px;width:100%;margin:0 auto;
   padding:12px 22px calc(12px + env(safe-area-inset-bottom));
   border-top:1px solid var(--lijn-zacht);background:var(--grond)}
-.uitslag-voet .btn{width:100%}
+.uitslag-voet{display:flex;gap:10px}
+.uitslag-voet .btn{flex:1 1 0;width:auto;min-width:0}
+.uitslag-voet .btn[hidden]{display:none}
 @keyframes uitslagIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .uitslag-beeld{position:relative;width:128px;height:128px;margin:22px auto 14px}
 /* Alleen de ring draait een kwartslag (zodat hij bovenaan begint); het
@@ -3518,7 +3501,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
     <!-- Bord -->
     <div class="pane active" id="pane-board">
       <div id="boardViewport">
-        <div id="boardStage"><div id="gridWrap"><svg id="bordSchaduw" aria-hidden="true"></svg><div id="grid"></div><div id="objSchaduw"></div><svg id="walls"></svg><div id="hoogArt"></div><div id="labels"></div><div id="pawns"></div></div></div>
+        <div id="boardStage"><div id="gridWrap"><svg id="bordSchaduw" aria-hidden="true"></svg><div id="grid"></div><div id="objSchaduw"></div><svg id="walls"></svg><div id="hoogArt"></div><div id="labels"></div><div id="noteLaag"></div><div id="pawns"></div></div></div>
       </div>
     </div>
 
@@ -3570,7 +3553,9 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       </div>
       <div class="uitslag-lijst" id="endDetails"></div>
     </div>
-    <div class="uitslag-voet"><button class="btn" id="btnEndBack">Terug naar het bord</button></div>
+    <!-- Klopt alles, dan mag je door naar het menu; anders is er maar een
+         weg: terug naar het bord om verder te puzzelen. -->
+    <div class="uitslag-voet"><button class="btn ghost" id="btnEndMenu" hidden>Naar het menu</button><button class="btn" id="btnEndBack">Terug naar het bord</button></div>
   </section>
 </div>
 
@@ -3787,7 +3772,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
    de player zelf. Het wordt gebakken door assets/tools/build_palette.py. */
 /* ══════════ Vlak kleurenpalet: vloeren en muren ══════════
    Eén bron voor alle vloer- en muurkleuren, in dag- en nachtstand. Gemaakt
-   uit assets/art/concepts/clueboard-floor-wall-flat-colors-day-night-v1.json
+   uit assets/tools/clueboard-floor-wall-flat-colors-day-night-v1.json
    door assets/tools/build_palette.py; met de hand bijwerken hoeft niet. */
 /* @palet-begin */
 const VLAK_PALET = {
@@ -3880,7 +3865,7 @@ function zetVlakPalet(){
 /* @clueboard:assets-begin */
 /* Gegenereerd door assets/tools/build_assets.py uit assets/manifest.json.
    Niet met de hand aanpassen: wijzig de bank en draai het script opnieuw. */
-const ASSET_MANIFEST = {"artTile":128,"characterNote":"Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ (512px, zelfde canvas). Van achter naar voor: hoofd, shirt, haar, en alleen bij het slachtoffer de kruisogen; de lagen liggen 1:1 op elkaar, niets schuift. Shirt en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden. skinTones: vier huidtinten; light is de tint van de tekening zelf (base) en wordt niet omgekleurd; avoidHair zegt welke haarkleuren de bouwer bij die tint niet vanzelf toekent.","floorArt":{"note":"Hoeveel tekeningen er per vloersoort klaarstaan in art/backgrounds/<thema>/. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.","variants":{"concrete":1,"dirt":1,"grass":6,"gravel":1,"sand":2,"stone":4,"tile":1,"water":1,"wood":4}},"format":"clueboard-assets","gebiedsklassen":[{"id":"adellijk","label":"Voor edelen","rol":"noble","themes":["medieval"]}],"hairColors":[{"hex":"#2B2622","id":"soft-black","label":"Zwart"},{"hex":"#4A3226","id":"deep-brown","label":"Donkerbruin"},{"hex":"#7A4E2D","id":"warm-brown","label":"Warm bruin"},{"hex":"#9B4A2C","id":"auburn","label":"Kastanje"},{"hex":"#B48A4A","id":"dark-blond","label":"Donkerblond"},{"hex":"#A7A9AC","id":"silver","label":"Zilvergrijs"}],"hairStyles":[{"gender":"any","id":"bald","label":"Kaal"},{"gender":"male","id":"buzz-cut","label":"Stekeltjes"},{"gender":"male","id":"crew-cut","label":"Kortgeknipt"},{"gender":"male","id":"short-crop","label":"Kort"},{"gender":"male","id":"side-part","label":"Zijscheiding"},{"gender":"male","id":"swept-back","label":"Achterover"},{"gender":"male","id":"undercut","label":"Opgeschoren"},{"gender":"male","id":"wavy-crop","label":"Kort golvend"},{"gender":"any","id":"short-curls","label":"Korte krullen"},{"gender":"female","id":"bob","label":"Bob"},{"gender":"female","id":"shoulder-straight","label":"Steil tot de schouders"},{"gender":"female","id":"long-wavy","label":"Lang golvend"},{"gender":"female","id":"long-curls","label":"Lange krullen"},{"gender":"female","id":"ponytail","label":"Paardenstaart"},{"gender":"female","id":"half-up","label":"Half opgestoken"}],"iconViewBox":"0 0 24 24","identityColors":[{"hex":"#C79A3A","id":"C01","victimOnly":false},{"hex":"#3E8DB5","id":"C02","victimOnly":false},{"hex":"#694875","id":"C03","victimOnly":false},{"hex":"#E07A9A","id":"C04","victimOnly":false},{"hex":"#285C49","id":"C05","victimOnly":false},{"hex":"#7B7A32","id":"C06","victimOnly":false},{"hex":"#79A8B0","id":"C07","victimOnly":false},{"hex":"#75639A","id":"C08","victimOnly":false},{"hex":"#79A85A","id":"C09","victimOnly":false},{"hex":"#AAA0C8","id":"C10","victimOnly":false},{"hex":"#84562B","id":"C11","victimOnly":false},{"hex":"#AFC79E","id":"C12","victimOnly":false},{"hex":"#B6544A","id":"C13","victimOnly":true},{"hex":"#2E777C","id":"C14","victimOnly":false},{"hex":"#4D5F96","id":"C15","victimOnly":false},{"hex":"#A85F36","id":"C16","victimOnly":false},{"hex":"#8C4F86","id":"C17","victimOnly":false},{"hex":"#D08332","id":"C18","victimOnly":false},{"hex":"#477A66","id":"C19","victimOnly":false},{"hex":"#5B6672","id":"C20","victimOnly":false}],"ink":"#1D2036","note":"Bron van waarheid voor iconen, tekeningen, objectkennis, ruimtes, rollen, spelerskleuren en namen. Builder en player lezen hier allebei uit; niets hardcoderen. De kleur van een persoon hangt aan de beginletter van zijn naam (A t/m L, plus victim); de letter erop is donker of wit, afhankelijk van wat het beste leest. Rollen met available:false staan nog niet in de buildermenu's. Bij elke naam staat het geslacht, zodat de bouwer dat niet hoeft te raden voor de namen die hij zelf uitdeelt.","objects":[{"art":["barrel.svg"],"article":"het","category":"furniture","group":"Opslag","icon":"icons/objects/barrel.svg","kind":"Barrel","label":"Vat","labelPlural":"vaten","maxTiles":1,"slug":"barrel","themes":null,"type":"blocked"},{"art":["bed.svg"],"article":"het","category":"furniture","group":"Zitten","icon":"icons/objects/bed.svg","kind":"Bed","label":"Bed","labelPlural":"bedden","maxTiles":2,"pose":{"vz":"op","ww":"lag"},"slug":"bed","themes":null,"type":"occupiable"},{"art":["bench-2x1.svg","bench.svg"],"article":"de","category":"furniture","group":"Zitten","icon":"icons/objects/bench.svg","kind":"Bench","label":"Bank","labelPlural":"banken","maxTiles":2,"pose":{"vz":"op","ww":"zat"},"slug":"bench","themes":null,"type":"occupiable"},{"art":["boar.svg"],"article":"het","category":"animal","group":"Dieren","icon":"icons/objects/boar.svg","kind":"Boar","label":"Everzwijn","labelPlural":"everzwijnen","maxTiles":1,"slug":"boar","themes":["medieval"],"type":"blocked"},{"art":["boat.svg"],"article":"de","category":"vehicle","group":"Voertuigen","icon":"icons/objects/boat.svg","kind":"Boat","label":"Boot","labelPlural":"boten","maxTiles":2,"pose":{"vz":"in","ww":"zat"},"slug":"boat","themes":null,"type":"occupiable"},{"art":["box.svg"],"article":"de","category":"furniture","group":"Opslag","icon":"icons/objects/box.svg","kind":"Box","label":"Doos","labelPlural":"dozen","maxTiles":1,"slug":"box","themes":null,"type":"blocked"},{"art":["carpet-3x1.svg","carpet-2x1.svg","carpet.svg"],"article":"het","category":"decor","group":"Meubilair","icon":"icons/objects/carpet.svg","kind":"Carpet","label":"Tapijt","labelPlural":"tapijten","maxTiles":null,"slug":"carpet","themes":null,"type":"occupiable","under":true},{"art":["catapult.svg"],"article":"de","category":"decor","group":"Obstakels","icon":"icons/objects/catapult.svg","kind":"Catapult","label":"Katapult","labelPlural":"katapulten","maxTiles":2,"slug":"catapult","themes":["medieval"],"type":"blocked"},{"art":["chair.svg"],"article":"de","category":"furniture","group":"Zitten","icon":"icons/objects/chair.svg","kind":"Chair","label":"Stoel","labelPlural":"stoelen","maxTiles":1,"pose":{"vz":"op","ww":"zat"},"slug":"chair","themes":null,"type":"occupiable"},{"art":["cow.svg"],"article":"de","category":"animal","group":"Dieren","icon":"icons/objects/cow.svg","kind":"Cow","label":"Koe","labelPlural":"koeien","maxTiles":1,"slug":"cow","themes":null,"type":"blocked"},{"art":["crate.svg"],"article":"het","category":"furniture","group":"Opslag","icon":"icons/objects/crate.svg","kind":"Crate","label":"Krat","labelPlural":"kratten","maxTiles":1,"slug":"crate","themes":null,"type":"blocked"},{"art":["door.svg"],"article":"de","category":"wall","group":"Muren","icon":"icons/objects/door.svg","kind":"Door","label":"Deur","labelPlural":"deuren","maxTiles":null,"slug":"door","themes":null,"type":"blocked"},{"art":["easel.svg"],"article":"de","category":"furniture","group":"Meubilair","icon":"icons/objects/easel.svg","kind":"Easel","label":"Schildersezel","labelPlural":"schildersezels","maxTiles":1,"slug":"easel","themes":null,"type":"blocked"},{"art":["gate.svg"],"article":"de","category":"wall","group":"Muren","icon":"icons/objects/gate.svg","kind":"Gate","label":"Poort","labelPlural":"poorten","maxTiles":null,"slug":"gate","themes":null,"type":"blocked"},{"art":["horse.svg"],"article":"het","category":"animal","group":"Dieren","icon":"icons/objects/horse.svg","kind":"Horse","label":"Paard","labelPlural":"paarden","maxTiles":1,"pose":{"vz":"op","ww":"zat"},"slug":"horse","themes":["medieval"],"type":"occupiable"},{"art":["house.svg"],"article":"het","category":"decor","group":"Structuur","icon":"icons/objects/house.svg","kind":"House","label":"Huisje","labelPlural":"huisjes","maxTiles":1,"slug":"house","themes":null,"type":"blocked"},{"art":["loom.svg"],"article":"het","category":"furniture","group":"Meubilair","icon":"icons/objects/loom.svg","kind":"Loom","label":"Weefgetouw","labelPlural":"weefgetouwen","maxTiles":1,"slug":"loom","themes":["medieval"],"type":"blocked"},{"art":["pig.svg"],"article":"het","category":"animal","group":"Dieren","icon":"icons/objects/pig.svg","kind":"Pig","label":"Varken","labelPlural":"varkens","maxTiles":1,"slug":"pig","themes":null,"type":"blocked"},{"art":["plant.svg"],"article":"de","category":"nature","group":"Natuur","icon":"icons/objects/plant.svg","kind":"Plant","label":"Plant","labelPlural":"planten","maxTiles":1,"slug":"plant","themes":null,"type":"blocked"},{"art":["puddle.svg"],"article":"de","category":"nature","group":"Natuur","icon":"icons/objects/puddle.svg","kind":"Puddle","label":"Modderplas","labelPlural":"modderplassen","maxTiles":1,"pose":{"vz":"in","ww":"stond"},"slug":"puddle","themes":null,"type":"occupiable"},{"art":["rubble.svg"],"article":"het","category":"decor","group":"Obstakels","icon":"icons/objects/rubble.svg","kind":"Rubble","label":"Puin","labelPlural":"puinhopen","maxTiles":1,"slug":"rubble","themes":null,"type":"blocked"},{"art":["sack.svg"],"article":"de","category":"furniture","group":"Opslag","icon":"icons/objects/sack.svg","kind":"Sack","label":"Zak","labelPlural":"zakken","maxTiles":1,"slug":"sack","themes":null,"type":"blocked"},{"art":["shelf.svg"],"article":"de","category":"furniture","group":"Opslag","icon":"icons/objects/shelf.svg","kind":"Shelf","label":"Boekenkast","labelPlural":"boekenkasten","maxTiles":1,"slug":"shelf","themes":null,"type":"blocked"},{"art":["shrub.svg"],"article":"de","available":false,"category":"nature","group":"Natuur","icon":"icons/objects/shrub.svg","kind":"Shrub","label":"Struik","labelPlural":"struiken","maxTiles":1,"slug":"shrub","themes":null,"type":"blocked"},{"art":["statue.svg"],"article":"het","category":"decor","group":"Structuur","icon":"icons/objects/statue.svg","kind":"Statue","label":"Standbeeld","labelPlural":"standbeelden","maxTiles":1,"slug":"statue","themes":null,"type":"blocked"},{"art":["stones.svg"],"article":"de","category":"nature","group":"Natuur","icon":"icons/objects/stones.svg","kind":"Stones","label":"Stenen","labelPlural":"stenen","maxTiles":null,"slug":"stones","themes":null,"type":"blocked"},{"art":["table-2x1.svg","table.svg"],"article":"de","category":"furniture","group":"Meubilair","icon":"icons/objects/table.svg","kind":"Table","label":"Tafel","labelPlural":"tafels","maxTiles":null,"slug":"table","themes":null,"type":"blocked"},{"art":["treasure.svg"],"article":"de","category":"decor","group":"Opslag","icon":"icons/objects/treasure.svg","kind":"Treasure","label":"Schat","labelPlural":"schatten","maxTiles":1,"slug":"treasure","themes":null,"type":"blocked"},{"art":["tree.svg"],"article":"de","category":"nature","group":"Natuur","icon":"icons/objects/tree.svg","kind":"Tree","label":"Boom","labelPlural":"bomen","maxTiles":1,"slug":"tree","themes":null,"type":"blocked"},{"art":["vase.svg"],"article":"de","category":"decor","group":"Structuur","icon":"icons/objects/vase.svg","kind":"Vase","label":"Vaas","labelPlural":"vazen","maxTiles":1,"slug":"vase","themes":null,"type":"blocked"},{"art":["watermill-2x1.svg","watermill.svg"],"article":"de","category":"decor","group":"Structuur","icon":"icons/objects/watermill.svg","kind":"Watermill","label":"Watermolen","labelPlural":"watermolens","maxTiles":2,"slug":"watermill","themes":["medieval"],"type":"blocked"},{"art":["weapon-chest.svg"],"article":"de","category":"furniture","group":"Opslag","icon":"icons/objects/weapon-chest.svg","kind":"Weapon Chest","label":"Wapenkist","labelPlural":"wapenkisten","maxTiles":1,"slug":"weapon-chest","themes":["medieval"],"type":"blocked"},{"art":["well-2x2.svg","well.svg"],"article":"de","category":"decor","group":"Structuur","icon":"icons/objects/well.svg","kind":"Well","label":"Waterput","labelPlural":"waterputten","maxTiles":4,"slug":"well","themes":null,"type":"blocked"},{"art":["window.svg"],"article":"het","category":"wall","group":"Muren","icon":"icons/objects/window.svg","kind":"Window","label":"Raam","labelPlural":"ramen","maxTiles":null,"slug":"window","themes":null,"type":"blocked"},{"art":["wolf.svg"],"article":"de","category":"animal","group":"Dieren","icon":"icons/objects/wolf.svg","kind":"Wolf","label":"Wolf","labelPlural":"wolven","maxTiles":1,"slug":"wolf","themes":["medieval"],"type":"blocked"}],"personColors":{"A":"#C79A3A","B":"#3E8DB5","C":"#694875","D":"#E07A9A","E":"#285C49","F":"#7B7A32","G":"#79A8B0","H":"#75639A","I":"#79A85A","J":"#AAA0C8","K":"#84562B","L":"#AFC79E","M":"#2E777C","N":"#4D5F96","O":"#A85F36","P":"#8C4F86","Q":"#D08332","R":"#477A66","S":"#5B6672","victim":"#B6544A"},"personNames":{"A":[{"gender":"male","name":"Adelbert"},{"gender":"female","name":"Agnes"},{"gender":"male","name":"Alard"},{"gender":"female","name":"Aleid"},{"gender":"male","name":"Anselm"},{"gender":"male","name":"Arnout"},{"gender":"female","name":"Aveline"},{"gender":"male","name":"Alwin"},{"gender":"female","name":"Amelie"},{"gender":"male","name":"Aldric"}],"B":[{"gender":"male","name":"Baldwin"},{"gender":"female","name":"Beatrix"},{"gender":"male","name":"Bertram"},{"gender":"male","name":"Bavo"},{"gender":"female","name":"Brechtje"},{"gender":"male","name":"Boudewijn"},{"gender":"male","name":"Berthold"},{"gender":"female","name":"Bela"},{"gender":"male","name":"Brand"},{"gender":"female","name":"Bertrada"}],"C":[{"gender":"male","name":"Casimir"},{"gender":"female","name":"Clementia"},{"gender":"male","name":"Coenraad"},{"gender":"male","name":"Christiaen"},{"gender":"female","name":"Cunera"},{"gender":"male","name":"Constantijn"},{"gender":"female","name":"Cathelijne"},{"gender":"male","name":"Cyriel"},{"gender":"male","name":"Colijn"},{"gender":"female","name":"Clara"}],"D":[{"gender":"male","name":"Diederik"},{"gender":"female","name":"Dorothea"},{"gender":"male","name":"Duncan"},{"gender":"male","name":"Dagobert"},{"gender":"female","name":"Dieuwertje"},{"gender":"male","name":"Dirk"},{"gender":"male","name":"Doede"},{"gender":"male","name":"Damiaan"},{"gender":"female","name":"Dina"},{"gender":"male","name":"Doriaan"}],"E":[{"gender":"female","name":"Eleonora"},{"gender":"male","name":"Everhard"},{"gender":"male","name":"Edzard"},{"gender":"male","name":"Eelke"},{"gender":"male","name":"Emmerik"},{"gender":"female","name":"Elsbeth"},{"gender":"male","name":"Egbert"},{"gender":"female","name":"Ermgard"},{"gender":"male","name":"Eduard"},{"gender":"female","name":"Elske"}],"F":[{"gender":"male","name":"Fulbert"},{"gender":"female","name":"Femke"},{"gender":"male","name":"Floris"},{"gender":"male","name":"Frederik"},{"gender":"female","name":"Fenna"},{"gender":"male","name":"Ferdinand"},{"gender":"male","name":"Filips"},{"gender":"male","name":"Folkert"},{"gender":"female","name":"Francina"},{"gender":"male","name":"Frans"}],"G":[{"gender":"male","name":"Godfried"},{"gender":"female","name":"Geertruide"},{"gender":"male","name":"Gerlach"},{"gender":"male","name":"Gijsbert"},{"gender":"female","name":"Griet"},{"gender":"male","name":"Gerbrand"},{"gender":"male","name":"Guido"},{"gender":"female","name":"Godelieve"},{"gender":"male","name":"Govert"},{"gender":"female","name":"Gerarda"}],"H":[{"gender":"male","name":"Hendrik"},{"gender":"female","name":"Hildegard"},{"gender":"male","name":"Herbert"},{"gender":"female","name":"Hadewych"},{"gender":"male","name":"Huibert"},{"gender":"male","name":"Hugo"},{"gender":"female","name":"Helwig"},{"gender":"male","name":"Harmen"},{"gender":"female","name":"Hilde"},{"gender":"female","name":"Hendrina"}],"I":[{"gender":"male","name":"Ingelbert"},{"gender":"female","name":"Ida"},{"gender":"female","name":"Isolde"},{"gender":"male","name":"Ivo"},{"gender":"female","name":"Irmgard"},{"gender":"female","name":"Imme"},{"gender":"male","name":"Isebrand"},{"gender":"female","name":"Iselinde"},{"gender":"male","name":"Immanuel"},{"gender":"female","name":"Ilse"}],"J":[{"gender":"female","name":"Jacoba"},{"gender":"male","name":"Joris"},{"gender":"male","name":"Judocus"},{"gender":"female","name":"Jutte"},{"gender":"male","name":"Johan"},{"gender":"female","name":"Jolente"},{"gender":"male","name":"Joost"},{"gender":"male","name":"Jorden"},{"gender":"female","name":"Josina"},{"gender":"female","name":"Jannetje"}],"K":[{"gender":"male","name":"Karel"},{"gender":"female","name":"Katelijne"},{"gender":"male","name":"Koenraad"},{"gender":"female","name":"Kunigonde"},{"gender":"male","name":"Klaas"},{"gender":"male","name":"Kerstiaen"},{"gender":"female","name":"Katrijn"},{"gender":"male","name":"Kobe"},{"gender":"female","name":"Klaasje"},{"gender":"male","name":"Koert"}],"L":[{"gender":"male","name":"Lodewijk"},{"gender":"female","name":"Liesbeth"},{"gender":"male","name":"Lambert"},{"gender":"male","name":"Ludolf"},{"gender":"female","name":"Lijsbeth"},{"gender":"male","name":"Laurens"},{"gender":"female","name":"Lutgarde"},{"gender":"male","name":"Lieven"},{"gender":"male","name":"Lammert"},{"gender":"female","name":"Lena"}],"V":[{"gender":"male","name":"Vladimir"},{"gender":"male","name":"Vincent"},{"gender":"male","name":"Volkert"},{"gender":"female","name":"Verena"},{"gender":"male","name":"Victor"},{"gender":"male","name":"Vrederik"},{"gender":"female","name":"Veronica"},{"gender":"male","name":"Vastrad"},{"gender":"male","name":"Valentijn"},{"gender":"female","name":"Vibeke"}]},"roles":[{"available":true,"baseline":false,"color":"#C9A227","gebieden":["adellijk"],"icon":"icons/roles/noble.svg","label":"Edele","labelPlural":"edelen","standing":"noble","themes":["medieval"]},{"available":true,"baseline":true,"color":"#6E8C4A","gebieden":["gewoon"],"icon":"icons/roles/villager.svg","label":"Dorpeling","labelPlural":"dorpelingen","standing":"villager","themes":["medieval"]},{"available":true,"baseline":false,"color":"#7E8894","gebieden":["*"],"icon":"icons/roles/knight.svg","label":"Ridder","labelPlural":"ridders","standing":"knight","themes":["medieval"]},{"available":false,"baseline":false,"color":"#8A6A45","gebieden":["gewoon"],"icon":"icons/roles/guard.svg","label":"Wacht","labelPlural":"wachten","standing":"guard","themes":["medieval"]},{"available":false,"baseline":false,"color":"#7B6597","gebieden":["gewoon"],"icon":"icons/roles/monk.svg","label":"Monnik","labelPlural":"monniken","standing":"monk","themes":["medieval"]},{"available":false,"baseline":false,"color":"#B5715A","gebieden":["gewoon"],"icon":"icons/roles/servant.svg","label":"Bediende","labelPlural":"bedienden","standing":"servant","themes":["medieval"]}],"roomAliases":{"great-hall":{"kind":"hall","qualifier":"Grote"},"smithy":{"kind":"forge"}},"roomQualifiers":[{"group":"Kwalificatie","items":[{"de":"Koninklijke","het":"Koninklijk","id":"royal"},{"de":"Grote","het":"Groot","id":"big"},{"de":"Kleine","het":"Klein","id":"small"},{"de":"Oude","het":"Oud","id":"old"},{"de":"Nieuwe","het":"Nieuw","id":"new"},{"de":"Verlaten","het":"Verlaten","id":"abandoned"},{"de":"Verborgen","het":"Verborgen","id":"hidden"},{"de":"Hoge","het":"Hoog","id":"high"},{"de":"Lage","het":"Laag","id":"low"}]},{"group":"Ligging","items":[{"de":"Noordelijke","het":"Noordelijk","id":"north"},{"de":"Oostelijke","het":"Oostelijk","id":"east"},{"de":"Zuidelijke","het":"Zuidelijk","id":"south"},{"de":"Westelijke","het":"Westelijk","id":"west"},{"de":"Bovenste","het":"Bovenste","id":"upper"},{"de":"Onderste","het":"Onderste","id":"lower"},{"de":"Voorste","het":"Voorste","id":"front"},{"de":"Achterste","het":"Achterste","id":"back"}]}],"rooms":[{"article":"de","floor":"marble","group":"Kasteel","id":"throne-room","label":"Troonzaal","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"hall","label":"Hal","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Kasteel","id":"royal-chamber","label":"Koningskamer","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"treasury","label":"Schatkamer","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"armoury","label":"Wapenkamer","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"guard-room","label":"Wachtkamer","themes":["medieval"]},{"article":"het","floor":"stone","group":"Kasteel","id":"barracks","label":"Soldatenverblijf","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"dungeon","label":"Kerker","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"cell","label":"Cel","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"tower","label":"Toren","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"keep","label":"Donjon","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"watchtower","label":"Wachttoren","themes":["medieval"]},{"article":"het","floor":"stone","group":"Kasteel","id":"gatehouse","label":"Poorthuis","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"city-walls","label":"Stadswallen","themes":["medieval"]},{"article":"de","floor":"gravel","group":"Kasteel","id":"courtyard","label":"Binnenplaats","themes":["medieval","modern"]},{"article":"de","floor":"marble","group":"Kasteel","id":"ballroom","label":"Balzaal","themes":["medieval","modern"]},{"article":"het","floor":"wood","group":"Woning","id":"house","label":"Huis","themes":["medieval"]},{"article":"het","floor":"wood","group":"Woning","id":"manor","label":"Landhuis","themes":["medieval","modern"]},{"article":"het","floor":"grass","group":"Woning","id":"estate","label":"Landgoed","themes":["medieval","modern"]},{"article":"de","floor":"dirt","group":"Woning","id":"hut","label":"Hut","themes":["medieval"]},{"article":"de","floor":"wood","group":"Woning","id":"room","label":"Kamer","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"bedroom","label":"Slaapkamer","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"dining-room","label":"Eetkamer","themes":["medieval","modern"]},{"article":"de","floor":"tile","group":"Woning","id":"kitchen","label":"Keuken","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"living-room","label":"Woonkamer","themes":["modern"]},{"article":"de","floor":"wood","group":"Woning","id":"library","label":"Bibliotheek","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"study","label":"Studeerkamer","themes":["medieval","modern"]},{"article":"het","floor":"carpet","group":"Woning","id":"office","label":"Kantoor","themes":["modern"]},{"article":"de","floor":"tile","group":"Woning","id":"bathroom","label":"Badkamer","themes":["modern"]},{"article":"het","floor":"wood","group":"Woning","id":"balcony","label":"Balkon","themes":["medieval","modern"]},{"article":"de","floor":"stone","group":"Woning","id":"corridor","label":"Gang","themes":["medieval","modern"]},{"article":"de","floor":"stone","group":"Woning","id":"cellar","label":"Kelder","themes":["medieval","modern"]},{"article":"de","floor":"stone","group":"Woning","id":"wine-cellar","label":"Wijnkelder","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"attic","label":"Zolder","themes":["medieval","modern"]},{"article":"de","floor":"stone","group":"Woning","id":"storage","label":"Berging","themes":["medieval","modern"]},{"article":"de","floor":"tile","group":"Woning","id":"conservatory","label":"Serre","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"music-room","label":"Muziekkamer","themes":["medieval","modern"]},{"article":"de","floor":"carpet","group":"Woning","id":"billiard-room","label":"Biljartkamer","themes":["modern"]},{"article":"de","floor":"concrete","group":"Woning","id":"garage","label":"Garage","themes":["modern"]},{"article":"het","floor":"gravel","group":"Dorp","id":"village-square","label":"Dorpsplein","themes":["medieval"]},{"article":"het","floor":"stone","group":"Dorp","id":"alley","label":"Steegje","themes":["medieval"]},{"article":"de","floor":"wood","group":"Dorp","id":"tavern","label":"Taverne","themes":["medieval"]},{"article":"de","floor":"stone","group":"Dorp","id":"forge","label":"Smederij","themes":["medieval"]},{"article":"de","floor":"wood","group":"Dorp","id":"workshop","label":"Werkplaats","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Dorp","id":"apothecary","label":"Apothekerswoning","themes":["medieval"]},{"article":"de","floor":"wood","group":"Dorp","id":"watermill","label":"Watermolen","themes":["medieval"]},{"article":"de","floor":"dirt","group":"Dorp","id":"stable","label":"Stallen","themes":["medieval"]},{"article":"de","floor":"gravel","group":"Markt","id":"stall-jewels","label":"Juwelen","themes":["medieval"]},{"article":"de","floor":"gravel","group":"Markt","id":"stall-clothes","label":"Kleding","themes":["medieval"]},{"article":"de","floor":"gravel","group":"Markt","id":"stall-weapons","label":"Wapens","themes":["medieval"]},{"article":"het","floor":"dirt","group":"Markt","id":"stall-livestock","label":"Vee","themes":["medieval"]},{"article":"het","floor":"gravel","group":"Markt","id":"stall-fruit","label":"Fruit","themes":["medieval"]},{"article":"de","floor":"gravel","group":"Markt","id":"stall-fish","label":"Vis","themes":["medieval"]},{"article":"het","floor":"gravel","group":"Markt","id":"pottery","label":"Keramiek","themes":["medieval"]},{"article":"de","floor":"stone","group":"Klooster en kerk","id":"church","label":"Kerk","themes":["medieval"]},{"article":"de","floor":"stone","group":"Klooster en kerk","id":"chapel","label":"Kapel","themes":["medieval"]},{"article":"het","floor":"marble","group":"Klooster en kerk","id":"altar","label":"Altaar","themes":["medieval"]},{"article":"de","floor":"wood","group":"Klooster en kerk","id":"dormitory","label":"Slaapzaal","themes":["medieval"]},{"article":"de","floor":"stone","group":"Klooster en kerk","id":"monk-cell","label":"Kloostercel","themes":["medieval"]},{"article":"de","floor":"marble","group":"Klooster en kerk","id":"statue-garden","label":"Beelden","themes":["medieval"]},{"article":"het","floor":"grass","group":"Buiten","id":"field","label":"Veld","themes":["medieval","modern"]},{"article":"het","floor":"grass","group":"Buiten","id":"wheat-field","label":"Tarweveld","themes":["medieval"]},{"article":"de","floor":"grass","group":"Buiten","id":"hill","label":"Heuvel","themes":["medieval","modern"]},{"article":"de","floor":"grass","group":"Buiten","id":"woods","label":"Bossen","themes":["medieval","modern"]},{"article":"de","floor":"dirt","group":"Buiten","id":"clearing","label":"Open Plek","themes":["medieval","modern"]},{"article":"de","floor":"grass","group":"Buiten","id":"garden","label":"Tuin","themes":["medieval","modern"]},{"article":"het","floor":"stone","group":"Buiten","id":"terrace","label":"Terras","themes":["medieval","modern"]},{"article":"de","floor":"dirt","group":"Buiten","id":"road","label":"Weg","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Buiten","id":"bridge","label":"Brug","themes":["medieval","modern"]},{"article":"de","floor":"water","group":"Buiten","id":"river","label":"Rivier","themes":["medieval","modern"]},{"article":"de","floor":"water","group":"Buiten","id":"brook","label":"Beek","themes":["medieval","modern"]},{"article":"de","floor":"water","group":"Buiten","id":"pond","label":"Vijver","themes":["medieval","modern"]},{"article":"het","floor":"stone","group":"Kamp en strijd","id":"fort","label":"Fort","themes":["medieval"]},{"article":"de","floor":"sand","group":"Kamp en strijd","id":"arena","label":"Arena","themes":["medieval"]},{"article":"de","floor":"dirt","group":"Kamp en strijd","id":"tent","label":"Tent","themes":["medieval"]},{"article":"de","floor":"dirt","group":"Kamp en strijd","id":"supply-tent","label":"Voorraadtent","themes":["medieval"]},{"article":"de","floor":"dirt","group":"Kamp en strijd","id":"command-tent","label":"Commandotent","themes":["medieval"]},{"article":"het","floor":"wood","group":"Onderweg","id":"carriage","label":"Rijtuig","themes":["medieval","modern"]},{"article":"het","floor":"wood","group":"Onderweg","id":"ship","label":"Schip","themes":["medieval","modern"]},{"article":"het","floor":"wood","group":"Onderweg","id":"aisle","label":"Gangpad","themes":["medieval","modern"]}],"skinTones":[{"base":true,"hex":"#FACD9E","id":"light","label":"Licht"},{"hex":"#E2AC7C","id":"medium","label":"Getint"},{"avoidHair":["dark-blond","auburn"],"hex":"#B77A50","id":"tan","label":"Bruin"},{"avoidHair":["dark-blond","auburn"],"hex":"#6E4530","id":"deep","label":"Donker"}],"spareIcons":[{"icon":"icons/objects/mirror.svg","keywords":["mirror","spiegel"],"slug":"mirror"},{"icon":"icons/objects/paint.svg","keywords":["paint","schilderij","portret"],"slug":"paint"},{"icon":"icons/objects/candle.svg","keywords":["candle","kaars"],"slug":"candle"},{"icon":"icons/objects/lamp.svg","keywords":["lamp","lantaarn","torch","fakkel"],"slug":"lamp"},{"icon":"icons/objects/fire.svg","keywords":["fire","haard","hearth","oven","forge"],"slug":"fire"},{"icon":"icons/objects/anvil.svg","keywords":["anvil","aambeeld","sword","zwaard","armour","wapen"],"slug":"anvil"},{"icon":"icons/objects/hay.svg","keywords":["hay","hooi","sack","zak","grain"],"slug":"hay"}],"ui":[{"icon":"icons/ui/back.svg","name":"back"},{"icon":"icons/ui/badge.svg","name":"badge"},{"icon":"icons/ui/blocked.svg","name":"blocked"},{"icon":"icons/ui/box.svg","name":"box"},{"icon":"icons/ui/check.svg","name":"check"},{"icon":"icons/ui/chevron.svg","name":"chevron"},{"icon":"icons/ui/clipboard.svg","name":"clipboard"},{"icon":"icons/ui/clock.svg","name":"clock"},{"icon":"icons/ui/compass.svg","name":"compass"},{"icon":"icons/ui/cross.svg","name":"cross"},{"icon":"icons/ui/culprit.svg","name":"culprit"},{"icon":"icons/ui/dagger.svg","name":"dagger"},{"icon":"icons/ui/dossier.svg","name":"dossier"},{"icon":"icons/ui/download.svg","name":"download"},{"icon":"icons/ui/droplet.svg","name":"droplet"},{"icon":"icons/ui/eye.svg","name":"eye"},{"icon":"icons/ui/eye-off.svg","name":"eye-off"},{"icon":"icons/ui/file.svg","name":"file"},{"icon":"icons/ui/globe.svg","name":"globe"},{"icon":"icons/ui/grid.svg","name":"grid"},{"icon":"icons/ui/help.svg","name":"help"},{"icon":"icons/ui/home.svg","name":"home"},{"icon":"icons/ui/list.svg","name":"list"},{"icon":"icons/ui/lock.svg","name":"lock"},{"icon":"icons/ui/moon.svg","name":"moon"},{"icon":"icons/ui/note.svg","name":"note"},{"icon":"icons/ui/pawn.svg","name":"pawn"},{"icon":"icons/ui/pencil.svg","name":"pencil"},{"icon":"icons/ui/people.svg","name":"people"},{"icon":"icons/ui/person.svg","name":"person"},{"icon":"icons/ui/pin.svg","name":"pin"},{"icon":"icons/ui/play.svg","name":"play"},{"icon":"icons/ui/plus.svg","name":"plus"},{"icon":"icons/ui/scissors.svg","name":"scissors"},{"icon":"icons/ui/settings.svg","name":"settings"},{"icon":"icons/ui/skull.svg","name":"skull"},{"icon":"icons/ui/sparkle.svg","name":"sparkle"},{"icon":"icons/ui/sun.svg","name":"sun"},{"icon":"icons/ui/swap.svg","name":"swap"},{"icon":"icons/ui/trash.svg","name":"trash"},{"icon":"icons/ui/undo.svg","name":"undo"},{"icon":"icons/ui/upload.svg","name":"upload"},{"icon":"icons/ui/warning.svg","name":"warning"}],"version":33};
+const ASSET_MANIFEST = {"artTile":128,"characterNote":"Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ (512px, zelfde canvas). Van achter naar voor: hoofd, shirt, haar, en alleen bij het slachtoffer de kruisogen; de lagen liggen 1:1 op elkaar, niets schuift. Shirt en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden. skinTones: vier huidtinten; light is de tint van de tekening zelf (base) en wordt niet omgekleurd; avoidHair zegt welke haarkleuren de bouwer bij die tint niet vanzelf toekent.","floorArt":{"note":"Vroeger het aantal geschilderde vloeren per soort in art/backgrounds/<thema>/; die vloeren staan nu buiten de repo (Design Department/60 Repo Sources/backgrounds) en de speler tekent de vloer uit CSS. Het getal doet niets meer. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.","variants":{"concrete":1,"dirt":1,"grass":6,"gravel":1,"sand":2,"stone":4,"tile":1,"water":1,"wood":4}},"format":"clueboard-assets","gebiedsklassen":[{"id":"adellijk","label":"Voor edelen","rol":"noble","themes":["medieval"]}],"hairColors":[{"hex":"#2B2622","id":"soft-black","label":"Zwart"},{"hex":"#4A3226","id":"deep-brown","label":"Donkerbruin"},{"hex":"#7A4E2D","id":"warm-brown","label":"Warm bruin"},{"hex":"#9B4A2C","id":"auburn","label":"Kastanje"},{"hex":"#B48A4A","id":"dark-blond","label":"Donkerblond"},{"hex":"#A7A9AC","id":"silver","label":"Zilvergrijs"}],"hairStyles":[{"gender":"any","id":"bald","label":"Kaal"},{"gender":"male","id":"buzz-cut","label":"Stekeltjes"},{"gender":"male","id":"crew-cut","label":"Kortgeknipt"},{"gender":"male","id":"short-crop","label":"Kort"},{"gender":"male","id":"side-part","label":"Zijscheiding"},{"gender":"male","id":"swept-back","label":"Achterover"},{"gender":"male","id":"undercut","label":"Opgeschoren"},{"gender":"male","id":"wavy-crop","label":"Kort golvend"},{"gender":"any","id":"short-curls","label":"Korte krullen"},{"gender":"female","id":"bob","label":"Bob"},{"gender":"female","id":"shoulder-straight","label":"Steil tot de schouders"},{"gender":"female","id":"long-wavy","label":"Lang golvend"},{"gender":"female","id":"long-curls","label":"Lange krullen"},{"gender":"female","id":"ponytail","label":"Paardenstaart"},{"gender":"female","id":"half-up","label":"Half opgestoken"}],"iconViewBox":"0 0 24 24","identityColors":[{"hex":"#C79A3A","id":"C01","victimOnly":false},{"hex":"#3E8DB5","id":"C02","victimOnly":false},{"hex":"#694875","id":"C03","victimOnly":false},{"hex":"#E07A9A","id":"C04","victimOnly":false},{"hex":"#285C49","id":"C05","victimOnly":false},{"hex":"#7B7A32","id":"C06","victimOnly":false},{"hex":"#79A8B0","id":"C07","victimOnly":false},{"hex":"#75639A","id":"C08","victimOnly":false},{"hex":"#79A85A","id":"C09","victimOnly":false},{"hex":"#AAA0C8","id":"C10","victimOnly":false},{"hex":"#84562B","id":"C11","victimOnly":false},{"hex":"#AFC79E","id":"C12","victimOnly":false},{"hex":"#B6544A","id":"C13","victimOnly":true},{"hex":"#2E777C","id":"C14","victimOnly":false},{"hex":"#4D5F96","id":"C15","victimOnly":false},{"hex":"#A85F36","id":"C16","victimOnly":false},{"hex":"#8C4F86","id":"C17","victimOnly":false},{"hex":"#D08332","id":"C18","victimOnly":false},{"hex":"#477A66","id":"C19","victimOnly":false},{"hex":"#5B6672","id":"C20","victimOnly":false}],"ink":"#1D2036","note":"Bron van waarheid voor iconen, tekeningen, objectkennis, ruimtes, rollen, spelerskleuren en namen. Builder en player lezen hier allebei uit; niets hardcoderen. De kleur van een persoon hangt aan de beginletter van zijn naam (A t/m L, plus victim); de letter erop is donker of wit, afhankelijk van wat het beste leest. Rollen met available:false staan nog niet in de buildermenu's. Bij elke naam staat het geslacht, zodat de bouwer dat niet hoeft te raden voor de namen die hij zelf uitdeelt.","objects":[{"art":["barrel.svg"],"article":"het","category":"furniture","group":"Opslag","icon":"icons/objects/barrel.svg","kind":"Barrel","label":"Vat","labelPlural":"vaten","maxTiles":1,"slug":"barrel","themes":null,"type":"blocked"},{"art":["bed.svg"],"article":"het","category":"furniture","group":"Zitten","icon":"icons/objects/bed.svg","kind":"Bed","label":"Bed","labelPlural":"bedden","maxTiles":2,"pose":{"vz":"op","ww":"lag"},"slug":"bed","themes":null,"type":"occupiable"},{"art":["bench-2x1.svg","bench.svg"],"article":"de","category":"furniture","group":"Zitten","icon":"icons/objects/bench.svg","kind":"Bench","label":"Bank","labelPlural":"banken","maxTiles":2,"pose":{"vz":"op","ww":"zat"},"slug":"bench","themes":null,"type":"occupiable"},{"art":["boar.svg"],"article":"het","category":"animal","group":"Dieren","icon":"icons/objects/boar.svg","kind":"Boar","label":"Everzwijn","labelPlural":"everzwijnen","maxTiles":1,"slug":"boar","themes":["medieval"],"type":"blocked"},{"art":["boat.svg"],"article":"de","category":"vehicle","group":"Voertuigen","icon":"icons/objects/boat.svg","kind":"Boat","label":"Boot","labelPlural":"boten","maxTiles":2,"pose":{"vz":"in","ww":"zat"},"slug":"boat","themes":null,"type":"occupiable"},{"art":["box.svg"],"article":"de","category":"furniture","group":"Opslag","icon":"icons/objects/box.svg","kind":"Box","label":"Doos","labelPlural":"dozen","maxTiles":1,"slug":"box","themes":null,"type":"blocked"},{"art":["carpet-3x1.svg","carpet-2x1.svg","carpet.svg"],"article":"het","category":"decor","group":"Meubilair","icon":"icons/objects/carpet.svg","kind":"Carpet","label":"Tapijt","labelPlural":"tapijten","maxTiles":null,"slug":"carpet","themes":null,"type":"occupiable","under":true},{"art":["catapult.svg"],"article":"de","category":"decor","group":"Obstakels","icon":"icons/objects/catapult.svg","kind":"Catapult","label":"Katapult","labelPlural":"katapulten","maxTiles":2,"slug":"catapult","themes":["medieval"],"type":"blocked"},{"art":["chair.svg"],"article":"de","category":"furniture","group":"Zitten","icon":"icons/objects/chair.svg","kind":"Chair","label":"Stoel","labelPlural":"stoelen","maxTiles":1,"pose":{"vz":"op","ww":"zat"},"slug":"chair","themes":null,"type":"occupiable"},{"art":["cow.svg"],"article":"de","category":"animal","group":"Dieren","icon":"icons/objects/cow.svg","kind":"Cow","label":"Koe","labelPlural":"koeien","maxTiles":1,"slug":"cow","themes":null,"type":"blocked"},{"art":["crate.svg"],"article":"het","category":"furniture","group":"Opslag","icon":"icons/objects/crate.svg","kind":"Crate","label":"Krat","labelPlural":"kratten","maxTiles":1,"slug":"crate","themes":null,"type":"blocked"},{"art":["door.svg"],"article":"de","category":"wall","group":"Muren","icon":"icons/objects/door.svg","kind":"Door","label":"Deur","labelPlural":"deuren","maxTiles":null,"slug":"door","themes":null,"type":"blocked"},{"art":["easel.svg"],"article":"de","category":"furniture","group":"Meubilair","icon":"icons/objects/easel.svg","kind":"Easel","label":"Schildersezel","labelPlural":"schildersezels","maxTiles":1,"slug":"easel","themes":null,"type":"blocked"},{"art":["gate.svg"],"article":"de","category":"wall","group":"Muren","icon":"icons/objects/gate.svg","kind":"Gate","label":"Poort","labelPlural":"poorten","maxTiles":null,"slug":"gate","themes":null,"type":"blocked"},{"art":["horse.svg"],"article":"het","category":"animal","group":"Dieren","icon":"icons/objects/horse.svg","kind":"Horse","label":"Paard","labelPlural":"paarden","maxTiles":1,"pose":{"vz":"op","ww":"zat"},"slug":"horse","themes":["medieval"],"type":"occupiable"},{"art":["house.svg"],"article":"het","category":"decor","group":"Structuur","icon":"icons/objects/house.svg","kind":"House","label":"Huisje","labelPlural":"huisjes","maxTiles":1,"slug":"house","themes":null,"type":"blocked"},{"art":["loom.svg"],"article":"het","category":"furniture","group":"Meubilair","icon":"icons/objects/loom.svg","kind":"Loom","label":"Weefgetouw","labelPlural":"weefgetouwen","maxTiles":1,"slug":"loom","themes":["medieval"],"type":"blocked"},{"art":["pig.svg"],"article":"het","category":"animal","group":"Dieren","icon":"icons/objects/pig.svg","kind":"Pig","label":"Varken","labelPlural":"varkens","maxTiles":1,"slug":"pig","themes":null,"type":"blocked"},{"art":["plant.svg"],"article":"de","category":"nature","group":"Natuur","icon":"icons/objects/plant.svg","kind":"Plant","label":"Plant","labelPlural":"planten","maxTiles":1,"slug":"plant","themes":null,"type":"blocked"},{"art":["puddle.svg"],"article":"de","category":"nature","group":"Natuur","icon":"icons/objects/puddle.svg","kind":"Puddle","label":"Modderplas","labelPlural":"modderplassen","maxTiles":1,"pose":{"vz":"in","ww":"stond"},"slug":"puddle","themes":null,"type":"occupiable"},{"art":["rubble.svg"],"article":"het","category":"decor","group":"Obstakels","icon":"icons/objects/rubble.svg","kind":"Rubble","label":"Puin","labelPlural":"puinhopen","maxTiles":1,"slug":"rubble","themes":null,"type":"blocked"},{"art":["sack.svg"],"article":"de","category":"furniture","group":"Opslag","icon":"icons/objects/sack.svg","kind":"Sack","label":"Zak","labelPlural":"zakken","maxTiles":1,"slug":"sack","themes":null,"type":"blocked"},{"art":["shelf.svg"],"article":"de","category":"furniture","group":"Opslag","icon":"icons/objects/shelf.svg","kind":"Shelf","label":"Boekenkast","labelPlural":"boekenkasten","maxTiles":1,"slug":"shelf","themes":null,"type":"blocked"},{"art":["shrub.svg"],"article":"de","available":false,"category":"nature","group":"Natuur","icon":"icons/objects/shrub.svg","kind":"Shrub","label":"Struik","labelPlural":"struiken","maxTiles":1,"slug":"shrub","themes":null,"type":"blocked"},{"art":["statue.svg"],"article":"het","category":"decor","group":"Structuur","icon":"icons/objects/statue.svg","kind":"Statue","label":"Standbeeld","labelPlural":"standbeelden","maxTiles":1,"slug":"statue","themes":null,"type":"blocked"},{"art":["stones.svg"],"article":"de","category":"nature","group":"Natuur","icon":"icons/objects/stones.svg","kind":"Stones","label":"Stenen","labelPlural":"stenen","maxTiles":null,"slug":"stones","themes":null,"type":"blocked"},{"art":["table-2x1.svg","table.svg"],"article":"de","category":"furniture","group":"Meubilair","icon":"icons/objects/table.svg","kind":"Table","label":"Tafel","labelPlural":"tafels","maxTiles":null,"slug":"table","themes":null,"type":"blocked"},{"art":["treasure.svg"],"article":"de","category":"decor","group":"Opslag","icon":"icons/objects/treasure.svg","kind":"Treasure","label":"Schat","labelPlural":"schatten","maxTiles":1,"slug":"treasure","themes":null,"type":"blocked"},{"art":["tree.svg"],"article":"de","category":"nature","group":"Natuur","icon":"icons/objects/tree.svg","kind":"Tree","label":"Boom","labelPlural":"bomen","maxTiles":1,"slug":"tree","themes":null,"type":"blocked"},{"art":["vase.svg"],"article":"de","category":"decor","group":"Structuur","icon":"icons/objects/vase.svg","kind":"Vase","label":"Vaas","labelPlural":"vazen","maxTiles":1,"slug":"vase","themes":null,"type":"blocked"},{"art":["watermill-2x1.svg","watermill.svg"],"article":"de","category":"decor","group":"Structuur","icon":"icons/objects/watermill.svg","kind":"Watermill","label":"Watermolen","labelPlural":"watermolens","maxTiles":2,"slug":"watermill","themes":["medieval"],"type":"blocked"},{"art":["weapon-chest.svg"],"article":"de","category":"furniture","group":"Opslag","icon":"icons/objects/weapon-chest.svg","kind":"Weapon Chest","label":"Wapenkist","labelPlural":"wapenkisten","maxTiles":1,"slug":"weapon-chest","themes":["medieval"],"type":"blocked"},{"art":["well-2x2.svg","well.svg"],"article":"de","category":"decor","group":"Structuur","icon":"icons/objects/well.svg","kind":"Well","label":"Waterput","labelPlural":"waterputten","maxTiles":4,"slug":"well","themes":null,"type":"blocked"},{"art":["window.svg"],"article":"het","category":"wall","group":"Muren","icon":"icons/objects/window.svg","kind":"Window","label":"Raam","labelPlural":"ramen","maxTiles":null,"slug":"window","themes":null,"type":"blocked"},{"art":["wolf.svg"],"article":"de","category":"animal","group":"Dieren","icon":"icons/objects/wolf.svg","kind":"Wolf","label":"Wolf","labelPlural":"wolven","maxTiles":1,"slug":"wolf","themes":["medieval"],"type":"blocked"}],"personColors":{"A":"#C79A3A","B":"#3E8DB5","C":"#694875","D":"#E07A9A","E":"#285C49","F":"#7B7A32","G":"#79A8B0","H":"#75639A","I":"#79A85A","J":"#AAA0C8","K":"#84562B","L":"#AFC79E","M":"#2E777C","N":"#4D5F96","O":"#A85F36","P":"#8C4F86","Q":"#D08332","R":"#477A66","S":"#5B6672","victim":"#B6544A"},"personNames":{"A":[{"gender":"male","name":"Adelbert"},{"gender":"female","name":"Agnes"},{"gender":"male","name":"Alard"},{"gender":"female","name":"Aleid"},{"gender":"male","name":"Anselm"},{"gender":"male","name":"Arnout"},{"gender":"female","name":"Aveline"},{"gender":"male","name":"Alwin"},{"gender":"female","name":"Amelie"},{"gender":"male","name":"Aldric"}],"B":[{"gender":"male","name":"Baldwin"},{"gender":"female","name":"Beatrix"},{"gender":"male","name":"Bertram"},{"gender":"male","name":"Bavo"},{"gender":"female","name":"Brechtje"},{"gender":"male","name":"Boudewijn"},{"gender":"male","name":"Berthold"},{"gender":"female","name":"Bela"},{"gender":"male","name":"Brand"},{"gender":"female","name":"Bertrada"}],"C":[{"gender":"male","name":"Casimir"},{"gender":"female","name":"Clementia"},{"gender":"male","name":"Coenraad"},{"gender":"male","name":"Christiaen"},{"gender":"female","name":"Cunera"},{"gender":"male","name":"Constantijn"},{"gender":"female","name":"Cathelijne"},{"gender":"male","name":"Cyriel"},{"gender":"male","name":"Colijn"},{"gender":"female","name":"Clara"}],"D":[{"gender":"male","name":"Diederik"},{"gender":"female","name":"Dorothea"},{"gender":"male","name":"Duncan"},{"gender":"male","name":"Dagobert"},{"gender":"female","name":"Dieuwertje"},{"gender":"male","name":"Dirk"},{"gender":"male","name":"Doede"},{"gender":"male","name":"Damiaan"},{"gender":"female","name":"Dina"},{"gender":"male","name":"Doriaan"}],"E":[{"gender":"female","name":"Eleonora"},{"gender":"male","name":"Everhard"},{"gender":"male","name":"Edzard"},{"gender":"male","name":"Eelke"},{"gender":"male","name":"Emmerik"},{"gender":"female","name":"Elsbeth"},{"gender":"male","name":"Egbert"},{"gender":"female","name":"Ermgard"},{"gender":"male","name":"Eduard"},{"gender":"female","name":"Elske"}],"F":[{"gender":"male","name":"Fulbert"},{"gender":"female","name":"Femke"},{"gender":"male","name":"Floris"},{"gender":"male","name":"Frederik"},{"gender":"female","name":"Fenna"},{"gender":"male","name":"Ferdinand"},{"gender":"male","name":"Filips"},{"gender":"male","name":"Folkert"},{"gender":"female","name":"Francina"},{"gender":"male","name":"Frans"}],"G":[{"gender":"male","name":"Godfried"},{"gender":"female","name":"Geertruide"},{"gender":"male","name":"Gerlach"},{"gender":"male","name":"Gijsbert"},{"gender":"female","name":"Griet"},{"gender":"male","name":"Gerbrand"},{"gender":"male","name":"Guido"},{"gender":"female","name":"Godelieve"},{"gender":"male","name":"Govert"},{"gender":"female","name":"Gerarda"}],"H":[{"gender":"male","name":"Hendrik"},{"gender":"female","name":"Hildegard"},{"gender":"male","name":"Herbert"},{"gender":"female","name":"Hadewych"},{"gender":"male","name":"Huibert"},{"gender":"male","name":"Hugo"},{"gender":"female","name":"Helwig"},{"gender":"male","name":"Harmen"},{"gender":"female","name":"Hilde"},{"gender":"female","name":"Hendrina"}],"I":[{"gender":"male","name":"Ingelbert"},{"gender":"female","name":"Ida"},{"gender":"female","name":"Isolde"},{"gender":"male","name":"Ivo"},{"gender":"female","name":"Irmgard"},{"gender":"female","name":"Imme"},{"gender":"male","name":"Isebrand"},{"gender":"female","name":"Iselinde"},{"gender":"male","name":"Immanuel"},{"gender":"female","name":"Ilse"}],"J":[{"gender":"female","name":"Jacoba"},{"gender":"male","name":"Joris"},{"gender":"male","name":"Judocus"},{"gender":"female","name":"Jutte"},{"gender":"male","name":"Johan"},{"gender":"female","name":"Jolente"},{"gender":"male","name":"Joost"},{"gender":"male","name":"Jorden"},{"gender":"female","name":"Josina"},{"gender":"female","name":"Jannetje"}],"K":[{"gender":"male","name":"Karel"},{"gender":"female","name":"Katelijne"},{"gender":"male","name":"Koenraad"},{"gender":"female","name":"Kunigonde"},{"gender":"male","name":"Klaas"},{"gender":"male","name":"Kerstiaen"},{"gender":"female","name":"Katrijn"},{"gender":"male","name":"Kobe"},{"gender":"female","name":"Klaasje"},{"gender":"male","name":"Koert"}],"L":[{"gender":"male","name":"Lodewijk"},{"gender":"female","name":"Liesbeth"},{"gender":"male","name":"Lambert"},{"gender":"male","name":"Ludolf"},{"gender":"female","name":"Lijsbeth"},{"gender":"male","name":"Laurens"},{"gender":"female","name":"Lutgarde"},{"gender":"male","name":"Lieven"},{"gender":"male","name":"Lammert"},{"gender":"female","name":"Lena"}],"V":[{"gender":"male","name":"Vladimir"},{"gender":"male","name":"Vincent"},{"gender":"male","name":"Volkert"},{"gender":"female","name":"Verena"},{"gender":"male","name":"Victor"},{"gender":"male","name":"Vrederik"},{"gender":"female","name":"Veronica"},{"gender":"male","name":"Vastrad"},{"gender":"male","name":"Valentijn"},{"gender":"female","name":"Vibeke"}]},"roles":[{"available":true,"baseline":false,"color":"#C9A227","gebieden":["adellijk"],"icon":"icons/roles/noble.svg","label":"Edele","labelPlural":"edelen","standing":"noble","themes":["medieval"]},{"available":true,"baseline":true,"color":"#6E8C4A","gebieden":["gewoon"],"icon":"icons/roles/villager.svg","label":"Dorpeling","labelPlural":"dorpelingen","standing":"villager","themes":["medieval"]},{"available":true,"baseline":false,"color":"#7E8894","gebieden":["*"],"icon":"icons/roles/knight.svg","label":"Ridder","labelPlural":"ridders","standing":"knight","themes":["medieval"]},{"available":false,"baseline":false,"color":"#8A6A45","gebieden":["gewoon"],"icon":"icons/roles/guard.svg","label":"Wacht","labelPlural":"wachten","standing":"guard","themes":["medieval"]},{"available":false,"baseline":false,"color":"#7B6597","gebieden":["gewoon"],"icon":"icons/roles/monk.svg","label":"Monnik","labelPlural":"monniken","standing":"monk","themes":["medieval"]},{"available":false,"baseline":false,"color":"#B5715A","gebieden":["gewoon"],"icon":"icons/roles/servant.svg","label":"Bediende","labelPlural":"bedienden","standing":"servant","themes":["medieval"]}],"roomAliases":{"great-hall":{"kind":"hall","qualifier":"Grote"},"smithy":{"kind":"forge"}},"roomQualifiers":[{"group":"Kwalificatie","items":[{"de":"Koninklijke","het":"Koninklijk","id":"royal"},{"de":"Grote","het":"Groot","id":"big"},{"de":"Kleine","het":"Klein","id":"small"},{"de":"Oude","het":"Oud","id":"old"},{"de":"Nieuwe","het":"Nieuw","id":"new"},{"de":"Verlaten","het":"Verlaten","id":"abandoned"},{"de":"Verborgen","het":"Verborgen","id":"hidden"},{"de":"Hoge","het":"Hoog","id":"high"},{"de":"Lage","het":"Laag","id":"low"}]},{"group":"Ligging","items":[{"de":"Noordelijke","het":"Noordelijk","id":"north"},{"de":"Oostelijke","het":"Oostelijk","id":"east"},{"de":"Zuidelijke","het":"Zuidelijk","id":"south"},{"de":"Westelijke","het":"Westelijk","id":"west"},{"de":"Bovenste","het":"Bovenste","id":"upper"},{"de":"Onderste","het":"Onderste","id":"lower"},{"de":"Voorste","het":"Voorste","id":"front"},{"de":"Achterste","het":"Achterste","id":"back"}]}],"rooms":[{"article":"de","floor":"marble","group":"Kasteel","id":"throne-room","label":"Troonzaal","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"hall","label":"Hal","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Kasteel","id":"royal-chamber","label":"Koningskamer","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"treasury","label":"Schatkamer","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"armoury","label":"Wapenkamer","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"guard-room","label":"Wachtkamer","themes":["medieval"]},{"article":"het","floor":"stone","group":"Kasteel","id":"barracks","label":"Soldatenverblijf","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"dungeon","label":"Kerker","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"cell","label":"Cel","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"tower","label":"Toren","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"keep","label":"Donjon","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"watchtower","label":"Wachttoren","themes":["medieval"]},{"article":"het","floor":"stone","group":"Kasteel","id":"gatehouse","label":"Poorthuis","themes":["medieval"]},{"article":"de","floor":"stone","group":"Kasteel","id":"city-walls","label":"Stadswallen","themes":["medieval"]},{"article":"de","floor":"gravel","group":"Kasteel","id":"courtyard","label":"Binnenplaats","themes":["medieval","modern"]},{"article":"de","floor":"marble","group":"Kasteel","id":"ballroom","label":"Balzaal","themes":["medieval","modern"]},{"article":"het","floor":"wood","group":"Woning","id":"house","label":"Huis","themes":["medieval"]},{"article":"het","floor":"wood","group":"Woning","id":"manor","label":"Landhuis","themes":["medieval","modern"]},{"article":"het","floor":"grass","group":"Woning","id":"estate","label":"Landgoed","themes":["medieval","modern"]},{"article":"de","floor":"dirt","group":"Woning","id":"hut","label":"Hut","themes":["medieval"]},{"article":"de","floor":"wood","group":"Woning","id":"room","label":"Kamer","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"bedroom","label":"Slaapkamer","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"dining-room","label":"Eetkamer","themes":["medieval","modern"]},{"article":"de","floor":"tile","group":"Woning","id":"kitchen","label":"Keuken","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"living-room","label":"Woonkamer","themes":["modern"]},{"article":"de","floor":"wood","group":"Woning","id":"library","label":"Bibliotheek","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"study","label":"Studeerkamer","themes":["medieval","modern"]},{"article":"het","floor":"carpet","group":"Woning","id":"office","label":"Kantoor","themes":["modern"]},{"article":"de","floor":"tile","group":"Woning","id":"bathroom","label":"Badkamer","themes":["modern"]},{"article":"het","floor":"wood","group":"Woning","id":"balcony","label":"Balkon","themes":["medieval","modern"]},{"article":"de","floor":"stone","group":"Woning","id":"corridor","label":"Gang","themes":["medieval","modern"]},{"article":"de","floor":"stone","group":"Woning","id":"cellar","label":"Kelder","themes":["medieval","modern"]},{"article":"de","floor":"stone","group":"Woning","id":"wine-cellar","label":"Wijnkelder","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"attic","label":"Zolder","themes":["medieval","modern"]},{"article":"de","floor":"stone","group":"Woning","id":"storage","label":"Berging","themes":["medieval","modern"]},{"article":"de","floor":"tile","group":"Woning","id":"conservatory","label":"Serre","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Woning","id":"music-room","label":"Muziekkamer","themes":["medieval","modern"]},{"article":"de","floor":"carpet","group":"Woning","id":"billiard-room","label":"Biljartkamer","themes":["modern"]},{"article":"de","floor":"concrete","group":"Woning","id":"garage","label":"Garage","themes":["modern"]},{"article":"het","floor":"gravel","group":"Dorp","id":"village-square","label":"Dorpsplein","themes":["medieval"]},{"article":"het","floor":"stone","group":"Dorp","id":"alley","label":"Steegje","themes":["medieval"]},{"article":"de","floor":"wood","group":"Dorp","id":"tavern","label":"Taverne","themes":["medieval"]},{"article":"de","floor":"stone","group":"Dorp","id":"forge","label":"Smederij","themes":["medieval"]},{"article":"de","floor":"wood","group":"Dorp","id":"workshop","label":"Werkplaats","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Dorp","id":"apothecary","label":"Apothekerswoning","themes":["medieval"]},{"article":"de","floor":"wood","group":"Dorp","id":"watermill","label":"Watermolen","themes":["medieval"]},{"article":"de","floor":"dirt","group":"Dorp","id":"stable","label":"Stallen","themes":["medieval"]},{"article":"de","floor":"gravel","group":"Markt","id":"stall-jewels","label":"Juwelen","themes":["medieval"]},{"article":"de","floor":"gravel","group":"Markt","id":"stall-clothes","label":"Kleding","themes":["medieval"]},{"article":"de","floor":"gravel","group":"Markt","id":"stall-weapons","label":"Wapens","themes":["medieval"]},{"article":"het","floor":"dirt","group":"Markt","id":"stall-livestock","label":"Vee","themes":["medieval"]},{"article":"het","floor":"gravel","group":"Markt","id":"stall-fruit","label":"Fruit","themes":["medieval"]},{"article":"de","floor":"gravel","group":"Markt","id":"stall-fish","label":"Vis","themes":["medieval"]},{"article":"het","floor":"gravel","group":"Markt","id":"pottery","label":"Keramiek","themes":["medieval"]},{"article":"de","floor":"stone","group":"Klooster en kerk","id":"church","label":"Kerk","themes":["medieval"]},{"article":"de","floor":"stone","group":"Klooster en kerk","id":"chapel","label":"Kapel","themes":["medieval"]},{"article":"het","floor":"marble","group":"Klooster en kerk","id":"altar","label":"Altaar","themes":["medieval"]},{"article":"de","floor":"wood","group":"Klooster en kerk","id":"dormitory","label":"Slaapzaal","themes":["medieval"]},{"article":"de","floor":"stone","group":"Klooster en kerk","id":"monk-cell","label":"Kloostercel","themes":["medieval"]},{"article":"de","floor":"marble","group":"Klooster en kerk","id":"statue-garden","label":"Beelden","themes":["medieval"]},{"article":"het","floor":"grass","group":"Buiten","id":"field","label":"Veld","themes":["medieval","modern"]},{"article":"het","floor":"grass","group":"Buiten","id":"wheat-field","label":"Tarweveld","themes":["medieval"]},{"article":"de","floor":"grass","group":"Buiten","id":"hill","label":"Heuvel","themes":["medieval","modern"]},{"article":"de","floor":"grass","group":"Buiten","id":"woods","label":"Bossen","themes":["medieval","modern"]},{"article":"de","floor":"dirt","group":"Buiten","id":"clearing","label":"Open Plek","themes":["medieval","modern"]},{"article":"de","floor":"grass","group":"Buiten","id":"garden","label":"Tuin","themes":["medieval","modern"]},{"article":"het","floor":"stone","group":"Buiten","id":"terrace","label":"Terras","themes":["medieval","modern"]},{"article":"de","floor":"dirt","group":"Buiten","id":"road","label":"Weg","themes":["medieval","modern"]},{"article":"de","floor":"wood","group":"Buiten","id":"bridge","label":"Brug","themes":["medieval","modern"]},{"article":"de","floor":"water","group":"Buiten","id":"river","label":"Rivier","themes":["medieval","modern"]},{"article":"de","floor":"water","group":"Buiten","id":"brook","label":"Beek","themes":["medieval","modern"]},{"article":"de","floor":"water","group":"Buiten","id":"pond","label":"Vijver","themes":["medieval","modern"]},{"article":"het","floor":"stone","group":"Kamp en strijd","id":"fort","label":"Fort","themes":["medieval"]},{"article":"de","floor":"sand","group":"Kamp en strijd","id":"arena","label":"Arena","themes":["medieval"]},{"article":"de","floor":"dirt","group":"Kamp en strijd","id":"tent","label":"Tent","themes":["medieval"]},{"article":"de","floor":"dirt","group":"Kamp en strijd","id":"supply-tent","label":"Voorraadtent","themes":["medieval"]},{"article":"de","floor":"dirt","group":"Kamp en strijd","id":"command-tent","label":"Commandotent","themes":["medieval"]},{"article":"het","floor":"wood","group":"Onderweg","id":"carriage","label":"Rijtuig","themes":["medieval","modern"]},{"article":"het","floor":"wood","group":"Onderweg","id":"ship","label":"Schip","themes":["medieval","modern"]},{"article":"het","floor":"wood","group":"Onderweg","id":"aisle","label":"Gangpad","themes":["medieval","modern"]}],"skinTones":[{"base":true,"hex":"#FACD9E","id":"light","label":"Licht"},{"hex":"#E2AC7C","id":"medium","label":"Getint"},{"avoidHair":["dark-blond","auburn"],"hex":"#B77A50","id":"tan","label":"Bruin"},{"avoidHair":["dark-blond","auburn"],"hex":"#6E4530","id":"deep","label":"Donker"}],"spareIcons":[{"icon":"icons/objects/mirror.svg","keywords":["mirror","spiegel"],"slug":"mirror"},{"icon":"icons/objects/paint.svg","keywords":["paint","schilderij","portret"],"slug":"paint"},{"icon":"icons/objects/candle.svg","keywords":["candle","kaars"],"slug":"candle"},{"icon":"icons/objects/lamp.svg","keywords":["lamp","lantaarn","torch","fakkel"],"slug":"lamp"},{"icon":"icons/objects/fire.svg","keywords":["fire","haard","hearth","oven","forge"],"slug":"fire"},{"icon":"icons/objects/anvil.svg","keywords":["anvil","aambeeld","sword","zwaard","armour","wapen"],"slug":"anvil"},{"icon":"icons/objects/hay.svg","keywords":["hay","hooi","sack","zak","grain"],"slug":"hay"}],"ui":[{"icon":"icons/ui/back.svg","name":"back"},{"icon":"icons/ui/badge.svg","name":"badge"},{"icon":"icons/ui/blocked.svg","name":"blocked"},{"icon":"icons/ui/box.svg","name":"box"},{"icon":"icons/ui/check.svg","name":"check"},{"icon":"icons/ui/chevron.svg","name":"chevron"},{"icon":"icons/ui/clipboard.svg","name":"clipboard"},{"icon":"icons/ui/clock.svg","name":"clock"},{"icon":"icons/ui/compass.svg","name":"compass"},{"icon":"icons/ui/cross.svg","name":"cross"},{"icon":"icons/ui/culprit.svg","name":"culprit"},{"icon":"icons/ui/dagger.svg","name":"dagger"},{"icon":"icons/ui/dossier.svg","name":"dossier"},{"icon":"icons/ui/download.svg","name":"download"},{"icon":"icons/ui/droplet.svg","name":"droplet"},{"icon":"icons/ui/eye.svg","name":"eye"},{"icon":"icons/ui/eye-off.svg","name":"eye-off"},{"icon":"icons/ui/file.svg","name":"file"},{"icon":"icons/ui/globe.svg","name":"globe"},{"icon":"icons/ui/grid.svg","name":"grid"},{"icon":"icons/ui/help.svg","name":"help"},{"icon":"icons/ui/home.svg","name":"home"},{"icon":"icons/ui/list.svg","name":"list"},{"icon":"icons/ui/lock.svg","name":"lock"},{"icon":"icons/ui/moon.svg","name":"moon"},{"icon":"icons/ui/note.svg","name":"note"},{"icon":"icons/ui/pawn.svg","name":"pawn"},{"icon":"icons/ui/pencil.svg","name":"pencil"},{"icon":"icons/ui/people.svg","name":"people"},{"icon":"icons/ui/person.svg","name":"person"},{"icon":"icons/ui/pin.svg","name":"pin"},{"icon":"icons/ui/play.svg","name":"play"},{"icon":"icons/ui/plus.svg","name":"plus"},{"icon":"icons/ui/scissors.svg","name":"scissors"},{"icon":"icons/ui/settings.svg","name":"settings"},{"icon":"icons/ui/skull.svg","name":"skull"},{"icon":"icons/ui/sparkle.svg","name":"sparkle"},{"icon":"icons/ui/sun.svg","name":"sun"},{"icon":"icons/ui/swap.svg","name":"swap"},{"icon":"icons/ui/trash.svg","name":"trash"},{"icon":"icons/ui/undo.svg","name":"undo"},{"icon":"icons/ui/upload.svg","name":"upload"},{"icon":"icons/ui/warning.svg","name":"warning"}],"version":33};
 const ASSET_ICON_BODIES = {"icons/objects/anvil.svg":"<path d=\"M12 3.2l2.2 9h-4.4z\"/><path d=\"M8.2 12.2h7.6M12 12.2v8.4M9.6 17.4h4.8\"/>","icons/objects/barrel.svg":"<path d=\"M7 4.2h10c1.2 3 1.2 12.6 0 15.6H7c-1.2-3-1.2-12.6 0-15.6z\"/><path d=\"M4.6 9h14.8M4.6 15h14.8\"/>","icons/objects/bed.svg":"<path d=\"M3.2 18.6v-9.2M3.2 13.4h17.6v5.2M20.8 18.6v-4\"/><path d=\"M3.2 13.4v-2.6a1.6 1.6 0 0 1 1.6-1.6h5.4a1.6 1.6 0 0 1 1.6 1.6v2.6\"/><circle cx=\"7.5\" cy=\"11.2\" r=\"1.5\"/>","icons/objects/bench.svg":"<path d=\"M3.4 11.6h17.2M4.8 14.4h14.4\"/><path d=\"M5.4 14.4v5.2M18.6 14.4v5.2M3.4 11.6V8.4M20.6 11.6V8.4\"/>","icons/objects/boar.svg":"<path d=\"M4.6 12.4c0-2.6 2.6-4.4 6.4-4.4s6.4 1.8 6.4 4.4v3.4c0 1.4-1 2.4-2.4 2.4H7c-1.4 0-2.4-1-2.4-2.4z\"/><path d=\"M17.4 11.4l2.6-1.6-.4 3.4\"/><path d=\"M7.4 18.2v2M15 18.2v2\"/><circle cx=\"8.6\" cy=\"11.6\" r=\".9\" fill=\"currentColor\" stroke=\"none\"/>","icons/objects/boat.svg":"<path d=\"M3.4 15.4h17.2l-2.6 4.2H6z\"/><path d=\"M12 15.4V4.6l6 6.4h-6\"/><path d=\"M2.6 19.6c1.8 1.2 3.6 1.2 5.4 0\"/>","icons/objects/box.svg":"<rect x=\"3.6\" y=\"5.6\" width=\"16.8\" height=\"13\" rx=\"1.6\"/><path d=\"M3.6 10.2h16.8M3.6 14h16.8\"/><path d=\"M8.4 5.6v13M15.6 5.6v13\"/>","icons/objects/candle.svg":"<path d=\"M12 2.6c1.7 1.9 1.7 3.2 0 4.6-1.7-1.4-1.7-2.7 0-4.6z\"/><rect x=\"9.4\" y=\"8.4\" width=\"5.2\" height=\"10.4\" rx=\"1.2\"/><path d=\"M7.4 20.6h9.2\"/>","icons/objects/carpet.svg":"<rect x=\"3.4\" y=\"7.2\" width=\"17.2\" height=\"9.6\" rx=\"1.6\"/><rect x=\"6.6\" y=\"10.2\" width=\"10.8\" height=\"3.6\" rx=\"1\"/><path d=\"M3.4 8.8H1.6M3.4 12H1.6M3.4 15.2H1.6M20.6 8.8h1.8M20.6 12h1.8M20.6 15.2h1.8\"/>","icons/objects/catapult.svg":"<path d=\"M3.4 18.6h15.2\"/><path d=\"M5.6 18.6l3.4-9.4M9 9.2l9.4-3.2\"/><circle cx=\"19.4\" cy=\"5.2\" r=\"2\"/><path d=\"M9 9.2l4 6.6M13 18.6v-2.8\"/>","icons/objects/chair.svg":"<path d=\"M7.6 3.8v9.4M16.4 3.8v9.4\"/><path d=\"M6 13.2h12\"/><path d=\"M8 13.2v7M16 13.2v7\"/><path d=\"M8.6 8.4h6.8\"/>","icons/objects/cow.svg":"<path d=\"M4.6 12.4c0-2.6 2.6-4.4 6.4-4.4s6.4 1.8 6.4 4.4v3.4c0 1.4-1 2.4-2.4 2.4H7c-1.4 0-2.4-1-2.4-2.4z\"/><path d=\"M17.4 11.4l2.6-1.6-.4 3.4\"/><path d=\"M7.4 18.2v2M15 18.2v2\"/><circle cx=\"8.6\" cy=\"11.6\" r=\".9\" fill=\"currentColor\" stroke=\"none\"/>","icons/objects/crate.svg":"<rect x=\"3.6\" y=\"5.6\" width=\"16.8\" height=\"13\" rx=\"1.6\"/><path d=\"M3.6 10.2h16.8M3.6 14h16.8\"/><path d=\"M8.4 5.6v13M15.6 5.6v13\"/>","icons/objects/door.svg":"<rect x=\"5.6\" y=\"2.8\" width=\"12.8\" height=\"18.4\" rx=\"1.6\"/><circle cx=\"15\" cy=\"12\" r=\"1.1\"/><path d=\"M8.4 6h3.2\"/>","icons/objects/easel.svg":"<rect x=\"6\" y=\"3.6\" width=\"12\" height=\"9\" rx=\"1.2\"/><path d=\"M12 12.6v8M6.6 20.6l3.4-8M17.4 20.6L14 12.6\"/><path d=\"M8.4 16.6h7.2\"/>","icons/objects/fire.svg":"<rect x=\"3.6\" y=\"3.8\" width=\"16.8\" height=\"16.6\" rx=\"1.8\"/><path d=\"M3.6 8.6h16.8\"/><path d=\"M12 11.4c2 1.8 2.6 3.4 1.6 5-1 1.6-3.2 1.6-4.2 0-1-1.6.4-3 2.6-5z\"/>","icons/objects/gate.svg":"<path d=\"M4 20.4V7.6l8-4.2 8 4.2v12.8\"/><path d=\"M8 20.4v-8M12 20.4v-9.4M16 20.4v-8\"/><path d=\"M4 14.6h16\"/>","icons/objects/hay.svg":"<path d=\"M8.4 6.4c0-1.6 1.4-2.6 3.6-2.6s3.6 1 3.6 2.6c2 1.8 3 4.4 3 7.4 0 3.8-2.6 6.2-6.6 6.2s-6.6-2.4-6.6-6.2c0-3 1-5.6 3-7.4z\"/><path d=\"M8.4 6.4h7.2\"/>","icons/objects/horse.svg":"<path d=\"M6.4 20.4c-.6-5 1.2-8.2 5-9.4l1-3.6 3.6 1.6 1.4-1.2.6 3.4c1.8 2 2 5.6 1.6 9.2\"/><path d=\"M10.4 20.4v-4.2M15.6 20.4v-4\"/><circle cx=\"15.4\" cy=\"9\" r=\".8\" fill=\"currentColor\" stroke=\"none\"/>","icons/objects/house.svg":"<path d=\"M4 11 12 4l8 7\"/><path d=\"M6 10v9h12v-9\"/><path d=\"M10.5 19v-5h3v5\"/>","icons/objects/lamp.svg":"<path d=\"M7.4 4.2h9.2l-2.4 6.6H9.8z\"/><path d=\"M12 10.8v7M8.8 20.4h6.4\"/><path d=\"M9.4 7.2h5.2\"/>","icons/objects/loom.svg":"<path d=\"M6 4v16M18 4v16M4 5h16M4 19h16\"/><path d=\"M8.5 8v8M12 8v8M15.5 8v8\"/>","icons/objects/mirror.svg":"<ellipse cx=\"12\" cy=\"10.4\" rx=\"6\" ry=\"7.6\"/><path d=\"M12 18v3.2M9 21.2h6\"/><path d=\"M9.6 7.4l1.6 4\"/>","icons/objects/paint.svg":"<rect x=\"3.6\" y=\"4.2\" width=\"16.8\" height=\"13.6\" rx=\"1.4\"/><path d=\"M4.6 14.4l3.8-4 2.8 2.8 4-4.8 4.2 5.2\"/><circle cx=\"8.4\" cy=\"8\" r=\"1.1\"/><path d=\"M12 17.8v2.6\"/>","icons/objects/pig.svg":"<path d=\"M4.6 12.4c0-2.6 2.6-4.4 6.4-4.4s6.4 1.8 6.4 4.4v3.4c0 1.4-1 2.4-2.4 2.4H7c-1.4 0-2.4-1-2.4-2.4z\"/><path d=\"M17.4 11.4l2.6-1.6-.4 3.4\"/><path d=\"M7.4 18.2v2M15 18.2v2\"/><circle cx=\"8.6\" cy=\"11.6\" r=\".9\" fill=\"currentColor\" stroke=\"none\"/>","icons/objects/plant.svg":"<path d=\"M8 14h8l-1.2 6H9.2Z\"/><path d=\"M12 14v-4\"/><path d=\"M12 10C9 11 6.5 9.5 6 6.5 9 5.5 11.5 7 12 10Z\"/><path d=\"M12 9c3 1 5.5-.5 6-3.5-3-1-5.5.5-6 3.5Z\"/>","icons/objects/puddle.svg":"<path d=\"M3.4 13.2c0-2.5 2.6-4 5.5-4 1.7 0 2.3-1.3 4.7-1.3 2.7 0 6.1 1.7 6.1 4.5 0 2.4-3 4-7.5 4-4.7 0-8.8-1.2-8.8-3.2Z\"/><path d=\"M8.2 12.4c1.2-.7 2.7-.7 3.9 0\"/>","icons/objects/rubble.svg":"<path d=\"M3.4 19.6l3.2-5.2 3.4 5.2z\"/><path d=\"M9.4 19.6l4-7.4 4.2 7.4z\"/><path d=\"M16.6 13.2l2-3.2 2 3.2z\"/><path d=\"M2.6 19.6h18.8\"/>","icons/objects/sack.svg":"<path d=\"M10 4.5c0-1 .8-1.7 2-1.7s2 .7 2 1.7\"/><path d=\"M9.5 7C7 9.5 5.5 13 5.5 16.5c0 3 2.8 4.8 6.5 4.8s6.5-1.8 6.5-4.8C18.5 13 17 9.5 14.5 7Z\"/><path d=\"M9 6.8h6\"/>","icons/objects/shelf.svg":"<rect x=\"4.6\" y=\"3.4\" width=\"14.8\" height=\"17.2\" rx=\"1.6\"/><path d=\"M4.6 9.2h14.8M4.6 14.8h14.8\"/><path d=\"M7.4 4.8v3M9.6 4.8v3M12 10.6v3\"/>","icons/objects/shrub.svg":"<path d=\"M12 20.4v-7.6\"/><path d=\"M12 12.8c-3.6 0-5.6-1.8-5.6-4.6 2.8 0 5.6 1.8 5.6 4.6zM12 12.8c3.6 0 5.6-1.8 5.6-4.6-2.8 0-5.6 1.8-5.6 4.6z\"/><path d=\"M8.2 16.6h7.6l-.8 4H9z\"/>","icons/objects/statue.svg":"<circle cx=\"12\" cy=\"5.6\" r=\"2.6\"/><path d=\"M8.6 15.4c0-3.6 1.6-5.6 3.4-5.6s3.4 2 3.4 5.6z\"/><path d=\"M6.6 18.2h10.8v2.4H6.6z\"/><path d=\"M8.6 15.4h6.8v2.8H8.6z\"/>","icons/objects/stones.svg":"<path d=\"M7 4.2h10c1.2 3 1.2 12.6 0 15.6H7c-1.2-3-1.2-12.6 0-15.6z\"/><path d=\"M4.6 9h14.8M4.6 15h14.8\"/>","icons/objects/table.svg":"<path d=\"M2.8 8.6h18.4\"/><path d=\"M2.8 8.6v2.4h18.4V8.6\"/><path d=\"M6 11v8.4M18 11v8.4\"/>","icons/objects/treasure.svg":"<path d=\"M4.5 11h15v8h-15Z\"/><path d=\"M4.5 11c0-3 2.5-5.2 7.5-5.2s7.5 2.2 7.5 5.2\"/><circle cx=\"12\" cy=\"13.8\" r=\"1.6\"/>","icons/objects/tree.svg":"<path d=\"M12 3.4l5.6 7.4h-3l3.6 5H5.8l3.6-5h-3z\"/><path d=\"M12 15.8v4.8M9.6 20.6h4.8\"/>","icons/objects/vase.svg":"<path d=\"M9.8 3.5h4.4\"/><path d=\"M10.4 3.5c0 2.4-.4 3.6-1.8 5.1-1.5 1.9-1.9 3.4-1.9 5.2 0 4.4 2.2 7.7 5.3 7.7s5.3-3.3 5.3-7.7c0-1.8-.4-3.3-1.9-5.2-1.4-1.5-1.8-2.7-1.8-5.1\"/>","icons/objects/watermill.svg":"<path d=\"M3.5 10.5 9 5.5l5.5 5v8.5h-11Z\"/><circle cx=\"16.5\" cy=\"13\" r=\"4.6\"/><path d=\"M16.5 8.4v9.2M11.9 13h9.2M13.2 9.7l6.6 6.6M19.8 9.7l-6.6 6.6\"/>","icons/objects/weapon-chest.svg":"<path d=\"M4.5 10.5h15V19h-15Z\"/><path d=\"M4.5 10.5C4.5 8 7 6 12 6s7.5 2 7.5 4.5\"/><path d=\"M9 13.5l6 4M15 13.5l-6 4\"/>","icons/objects/well.svg":"<path d=\"M5.5 9 12 4l6.5 5\"/><path d=\"M7 9v5M17 9v5\"/><path d=\"M5.5 14.5c2-1.3 11-1.3 13 0v3c0 1.4-2.9 2.7-6.5 2.7s-6.5-1.3-6.5-2.7Z\"/>","icons/objects/window.svg":"<rect x=\"4.2\" y=\"4.2\" width=\"15.6\" height=\"15.6\" rx=\"1.6\"/><path d=\"M12 4.2v15.6M4.2 12h15.6\"/><path d=\"M6.6 6.6l2.6 2.6\"/>","icons/objects/wolf.svg":"<path d=\"M6.4 8.4l-1.6-4 4 2.2h7.4l4-2.2-1.6 4\"/><path d=\"M5.2 10.6c0-1.4 3-2.4 6.8-2.4s6.8 1 6.8 2.4v4.8c0 2.4-3 4.2-6.8 4.2s-6.8-1.8-6.8-4.2z\"/><circle cx=\"9.6\" cy=\"12.4\" r=\".9\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"14.4\" cy=\"12.4\" r=\".9\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M12 15.4v1.4\"/>","icons/roles/guard.svg":"<path d=\"M12 2.8 19.2 5.4v6.2c0 4.3-3.1 7.4-7.2 9.2-4.1-1.8-7.2-4.9-7.2-9.2V5.4z\"/><path d=\"M12 7.4v8.2M8.4 11.4h7.2\"/>","icons/roles/knight.svg":"<path d=\"M12 2.5 20.6 5.6V12c0 5.5-3.9 8.7-8.6 10.5C7.3 20.7 3.4 17.5 3.4 12V5.6Z\"/>","icons/roles/monk.svg":"<path d=\"M4.2 20.8c0-4.3 3.5-7.8 7.8-7.8s7.8 3.5 7.8 7.8z\"/><path d=\"M12 3c2.6 0 4.4 2.1 4.4 5s-1.8 5.2-4.4 5.2S7.6 10.9 7.6 8 9.4 3 12 3z\"/><path d=\"M9.5 7c.4 1.7 1.2 3 2.5 3.8 1.3-.8 2.1-2.1 2.5-3.8\"/>","icons/roles/noble.svg":"<path d=\"M3.6 17.6h16.8\"/><path d=\"M3.6 17.6 2.6 7.2l4.8 3.5L12 4.4l4.6 6.3 4.8-3.5-1 10.4z\"/><path d=\"M7.6 14.2h8.8\"/>","icons/roles/servant.svg":"<path d=\"M7.2 5.4h6.4c1.1 0 1.9.9 1.8 2l-.9 11.2c-.1 1-.9 1.8-1.9 1.8H8.2c-1 0-1.8-.8-1.9-1.8L5.4 7.4c-.1-1.1.7-2 1.8-2z\"/><path d=\"M15.6 9c2.3 0 3.6 1.3 3.6 3.2s-1.3 3.2-3.6 3.2\"/><path d=\"M6.2 9.6h9\"/>","icons/roles/villager.svg":"<circle cx=\"12\" cy=\"6.8\" r=\"3.4\"/><path d=\"M4.8 20.6c0-4 3.2-6.8 7.2-6.8s7.2 2.8 7.2 6.8\"/>","icons/ui/back.svg":"<path d=\"M15 5.6l-6.6 6.4 6.6 6.4\"/>","icons/ui/badge.svg":"<path d=\"M12 3.4l7.1 3v5.2c0 4.6-2.9 7.4-7.1 8.9-4.2-1.5-7.1-4.3-7.1-8.9V6.4z\"/><path d=\"M9.2 12.1l2 2 3.6-3.9\"/>","icons/ui/blocked.svg":"<circle cx=\"12\" cy=\"12\" r=\"8.6\"/><path d=\"M6 18L18 6\"/>","icons/ui/box.svg":"<path d=\"M3.8 7.7L12 3.5l8.2 4.2v8.6L12 20.5l-8.2-4.2z\"/><path d=\"M3.8 7.7L12 11.9l8.2-4.2\"/><path d=\"M12 11.9v8.6\"/>","icons/ui/check.svg":"<path d=\"M5.2 12.4l4.4 4.4 9.2-9.6\"/>","icons/ui/chevron.svg":"<path d=\"M6.4 9.4l5.6 5.6 5.6-5.6\"/>","icons/ui/clipboard.svg":"<path d=\"M8.6 4.4H6.8a1.8 1.8 0 0 0-1.8 1.8v13.2a1.8 1.8 0 0 0 1.8 1.8h10.4a1.8 1.8 0 0 0 1.8-1.8V6.2a1.8 1.8 0 0 0-1.8-1.8h-1.8\"/><rect x=\"8.6\" y=\"2.6\" width=\"6.8\" height=\"3.6\" rx=\"1.2\"/><path d=\"M8.4 11.6h7.2M8.4 15.2h4.8\"/>","icons/ui/clock.svg":"<circle cx=\"12\" cy=\"12\" r=\"8.6\"/><path d=\"M12 7.3V12l3.1 2\"/><circle cx=\"12\" cy=\"12\" r=\".9\" fill=\"currentColor\" stroke=\"none\"/>","icons/ui/compass.svg":"<circle cx=\"12\" cy=\"12\" r=\"8.6\"/><path d=\"M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z\"/>","icons/ui/cross.svg":"<path d=\"M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4\"/>","icons/ui/culprit.svg":"<circle cx=\"6.6\" cy=\"15.9\" r=\"4.5\"/><circle cx=\"17.4\" cy=\"15.9\" r=\"4.5\"/><path d=\"M9.7 12.6l1.4-2.5M14.3 12.6l-1.4-2.5\"/><circle cx=\"12\" cy=\"7.8\" r=\"2.4\"/>","icons/ui/dagger.svg":"<path d=\"M12 2.6l3.1 6.9v3.1H8.9V9.5z\"/><path d=\"M6.4 12.6h11.2\"/><path d=\"M12 12.6v6.4\"/><path d=\"M9.6 19h4.8\"/>","icons/ui/dossier.svg":"<path d=\"M4.6 6.2A1.6 1.6 0 0 1 6.2 4.6h3.4l1.5 1.9h6.7a1.6 1.6 0 0 1 1.6 1.6v9.3a1.6 1.6 0 0 1-1.6 1.6H6.2a1.6 1.6 0 0 1-1.6-1.6z\"/><path d=\"M8.3 11.6h7.4M8.3 14.8h4.6\"/>","icons/ui/download.svg":"<path d=\"M12 4.4V15.4\"/><path d=\"M7.8 11.2L12 15.4l4.2-4.2\"/><path d=\"M4.6 15.6v3.2a1.8 1.8 0 0 0 1.8 1.8h11.2a1.8 1.8 0 0 0 1.8-1.8v-3.2\"/>","icons/ui/droplet.svg":"<path d=\"M12 3.4c3.5 4.1 5.4 7 5.4 9.4a5.4 5.4 0 0 1-10.8 0c0-2.4 1.9-5.3 5.4-9.4z\"/><path d=\"M9.4 14.2c.2 1.5 1.1 2.5 2.4 2.8\"/>","icons/ui/eye-off.svg":"<path d=\"M2.6 12S6.4 5.4 12 5.4 21.4 12 21.4 12 17.6 18.6 12 18.6 2.6 12 2.6 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3.2\"/><path d=\"M4 20L20 4\"/>","icons/ui/eye.svg":"<g class=\"eye-open\"><path d=\"M2.2 12S5.6 5.8 12 5.8 21.8 12 21.8 12 18.4 18.2 12 18.2 2.2 12 2.2 12z\"/><circle cx=\"12\" cy=\"12\" r=\"2.9\"/></g><g class=\"eye-closed\"><path d=\"M3.4 3.4l17.2 17.2\"/><path d=\"M10.2 10.3a2.9 2.9 0 0 0 3.9 4\"/><path d=\"M6.8 6.9C4 8.6 2.2 12 2.2 12s3.4 6.2 9.8 6.2c1.6 0 3-.4 4.2-1\"/><path d=\"M17.6 17.5c2.5-1.7 4.2-5.5 4.2-5.5s-1.1-2-3.1-3.8\"/></g>","icons/ui/file.svg":"<path d=\"M6.4 3.8h7l4.2 4.3v12.1H6.4z\"/><path d=\"M13.2 3.8v4.3h4.4\"/><path d=\"M9 12.6h6M9 16h4\"/>","icons/ui/globe.svg":"<circle cx=\"12\" cy=\"12\" r=\"8.6\"/><path d=\"M3.4 12h17.2\"/><path d=\"M12 3.4c2.2 2.4 3.3 5.3 3.3 8.6S14.2 18.2 12 20.6c-2.2-2.4-3.3-5.3-3.3-8.6S9.8 5.8 12 3.4z\"/>","icons/ui/grid.svg":"<rect x=\"3.6\" y=\"3.6\" width=\"7.2\" height=\"7.2\" rx=\"2\"/><rect x=\"13.2\" y=\"3.6\" width=\"7.2\" height=\"7.2\" rx=\"2\"/><rect x=\"3.6\" y=\"13.2\" width=\"7.2\" height=\"7.2\" rx=\"2\"/><rect x=\"13.2\" y=\"13.2\" width=\"7.2\" height=\"7.2\" rx=\"2\"/>","icons/ui/help.svg":"<circle cx=\"12\" cy=\"12\" r=\"8.6\"/><path d=\"M9.5 9.4a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.1-2.5 3.7\"/><circle cx=\"12\" cy=\"17.3\" r=\".9\" fill=\"currentColor\" stroke=\"none\"/>","icons/ui/home.svg":"<path d=\"M3.6 10.6L12 3.6l8.4 7\"/><path d=\"M5.8 9.2v10.6a.9.9 0 0 0 .9.9h10.6a.9.9 0 0 0 .9-.9V9.2\"/><path d=\"M9.8 20.7v-5.5h4.4v5.5\"/>","icons/ui/list.svg":"<path d=\"M9.2 6.6h10.4M9.2 12h10.4M9.2 17.4h10.4\"/><circle cx=\"4.9\" cy=\"6.6\" r=\"1.35\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"4.9\" cy=\"12\" r=\"1.35\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"4.9\" cy=\"17.4\" r=\"1.35\" fill=\"currentColor\" stroke=\"none\"/>","icons/ui/lock.svg":"<rect x=\"4.8\" y=\"10.4\" width=\"14.4\" height=\"10\" rx=\"2.4\"/><path d=\"M8.2 10.4V7.9a3.8 3.8 0 0 1 7.6 0v2.5\"/><path d=\"M12 14.4v2.2\"/>","icons/ui/moon.svg":"<path d=\"M20.2 14.6A8.4 8.4 0 0 1 9.4 3.8a8.4 8.4 0 1 0 10.8 10.8z\"/>","icons/ui/note.svg":"<path d=\"M15.4 4.6l4 4L9.2 18.8l-5 1 1-5z\"/><path d=\"M13.7 6.3l4 4\"/>","icons/ui/pawn.svg":"<circle cx=\"12\" cy=\"7.4\" r=\"3.3\"/><path d=\"M7.6 20.4c0-3.6 2-5.6 4.4-5.6s4.4 2 4.4 5.6z\"/><path d=\"M6.2 20.4h11.6\"/>","icons/ui/pencil.svg":"<path d=\"M4.4 19.6h3.6L19.2 8.4a2.55 2.55 0 0 0-3.6-3.6L4.4 16z\"/><path d=\"M14.6 5.8l3.6 3.6\"/>","icons/ui/people.svg":"<circle cx=\"9.2\" cy=\"8.4\" r=\"3.3\"/><path d=\"M3.4 19.8c0-3.2 2.6-5.5 5.8-5.5s5.8 2.3 5.8 5.5\"/><path d=\"M16.4 5.6a3.3 3.3 0 0 1 0 6.4\"/><path d=\"M17.6 14.6c1.9.7 3 2.5 3 5.2\"/>","icons/ui/person.svg":"<circle cx=\"12\" cy=\"8.2\" r=\"3.6\"/><path d=\"M5.4 20.2c0-3.7 3-6 6.6-6s6.6 2.3 6.6 6\"/>","icons/ui/pin.svg":"<path d=\"M12 21.2c0 0 6.4-5.9 6.4-10.6a6.4 6.4 0 1 0-12.8 0C5.6 15.3 12 21.2 12 21.2z\"/><circle cx=\"12\" cy=\"10.4\" r=\"2.5\"/>","icons/ui/play.svg":"<path d=\"M8.5 5.6a1 1 0 0 1 1.52-.85l8.1 5.4a1.2 1.2 0 0 1 0 2l-8.1 5.4a1 1 0 0 1-1.52-.85z\"/>","icons/ui/plus.svg":"<path d=\"M12 5.2v13.6M5.2 12h13.6\"/>","icons/ui/scissors.svg":"<circle cx=\"6.4\" cy=\"17.6\" r=\"2.6\"/><circle cx=\"6.4\" cy=\"6.4\" r=\"2.6\"/><path d=\"M8.7 8.1L18.8 18.4M8.7 15.9L18.8 5.6\"/>","icons/ui/settings.svg":"<circle cx=\"12\" cy=\"12\" r=\"3.2\"/><path d=\"M9.91 2.94 A9.30 9.30 0 0 1 14.09 2.94 L14.47 5.56 A6.90 6.90 0 0 1 16.34 6.64 L18.80 5.66 A9.30 9.30 0 0 1 20.89 9.28 L18.82 10.92 A6.90 6.90 0 0 1 18.82 13.08 L20.89 14.72 A9.30 9.30 0 0 1 18.80 18.34 L16.34 17.36 A6.90 6.90 0 0 1 14.47 18.44 L14.09 21.06 A9.30 9.30 0 0 1 9.91 21.06 L9.53 18.44 A6.90 6.90 0 0 1 7.66 17.36 L5.20 18.34 A9.30 9.30 0 0 1 3.11 14.72 L5.18 13.08 A6.90 6.90 0 0 1 5.18 10.92 L3.11 9.28 A9.30 9.30 0 0 1 5.20 5.66 L7.66 6.64 A6.90 6.90 0 0 1 9.53 5.56 L9.91 2.94 Z\"/>","icons/ui/skull.svg":"<path d=\"M6.2 17.2C4.5 15.8 3.5 13.8 3.5 11.5 3.5 6.9 7.3 3.4 12 3.4s8.5 3.5 8.5 8.1c0 2.3-1 4.3-2.7 5.7v2.3a1.3 1.3 0 0 1-1.3 1.3H7.5a1.3 1.3 0 0 1-1.3-1.3z\"/><circle cx=\"8.9\" cy=\"11.6\" r=\"1.9\"/><circle cx=\"15.1\" cy=\"11.6\" r=\"1.9\"/><path d=\"M10.7 16.4h2.6\"/>","icons/ui/sparkle.svg":"<path d=\"M10.4 3.2l1.8 4.8 4.8 1.8-4.8 1.8-1.8 4.8-1.8-4.8L3.8 9.8l4.8-1.8z\"/><path d=\"M18 15.2l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z\"/>","icons/ui/sun.svg":"<circle cx=\"12\" cy=\"12\" r=\"4.2\"/><path d=\"M12 2.6v2.6M12 18.8v2.6M2.6 12h2.6M18.8 12h2.6M5.4 5.4l1.8 1.8M16.8 16.8l1.8 1.8M5.4 18.6l1.8-1.8M16.8 7.2l1.8-1.8\"/>","icons/ui/swap.svg":"<path d=\"M4.6 8.8h13.2\"/><path d=\"M14.8 5.6L18 8.8l-3.2 3.2\"/><path d=\"M19.4 15.2H6.2\"/><path d=\"M9.4 12L6.2 15.2l3.2 3.2\"/>","icons/ui/trash.svg":"<path d=\"M4.9 6.9h14.2M9.4 6.9V4.7h5.2v2.2M6.7 6.9l.9 12a1.4 1.4 0 0 0 1.4 1.3h6a1.4 1.4 0 0 0 1.4-1.3l.9-12\"/><path d=\"M10.4 10.6v6M13.6 10.6v6\"/>","icons/ui/undo.svg":"<path d=\"M7.5 4.5L3.5 8.5l4 4\"/><path d=\"M3.5 8.5H14a5.5 5.5 0 0 1 0 11H9\"/>","icons/ui/upload.svg":"<path d=\"M12 15.6V4.6\"/><path d=\"M7.8 8.8L12 4.6l4.2 4.2\"/><path d=\"M4.6 15.6v3.2a1.8 1.8 0 0 0 1.8 1.8h11.2a1.8 1.8 0 0 0 1.8-1.8v-3.2\"/>","icons/ui/warning.svg":"<path d=\"M12 3.8l8.8 15.4H3.2z\"/><path d=\"M12 9.8v4.2\"/><circle cx=\"12\" cy=\"16.8\" r=\".95\" fill=\"currentColor\" stroke=\"none\"/>"};
 /* @clueboard:assets-end */
 
@@ -3897,7 +3882,6 @@ function assetBust(v){
   return (location.protocol === 'file:') ? '' : ('?v=' + (v || 1));
 }
 const ART_DIR = "../assets/art/objects/";
-const THEME_DIR = "../assets/themes/";
 
 /* ══════════════════════════════════════════════════════
    Skins
@@ -4043,29 +4027,6 @@ function hydrateIcons(root){
     if(UI_ICONS[nm]) el.innerHTML=icon(nm);
   });
 }
-/* Het merkteken als tekening, zodat de terugknop in het spel hetzelfde logo
-   toont als het introscherm. Eigen kleurverloop-namen, anders botsen ze met
-   die van het introscherm. */
-function brandMark(){
-  return '<svg viewBox="0 0 64 64" aria-hidden="true">'
-    +'<defs>'
-    +'<linearGradient id="bmG" x1="0" y1="0" x2="1" y2="1">'
-    +'<stop offset="0" stop-color="#8577FF"/><stop offset=".55" stop-color="#5B4BE8"/>'
-    +'<stop offset="1" stop-color="#3B2FB4"/></linearGradient>'
-    +'<linearGradient id="bmGlass" x1="0" y1="0" x2="0" y2="1">'
-    +'<stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#DDE4F6"/></linearGradient>'
-    +'</defs>'
-    +'<rect x="3" y="3" width="58" height="58" rx="17" fill="url(#bmG)"/>'
-    +'<rect x="3.9" y="3.9" width="56.2" height="56.2" rx="16.2" fill="none" stroke="rgba(255,255,255,.42)" stroke-width="2"/>'
-    +'<g stroke="rgba(255,255,255,.9)" stroke-width="3.2" fill="none" stroke-linejoin="round">'
-    +'<rect x="13" y="13" width="15" height="15" rx="4"/>'
-    +'<rect x="36" y="13" width="15" height="15" rx="4" opacity=".45"/>'
-    +'<rect x="13" y="36" width="15" height="15" rx="4" opacity=".45"/></g>'
-    +'<circle cx="41.5" cy="41.5" r="11" fill="url(#bmGlass)" stroke="#151A33" stroke-width="3.2"/>'
-    +'<path d="M36.5 41.5h10M41.5 36.5v10" stroke="#5B4BE8" stroke-width="3" stroke-linecap="round"/>'
-    +'<path d="M49.6 49.6l6.2 6.2" stroke="#151A33" stroke-width="5" stroke-linecap="round"/>'
-    +'</svg>';
-}
 
 /* Korte trilling bij betekenisvolle acties; stil falen waar het niet ondersteund wordt. */
 function haptic(pattern){
@@ -4103,9 +4064,6 @@ function validateLevel(raw){
    staat in de bank; hier wordt hij alleen uitgelezen. */
 const PERSON_COLORS=AssetBank.manifest.personColors||{};
 const VICTIM_COLOR=PERSON_COLORS.victim||"#C0392B";
-function colorForLetter(letter){
-  return PERSON_COLORS[String(letter||"").charAt(0).toUpperCase()] || "#4A5568";
-}
 /* De pionkleuren komen uit een gedempt palet met zowel lichte als donkere
    tinten; de letter erop wordt dus per kleur donker of wit, wat het beste
    leest. Zo blijft elke pion leesbaar zonder dat het palet ingeperkt wordt. */
@@ -4313,6 +4271,9 @@ function boardBounds(m){
    zodra ze in het document staan. Staat identiek in player en builder.
    ============================================================ */
 const CH_DIR="../assets/characters/";
+/* De lagen heten in de code nog .png -- dat is de bron -- maar geladen wordt
+   de WebP ernaast. Mislukt die, dan valt het laden terug op de PNG. */
+function chPad(laag){ return CH_DIR+String(laag).replace(/\.(png|jpg)$/,".webp"); }
 function chBust(){ return "?v="+((AssetBank.manifest&&AssetBank.manifest.version)||1); }
 function chEsc(s){ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 /* Alleen kapsels waarvan de tekening geleverd is (available !== false). */
@@ -4343,17 +4304,6 @@ function hashCode(str){
   let h=0; str=String(str);
   for(let i=0;i<str.length;i++) h=(h*31+str.charCodeAt(i))|0;
   return Math.abs(h);
-}
-function kapselStandaard(name,gender){
-  const h=hashCode(String(name||"")+"|"+(gender||"x"));
-  const tinten=huidTinten();
-  const skinTone=tinten.length ? tinten[Math.floor(h/9973)%tinten.length].id : "light";
-  const stijlen=haarStijlenVoor(gender), kleuren=haarKleurenVoor(skinTone);
-  return {
-    hairStyle: stijlen.length ? stijlen[h%stijlen.length].id : kapselTerugval(gender),
-    hairColor: kleuren.length ? kleuren[Math.floor(h/97)%kleuren.length].id : "deep-brown",
-    skinTone
-  };
 }
 /* Wat er getekend wordt. Een level zonder deze velden (van vóór het
    character-systeem) krijgt side-part in deep-brown: het kapsel en de kleur
@@ -4393,7 +4343,8 @@ function chLaadBron(laag){
       };
       /* Bij een herkansing een eigen sleutel achter de naam, anders geeft de
          browser meteen dezelfde mislukking terug uit zijn cache. */
-      img.src=CH_DIR+laag+chBust()+(poging?"&p="+poging:"");
+      /* Na twee mislukte pogingen op de WebP de PNG proberen. */
+      img.src=(poging>=2 ? CH_DIR+laag : chPad(laag))+chBust()+(poging?"&p="+poging:"");
     };
     haal();
   });
@@ -4448,9 +4399,14 @@ function chKleur(laag,hex){
       a[i]=r; a[i+1]=gg; a[i+2]=b;
     }
     g.putImageData(d,0,0);
-    const url=c.toDataURL("image/png");
-    CH_CACHE.set(sleutel,url);
-    return url;
+    /* Een blob-URL in plaats van een data-URL. Een data-URL is een tekst van
+       honderden kilobytes die in elke <img> apart staat en apart ontcijferd
+       wordt; op een telefoon met veel portretten tegelijk liep dat vast en
+       bleef een laag leeg. Een blob wordt een keer bewaard en overal gedeeld. */
+    return new Promise(ok=>{
+      if(!c.toBlob || typeof URL==="undefined" || !URL.createObjectURL){ ok(c.toDataURL("image/png")); return; }
+      c.toBlob(b=>ok(b ? URL.createObjectURL(b) : c.toDataURL("image/png")),"image/png");
+    }).then(url=>{ CH_CACHE.set(sleutel,url); return url; });
   }).catch(e=>{
     /* Niet bewaren wat niet gelukt is, anders krijgt elke volgende vraag om
        deze laag dezelfde mislukking terug. */
@@ -4480,8 +4436,25 @@ document.addEventListener("error",e=>{
   const img=e.target;
   if(!img || img.tagName!=="IMG" || !img.classList || !img.classList.contains("ch-l")) return;
   const bron=img.dataset.bron; if(!bron) return;
+  /* Sneuvelde de ingekleurde versie (blob of data), dan is de ongekleurde
+     tekening het vangnet: liever een grijs shirt dan een gat in het gezicht. */
+  const src=img.getAttribute("src")||"";
+  if(/^(blob|data):/.test(src)){
+    delete img.dataset.klaar; delete img.dataset.tint;
+    img.src=bron+"&k="+(Date.now()%1000);
+    return;
+  }
+  /* Kwam de WebP niet aan, dan meteen de PNG: die staat er altijd naast. */
+  if(/\.webp(\?|$)/.test(bron) && !img.dataset.png){
+    img.dataset.png="1";
+    img.dataset.bron=bron.replace(".webp",".png");
+    img.src=img.dataset.bron;
+    return;
+  }
+  /* Een gewone laadfout krijgt een paar herkansingen met oplopende rust:
+     op een wankel netwerk zijn twee snelle pogingen niet genoeg. */
   const n=(parseInt(img.dataset.poging,10)||0)+1;
-  if(n>2) return;
+  if(n>4) return;
   img.dataset.poging=String(n);
   setTimeout(()=>{
     if(!img.isConnected) return;
@@ -4489,7 +4462,7 @@ document.addEventListener("error",e=>{
     /* Was dit een gekleurde laag, dan moet hij daarna ook weer zijn kleur
        krijgen; anders staat er een grijs shirt of een grijze pruik. */
     if(img.dataset.tint){ delete img.dataset.klaar; chVul(img); }
-  }, 300*n);
+  }, 500*n);
 },true);
 (function(){
   if(typeof MutationObserver==="undefined") return;
@@ -4506,7 +4479,7 @@ document.addEventListener("error",e=>{
 
 /* ── De markup ─────────────────────────────────────────── */
 function chLaag(laag,tint){
-  const bron=CH_DIR+laag+chBust();
+  const bron=chPad(laag)+chBust();
   return '<img class="ch-l" alt="" draggable="false" decoding="async" src="'+bron+'" data-bron="'+chEsc(bron)+'"'
     +(tint?' data-laag="'+laag+'" data-tint="'+chEsc(tint)+'"':'')+'>';
 }
@@ -4990,16 +4963,6 @@ function roomCentroid(room){
   return n?{c:sc/n, r:sr/n}:{c:0,r:0};
 }
 
-/* Hoeveel vakjes van dit stuk rij een object dragen. Een naam die daar
-   overheen valt, valt over een tekening heen. */
-function runObjecten(run){
-  let n=0;
-  for(let c=run.start;c<run.start+run.len;c++){
-    const t=M.tiles.get("c"+c+"r"+run.row);
-    if(t && t.objectId) n++;
-  }
-  return n;
-}
 /* Het beste stuk van deze rij voor een naam van `needed` vakjes breed: het
    venster met de minste objecten eronder. Geeft de startkolom terug. */
 function besteVenster(run,needed){
@@ -5224,8 +5187,8 @@ const MAT_EXT=1.5;   /* overlap over de tegelgrens, tegen haarnaden */
    eigen uitsnede van dezelfde afbeelding. Is het kleed groter dan vijf bij
    vijf, dan wordt de tekening meegeschaald in plaats van herhaald. */
 const MAT_TEX_VAKJES=5;
-function matTextuurUrl(){ return assetUrl("overlays","mat-textuur","jpg"); }
-function kruisUrl(){ return assetUrl("overlays","kruis","png"); }
+function matTextuurUrl(){ return assetUrl("overlays","mat-textuur","webp"); }
+function kruisUrl(){ return assetUrl("overlays","kruis","webp"); }
 /* De omvang van een kleed in vakjes, en waar deze tegel daarbinnen ligt. Het
    antwoord hangt alleen van het kleed af, dus het wordt per kleed onthouden:
    een kleed van zes tegels zou het anders zes keer uitrekenen. */
@@ -5403,11 +5366,13 @@ function withThemeFallback(folder,names){
      staat er een render, dan wint die; anders valt hij door naar de tekening.
      Het beeld wordt altijd naar zijn vak geschaald (object-fit/contain), dus
      een hogere resolutie uploaden maakt alleen scherper, nooit groter. */
-  if(th) names.forEach(n=>{ out.push(assetUrl(folder,th+n,"png")); out.push(assetUrl(folder,th+n)); });
+  /* WebP eerst: dezelfde tekening, ruim vijf keer zo klein. De PNG blijft
+     erachter staan voor een browser die geen WebP kent. */
+  if(th) names.forEach(n=>{ out.push(assetUrl(folder,th+n,"webp")); out.push(assetUrl(folder,th+n,"png")); out.push(assetUrl(folder,th+n)); });
   /* Ook de gedeelde map mag een PNG hebben: de nieuwe objecttekeningen zijn
      uitgeknipt uit het stijlvel en gelden voor elk thema. Staat er geen PNG,
      dan blijft de oude SVG-tekening gewoon staan. */
-  names.forEach(n=>{ out.push(assetUrl(folder,n,"png")); out.push(assetUrl(folder,n)); });
+  names.forEach(n=>{ out.push(assetUrl(folder,n,"webp")); out.push(assetUrl(folder,n,"png")); out.push(assetUrl(folder,n)); });
   return out;
 }
 /* Probeert de kandidaten op volgorde. De eerste die laadt wint; lukt er geen
@@ -5477,14 +5442,16 @@ function isProductie(slug,w,h){
 /* De schaduw hoort bij de tekening en niet bij het thema: één bestand per
    soort, in dezelfde uitsnede als het object zelf. Hij vermenigvuldigt met de
    vloer, dus hij klopt overdag en 's nachts vanzelf. */
-function objectSchaduwUrl(slug){ return assetUrl("objects","shadows/"+slug,"png"); }
+function objectSchaduwUrls(slug){ return [assetUrl("objects","shadows/"+slug,"webp"), assetUrl("objects","shadows/"+slug,"png")]; }
 /* 's Nachts eerst de nachtversie, en anders die van overdag. Niet elk object
    heeft er al een; wat ontbreekt valt gewoon terug. */
 function objectProdCandidates(slug){
   const namen=[];
   if(document.documentElement.dataset.thema!=="licht") namen.push("dark/"+slug);
   namen.push(slug);
-  return namen.map(n=>assetUrl("objects",n,"png"));
+  const uit=[];
+  namen.forEach(n=>{ uit.push(assetUrl("objects",n,"webp")); uit.push(assetUrl("objects",n,"png")); });
+  return uit;
 }
 /* De tekeningen komen van een stijlvel en staan daar allemaal even groot in
    hun kader. Op het bord klopt dat niet altijd: een stoel mag zijn vakje wat
@@ -5572,52 +5539,7 @@ function objectAssetCandidates(kind,w,h){
   names.push(slug);
   return withThemeFallback("objects",names);
 }
-/* Hoeveel tekeningen er van een vloersoort klaarstaan. Staat in de bank, niet
-   hier: de bestanden en dit getal horen bij elkaar. */
-function floorVariantCount(id){
-  const fa=AssetBank.manifest.floorArt;
-  const n=fa&&fa.variants?fa.variants[id]:0;
-  return Math.max(1, n||1);
-}
-function floorArtName(id,n){ return n<=1 ? "floor-"+id : "floor-"+id+"-"+n; }
 
-/* Vloeren: een tegelbare tekening per vloertype, herhaald over de ruimte.
-   Twee kamers met dezelfde vloer zouden in elkaar overlopen, dus krijgt elke
-   volgende kamer de volgende variant: gras 1, gras 2, gras 3... Zijn er meer
-   kamers dan varianten, dan begint het rijtje opnieuw. De volgorde is die van
-   de kamers in het level, dus hij ligt vast en springt niet per keer. */
-function applyFloorArt(){
-  /* De lichte foundations komen uit de CSS, één tekening per vakje. De oude
-     geschilderde vloeren (floor-<soort>.png, met varianten per kamer) blijven
-     in de map staan voor vergelijking, maar worden hier niet meer geladen. */
-  if(document.body.classList.contains("vloer-v3")) return;
-  const perVloer=new Map();
-  M.rooms.forEach(function(r){
-    const f=roomFloorArt(r); if(!f) return;
-    if(!perVloer.has(f)) perVloer.set(f,[]);
-    perVloer.get(f).push(r.id);
-  });
-  perVloer.forEach(function(kamers,f){
-    const aantal=floorVariantCount(f);
-    kamers.forEach(function(roomId,i){
-      const n=(i%aantal)+1;
-      /* De genummerde variant eerst; ontbreekt die, dan de basistekening. */
-      const namen=n>1?[floorArtName(f,n),"floor-"+f]:["floor-"+f];
-      const urls=withThemeFallback("backgrounds",namen);
-      let j=0;
-      const probe=new Image();
-      probe.onerror=function(){ j++; if(j<urls.length) probe.src=urls[j]; };
-      probe.onload=function(){
-        const url=urls[j];
-        $$('#grid .tile[data-room="'+roomId+'"][data-floor-art="'+f+'"]').forEach(function(t){
-          t.classList.add("has-floor-art");
-          t.style.backgroundImage='url("'+url+'")';
-        });
-      };
-      probe.src=urls[0];
-    });
-  });
-}
 
 /* Eén tekening per object per laag. De laag telt mee: een tapijt dat deels
    onder een tafel ligt, is bovenin drie losse tegels en onderin één. Zonder
@@ -5819,10 +5741,11 @@ function renderBoard(){
             const sch=document.createElement("div");
             sch.className="objschaduw"+soortKlasse;
             sch.dataset.tegel=id;
+            sch.dataset.slug=slug;
             sch.style.left="calc(var(--cell) * "+(c-b.minC)+" + var(--cell) * var("+kaderVar+"-links))";
             sch.style.top="calc(var(--cell) * "+(r-b.minR)+" + var(--cell) * var("+kaderVar+"-boven))";
             ($("#objSchaduw")||el).appendChild(sch);
-            mountAsset(sch,[objectSchaduwUrl(slug)],null,null);
+            mountAsset(sch,objectSchaduwUrls(slug),null,null);
           }
           const hoog = !prod && plan.w===1 && plan.h===1 && UITSTEKERS.indexOf(slug)>=0;
           const maatNaam = (plan.w>1||plan.h>1) ? slug+"-"+plan.w+"x"+plan.h : slug;
@@ -5881,7 +5804,6 @@ function renderBoard(){
       grid.appendChild(el);
     }
   }
-  applyFloorArt();
   zetGolfFase();
   paintBoard();
   fitBoard();
@@ -5951,7 +5873,10 @@ let OBJ_DX = maatVrij("clueboard:objDx",0);
 const OBJ_MATEN = {
   gewoon: {kader:1.40, dy:-15.0},
   dier:   {kader:1.80, dy:-10.0},
-  paard:  {kader:2.10, dy:-12.5},
+  /* Het paard stond een maat groter dan de andere dieren; dat las als een
+     ander soort object. Nu dezelfde maat, de eigen soort blijft bestaan zodat
+     hij later los bij te stellen is. */
+  paard:  {kader:1.80, dy:-10.0},
 };
 /* Staat "kleine objecten" aan, dan past alles binnen zijn eigen vakje: één
    maat voor alle soorten. Voorlopig geldt dat alleen voor de objecten van één
@@ -6329,7 +6254,18 @@ function tekenKopStand(){
   /* Goud is een uitnodiging: die hoort er pas te zijn als er echt iets te
      controleren valt. */
   const knop=$("#btnCheck");
-  if(knop) knop.classList.toggle("klaar",placed.size===M.people.length && M.people.length>0);
+  const alles=placed.size===M.people.length && M.people.length>0;
+  if(knop) knop.classList.toggle("klaar",alles);
+  /* Staat de laatste pion net, dan hoeft niemand meer op Controleer te
+     drukken: de vraag wie de dader is komt vanzelf. Alleen na een echte zet
+     (justPlaced), niet bij hervatten of stap-terug, en de vraag laat zich
+     gewoon wegklikken -- Controleer blijft er ook voor wie eerst nog wil
+     kijken. */
+  if(alles && justPlaced && !revealed){
+    const m=$("#modalAccuse");
+    if(m && !m.classList.contains("open"))
+      setTimeout(()=>{ if(M && placed.size===M.people.length && !revealed && !m.classList.contains("open")) openAccuse(); },420);
+  }
 }
 function paintBoard(){
   if(isDesktop()) setTimeout(tekenDetail,0);
@@ -6339,6 +6275,7 @@ function paintBoard(){
      genoeg en nooit vaker. */
   bewaarBezig();
   const pawnHost=$("#pawns"); if(pawnHost) pawnHost.innerHTML="";
+  const noteHost=$("#noteLaag"); if(noteHost) noteHost.innerHTML="";
   const bb=M.bounds;
   $$("#grid .tile[data-tile]").forEach(el=>{
     const id=el.dataset.tile;
@@ -6430,7 +6367,15 @@ function paintBoard(){
             s.textContent=p.letter; s.style.color=p.color;
             wrap.appendChild(s);
           });
-          el.appendChild(wrap);
+          /* Op de notitielaag, op de plek van dit vakje, met dezelfde
+             muurklassen zodat de letters even ver van een muur blijven. */
+          const tt=M.tiles.get(id);
+          const slot=document.createElement("div");
+          slot.className="note-slot "+Array.from(el.classList).filter(c=>/^w-/.test(c)).join(" ");
+          slot.style.left="calc(var(--cell) * "+(tt.column-bb.minC)+")";
+          slot.style.top="calc(var(--cell) * "+(tt.row-bb.minR)+")";
+          slot.appendChild(wrap);
+          (noteHost||el).appendChild(slot);
         }
       }
     }
@@ -6522,12 +6467,13 @@ function shakeTile(el){
   setTimeout(()=>el.classList.remove("shake"),340);
 }
 function attachTileInput(el,tileId){
-  let timer=null, fired=false, sx=0, sy=0, moved=false, veeg=null, klaar=false;
+  let timer=null, fired=false, sx=0, sy=0, moved=false, veeg=null, klaar=false, tikGedaan=false;
   const cancel=()=>{ clearTimeout(timer); timer=null; el.classList.remove("pressing"); };
   /* Het einde van een tik: menu open, of niets als het een lange druk of een
      veeg was. Eén plek, want de tik komt langs twee wegen binnen (zie onder). */
   const tik=()=>{
     const wasFired=fired, wasMoved=moved;
+    tikGedaan=true;
     cancel(); veeg=null;
     if(wasFired||wasMoved||revealed) return;
     const t=M.tiles.get(tileId);
@@ -6553,7 +6499,7 @@ function attachTileInput(el,tileId){
     if($("#radial").classList.contains("open")) return;
     /* Desktop: shift-klik zet meteen een kruisje, zonder vasthouden. */
     if(isDesktop() && e.shiftKey){ fired=true; toggleCross(tileId); return; }
-    fired=false; moved=false; veeg=null; klaar=false; sx=e.clientX; sy=e.clientY;
+    fired=false; moved=false; veeg=null; klaar=false; tikGedaan=false; sx=e.clientX; sy=e.clientY;
     /* Alleen de muis vastpakken. Een vinger is al impliciet aan het vakje
        gebonden zolang hij het scherm raakt; expliciet vastpakken bleek op
        Android-Chrome samen te gaan met een pointerup die nooit meer kwam. */
@@ -6608,8 +6554,14 @@ function attachTileInput(el,tileId){
      over. preventDefault houdt de nagebootste muisklik tegen, zodat er niet
      alsnog iets dubbel gebeurt. */
   el.addEventListener("touchend",e=>{
-    if(!timer) return;                     /* al afgehandeld, of nooit begonnen */
     if(e.touches&&e.touches.length) return; /* nog een vinger op het scherm */
+    /* Meestal is pointerup er al geweest en staat de kring al open. Dan komt
+       hierna nog de nagebootste muisklik -- en die valt niet op dit vakje maar
+       op de sluier die er inmiddels overheen ligt, waarna de kring meteen
+       weer dichtging. Daarom hier altijd de klik tegenhouden zodra deze
+       aanraking als tik is afgehandeld. */
+    if(tikGedaan){ if(e.cancelable) e.preventDefault(); return; }
+    if(!timer) return;                     /* nooit begonnen */
     klaar=true;
     if(e.cancelable) e.preventDefault();
     tik();
@@ -6724,6 +6676,7 @@ function openTileMenu(tileId,el){
   /* Eerst de sluier aanzetten en pas daarna meten: het openen legt de pagina
      vast en verschuift de indeling, en wie daarvoor meet mikt ernaast. */
   $("#radial").classList.add("open");
+  radialOpenTijd=Date.now();
   const center=zoomToTile(el);
   /* Meteen mee, in dezelfde beweging als de zoom. Wachten tot het bord stil
      lag voelde als een hapering tussen je tik en het menu. */
@@ -6992,15 +6945,15 @@ function bandKleur(hex){
    rolkleur (edele goud, ridder neutraal grijs). Geen picto, erft nooit de
    persoonskleur. De drie ongebruikte rollen houden hun oude vorm. */
 function rolBadge(standing){
-  if(standing==="noble")  return '<img class="rb" alt="" draggable="false" src="'+CH_DIR+'ui/badge-edele.png'+chBust()+'">';
-  if(standing==="knight") return '<img class="rb" alt="" draggable="false" src="'+CH_DIR+'ui/badge-ridder.png'+chBust()+'">';
+  if(standing==="noble")  return '<img class="rb" alt="" draggable="false" src="'+chPad('ui/badge-edele.png')+chBust()+'">';
+  if(standing==="knight") return '<img class="rb" alt="" draggable="false" src="'+chPad('ui/badge-ridder.png')+chBust()+'">';
   return (standing==="guard"||standing==="monk"||standing==="servant") ? roleShapeOud(standing, roleColor(standing)) : "";
 }
 /* Compacte portretcontainer: de gouden banier of het schild als backplate
    achter het character. Zonder extra cirkel erin. */
 function rolContainer(standing){
-  if(standing==="noble")  return '<img class="rc" alt="" draggable="false" src="'+CH_DIR+'ui/banier.png'+chBust()+'">';
-  if(standing==="knight") return '<img class="rc" alt="" draggable="false" src="'+CH_DIR+'ui/schild.png'+chBust()+'">';
+  if(standing==="noble")  return '<img class="rc" alt="" draggable="false" src="'+chPad('ui/banier.png')+chBust()+'">';
+  if(standing==="knight") return '<img class="rc" alt="" draggable="false" src="'+chPad('ui/schild.png')+chBust()+'">';
   return (standing==="guard"||standing==="monk"||standing==="servant") ? roleShapeOud(standing, roleColor(standing)) : "";
 }
 function heeftRolvorm(standing){
@@ -7102,7 +7055,7 @@ function personButton(p,tileId,t,x,y){
     b.dataset.standing=vorm;
     const rc=document.createElement("img");
     rc.className="rc"; rc.alt=""; rc.draggable=false;
-    rc.src=CH_DIR+"ui/"+(vorm==="noble"?"banier":"schild")+".png"+chBust();
+    rc.src=chPad("ui/"+(vorm==="noble"?"banier":"schild")+".png")+chBust();
     b.appendChild(rc);
   }
   const face=document.createElement("span");
@@ -7178,23 +7131,6 @@ function personButton(p,tileId,t,x,y){
 function hardBlock(t){
   if(!t) return "Deze tegel bestaat niet.";
   if(t.status==="blocked") return "Hier kan niemand staan; alleen een kruis.";
-  return null;
-}
-function softIssue(p,tileId){
-  const t=M.tiles.get(tileId);
-  const other=personOnTile(tileId);
-  if(other && other!==p.id) return M.peopleById.get(other).name+" stond hier al.";
-  for(const [pid,tid] of placed){
-    if(pid===p.id) continue;
-    const ot=M.tiles.get(tid); if(!ot) continue;
-    if(ot.row===t.row) return "Rij "+t.row+" is al bezet door "+M.peopleById.get(pid).name+".";
-    if(ot.column===t.column) return "Kolom "+t.column+" is al bezet door "+M.peopleById.get(pid).name+".";
-  }
-  const room=M.rooms.get(t.roomId);
-  if(room && Array.isArray(room.allowedStandings) && room.allowedStandings.length){
-    if(!p.standing || room.allowedStandings.indexOf(p.standing)<0)
-      return p.name+" mag niet in de "+(room.name||"ruimte")+".";
-  }
   return null;
 }
 /* Iemand van een vakje halen. Staat op één plek, want het gebeurt vanuit de
@@ -7286,11 +7222,6 @@ function stripOwnName(text,person){
      en dat leest niet. Dan neemt het voornaamwoord de plek van de naam in. */
   if(/^of\s/i.test(rest)) return (person.gender==="female"?"Zij":"Hij")+" "+rest;
   return rest;
-}
-function posBadge(personId){
-  const tid=placed.get(personId); if(!tid) return null;
-  const t=M.tiles.get(tid); if(!t) return null;
-  return "k"+t.column+" r"+t.row;
 }
 
 
@@ -7904,7 +7835,6 @@ function startTimer(){
 }
 function stopTimer(){ if(timerId){clearInterval(timerId);timerId=null;} }
 
-function allPlaced(){ return placed.size===M.people.length; }
 function updateActionState(){
   /* Controleer mag altijd: wie te vroeg drukt ziet gewoon wat er nog fout
      of leeg staat. */
@@ -7998,6 +7928,7 @@ function checkSolution(){
   const total=M.people.length, perfect=(correct===total);
   uitslagPerfect=perfect;
   if(perfect){ bewaarVoltooid(currentRaw,elapsed); wisBezig(currentRaw); }
+  { const mb=$("#btnEndMenu"); if(mb) mb.hidden=!perfect; }
   const card=document.querySelector("#screen-end .uitslag");
   if(card){ card.classList.toggle("win",perfect); card.classList.toggle("lose",!perfect); }
   haptic(perfect?[16,60,26,60,40]:[46,70,46]);
@@ -8164,7 +8095,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.118";
+const PLAYER_APP_VERSION="0.9.120";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8382,22 +8313,6 @@ function loadFile(file){
   rd.readAsText(file);
 }
 
-/* ------------------------------------------------------------
-   Level-detail: slachtoffer + verdachten, v\u00f3\u00f3rdat het bord opent.
-   De schuldige wordt hier nooit apart gelabeld \u2014 dat zou de puzzel
-   verklappen \u2014 dus iedereen buiten het slachtoffer heet "Verdachte".
-   ------------------------------------------------------------ */
-function detailPeople(raw){
-  const p=raw.puzzle, content=raw.content||{};
-  const cp=content.people||{};
-  const victimId=(raw.solution&&raw.solution.victimId)||p.people.victimId||null;
-  const people=p.people.placements.map(pl=>{
-    const c=cp[pl.id]||{};
-    const name=c.name||pl.name||pl.id;
-    return {id:pl.id, name:name, letter:String(name).trim().charAt(0).toUpperCase()||"?", isVictim:pl.id===victimId};
-  });
-  return {victim:people.find(pe=>pe.isVictim)||null, suspects:people.filter(pe=>!pe.isVictim)};
-}
 /* Bordbrede regels (bv. toegang tot een ruimte) bevatten geen puzzeloplossing
    en mogen dus getoond worden; per-persoon regels blijven verborgen tot in-game. */
 /* De standaardzin over edelen, dorpelingen en ridders die de bouwer bij
@@ -8409,33 +8324,6 @@ function getBoardRules(raw){
   const content=raw.content||{};
   const src=(Array.isArray(raw.clues)&&raw.clues.length)?raw.clues:(content.clues||[]);
   return src.filter(c=>c && !c.personId && (c.text||c.storyText) && !isAlgemeneRegel(c.text||c.storyText));
-}
-/* Genoeg model om portretten te kunnen tekenen voordat het level start:
-   kleuren, letters en standen, meer heeft personPortrait niet nodig. */
-function modelVoorDetail(raw){
-  const p=raw.puzzle, content=raw.content||{}, cp=content.people||{};
-  const victimId=(raw.solution&&raw.solution.victimId)||p.people.victimId||null;
-  const mensen=p.people.placements.map((pl,i)=>{
-    const c=cp[pl.id]||{};
-    const standing=c.role||pl.standing||null;
-    return { id:pl.id, index:i, name:c.name||pl.name||pl.id,
-             gender:c.gender||pl.gender||null,
-             standing:standing||null, standingLabel:roleLabel(standing),
-             colorLetter:c.nameLetter||null,
-             hairStyle:c.hairStyle||null, hairColor:c.hairColor||null, skinTone:c.skinTone||null,
-             attributes:(c.attributes&&typeof c.attributes==="object")?c.attributes:null,
-             color:null, letter:"" };
-  });
-  const m={ victimId, people:mensen, peopleById:new Map(), theme:p.theme||"" };
-  assignPersonColors(m);
-  assignPersonLetters(mensen);
-  mensen.forEach(x=>m.peopleById.set(x.id,x));
-  m.victim=mensen.find(x=>x.id===victimId)||null;
-  m.suspects=mensen.filter(x=>x.id!==victimId);
-  const src=(Array.isArray(raw.clues)&&raw.clues.length)?raw.clues:(content.clues||[]);
-  const vc=src.find(c=>c && c.personId===victimId && (c.text||c.storyText));
-  m.victimClue=vc?(vc.text||vc.storyText):"";
-  return m;
 }
 
 function showLevelDetail(levelIndex){
@@ -8595,7 +8483,7 @@ function warmLevel(){
     if(p.standing==="noble") platen.push("ui/banier.png");
     else if(p.standing==="knight") platen.push("ui/schild.png");
   });
-  const beelden=[...new Set(platen)].map(n=>CH_DIR+n+chBust());
+  const beelden=[...new Set(platen)].map(n=>chPad(n)+chBust());
   /* Wat er op het bord staat is al door de browser opgevraagd; met decode()
      is het straks ook echt klaar om te tekenen in plaats van halverwege. */
   $$("#grid .tile img, #grid .tile .objart img, #hoogArt .objart img, #objSchaduw .objschaduw img").forEach(i=>{ if(i.currentSrc) beelden.push(i.currentSrc); });
@@ -8656,14 +8544,6 @@ function miniKaart(){
     h+='<span class="mk-c'+(t.status==="blocked"?" blok":"")+'" style="background:'+kleur+'"></span>';
   }
   return h+"</div>";
-}
-function bordFiche(pe){
-  const rol=(pe.standing && rolDoetErToe(pe.standing)) ? rolBadge(pe.standing) : "";
-  const letter=pe.letter||pe.name.charAt(0).toUpperCase();
-  return '<span class="bord-fiche'+(pe.id===M.victimId?" victim":"")+'" style="--pc:'+esc(pe.color||"#888")+'">'
-    +'<span class="init" data-len="'+letter.length+'" style="color:'+inkOnColor(pe.color||"#888")+'">'+esc(letter)+'</span>'
-    +(rol?'<span class="role-badge">'+rol+'</span>':'')
-    +'</span>';
 }
 let introOpen=false;
 /* Een duwtje om verder te lezen. Het verschijnt pas als je een paar tellen
@@ -9336,8 +9216,12 @@ $("#btnAccuseConfirm").addEventListener("click",e=>{
    om verder te puzzelen (of om je oplossing nog eens te bekijken). Naar het
    menu ga je met de pijl in de kop. */
 $("#btnEndBack").addEventListener("click",terugNaarBord);
+$("#btnEndMenu").addEventListener("click",toMenu);
 
-$("#radialBackdrop").addEventListener("click",closeRadial);
+/* Een klik op de sluier sluit de kring -- behalve vlak na het openen: dat is
+   de nagebootste klik van de vinger die de kring net opende. */
+let radialOpenTijd=0;
+$("#radialBackdrop").addEventListener("click",()=>{ if(Date.now()-radialOpenTijd<450) return; closeRadial(); });
 document.addEventListener("click",e=>{
   const c=e.target.closest("[data-close]");
   if(c){ const m=c.closest(".modal"); if(m) closeModal(m); }

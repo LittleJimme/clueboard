@@ -20,8 +20,8 @@ from PIL import Image
 
 HIER = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.dirname(HIER)
-DOEL = os.path.join(ASSETS, "art", "backgrounds", "medieval")
-INBOX = os.path.join(ASSETS, "render", "inbox")
+DOEL = os.path.join(os.path.dirname(ASSETS), "Design Department", "60 Repo Sources", "backgrounds", "medieval")
+INBOX = os.path.join(os.path.dirname(ASSETS), "Design Department", "60 Repo Sources", "render", "inbox")
 
 MAAT = 256      # ruim boven de celgrootte op het scherm
 

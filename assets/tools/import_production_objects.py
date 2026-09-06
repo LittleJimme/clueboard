@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Zet de objecten uit assets/art/production/objects in de assetbank.
+"""Zet de objecten uit Design Department/60 Repo Sources/production/objects in de assetbank.
 
 Uit Photoshop komen twee bestanden per object, precies over elkaar geplaatst:
 
@@ -34,7 +34,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-BRON   = os.path.join(WORTEL, "assets", "art", "production", "objects")
+BRON   = os.path.join(WORTEL, "Design Department", "60 Repo Sources", "production", "objects")
 OBJ    = os.path.join(WORTEL, "assets", "art", "objects")
 GROEI  = 2      # pixels dat de alpha uitzet voor het uitrekenen
 DREMPEL = 250   # hierboven is het papier, geen schaduw

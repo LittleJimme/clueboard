@@ -913,13 +913,6 @@ function helpBord(regels, opt){
   });
   return h+"</div>";
 }
-/* Dezelfde banier en hetzelfde schild als in het spel, zodat je de vorm
-   later op het bord meteen herkent. */
-function meng(hex,f){
-  const n=parseInt(hex.replace("#",""),16);
-  const k=v=>Math.max(0,Math.min(255,Math.round(v*f)));
-  return "#"+[k(n>>16&255),k(n>>8&255),k(n&255)].map(v=>v.toString(16).padStart(2,"0")).join("");
-}
 /* De compacte rolcontainer uit de goedgekeurde referentie: banier voor de
    edele, schild voor de ridder. Zelfde vorm als in de player; de kleur is
    die van de rol en erft nooit een persoonskleur. */

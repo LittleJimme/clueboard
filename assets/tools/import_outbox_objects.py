@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Zet de 1x1-objecten uit assets/art/MAIN/Outbox in de assetbank.
+"""Zet de 1x1-objecten uit Design Department/60 Repo Sources/MAIN/Outbox in de assetbank.
 
 Per object komen er drie bestanden uit Photoshop, alle 1024 bij 1024:
 
@@ -26,7 +26,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-BRON = os.path.join(WORTEL, "assets", "art", "MAIN", "Outbox")
+BRON = os.path.join(WORTEL, "Design Department", "60 Repo Sources", "MAIN", "Outbox")
 OBJ  = os.path.join(WORTEL, "assets", "art", "objects")
 MAAT = 512      # wat er in de bank komt
 GROEI = 2       # pixels dat de alpha uitzet voor het uitrekenen van de schaduw

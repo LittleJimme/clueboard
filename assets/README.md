@@ -10,8 +10,8 @@ icons/objects/    24x24 lijniconen, één per objectsoort
 icons/ui/         24x24 lijniconen voor de interface
 icons/roles/      24x24 lijniconen per stand (edele, ridder, ...)
 art/objects/      gekleurde tekeningen voor het bord
-art/characters/   gekleurde tekeningen per personage
-art/backgrounds/  herhaalbare vloertexturen
+characters/       de lagen van de personages (hoofd, shirt, haar), als PNG en WebP
+art/backgrounds/  (leeg; de geschilderde vloeren staan buiten de repo, zie onder)
 tools/            buildscript
 preview.html      contactvel van de hele bank
 ```
@@ -167,3 +167,22 @@ kan nog steeds en wint dan van de samenstelling.
 Nederlandse naam, hun kleur en hun picto. Er zijn er zes; `available: false`
 houdt een stand voorlopig uit de buildermenu's. Zet die vlag op `true` en de
 stand doet meteen mee — er hoeft geen code aangepast te worden.
+
+
+## Bronmateriaal buiten de repo
+
+Alles wat het spel niet laadt maar wat een script inleest of wat ter
+vergelijking bewaard blijft, staat in `Design Department/60 Repo Sources/`
+(niet in git):
+
+    MAIN/Outbox/     de 1024px-renders uit Photoshop; import_outbox_objects.py leest hier
+    production/      eerdere lichtingen objecten, tapijttextuur, kruisje
+    concepts/        stijlvellen waar cut_*.py uit knipt
+    styleboards/     de losse proefbeelden en stijlborden
+    render/inbox/    gerenderde bladen (vloertegels, muurstukken)
+    backgrounds/     de geschilderde vloeren van vroeger, plus cut_floors.py
+    themes/          de perkament-skin van vroeger
+    ui/              de getekende invalbeelden van die skin, plus maak_ui_sprites.py
+
+Wat het spel wel laadt staat als PNG (bron) en WebP (geladen) naast elkaar;
+`python assets/tools/maak_webp.py` maakt de WebP's bij na een import.

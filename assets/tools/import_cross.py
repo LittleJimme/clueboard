@@ -17,7 +17,7 @@ import numpy as np
 from PIL import Image
 
 WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-BRON = os.path.join(WORTEL, "assets", "art", "production", "occupied-markers",
+BRON = os.path.join(WORTEL, "Design Department", "60 Repo Sources", "production", "occupied-markers",
                     "occupied-cross-c-white-v1.png")
 DOEL = os.path.join(WORTEL, "assets", "art", "overlays", "kruis.png")
 MAAT = 384      # het kruis beslaat 70% van een vakje; ook op een groot scherm ruim
