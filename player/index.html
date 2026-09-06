@@ -3606,6 +3606,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="debug-rij"><b>Textuur</b><input type="range" id="overlaySterkte" min="0" max="100" step="1" value="25" aria-label="Hoe hard de materiaaltekening over de kleur ligt"><span class="debug-getal" id="overlaySterkteGetal">25.0</span></div>
   <div class="debug-kop">Proef: golf op het water</div>
   <div class="debug-rij"><b>Slag (s)</b><input type="range" id="golfDuur" min="1" max="14" step="0.5" value="6" aria-label="Seconden per slag"><span class="debug-getal" id="golfDuurGetal">6.0</span></div>
+  <div class="debug-rij"><b>Frequentie /min</b><input type="range" id="golfFreq" min="4" max="60" step="1" value="10" aria-label="Slagen per minuut"><span class="debug-getal" id="golfFreqGetal">10</span></div>
   <div class="debug-rij"><b>Golflengte</b><input type="range" id="golfLengte" min="1" max="14" step="0.5" value="5" aria-label="Tegels per golf"><span class="debug-getal" id="golfLengteGetal">5.0</span></div>
   <div class="debug-rij"><b>Kleiner %</b><input type="range" id="golfDiep" min="0" max="25" step="0.5" value="6" aria-label="Procent kleiner in het dal"><span class="debug-getal" id="golfDiepGetal">6.0</span></div>
   <div class="debug-rij"><b>Groter %</b><input type="range" id="golfHoog" min="0" max="25" step="0.5" value="6" aria-label="Procent groter op de top"><span class="debug-getal" id="golfHoogGetal">6.0</span></div>
@@ -8106,7 +8107,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.121";
+const PLAYER_APP_VERSION="0.9.122";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9132,8 +9133,19 @@ maatSchuif("overlaySterkte","overlaySterkteGetal","clueboard:overlaySterkte",
 
 /* De golf: tempo en lengte veranderen de fase per tegel, dus die rekenen
    zetGolfFase opnieuw; de twee maten lopen via zetMaten in de CSS. */
+/* Slag en frequentie zijn een en dezelfde knop van twee kanten: zoveel
+   seconden per slag is zoveel slagen per minuut. Beide schuiven sturen
+   dezelfde maat en houden elkaar bij. */
+function toonGolfTempo(){
+  const d=$("#golfDuur"), f=$("#golfFreq");
+  if(d){ d.value=String(GOLF_DUUR); const g=$("#golfDuurGetal"); if(g) g.textContent=GOLF_DUUR.toFixed(1); }
+  if(f){ const per=60/GOLF_DUUR; f.value=String(Math.round(per)); const g=$("#golfFreqGetal"); if(g) g.textContent=per.toFixed(1); }
+}
 maatSchuif("golfDuur","golfDuurGetal","clueboard:golfDuur",
-  ()=>GOLF_DUUR, v=>{ GOLF_DUUR=v; zetGolfFase(); }, false);
+  ()=>GOLF_DUUR, v=>{ GOLF_DUUR=v; zetGolfFase(); toonGolfTempo(); }, false);
+maatSchuif("golfFreq","golfFreqGetal","clueboard:golfFreq",
+  ()=>60/GOLF_DUUR, v=>{ GOLF_DUUR=60/Math.max(1,v); try{ localStorage.setItem("clueboard:golfDuur",String(GOLF_DUUR)); }catch(e){} zetGolfFase(); toonGolfTempo(); }, false, 1);
+toonGolfTempo();
 maatSchuif("golfLengte","golfLengteGetal","clueboard:golfLengte",
   ()=>GOLF_LENGTE, v=>{ GOLF_LENGTE=v; zetGolfFase(); }, false);
 maatSchuif("golfDiep","golfDiepGetal","clueboard:golfDiep",
