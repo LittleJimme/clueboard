@@ -21,7 +21,9 @@
    in het lichte thema zou witte balktekst onleesbaar zijn, dus dan terug
    naar "default". Zelfde constructie als in het menu. */
 try{ var _t=localStorage.getItem("clueboard:menuThema");
-     if(_t==="licht"||_t==="donker") document.documentElement.dataset.thema=_t;
+     /* Licht is de stand waarin het spel opengaat; donker is een keuze. */
+     if(_t!=="donker") _t="licht";
+     document.documentElement.dataset.thema=_t;
      if(_t==="licht"){
        document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').content="default";
        document.getElementById("themeColorMeta").content="#F0EEE7";
@@ -4682,8 +4684,10 @@ function setEasyMode(aan){
 }
 /* Auto-kruisjes staat los van easy mode: je mag iedereen overal neerzetten,
    maar na elke plaatsing gaan de rij en de kolom wel vanzelf dicht. */
-let autoKruis=false;
-try{ autoKruis=localStorage.getItem("cb_autokruis")==="1"; }catch(e){}
+/* Standaard aan: de eerste keer helpt het meer dan het stoort. Alleen wie
+   hem zelf uitzet, houdt hem uit. */
+let autoKruis=true;
+try{ autoKruis=localStorage.getItem("cb_autokruis")!=="0"; }catch(e){}
 function setAutoKruis(aan){
   autoKruis=!!aan;
   try{ localStorage.setItem("cb_autokruis",autoKruis?"1":"0"); }catch(e){}
@@ -8217,7 +8221,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.131";
+const PLAYER_APP_VERSION="0.9.132";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9378,7 +9382,7 @@ hydrateIcons();
 $$("#themaKeuze [data-thema]").forEach(b=>b.addEventListener("click",()=>zetThema(b.dataset.thema)));
 { const bt=$("#btnThema");
   if(bt) bt.addEventListener("click",()=>zetThema(document.documentElement.dataset.thema==="licht"?"donker":"licht")); }
-(function(){ let t="donker"; try{ t=localStorage.getItem(THEMA_SLEUTEL)||"donker"; }catch(e){} zetThema(t); })();
+(function(){ let t="licht"; try{ t=localStorage.getItem(THEMA_SLEUTEL)||"licht"; }catch(e){} zetThema(t); })();
 { const v=$("#playerVersieTekst"); if(v) v.textContent=String(PLAYER_APP_VERSION); }
 /* Altijd in beeld, heel licht: op een schermafdruk van een speler is dan
    meteen te zien met welke versie hij speelde. */

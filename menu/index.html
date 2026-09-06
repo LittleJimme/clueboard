@@ -12,7 +12,8 @@
    en niet bij zetThema(): een lichte pagina met witte statusbalktekst
    is onleesbaar, dus schakelen we om vóórdat de pagina verschijnt. */
 try{
-  if(localStorage.getItem("clueboard:menuThema")==="licht"){
+  /* Licht is de standaardstand; donker is een keuze die bewaard blijft. */
+  if(localStorage.getItem("clueboard:menuThema")!=="donker"){
     document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').content="default";
     document.getElementById("themeColorMeta").content="#F0EEE7";
     document.documentElement.dataset.thema="licht";
@@ -801,7 +802,7 @@ function $(sel){ return document.querySelector(sel); }
    werkelijke scherm, want een verschil van twee stappen is op een donkere
    telefoon al een zichtbare naad. */
 const THEMA_KLEUR = { donker:"#24191A", licht:"#F0EEE7" };
-const THEMA_STANDAARD = "donker";
+const THEMA_STANDAARD = "licht";
 const THEMA_SLEUTEL = "clueboard:menuThema";
 function zetThema(naam){
   const t = THEMA_KLEUR[naam] ? naam : THEMA_STANDAARD;
