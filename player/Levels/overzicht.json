@@ -1,6 +1,28 @@
 {
-  "gemaakt": "2026-09-05T17:38:04",
+  "gemaakt": "2026-09-06T13:23:44",
   "levels": [
+    {
+      "file": "100v4 Test Level.json",
+      "content": {
+        "title": "Test Level"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 8,
+          "rows": 8
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtppube2ms7g0",
+      "levelNumber": 100,
+      "levelVersion": 4,
+      "test": true,
+      "difficulty": {
+        "graad": 1,
+        "uitleg": "Elke stap volgt rechtstreeks uit één aanwijzing."
+      }
+    },
     {
       "file": "1v4 Herberg de Doortocht.json",
       "content": {

@@ -2645,7 +2645,7 @@ function objectSizeText(kind){
   if (isWallKind(kind)) return 'op een muur';
   if (isUnderKind(kind)) return 'vrije vorm, ligt eronder';
   const n = objectSizeRule(kind);
-  return n === 1 ? '1 tegel' : n === 2 ? '2 tegels' : '1 tot 3 tegels';
+  return n === 1 ? '1 tegel' : n === 2 ? '2 tegels' : n === 4 ? '4 tegels, 2 bij 2' : '1 tot 3 tegels';
 }
 
 /* Het pictogram van een objectsoort. De gekleurde tekening uit assets/art/
@@ -4932,15 +4932,23 @@ function lineBetween(a, b){
   return out;
 }
 
-/* Geldige objectvormen: single, line-2, line-3, corner-3 (max 3 tegels, aaneengesloten). */
+/* Geldige objectvormen: single, line-2, line-3, corner-3, en block-4 (een
+   vol vierkant van 2 bij 2, voor de waterput). Altijd aaneengesloten. */
 function isValidObjectShape(tiles){
   if (!tiles.length) return false;
-  if (tiles.length > 3) return false;
+  if (tiles.length > 4) return false;
   if (components(tiles).length !== 1) return false;
   if (tiles.length === 1) return true;
 
   const xs = tiles.map(k => S.tiles[k].x);
   const ys = tiles.map(k => S.tiles[k].y);
+  /* Vier tegels mogen alleen als ze samen precies een 2x2-vak vullen; een
+     rij van vier of een T-vorm is geen object dat we tekenen. */
+  if (tiles.length === 4){
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    return maxX - minX === 1 && maxY - minY === 1;
+  }
   const sameRow = ys.every(y => y === ys[0]);
   const sameCol = xs.every(x => x === xs[0]);
   if (sameRow || sameCol) return true; // line-2 / line-3
@@ -5026,7 +5034,7 @@ function applyAt(k){
     }
     const merged = obj.tiles.concat([k]);
     if (!isValidObjectShape(merged)){
-      reject(k, { msg:'Vorm niet geldig: 2 of 3 op een rij, of een L-hoek.' });
+      reject(k, { msg:'Vorm niet geldig: 2 of 3 op een rij, een L-hoek, of 2 bij 2 (waterput).' });
       return;
     }
     setStatus(k, status, kind);
@@ -9523,9 +9531,10 @@ function objectShape(o){
   const xs = o.tiles.map(k => S.tiles[k].x), ys = o.tiles.map(k => S.tiles[k].y);
   if (ys.every(y => y === ys[0]) || xs.every(x => x === xs[0])) return 'line-' + n;
   if (n === 3) return 'corner-3';
+  if (n === 4) return 'block-4';
   return 'group-' + n;
 }
-const SHAPE_NL = { 'single':'losse tegel', 'line-2':'2 op een rij', 'line-3':'3 op een rij', 'corner-3':'L-hoek' };
+const SHAPE_NL = { 'single':'losse tegel', 'line-2':'2 op een rij', 'line-3':'3 op een rij', 'corner-3':'L-hoek', 'block-4':'2 bij 2' };
 function objectFootprint(o){
   const sh = objectShape(o);
   return SHAPE_NL[sh] || (o.tiles.length + ' tegels');
