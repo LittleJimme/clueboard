@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-06T22:32:33",
+  "gemaakt": "2026-09-06T23:15:49",
   "levels": [
     {
       "file": "100v4 Test Level.json",
@@ -42,6 +42,27 @@
       "difficulty": {
         "graad": 4,
         "uitleg": "Veel aannemen en verwerpen, en de volgorde luistert."
+      }
+    },
+    {
+      "file": "11v1 De Oude Gevangenis.json",
+      "content": {
+        "title": "De Oude Gevangenis"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 5,
+          "rows": 5
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtqb7483p9zcl",
+      "levelNumber": 11,
+      "levelVersion": 1,
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
