@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-06T15:45:20",
+  "gemaakt": "2026-09-06T22:32:33",
   "levels": [
     {
       "file": "100v4 Test Level.json",
@@ -21,6 +21,27 @@
       "difficulty": {
         "graad": 1,
         "uitleg": "Elke stap volgt rechtstreeks uit één aanwijzing."
+      }
+    },
+    {
+      "file": "10v5 Het Jachthuis.json",
+      "content": {
+        "title": "Het Jachthuis"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 5,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtpz6a4i6yb8m",
+      "levelNumber": 10,
+      "levelVersion": 5,
+      "difficulty": {
+        "graad": 4,
+        "uitleg": "Veel aannemen en verwerpen, en de volgorde luistert."
       }
     },
     {
