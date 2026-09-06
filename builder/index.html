@@ -200,7 +200,10 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 /* Twee klassen, zodat deze het wint van .dialog verderop in het blad --
    anders krijgt het venster de maat van een gewoon dialoogje en valt de
    knoppenrij eronder uit. */
-.dialog.opl-venster{
+/* Geen inval-animatie: het rekenen blokkeert de draad vlak na het openen, en
+   een animatie die op opacity 0 begint komt dan niet meer aan zijn einde --
+   dan blijft alleen het waas over het bord over en lijkt het venster weg. */
+.dialog.opl-venster{animation:none;
   width:min(1060px,96vw);max-height:88vh;padding:24px;
   display:flex;flex-direction:column;box-sizing:border-box;
 }
@@ -3904,8 +3907,10 @@ function doeOplossingCheck(){
     body.innerHTML = zoekBezigHtml();
     /* Eerst laten tekenen, dan pas rekenen: het zoeken houdt de draad bezet,
        dus wat op dat moment nog niet op het scherm staat verschijnt ook niet
-       meer. Twee frames, want na het eerste is de opmaak pas berekend. */
-    requestAnimationFrame(() => requestAnimationFrame(() => {
+       meer. Met setTimeout, niet requestAnimationFrame: animatieframes staan
+       stil in een tabblad op de achtergrond, en dan begon het rekenen nooit
+       en bleef "Bezig met zoeken" onzichtbaar staan. */
+    setTimeout(() => {
       initContent();
       let r = null;
       /* Ruim de tijd nemen. Het standaardbudget (2 s, en 200 ms zodra er meer
@@ -3990,7 +3995,7 @@ function doeOplossingCheck(){
       const uitK = body.querySelector('[data-override-uit]');
       if (uitK) uitK.onclick = () => { wisOplossingOverride(); reken(); };
       renderSidebar();
-    }));
+    }, 40);
   };
   scrim.querySelector('[data-opnieuw]').onclick = reken;
 
@@ -5909,7 +5914,17 @@ function regelZwaarteInfo(id, args, personId){
       ? { zw:3, reden:'Een bordregel die telt: pas te gebruiken als het bord al bijna vol staat.' }
       : { zw:2, reden:'Een bordregel om na te kijken zodra een ruimte, rij of kolom in beeld komt.' };
   }
+  /* Het slachtoffer was alleen met de dader. "Was in hetzelfde gebied als"
+     met het slachtoffer aan een van beide kanten noemt de dader dus bij
+     naam -- en zodra het slachtoffer staat, staat de dader in dat gebied.
+     Lichter wordt het niet, hoe de rest van de ketting ook loopt. */
   const afh = ONTLEEDBAAR[id] || atomAfhankelijkheid(id);
+  if (id === 'with-person' && S.victim && S.people[S.victim]){
+    const q = regelPartner(args, personId);
+    if (q === S.victim || personId === S.victim)
+      return { zw:1, reden:'Het slachtoffer was alleen met de dader: deze regel geeft de dader bij naam, en zet '+
+                           personName(q === S.victim ? personId : q)+' meteen in het gebied van het slachtoffer.' };
+  }
   if (afh === 'iedereen') return { zw:3, reden:'Gaat over iedereen tegelijk: pas bruikbaar door aannemen en verwerpen.' };
   let basis = 1, reden = 'Streept meteen vakjes weg, alleen uit deze regel.';
   if (afh === 'paar'){
