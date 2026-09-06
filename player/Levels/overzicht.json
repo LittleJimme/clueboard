@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-06T23:15:49",
+  "gemaakt": "2026-09-07T00:14:37",
   "levels": [
     {
       "file": "100v4 Test Level.json",
@@ -45,7 +45,7 @@
       }
     },
     {
-      "file": "11v1 De Oude Gevangenis.json",
+      "file": "11v2 De Oude Gevangenis.json",
       "content": {
         "title": "De Oude Gevangenis"
       },
@@ -59,7 +59,7 @@
       },
       "levelId": "lvl-mtqb7483p9zcl",
       "levelNumber": 11,
-      "levelVersion": 1,
+      "levelVersion": 2,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."

@@ -1,11 +1,11 @@
 {
   "levelNumber": 11,
-  "levelVersion": 1,
+  "levelVersion": 2,
   "levelId": "lvl-mtqb7483p9zcl",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-06T21:13:46.273Z",
+  "exportedAt": "2026-09-06T22:13:40.877Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -565,20 +565,6 @@
         "tiles": [
           "c3r4",
           "c3r3"
-        ],
-        "occupiable": false,
-        "note": null
-      },
-      {
-        "id": "wall-10",
-        "kind": "Door",
-        "kindLabel": "Deur",
-        "name": "Deur",
-        "anchorTile": "c2r5",
-        "side": "south",
-        "orientation": "horizontal",
-        "tiles": [
-          "c2r5"
         ],
         "occupiable": false,
         "note": null
@@ -1207,6 +1193,7 @@
         "id": "clue-3",
         "scope": "person",
         "personId": "p3",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1231,6 +1218,7 @@
         "id": "clue-4",
         "scope": "person",
         "personId": "p4",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1249,6 +1237,7 @@
         "id": "clue-5",
         "scope": "person",
         "personId": "p2",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1280,6 +1269,7 @@
         "id": "clue-11",
         "scope": "person",
         "personId": "p1",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1479,7 +1469,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 6,
+    "ms": 8,
     "override": null
   }
 }

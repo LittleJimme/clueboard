@@ -21,14 +21,16 @@ Een deur bestaat uit twee knoppen (de pilaren) op één lijn -- de
 scharnierlijn, die de speler op de muur legt -- en een blad dat aan de eerste
 knop hangt. De tweede knop staat vrij; daaraan wordt gemeten hoe groot de
 knoppen zijn en waar de lijn precies loopt. Die vrije knop gaat ook los de
-bank in, in het goud van de edele muren: op zo'n muur legt de speler hem
-over de stalen knoppen heen, zodat de pilaren meekleuren met de muur.
+bank in: de speler kleurt hem ter plekke in de kleur van de muur (zoals de
+shirts van de personages) en legt hem over de stalen knoppen van de plaat,
+zodat de pilaren altijd de kleur van hun muur hebben -- overdag, 's nachts
+en op een gouden muur.
 
 Wat de speler moet weten om de plaat op de muur te leggen wordt hier
 uitgerekend en afgedrukt als DEUR_PLAAT. Na een nieuwe tekening: draaien,
 en de afgedrukte regels in player/index.html plakken.
 """
-import colorsys, os, sys
+import os, sys
 from PIL import Image, ImageDraw
 
 from import_outbox_objects import schaduwlaag, schrijf
@@ -40,7 +42,6 @@ MAAT = 512          # de langste zijde van de bijgesneden plaat
 KNOP_MAAT = 128     # de losse knop
 RAND = 8            # lucht om de snede heen, in pixels van het bronbeeld
 DREMPEL = 10        # alpha waaronder een pixel als leeg telt
-GOUD = "#D3B45D"    # VLAK_PALET.muren.noble.dag in de speler
 
 STUKKEN = {
     "door-h": {"dag": "Deur Horizontaal", "nacht": "Deur horizontaal Nacht",
@@ -128,37 +129,6 @@ def meet_knoppen(dag, as_, lijn):
     return scharnier, c1, c2, straal
 
 
-def verguld(im, hexkleur):
-    """Dezelfde knop, in het goud van de edele muur: de kleur van de muur, met
-    de licht/donker-tekening van de stalen knop eroverheen."""
-    r, g, b = int(hexkleur[1:3], 16), int(hexkleur[3:5], 16), int(hexkleur[5:7], 16)
-    gh, gl, gs = colorsys.rgb_to_hls(r / 255.0, g / 255.0, b / 255.0)
-    px = im.load()
-    w, h = im.size
-    # de gemiddelde lichtheid van de knop wordt de lichtheid van het goud
-    som, n = 0.0, 0
-    for y in range(h):
-        for x in range(w):
-            R, G, B, A = px[x, y]
-            if A > DREMPEL:
-                som += colorsys.rgb_to_hls(R / 255.0, G / 255.0, B / 255.0)[1]
-                n += 1
-    gem = som / n if n else 0.5
-    uit = Image.new("RGBA", im.size)
-    up = uit.load()
-    for y in range(h):
-        for x in range(w):
-            R, G, B, A = px[x, y]
-            if A <= 0:
-                up[x, y] = (0, 0, 0, 0)
-                continue
-            l = colorsys.rgb_to_hls(R / 255.0, G / 255.0, B / 255.0)[1]
-            l2 = min(1.0, max(0.0, gl + (l - gem) * 1.1))
-            R2, G2, B2 = colorsys.hls_to_rgb(gh, l2, gs)
-            up[x, y] = (int(R2 * 255), int(G2 * 255), int(B2 * 255), A)
-    return uit
-
-
 def main():
     if not os.path.isdir(BRON):
         print("map ontbreekt:", BRON)
@@ -204,8 +174,8 @@ def main():
         as_ = st["as"]
         scharnier, c1, c2, straal = meet_knoppen(dag, as_, st["lijn"])
 
-        # De vrije knop los, in goud. Een vierkant om de knop met één pixel
-        # lucht; de speler legt hem met zijn midden op het midden van elke knop.
+        # De vrije knop los. Een vierkant om de knop met één pixel lucht; de
+        # speler legt hem met zijn midden op het midden van elke knop.
         if as_ == "h":
             kx, ky = c2, scharnier
         else:
@@ -217,9 +187,8 @@ def main():
         ImageDraw.Draw(masker).ellipse((0, 0, knop.size[0] - 1, knop.size[1] - 1), fill=255)
         alpha = Image.composite(knop.getchannel("A"), Image.new("L", knop.size, 0), masker)
         knop.putalpha(alpha)
-        knop_goud = verguld(knop, GOUD).resize((KNOP_MAAT, KNOP_MAAT), Image.LANCZOS)
-        schrijf(knop_goud, os.path.join(DOEL, slug + "-knop-edel.png"))
-        regel += "  knop-edel"
+        schrijf(knop.resize((KNOP_MAAT, KNOP_MAAT), Image.LANCZOS), os.path.join(DOEL, slug + "-knop.png"))
+        regel += "  knop"
         print(regel)
 
         # De maten voor de speler, als deel van de bijgesneden plaat: langs de

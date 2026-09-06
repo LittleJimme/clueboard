@@ -1456,7 +1456,6 @@ html:not([data-thema="licht"]) .note-cross img{opacity:.74}
   filter:drop-shadow(0 1px 2px rgba(21,26,51,.35));
 }
 .pawn .role-badge svg,.pawn .role-badge img{width:100%;height:100%;display:block;overflow:visible}
-body.hide-roles .pawn .role-badge{display:none}
 .pawn .mark{
   position:absolute;left:-14%;top:-18%;width:52%;height:52%;border-radius:999px;
   background:linear-gradient(180deg,#E8706C,var(--danger));border:1.5px solid #A93330;color:#fff;
@@ -2826,7 +2825,8 @@ body.in-game .set-row .set-tekst small{font-size:12px;line-height:1.35;font-weig
 body.in-game .set-row .vraag-ic{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:19px;color:var(--goud)}
 body.in-game .set-row .pijl-rechts{width:14px;height:14px;color:var(--dof);transform:rotate(-90deg);display:flex}
 body.in-game .set-row .pijl-rechts svg{width:100%;height:100%}
-body.in-game .vis-raster{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+/* Eén kolom: drie keuzes onder elkaar lezen rustiger dan een raster. */
+body.in-game .vis-raster{display:grid;grid-template-columns:1fr;gap:6px}
 body.in-game .vis-raster .vis-row{margin:0;min-height:40px;font-size:12.5px}
 body.in-game .vis-raster .vis-row.breed{grid-column:1 / -1}
 body.in-game .vis-row{border:1px solid var(--goud-lijn);background:var(--goud-zacht);transition:background .15s,border-color .15s,opacity .15s}
@@ -3729,7 +3729,6 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       <button class="vis-row" id="visNotes" aria-pressed="true"><span class="set-mini" data-mini="letters"></span><span class="vis-naam">Letters</span><span class="oog"></span></button>
       <button class="vis-row" id="visCrosses" aria-pressed="true"><span class="set-mini" data-mini="kruisjes"></span><span class="vis-naam">Kruisjes</span><span class="oog"></span></button>
       <button class="vis-row" id="visRoomLabels" aria-pressed="true"><span class="set-mini" data-mini="ruimtenamen"></span><span class="vis-naam">Ruimtenamen</span><span class="oog"></span></button>
-      <button class="vis-row" id="visRoles" aria-pressed="true"><span class="set-mini" data-mini="rolpictos"></span><span class="vis-naam">Rolpicto's</span><span class="oog"></span></button>
     </div>
     <button class="set-row schakel keuze-rij" id="rowKleinObject" type="button" aria-pressed="false">
       <span class="set-mini" data-mini="klein"></span>
@@ -4056,6 +4055,11 @@ function zetObjectThema(){
   $$('#hoogArt .deurart[data-deur]').forEach(el=>{
     const img=el.querySelector("img"); if(!img) return;
     zetBron(img,deurKandidaten(el.dataset.deur));
+  });
+  /* De muurkleur is net omgezet; de knoppen krijgen die kleur ook. */
+  $$('#hoogArt .deurknop img[data-tint]').forEach(img=>{
+    img.dataset.tint=muurKleur(img.parentNode.classList.contains("edel"));
+    chVul(img);
   });
 }
 function applySkin(theme){
@@ -4460,8 +4464,15 @@ function chLaadBron(laag){
       };
       /* Bij een herkansing een eigen sleutel achter de naam, anders geeft de
          browser meteen dezelfde mislukking terug uit zijn cache. */
-      /* Na twee mislukte pogingen op de WebP de PNG proberen. */
-      img.src=(poging>=2 ? CH_DIR+laag : chPad(laag))+chBust()+(poging?"&p="+poging:"");
+      /* Na twee mislukte pogingen op de WebP de PNG proberen. Een laag met
+         "bank:" ervoor ("bank:walls/door-h-knop") komt uit de kunstbank in
+         plaats van het personagepakket: de deurknop wordt met dezelfde kwast
+         ingekleurd als een shirt. (De personagelagen zelf heten ook met een
+         map, "haar/bob.png", dus alleen het voorvoegsel telt.) */
+      const bank=/^bank:([^/]+)\/(.+)$/.exec(laag);
+      img.src=(bank
+        ? assetUrl(bank[1],bank[2],poging>=2?"png":"webp")
+        : (poging>=2 ? CH_DIR+laag : chPad(laag))+chBust())+(poging?"&p="+poging:"");
     };
     haal();
   });
@@ -4919,7 +4930,8 @@ function personOnTile(tileId){
    keer hoeft te kiezen.
    ============================================================ */
 const VIS_KEY="clueboard_visibility";
-const VIS_DEFAULTS={notes:true, crosses:true, roomLabels:true, roles:true};
+/* De roltekens op de pionnen zijn geen keuze meer: die staan altijd aan. */
+const VIS_DEFAULTS={notes:true, crosses:true, roomLabels:true};
 let visibility=Object.assign({},VIS_DEFAULTS);
 
 function loadVisibility(){
@@ -4938,9 +4950,7 @@ function applyVisibility(){
   const b=document.body;
   b.classList.toggle("hide-notes",!visibility.notes);
   b.classList.toggle("hide-room-labels",!visibility.roomLabels);
-  b.classList.toggle("hide-roles",!visibility.roles);
-  const boxes={notes:$("#visNotes"), crosses:$("#visCrosses"), roomLabels:$("#visRoomLabels"),
-               roles:$("#visRoles")};
+  const boxes={notes:$("#visNotes"), crosses:$("#visCrosses"), roomLabels:$("#visRoomLabels")};
   /* Open oog = zichtbaar, doorgestreept oog = verborgen. De hele rij is de
      knop, zodat je niet op een klein vierkantje hoeft te mikken. */
   Object.keys(boxes).forEach(k=>{
@@ -5634,7 +5644,7 @@ const MEERVAKS_BOVEN = ["watermill-2x1"];
      midden     waar het midden tussen de knoppen ligt (langs de muur)
      span       hoe breed de pilaren buitenom staan, langs de muur
      knoppen    hoe ver de knoppen uit elkaar liggen; tot daar loopt de muur
-     knop       de zijde van het vierkant om één knop (de losse gouden knop)
+     knop       de zijde van het vierkant om één knop (de losse knop)
      hoogte     hoogte gedeeld door breedte van de plaat
    De plaat voor een liggende muur draait naar beneden open, die voor een
    staande naar rechts; de andere kant op is een spiegeling. */
@@ -6479,24 +6489,33 @@ function tekenDeuren(deuren,cell){
     };
     zet(schaduw,"deurschaduw",[assetUrl("walls","shadows/"+naam,"webp"),assetUrl("walls","shadows/"+naam,"png")]);
     zet(hoog,"deurart",deurKandidaten(naam)).dataset.deur=naam;
-    /* In een gouden muur kleuren de pilaren mee: dezelfde knop, in goud,
-       precies over de stalen knop van de plaat heen. Op beide knoppen, want
-       ze staan op dezelfde lijn en hebben dezelfde maat. */
-    if(d.edel){
-      const m=d.h?DEUR_PLAAT.h:DEUR_PLAAT.v;
+    /* De pilaren in de kleur van hun muur: de losse knop, ter plekke
+       ingekleurd, precies over de stalen knoppen van de plaat heen. Op beide
+       knoppen, want ze staan op dezelfde lijn en hebben dezelfde maat. Het
+       inkleuren doet de waarnemer van de personagelagen (img[data-tint]). */
+    { const m=d.h?DEUR_PLAAT.h:DEUR_PLAAT.v;
       const langs=d.h?g.w:g.h, zijde=m.knop*langs;
       [-1,1].forEach(kant=>{
         const mid=cell/2+kant*m.knoppen*langs/2;
         const el=document.createElement("div");
-        el.className="deurknop";
+        el.className="deurknop"+(d.edel?" edel":"");
         el.style.left=((d.h?d.x+mid:d.x)-zijde/2).toFixed(1)+"px";
         el.style.top =((d.h?d.y:d.y+mid)-zijde/2).toFixed(1)+"px";
         el.style.width=zijde.toFixed(1)+"px"; el.style.height=zijde.toFixed(1)+"px";
-        hoog.appendChild(el);
-        mountAsset(el,[assetUrl("walls",naam+"-knop-edel","webp"),assetUrl("walls",naam+"-knop-edel","png")],null,null);
+        const img=document.createElement("img");
+        img.alt=""; img.setAttribute("aria-hidden","true"); img.decoding="async";
+        img.dataset.laag="bank:walls/"+naam+"-knop"; img.dataset.tint=muurKleur(d.edel);
+        el.appendChild(img); hoog.appendChild(el);
       });
     }
   });
+}
+/* De kleur van een muur zoals hij nu op het bord staat: goud voor een edele
+   ruimte, anders de gewone muurkleur van dit thema. Uit de CSS-variabelen,
+   want die veranderen met dag en nacht. */
+function muurKleur(edel){
+  const v=getComputedStyle(document.documentElement).getPropertyValue(edel?"--muur-noble":"--muur-standard").trim();
+  return /^#[0-9a-f]{6}$/i.test(v) ? v : (edel?"#D3B45D":"#2B2117");
 }
 /* Welke kleur hoort bij een edele ruimte; alleen om de muur een naam te geven
    waar de proefstand "gouden muren uit" iets mee kan. */
@@ -8519,7 +8538,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.145";
+const PLAYER_APP_VERSION="0.9.146";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9704,8 +9723,7 @@ maatSchuif("golfHoog","golfHoogGetal","clueboard:golfHoog",
   },true);
 }
 
-[["visNotes","notes"],["visCrosses","crosses"],["visRoomLabels","roomLabels"],
- ["visRoles","roles"]].forEach(([id,key])=>{
+[["visNotes","notes"],["visCrosses","crosses"],["visRoomLabels","roomLabels"]].forEach(([id,key])=>{
   const el=$("#"+id);
   if(el) el.addEventListener("click",()=>setVisibility(key,!visibility[key]));
 });
@@ -9717,7 +9735,6 @@ const SET_MINI={
   letters:'<svg viewBox="0 0 28 28"><rect x="3" y="3" width="22" height="22" rx="6" class="vak"/><text x="14" y="19.5" text-anchor="middle" font-size="14" font-weight="800" fill="currentColor">A</text></svg>',
   kruisjes:'<svg viewBox="0 0 28 28"><rect x="3" y="3" width="22" height="22" rx="6" class="vak"/><path d="M9.5 9.5l9 9M18.5 9.5l-9 9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>',
   ruimtenamen:'<svg viewBox="0 0 28 28"><rect x="1.5" y="8.5" width="25" height="11" rx="5.5" fill="currentColor"/><text x="14" y="16.9" text-anchor="middle" font-size="6.4" font-weight="800" letter-spacing=".06em" fill="var(--kaart)">GANG</text></svg>',
-  rolpictos:'<svg viewBox="0 0 28 28"><circle cx="11.5" cy="8.5" r="4.4" fill="currentColor"/><path d="M4.5 24c0-5.2 3-8.2 7-8.2s7 3 7 8.2z" fill="currentColor"/><circle cx="21" cy="19.5" r="5.2" fill="var(--kaart)" stroke="currentColor" stroke-width="1.8"/><path d="M21 16.7v5.6M18.2 19.5h5.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
   klein:'<svg viewBox="0 0 28 28"><rect x="3" y="3" width="22" height="22" rx="6" class="vak"/><rect x="9" y="9" width="10" height="10" rx="2.2" fill="currentColor"/></svg>',
   easy:'<svg viewBox="0 0 28 28"><rect x="3" y="3" width="22" height="22" rx="6" class="vak"/><path d="M8.5 14.5l4 4 7-8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
   opnieuw:'<svg viewBox="0 0 28 28"><rect x="3" y="3" width="9.5" height="9.5" rx="2.5" class="vak"/><rect x="15.5" y="3" width="9.5" height="9.5" rx="2.5" class="vak"/><rect x="3" y="15.5" width="9.5" height="9.5" rx="2.5" class="vak"/><rect x="15.5" y="15.5" width="9.5" height="9.5" rx="2.5" class="vak"/></svg>'
