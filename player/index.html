@@ -1657,18 +1657,27 @@ body.radiaal-open .room-label{opacity:0}
 /* Het stapkringetje: verschijnt onder je vinger als je naast het bord lang
    drukt. Twee knoppen in de stijl van de hulpknoppen op de kring, met het
    gouden stipje waar je drukte. De gekozen kant groeit; de andere dooft. */
-#stapRadiaal{position:fixed;inset:0;z-index:61;display:none;--rbtn:58px;--pc:var(--goud);--pc-tekst:var(--goud-op)}
+/* Witte knoppen, in beide thema's: ze liggen als losse schijfjes op de
+   sluier en horen niet bij de gouden knoppen van het spel. Alle beweging
+   (opkomen, meeschuiven, wegschieten) doet het script met Web Animations en
+   inline transforms; hier alleen het uiterlijk. De gouden ring komt zodra je
+   ver genoeg opzij bent om bij het loslaten die stap te zetten. */
+#stapRadiaal{position:fixed;inset:0;z-index:61;display:none;--rbtn:60px;--pc:#FBFAF6;--pc-tekst:#231819}
 #stapRadiaal.open{display:block}
-#stapRadiaal .sr-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.26);animation:fadeIn .16s ease both}
+#stapRadiaal .sr-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.26)}
 #stapRadiaal .sr-stip{position:absolute;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%);
-  background:var(--goud);box-shadow:0 0 0 5px rgba(201,147,47,.28);animation:fadeIn .16s ease both}
-#stapRadiaal .sr-knop{animation:fadeIn .18s ease both;transition:transform .14s cubic-bezier(.2,.8,.3,1),opacity .14s}
+  background:#FBFAF6;box-shadow:0 0 0 5px rgba(251,250,246,.28),0 2px 8px rgba(0,0,0,.3)}
+#stapRadiaal .sr-knop{background:#FBFAF6;color:#231819;border:1px solid rgba(0,0,0,.08);
+  box-shadow:0 8px 22px rgba(0,0,0,.30),0 0 0 2px rgba(255,255,255,.35);transition:box-shadow .15s;will-change:transform}
+#stapRadiaal .sr-knop.kies{box-shadow:0 0 0 3px var(--goud),0 10px 26px rgba(0,0,0,.34)}
 #stapRadiaal .sr-knop .ic{width:24px;height:24px;display:flex}
 #stapRadiaal .sr-knop .ic svg{width:100%;height:100%}
 #stapRadiaal .sr-knop.vooruit .ic{transform:scaleX(-1)}
-#stapRadiaal .sr-knop .lbl{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none}
-#stapRadiaal .sr-knop.kies{transform:translate(-50%,-50%) scale(1.18)}
-#stapRadiaal.kiest .sr-knop:not(.kies):not([disabled]){opacity:.5}
+#stapRadiaal .sr-knop .lbl{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+/* Op een iPhone als webapp houdt een vaste laag boven de thuisbalk op; de
+   sluiers lopen daarom een veilige zone verder naar beneden door, anders
+   blijft daar een lichte balk staan zolang ze open zijn. */
+#stapRadiaal .sr-backdrop,#radial .backdrop,.modal>.backdrop{bottom:calc(0px - env(safe-area-inset-bottom,0px))}
 #radial{position:fixed;inset:0;display:none;z-index:60}
 #radial.open{display:block}
 /* Eén sluier met het gekozen vakje eruit geknipt. Een masker met een verloop
@@ -8594,7 +8603,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.147";
+const PLAYER_APP_VERSION="0.9.148";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9470,13 +9479,19 @@ $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
    stap vooruit rechts. Je houdt ingedrukt, sleept naar een kant en laat los;
    loslaten zonder te slepen sluit het weer. Op het bord zelf niet: daar is
    lang drukken al van de tegels. De handlers zitten op het document in de
-   vangfase, zodat het loslaten boven een tegel die tegel niet raakt. */
+   vangfase, zodat het loslaten boven een tegel die tegel niet raakt.
+
+   De beweging vertelt wat er gaat gebeuren: de knop aan de kant waar je heen
+   sleept groeit en schuift met je vinger mee, de andere krimpt en dooft. Bij
+   het loslaten schiet de gekozen knop nog een stukje door terwijl hij
+   vervaagt -- alsof je hem een zetje gaf -- en de stap is dan al gezet. */
 (function(){
   const laag=$("#stapRadiaal"); if(!laag) return;
-  const HOUD=420, WIEBEL=9, KIES=28, AFSTAND=76;
+  const HOUD=420, WIEBEL=9, KIES=26, AFSTAND=78, REIK=130;
   const knop={terug:laag.querySelector(".terug"), vooruit:laag.querySelector(".vooruit")};
-  const stip=laag.querySelector(".sr-stip");
-  let timer=null, start=null, open=false, kant=0;
+  const stip=laag.querySelector(".sr-stip"), sluier=laag.querySelector(".sr-backdrop");
+  const alles=[knop.terug,knop.vooruit,stip,sluier];
+  let timer=null, start=null, open=false, kant=0, rek=0;
   const mag=()=>document.body.classList.contains("in-game")
     && !document.querySelector(".modal.open") && !$("#radial").classList.contains("open");
   const buiten=t=>{
@@ -9484,38 +9499,85 @@ $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
     if(t.closest("#gridWrap, button, a, input, textarea, select, [contenteditable], .modal, #radial, .tabbar, .game-head, #pane-clues, #pane-detail")) return false;
     return !!t.closest("#boardViewport, #pane-board");
   };
+  const stopAnimaties=()=>alles.forEach(el=>el.getAnimations().forEach(a=>a.cancel()));
+  const zet=(el,dx,schaal,dim)=>{
+    el.style.transform="translate(calc(-50% + "+dx.toFixed(1)+"px),-50%) scale("+schaal.toFixed(3)+")";
+    el.style.opacity=el.disabled?"":String(dim);
+  };
   function toon(x,y){
-    open=true; kant=0;
-    stip.style.left=x+"px"; stip.style.top=y+"px";
+    stopAnimaties();
+    open=true; kant=0; rek=0;
+    stip.style.left=x+"px"; stip.style.top=y+"px"; stip.style.transform="";
     /* Dicht bij een zijkant schuift het paar op, zodat beide knoppen in beeld
        blijven. */
     const mid=Math.max(AFSTAND+36, Math.min(window.innerWidth-AFSTAND-36, x));
-    knop.terug.style.left=(mid-AFSTAND)+"px";  knop.terug.style.top=y+"px";
-    knop.vooruit.style.left=(mid+AFSTAND)+"px"; knop.vooruit.style.top=y+"px";
-    knop.terug.disabled=!historie.length; knop.vooruit.disabled=!toekomst.length;
-    knop.terug.classList.remove("kies"); knop.vooruit.classList.remove("kies");
-    laag.classList.remove("kiest"); laag.classList.add("open");
+    const plek={terug:mid-AFSTAND, vooruit:mid+AFSTAND};
+    ["terug","vooruit"].forEach(k=>{
+      const el=knop[k];
+      el.style.left=plek[k]+"px"; el.style.top=y+"px";
+      el.disabled = k==="terug" ? !historie.length : !toekomst.length;
+      el.classList.remove("kies");
+      zet(el,0,1,1);
+      /* Ze komen uit het stipje tevoorschijn. */
+      el.animate([
+        {transform:"translate(calc(-50% + "+(x-plek[k])+"px),-50%) scale(.5)",opacity:0},
+        {transform:"translate(-50%,-50%) scale(1)",opacity:el.disabled?.35:1}
+      ],{duration:230,easing:"cubic-bezier(.2,.8,.3,1)"});
+    });
+    sluier.animate([{opacity:0},{opacity:1}],{duration:160,easing:"ease-out"});
+    stip.animate([{transform:"translate(-50%,-50%) scale(.4)",opacity:0},{transform:"translate(-50%,-50%) scale(1)",opacity:1}],{duration:180,easing:"ease-out"});
+    laag.classList.add("open");
     haptic(14);
   }
-  function kies(dx){
-    const k=dx<-KIES?-1:dx>KIES?1:0;
-    if(k===kant) return;
-    kant=k;
-    knop.terug.classList.toggle("kies",k===-1&&!knop.terug.disabled);
-    knop.vooruit.classList.toggle("kies",k===1&&!knop.vooruit.disabled);
-    laag.classList.toggle("kiest",k!==0);
-    if(k) haptic(8);
+  function volg(dx){
+    rek=dx;
+    const f=Math.min(1,Math.abs(dx)/REIK), richting=dx<0?-1:1;
+    const voor = richting<0 ? knop.terug : knop.vooruit;
+    const achter = richting<0 ? knop.vooruit : knop.terug;
+    const mee=richting*f*34;
+    if(!voor.disabled){ zet(voor,mee,1+f*.28,1); zet(achter,mee*.25,1-f*.12,1-f*.55); }
+    else { zet(voor,mee*.3,1,1); zet(achter,mee*.25,1,1); }
+    stip.style.transform="translate(calc(-50% + "+(dx*.18).toFixed(1)+"px),-50%)";
+    const k = dx<-KIES?-1 : dx>KIES?1 : 0;
+    if(k!==kant){
+      kant=k;
+      knop.terug.classList.toggle("kies",k===-1&&!knop.terug.disabled);
+      knop.vooruit.classList.toggle("kies",k===1&&!knop.vooruit.disabled);
+      if(k && !voor.disabled) haptic(8);
+    }
   }
   function sluit(doe){
     clearTimeout(timer); timer=null;
-    if(open){
-      const k=kant;
-      /* Een tel blijven staan: de klik die na het loslaten komt, landt dan op
-         de sluier en niet op wat eronder ligt. */
-      setTimeout(()=>laag.classList.remove("open","kiest"),40);
-      if(doe){ if(k===-1&&historie.length) stapTerug(); else if(k===1&&toekomst.length) stapVooruit(); }
-    }
-    open=false; start=null; kant=0;
+    if(!open){ start=null; return; }
+    open=false; start=null;
+    const k=kant, dx=rek; kant=0; rek=0;
+    const gekozen = (doe && k) ? (k<0?knop.terug:knop.vooruit) : null;
+    const kan = !!gekozen && !gekozen.disabled;
+    const uit={duration:kan?320:170,easing:"cubic-bezier(.2,.6,.2,1)",fill:"forwards"};
+    const klaar=[];
+    [knop.terug,knop.vooruit].forEach(el=>{
+      const nu=el.style.transform||"translate(-50%,-50%)";
+      const zetje = (el===gekozen && kan)
+        ? "translate(calc(-50% + "+(Math.sign(dx)*(Math.abs(dx)*.3+58)).toFixed(1)+"px),-50%) scale(1.42)"
+        : nu;
+      klaar.push(el.animate([{transform:nu,opacity:getComputedStyle(el).opacity},{transform:zetje,opacity:0}],uit).finished);
+    });
+    klaar.push(stip.animate([{opacity:1},{opacity:0}],uit).finished);
+    klaar.push(sluier.animate([{opacity:1},{opacity:0}],uit).finished);
+    if(kan){ if(k<0) stapTerug(); else stapVooruit(); }
+    /* Opruimen zodra het vervagen klaar is -- of na een vaste tijd, want in
+       een tabblad op de achtergrond staan animaties stil en zou de sluier
+       anders blijven hangen. */
+    let opgeruimd=false;
+    const opruimen=()=>{
+      if(opgeruimd||open) return;            /* al gedaan, of er is alweer een nieuwe gestart */
+      opgeruimd=true;
+      laag.classList.remove("open");
+      knop.terug.classList.remove("kies"); knop.vooruit.classList.remove("kies");
+      stopAnimaties();
+    };
+    Promise.all(klaar).catch(()=>{}).then(opruimen);
+    setTimeout(opruimen, uit.duration+150);
   }
   document.addEventListener("pointerdown",e=>{
     if(open){ e.preventDefault(); e.stopPropagation(); return; }
@@ -9528,7 +9590,7 @@ $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
     if(!start||e.pointerId!==start.id) return;
     const dx=e.clientX-start.x, dy=e.clientY-start.y;
     if(!open){ if(Math.hypot(dx,dy)>WIEBEL){ clearTimeout(timer); start=null; } return; }
-    e.preventDefault(); kies(dx);
+    e.preventDefault(); volg(dx);
   },{capture:true,passive:false});
   const einde=e=>{
     if(!start||e.pointerId!==start.id) return;
@@ -9538,7 +9600,9 @@ $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
   document.addEventListener("pointerup",einde,true);
   document.addEventListener("pointercancel",einde,true);
   /* Wat er verder nog bij het loslaten hoort mag het bord niet bereiken, en
-     het lange drukken mag geen contextmenu of tekstselectie oproepen. */
+     het lange drukken mag geen contextmenu of tekstselectie oproepen. De
+     klik die na het loslaten komt landt op de sluier, die nog even blijft
+     staan terwijl de knoppen vervagen. */
   ["touchend","touchmove"].forEach(n=>document.addEventListener(n,e=>{ if(open){ e.preventDefault(); e.stopPropagation(); } },{capture:true,passive:false}));
   document.addEventListener("contextmenu",e=>{ if(open||(start&&buiten(e.target))) e.preventDefault(); },true);
   laag.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); },true);
