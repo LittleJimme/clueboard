@@ -112,8 +112,11 @@ def schaduwlaag(objectpad, platpad):
     d = 1 - min(s) is dat op te lossen, en bij het uiteindelijke
     vermenigvuldigen geldt dan nog steeds resultaat = ondergrond * s.
     """
-    obj = Image.open(objectpad).convert("RGBA")
-    plat = Image.open(platpad).convert("RGB")
+    # Een aanroeper die het platte beeld al heeft klaargemaakt -- bijvoorbeeld
+    # omdat het met alfa werd aangeleverd en op de papierkleur moest worden
+    # gezet -- geeft het beeld zelf mee in plaats van een pad.
+    obj = objectpad if isinstance(objectpad, Image.Image) else Image.open(objectpad).convert("RGBA")
+    plat = platpad if isinstance(platpad, Image.Image) else Image.open(platpad).convert("RGB")
     if obj.size != plat.size:
         raise ValueError("maten lopen uiteen: %s vs %s" % (obj.size, plat.size))
     a = obj.split()[3]

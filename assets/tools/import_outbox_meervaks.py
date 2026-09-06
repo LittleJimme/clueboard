@@ -55,31 +55,51 @@ def klein(im):
     return im.resize((im.width // DEEL, im.height // DEEL), Image.LANCZOS)
 
 
-def opWit(pad):
-    """Het platte beeld als RGB op wit, plus of het overal dekkend was."""
+def platBeeld(pad):
+    """Het platte beeld als RGB, met de doorzichtige randen op papierkleur.
+
+    Sommige platen komen met alfa binnen: het beeld staat er wel helemaal op,
+    maar boven en onder is een strook doorzichtig gelaten. Die strook op wit
+    zetten zou niet kloppen -- het papier is roomkleurig, en dan leest de hele
+    strook straks als een flauwe schaduw. De papierkleur wordt daarom aan de
+    rand van het dekkende deel gemeten en de doorzichtige rest krijgt diezelfde
+    kleur; daarmee is het weer één egaal vel.
+    """
     im = Image.open(pad)
     if im.mode != "RGBA":
-        return im.convert("RGB"), True
-    alpha = np.asarray(im)[:, :, 3]
-    wit = Image.new("RGB", im.size, (255, 255, 255))
-    wit.paste(im.convert("RGB"), (0, 0), im.split()[3])
-    return wit, bool(alpha.min() == 255)
+        return im.convert("RGB")
+    a = np.asarray(im)
+    vol = a[:, :, 3] > 250
+    if not vol.any():
+        return im.convert("RGB")
+    ys, xs = np.nonzero(vol)
+    y0, y1, x0, x1 = int(ys.min()), int(ys.max()), int(xs.min()), int(xs.max())
+    ring = np.concatenate([a[y0:y0+6, x0:x1+1, :3].reshape(-1, 3),
+                           a[max(y0, y1-5):y1+1, x0:x1+1, :3].reshape(-1, 3),
+                           a[y0:y1+1, x0:x0+6, :3].reshape(-1, 3),
+                           a[y0:y1+1, max(x0, x1-5):x1+1, :3].reshape(-1, 3)])
+    papier = tuple(int(v) for v in np.median(ring, axis=0))
+    vel = Image.new("RGB", im.size, papier)
+    vel.paste(im.convert("RGB"), (0, 0), im.split()[3])
+    return vel
 
 
 def schaduwDeugt(objectpad, platpad):
     """Hoort dit platte beeld bij dit object? Zo niet: waarom niet."""
     obj = Image.open(objectpad).convert("RGBA")
-    plat, dekkend = opWit(platpad)
+    plaat = Image.open(platpad)
+    plat = platBeeld(platpad)
     if obj.size != plat.size:
         return "de maten lopen uiteen (%s tegen %s)" % (obj.size, plat.size)
-    if not dekkend:
-        return "het platte beeld is niet overal dekkend aangeleverd"
+    er_op0 = np.asarray(obj)[:, :, 3] > 128
+    if plaat.mode == "RGBA" and not bool((np.asarray(plaat)[:, :, 3][er_op0] > 250).all()):
+        return "het object staat niet volledig op de platte plaat"
     F = np.asarray(plat, dtype=np.float64)
     rand = np.concatenate([F[:6].reshape(-1, 3), F[-6:].reshape(-1, 3),
                            F[:, :6].reshape(-1, 3), F[:, -6:].reshape(-1, 3)])
     papier = np.median(rand, axis=0)
     if papier.min() < 200:
-        return "het papier is niet wit (%s)" % papier.astype(int).tolist()
+        return "het papier is te donker (%s)" % papier.astype(int).tolist()
     donker = (F / np.maximum(papier, 1e-6)).min(axis=2) < 0.92
     er_op = np.asarray(obj)[:, :, 3] > 128
     if not er_op.any():
@@ -124,7 +144,7 @@ def main(argv):
             gemist.append("%s: schaduw overgeslagen, %s" % (slug, klacht))
             regel += "  schaduw   -  "
         else:
-            schrijf(klein(schaduwlaag(rollen["dag"], rollen["shadow"])),
+            schrijf(klein(schaduwlaag(rollen["dag"], platBeeld(rollen["shadow"]))),
                     os.path.join(OBJ, "shadows", slug + ".png"))
             regel += "  schaduw %3d kB" % (os.path.getsize(os.path.join(OBJ, "shadows", slug + ".png")) // 1024)
         print(regel)
