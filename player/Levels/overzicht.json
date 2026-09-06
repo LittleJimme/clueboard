@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-06T15:31:23",
+  "gemaakt": "2026-09-06T15:45:20",
   "levels": [
     {
       "file": "100v4 Test Level.json",
@@ -213,7 +213,7 @@
       }
     },
     {
-      "file": "9v12 Achter de Gracht.json",
+      "file": "9v13 Achter de Gracht.json",
       "content": {
         "title": "Achter de Gracht"
       },
@@ -227,7 +227,7 @@
       },
       "levelId": "lvl-mtpsczg45i82s",
       "levelNumber": 9,
-      "levelVersion": 12,
+      "levelVersion": 13,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."

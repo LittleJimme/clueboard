@@ -1,11 +1,11 @@
 {
   "levelNumber": 9,
-  "levelVersion": 12,
+  "levelVersion": 13,
   "levelId": "lvl-mtpsczg45i82s",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-06T13:30:46.892Z",
+  "exportedAt": "2026-09-06T13:45:06.239Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -2336,7 +2336,7 @@
         ]
       },
       {
-        "id": "clue-20",
+        "id": "clue-21",
         "scope": "person",
         "personId": "p5",
         "terms": [
@@ -2355,7 +2355,7 @@
             "not": false,
             "any": [
               {
-                "atom": "closest-to-kind",
+                "atom": "same-col-as-kind",
                 "args": {
                   "objectKind": "Treasure"
                 }
@@ -2589,7 +2589,7 @@
       "holds": true
     },
     {
-      "id": "clue-20",
+      "id": "clue-21",
       "scope": "person",
       "personId": "p5",
       "locked": false,
@@ -2609,7 +2609,7 @@
           "not": false,
           "any": [
             {
-              "atom": "closest-to-kind",
+              "atom": "same-col-as-kind",
               "args": {
                 "objectKind": "Treasure"
               }
@@ -2617,8 +2617,8 @@
           ]
         }
       ],
-      "text": "Dina was de enige die op een stoel zat en stond het dichtst bij een schat.",
-      "generatedText": "Dina was de enige die op een stoel zat en stond het dichtst bij een schat.",
+      "text": "Dina was de enige die op een stoel zat en stond in dezelfde kolom als een schat.",
+      "generatedText": "Dina was de enige die op een stoel zat en stond in dezelfde kolom als een schat.",
       "storyText": null,
       "holds": true
     }
@@ -2666,7 +2666,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 48,
+    "ms": 49,
     "override": null
   }
 }
