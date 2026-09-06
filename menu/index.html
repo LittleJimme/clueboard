@@ -1150,6 +1150,34 @@ let alleenOpen=false;   /* alleen zaken die je nog niet hebt afgerond */
 let alleenBezig=false;  /* alleen zaken waar je middenin zit */
 let sorteer="nr";        /* "nr" (zaaknummer) of "titel" (A–Z) */
 
+/* Hoe je de lijst had staan blijft op dit apparaat bewaard. Wie op niveau 3
+   filtert, een zaak speelt en terugkomt, wil niet weer door alles heen: het
+   menu is een kast waarin je zelf iets hebt opgeruimd, en dat hoort te blijven
+   staan tot je het zelf omzet. */
+const FILTER_SLEUTEL="clueboard:menuFilters";
+function bewaarFilters(){
+  try{ localStorage.setItem(FILTER_SLEUTEL, JSON.stringify(
+    { niveau:actieveFilter, open:alleenOpen, bezig:alleenBezig, sorteer:sorteer })); }
+  catch(e){}
+}
+function leesFilters(){
+  let d=null;
+  try{ d=JSON.parse(localStorage.getItem(FILTER_SLEUTEL)||"null"); }catch(e){}
+  if(!d || typeof d!=="object") return;
+  /* Alleen waarden die nu nog bestaan; wat er niet meer is valt terug op de
+     beginstand in plaats van een lege lijst op te leveren. */
+  const n=+d.niveau;
+  actieveFilter = (n>=1 && n<=5) ? n : 0;
+  alleenOpen = !!d.open;
+  alleenBezig = !!d.bezig;
+  sorteer = d.sorteer==="titel" ? "titel" : "nr";
+}
+/* De sorteerknoppen dragen hun stand in de opmaak; die moet mee terug. */
+function tekenSorteer(){
+  const rij=$("#sorteerRij"); if(!rij) return;
+  [...rij.children].forEach(b=>b.classList.toggle("aan", b.dataset.s===sorteer));
+}
+
 /* Wat je van een zaak hebt afgerond staat in de browser van deze telefoon,
    onder dezelfde sleutel die de player schrijft. Alleen een uitgespeelde
    zaak komt erin, met de snelste tijd. */
@@ -1294,7 +1322,7 @@ function tekenFilter(){
   { const bk=$("#bezigKnop");
     const ietsBezig=alleLevels.some(e=>!voltooidVan(e.raw) && bezigVan(e.raw));
     if(bk){
-      if(!ietsBezig) alleenBezig=false;
+      if(!ietsBezig && alleenBezig){ alleenBezig=false; bewaarFilters(); }
       bk.hidden=!ietsBezig;
       bk.classList.toggle("aan",alleenBezig);
       bk.setAttribute("aria-pressed",alleenBezig?"true":"false");
@@ -1313,6 +1341,7 @@ function tekenFilter(){
     }
     b.onclick=()=>{
       actieveFilter=c.n;
+      bewaarFilters();
       $("#filterDrop").classList.remove("open");
       knop.setAttribute("aria-expanded","false");
       tekenFilter(); tekenLijst();
@@ -1322,8 +1351,8 @@ function tekenFilter(){
   knop.classList.toggle("aan", !!actieveFilter);
   label.textContent = actieveFilter ? ("Niveau "+actieveFilter) : "Niveau";
 }
-$("#openKnop").addEventListener("click",()=>{ alleenOpen=!alleenOpen; tekenFilter(); tekenLijst(); });
-$("#bezigKnop").addEventListener("click",()=>{ alleenBezig=!alleenBezig; tekenFilter(); tekenLijst(); });
+$("#openKnop").addEventListener("click",()=>{ alleenOpen=!alleenOpen; bewaarFilters(); tekenFilter(); tekenLijst(); });
+$("#bezigKnop").addEventListener("click",()=>{ alleenBezig=!alleenBezig; bewaarFilters(); tekenFilter(); tekenLijst(); });
 $("#filterKnop").addEventListener("click",e=>{
   e.stopPropagation();
   const drop=$("#filterDrop");
@@ -1463,6 +1492,7 @@ async function laadLevels(){
     $("#sorteerRij").style.display="none";
     return;
   }
+  tekenSorteer();
   tekenFilter();
   tekenLijst();
 }
@@ -1472,7 +1502,8 @@ $("#sorteerRij").addEventListener("click",e=>{
   const b=e.target.closest("button[data-s]");
   if(!b) return;
   sorteer=b.dataset.s;
-  [...$("#sorteerRij").children].forEach(x=>x.classList.toggle("aan", x===b));
+  bewaarFilters();
+  tekenSorteer();
   tekenLijst();
 });
 
@@ -1554,6 +1585,8 @@ function initZelf(){
 })();
 
 initZelf();
+/* Eerst terughalen hoe de lijst stond, dan pas tekenen. */
+leesFilters();
 laadLevels();
 /* Wie het spel voor het eerst opent, krijgt de uitleg vanzelf; daarna nooit
    meer ongevraagd. */
