@@ -1654,6 +1654,21 @@ body.radiaal-open .room-label{opacity:0}
 .view-switch .vs-other::before{content:"";position:absolute;left:0;top:1px;bottom:1px;width:1px;background:rgba(255,255,255,.28)}
 
 /* ---------- Radiaal menu ---------- */
+/* Het stapkringetje: verschijnt onder je vinger als je naast het bord lang
+   drukt. Twee knoppen in de stijl van de hulpknoppen op de kring, met het
+   gouden stipje waar je drukte. De gekozen kant groeit; de andere dooft. */
+#stapRadiaal{position:fixed;inset:0;z-index:61;display:none;--rbtn:58px;--pc:var(--goud);--pc-tekst:var(--goud-op)}
+#stapRadiaal.open{display:block}
+#stapRadiaal .sr-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.26);animation:fadeIn .16s ease both}
+#stapRadiaal .sr-stip{position:absolute;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%);
+  background:var(--goud);box-shadow:0 0 0 5px rgba(201,147,47,.28);animation:fadeIn .16s ease both}
+#stapRadiaal .sr-knop{animation:fadeIn .18s ease both;transition:transform .14s cubic-bezier(.2,.8,.3,1),opacity .14s}
+#stapRadiaal .sr-knop .ic{width:24px;height:24px;display:flex}
+#stapRadiaal .sr-knop .ic svg{width:100%;height:100%}
+#stapRadiaal .sr-knop.vooruit .ic{transform:scaleX(-1)}
+#stapRadiaal .sr-knop .lbl{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none}
+#stapRadiaal .sr-knop.kies{transform:translate(-50%,-50%) scale(1.18)}
+#stapRadiaal.kiest .sr-knop:not(.kies):not([disabled]){opacity:.5}
 #radial{position:fixed;inset:0;display:none;z-index:60}
 #radial.open{display:block}
 /* Eén sluier met het gekozen vakje eruit geknipt. Een masker met een verloop
@@ -2863,6 +2878,19 @@ body.in-game .sheet.melding .melding-beeld{
   display:flex;align-items:center;justify-content:center;color:var(--goud);filter:none}
 body.in-game .sheet.melding .melding-beeld svg{width:26px;height:26px}
 body.in-game .sheet.melding h3{font-family:var(--font-display);font-weight:600;font-size:24px;margin:0 0 8px}
+/* Notities wissen: een rij per keuze, bovenaan alles in goud, daaronder elke
+   persoon met zijn letter en hoeveel er van hem op het bord staat. Wie niets
+   op het bord heeft, ligt gedoofd. */
+body.in-game .sheet.melding.notities{max-width:400px}
+body.in-game .notitie-lijst{display:flex;flex-direction:column;gap:6px;margin-top:14px;max-height:46vh;overflow:auto;text-align:left}
+body.in-game .notitie-rij{display:flex;align-items:center;gap:10px;width:100%;min-height:46px;padding:7px 10px;border-radius:12px;
+  background:var(--kaart-2);border:1px solid var(--lijn);color:var(--inkt);font:800 13.5px var(--font-ui);text-align:left}
+body.in-game .notitie-rij.alles{border-color:var(--goud-lijn);background:var(--goud-zacht)}
+body.in-game .notitie-rij[disabled]{opacity:.45;pointer-events:none}
+body.in-game .notitie-rij .nt-token{flex:0 0 auto;width:28px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+  background:var(--kaart);border:1px solid var(--lijn);color:var(--goud);font:800 12px var(--font-ui)}
+body.in-game .notitie-rij .nt-naam{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.in-game .notitie-rij small{flex:0 0 auto;font-size:11.5px;font-weight:600;color:var(--dof)}
 body.in-game .sheet.melding p{font-size:15px;line-height:1.55;color:var(--inkt-2)}
 body.in-game .sheet.melding p b{color:var(--inkt);font-weight:800}
 body.in-game .sheet.melding .row{margin-top:16px;gap:10px}
@@ -3144,13 +3172,19 @@ html[data-thema="licht"] .stap-vel.titelkaart .help-merk-donker{display:none}
 html[data-thema="licht"] .stap-vel.titelkaart .help-merk-licht{display:block}
 .stap-vel.titelkaart .stap-teller,.stap-vel.titelkaart .stap-beeld,.stap-vel.titelkaart .stap-tekst{display:none}
 .stap-beeld[hidden]{display:none}
-.help-keuze{flex:0 0 auto;display:flex;gap:4px;padding:3px;margin:0 40px 12px 0;border-radius:999px;
+/* Eén schuifje met de twee delen erin: het gouden blok schuift onder de
+   gekozen naam door, zoals het knopje in de schakelaars van de instellingen.
+   De knoppen zelf zijn doorzichtig -- de gewone knopachtergrond gaf hier een
+   lichtgrijze pil op de donkere kaart, alsof hij uit een ander spel kwam. */
+.help-keuze{position:relative;flex:0 0 auto;display:flex;padding:3px;margin:0 40px 12px 0;border-radius:999px;
   background:var(--kaart-2);border:1px solid var(--lijn)}
-.help-keuze button{flex:1;height:32px;border-radius:999px;color:var(--dof);font:700 12px var(--font-ui);
-  letter-spacing:.04em;white-space:nowrap}
-/* De gekozen kant in het goud van het merk, niet in inkt: een zwarte pil hoort
-   bij een systeemknop, deze schakelaar hoort bij ClueBoard. */
-.help-keuze button.aan{background:var(--goud);color:var(--goud-op)}
+.help-keuze::before{content:"";position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:999px;
+  background:var(--goud);box-shadow:0 1px 3px rgba(0,0,0,.28);transition:transform .22s cubic-bezier(.2,.8,.3,1)}
+.help-keuze[data-aan="regels"]::before{transform:translateX(100%)}
+.help-keuze button{position:relative;flex:1;height:32px;border:0;border-radius:999px;background:none;
+  color:var(--dof);font:800 12.5px var(--font-ui);letter-spacing:.03em;white-space:nowrap;transition:color .18s}
+.help-keuze button.aan{color:var(--goud-op)}
+@media (prefers-reduced-motion:reduce){ .help-keuze::before{transition:none} }
 .stap-beeld{flex:0 0 210px;display:flex;align-items:center;justify-content:center;
   background:var(--kaart-2);border:1px solid var(--lijn-zacht);border-radius:16px;padding:12px;margin-bottom:14px;overflow:hidden}
 .stap-beeld[hidden]{display:none}
@@ -3666,6 +3700,15 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="radial-wat" id="radialWat" hidden></div>
 </div>
 
+<!-- Lang drukken naast het bord: een kringetje met stap terug links en stap
+     vooruit rechts. Ingedrukt houden, naar een kant slepen, loslaten. -->
+<div id="stapRadiaal" aria-hidden="true">
+  <div class="sr-backdrop"></div>
+  <div class="sr-stip"></div>
+  <button class="rbtn util sr-knop terug" type="button" tabindex="-1"><span class="ic" data-icon="undo"></span><span class="lbl">Terug</span></button>
+  <button class="rbtn util sr-knop vooruit" type="button" tabindex="-1"><span class="ic" data-icon="undo"></span><span class="lbl">Vooruit</span></button>
+</div>
+
 <!-- Modals -->
 <div class="modal" id="modalHelp">
   <div class="backdrop" data-close></div>
@@ -3744,7 +3787,7 @@ body.in-game .clue-card.done::before{background:var(--goud)}
     <div class="set-kop">Wissen</div>
     <div class="set-acties">
       <button class="set-actie" id="btnWisKruisjes" type="button"><span class="set-mini" data-mini="kruisjes"></span><b>Kruisjes</b><small id="wisKruisjesN">—</small></button>
-      <button class="set-actie" id="btnWisLetters" type="button"><span class="set-mini" data-mini="letters"></span><b>Letters</b><small id="wisLettersN">—</small></button>
+      <button class="set-actie" id="btnWisLetters" type="button"><span class="set-mini" data-mini="letters"></span><b>Notities</b><small id="wisLettersN">—</small></button>
       <button class="set-actie danger" id="btnRestart" type="button"><span class="set-mini" data-mini="opnieuw"></span><b>Opnieuw</b><small id="wisAllesN">—</small></button>
     </div>
     <!-- De uitleg stond als los vraagteken in de kop; op een telefoon hoort hij
@@ -3779,6 +3822,19 @@ body.in-game .clue-card.done::before{background:var(--goud)}
     <p id="bevestigTekst"></p>
     <div class="row"><button class="btn ghost" data-close>Nee</button>
     <button class="btn" id="bevestigJa">Ja</button></div>
+  </div>
+</div>
+
+<!-- Notities wissen: alles in één keer, of alleen de letters van één
+     persoon. De lijst wordt gevuld bij het openen (vulNotities). -->
+<div class="modal" id="modalNotities">
+  <div class="backdrop" data-close></div>
+  <div class="sheet melding notities">
+    <div class="melding-beeld"><span class="ic" data-icon="pencil"></span></div>
+    <h3>Notities wissen</h3>
+    <p>Alle letters die je op het bord hebt gezet, of alleen die van één persoon.</p>
+    <div class="notitie-lijst" id="notitieLijst"></div>
+    <div class="row"><button class="btn ghost" data-close>Sluiten</button></div>
   </div>
 </div>
 
@@ -8538,7 +8594,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.146";
+const PLAYER_APP_VERSION="0.9.147";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9264,6 +9320,7 @@ function tekenHelp(){
   const st=HELP_STAPPEN[helpStap];
   helpSet=st.set;
   $$("#helpKeuze button").forEach(b=>b.classList.toggle("aan",b.dataset.set===st.set));
+  $("#helpKeuze").dataset.aan=st.set;
   $("#helpBody").classList.toggle("titelkaart",!!st.titel);
   const deel=HELP_STAPPEN.filter(s=>s.set===st.set&&!s.titel), i=deel.indexOf(st);
   $("#helpTeller").textContent=st.titel?"":"Stap "+(i+1)+" van "+deel.length;
@@ -9409,6 +9466,83 @@ $("#btnHintJa").addEventListener("click",()=>{ closeModal($("#modalHint")); geef
   if(knop) knop.addEventListener("click",()=>zet(!document.body.classList.contains("klein-object")));
 }
 $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
+/* Lang drukken naast het bord opent een kringetje met stap terug links en
+   stap vooruit rechts. Je houdt ingedrukt, sleept naar een kant en laat los;
+   loslaten zonder te slepen sluit het weer. Op het bord zelf niet: daar is
+   lang drukken al van de tegels. De handlers zitten op het document in de
+   vangfase, zodat het loslaten boven een tegel die tegel niet raakt. */
+(function(){
+  const laag=$("#stapRadiaal"); if(!laag) return;
+  const HOUD=420, WIEBEL=9, KIES=28, AFSTAND=76;
+  const knop={terug:laag.querySelector(".terug"), vooruit:laag.querySelector(".vooruit")};
+  const stip=laag.querySelector(".sr-stip");
+  let timer=null, start=null, open=false, kant=0;
+  const mag=()=>document.body.classList.contains("in-game")
+    && !document.querySelector(".modal.open") && !$("#radial").classList.contains("open");
+  const buiten=t=>{
+    if(!t||!t.closest) return false;
+    if(t.closest("#gridWrap, button, a, input, textarea, select, [contenteditable], .modal, #radial, .tabbar, .game-head, #pane-clues, #pane-detail")) return false;
+    return !!t.closest("#boardViewport, #pane-board");
+  };
+  function toon(x,y){
+    open=true; kant=0;
+    stip.style.left=x+"px"; stip.style.top=y+"px";
+    /* Dicht bij een zijkant schuift het paar op, zodat beide knoppen in beeld
+       blijven. */
+    const mid=Math.max(AFSTAND+36, Math.min(window.innerWidth-AFSTAND-36, x));
+    knop.terug.style.left=(mid-AFSTAND)+"px";  knop.terug.style.top=y+"px";
+    knop.vooruit.style.left=(mid+AFSTAND)+"px"; knop.vooruit.style.top=y+"px";
+    knop.terug.disabled=!historie.length; knop.vooruit.disabled=!toekomst.length;
+    knop.terug.classList.remove("kies"); knop.vooruit.classList.remove("kies");
+    laag.classList.remove("kiest"); laag.classList.add("open");
+    haptic(14);
+  }
+  function kies(dx){
+    const k=dx<-KIES?-1:dx>KIES?1:0;
+    if(k===kant) return;
+    kant=k;
+    knop.terug.classList.toggle("kies",k===-1&&!knop.terug.disabled);
+    knop.vooruit.classList.toggle("kies",k===1&&!knop.vooruit.disabled);
+    laag.classList.toggle("kiest",k!==0);
+    if(k) haptic(8);
+  }
+  function sluit(doe){
+    clearTimeout(timer); timer=null;
+    if(open){
+      const k=kant;
+      /* Een tel blijven staan: de klik die na het loslaten komt, landt dan op
+         de sluier en niet op wat eronder ligt. */
+      setTimeout(()=>laag.classList.remove("open","kiest"),40);
+      if(doe){ if(k===-1&&historie.length) stapTerug(); else if(k===1&&toekomst.length) stapVooruit(); }
+    }
+    open=false; start=null; kant=0;
+  }
+  document.addEventListener("pointerdown",e=>{
+    if(open){ e.preventDefault(); e.stopPropagation(); return; }
+    if(e.button!==0 || !mag() || !buiten(e.target)) return;
+    start={x:e.clientX,y:e.clientY,id:e.pointerId};
+    clearTimeout(timer);
+    timer=setTimeout(()=>{ if(start) toon(start.x,start.y); },HOUD);
+  },true);
+  document.addEventListener("pointermove",e=>{
+    if(!start||e.pointerId!==start.id) return;
+    const dx=e.clientX-start.x, dy=e.clientY-start.y;
+    if(!open){ if(Math.hypot(dx,dy)>WIEBEL){ clearTimeout(timer); start=null; } return; }
+    e.preventDefault(); kies(dx);
+  },{capture:true,passive:false});
+  const einde=e=>{
+    if(!start||e.pointerId!==start.id) return;
+    if(open){ e.preventDefault(); e.stopPropagation(); }
+    sluit(open && e.type==="pointerup");
+  };
+  document.addEventListener("pointerup",einde,true);
+  document.addEventListener("pointercancel",einde,true);
+  /* Wat er verder nog bij het loslaten hoort mag het bord niet bereiken, en
+     het lange drukken mag geen contextmenu of tekstselectie oproepen. */
+  ["touchend","touchmove"].forEach(n=>document.addEventListener(n,e=>{ if(open){ e.preventDefault(); e.stopPropagation(); } },{capture:true,passive:false}));
+  document.addEventListener("contextmenu",e=>{ if(open||(start&&buiten(e.target))) e.preventDefault(); },true);
+  laag.addEventListener("click",e=>{ e.preventDefault(); e.stopPropagation(); },true);
+})();
 $$(".stap-vooruit").forEach(b=>b.addEventListener("click",stapVooruit));
 tekenStapKnoppen();
 $("#rowEasy").addEventListener("click",()=>setEasyMode(!easyMode));
@@ -9771,14 +9905,43 @@ $("#btnWisKruisjes").addEventListener("click",()=>{
     paintBoard(); vulWissen(); haptic(12); toast(n===1?"1 kruisje gewist.":n+" kruisjes gewist.");
   });
 });
-$("#btnWisLetters").addEventListener("click",()=>{
-  let n=0; notes.forEach(x=>{ if(x.marks&&x.marks.size) n+=x.marks.size; });
-  if(!n){ toast("Er staan geen letters."); return; }
-  bevestig("Letters wissen?", n===1?"De letter die je genoteerd hebt gaat weg.":"Alle "+n+" genoteerde letters gaan weg.",()=>{
-    onthoudStap();
-    notes.forEach(x=>{ if(x.marks) x.marks.clear(); });
-    paintBoard(); vulWissen(); haptic(12); toast(n===1?"1 letter gewist.":n+" letters gewist.");
+/* Notities wissen gaat via een keuze: alles, of alleen de letters van één
+   persoon. De keuze zelf is de bevestiging; terugdraaien kan met een stap
+   terug. */
+function notitiesPerPersoon(){
+  const per=new Map(); let alles=0;
+  notes.forEach(x=>{ if(!x.marks) return; x.marks.forEach((_,pid)=>{ per.set(pid,(per.get(pid)||0)+1); alles++; }); });
+  return {per:per, alles:alles};
+}
+function wisNotities(pid){
+  const t=notitiesPerPersoon();
+  const n=pid ? (t.per.get(pid)||0) : t.alles;
+  if(!n) return;
+  onthoudStap();
+  notes.forEach(x=>{ if(!x.marks) return; if(pid) x.marks.delete(pid); else x.marks.clear(); });
+  paintBoard(); vulWissen(); haptic(12);
+  closeModal($("#modalNotities"));
+  const wie=pid ? (M.peopleById.get(pid)||{}).name : null;
+  toast(wie ? "Notities van "+wie+" gewist." : (n===1?"1 notitie gewist.":n+" notities gewist."));
+}
+function vulNotities(){
+  const lijst=$("#notitieLijst"); if(!lijst||!M) return;
+  const t=notitiesPerPersoon();
+  const tel=n=>n===1?"1 op het bord":n+" op het bord";
+  let h='<button class="notitie-rij alles" type="button" data-pid=""'+(t.alles?"":" disabled")+'>'
+    +'<span class="nt-token">'+AssetBank.ui("pencil")+'</span><span class="nt-naam">Alle notities</span><small>'+(t.alles?tel(t.alles):"geen")+'</small></button>';
+  M.people.forEach(p=>{
+    const n=t.per.get(p.id)||0;
+    h+='<button class="notitie-rij" type="button" data-pid="'+esc(p.id)+'"'+(n?"":" disabled")+'>'
+      +'<span class="nt-token">'+esc(p.letter||String(p.name||"?").charAt(0))+'</span>'
+      +'<span class="nt-naam">'+esc(p.name||"")+'</span><small>'+(n?tel(n):"geen")+'</small></button>';
   });
+  lijst.innerHTML=h;
+  $$(".notitie-rij",lijst).forEach(b=>b.addEventListener("click",()=>wisNotities(b.dataset.pid||null)));
+}
+$("#btnWisLetters").addEventListener("click",()=>{
+  if(!notitiesPerPersoon().alles){ toast("Er staan geen notities."); return; }
+  vulNotities(); openModal("#modalNotities");
 });
 $("#btnRestart").addEventListener("click",()=>{
   if(placed.size===0 && notes.size===0){ toast("Er is nog niets om te wissen."); return; }
