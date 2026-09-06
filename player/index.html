@@ -8603,7 +8603,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.149";
+const PLAYER_APP_VERSION="0.9.150";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9483,8 +9483,8 @@ $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
 
    Je vinger ligt op de plek waar je drukt, dus daar staat alleen een bolletje;
    de twee knoppen staan een stuk erboven, links en rechts. Sleep je opzij,
-   dan glijdt het bolletje over een onzichtbare boog -- eerst opzij, dan
-   omhoog -- naar de knop aan die kant, de knoppen wijken uit elkaar, de
+   dan glijdt het bolletje over een onzichtbare boog -- eerst omhoog, dan
+   afbuigend opzij -- naar de knop aan die kant, de knoppen wijken uit elkaar, de
    gekozen groeit en de andere dooft. Is het bolletje ver genoeg, dan krijgt
    de knop een gouden ring: loslaten zet die stap. Bij het loslaten schiet de
    knop nog een stukje door langs de boog terwijl hij vervaagt. */
@@ -9514,10 +9514,11 @@ $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
     return {x: mid + (k==="terug"?-1:1)*(AFSTAND+uit), y: py-HOOGTE};
   };
   /* Het bolletje op de boog van de drukplek naar de gekozen knop: een
-     kwadratische kromme die eerst opzij gaat en dan omhoog buigt. */
+     kwadratische kromme die eerst recht omhoog gaat en dan afbuigt naar de
+     knop. Het stuurpunt ligt vrijwel boven de drukplek, op knophoogte. */
   const boog=(f,r)=>{
     const doel=knopPlek(r<0?"terug":"vooruit",f,r);
-    const c={x: px + (doel.x-px)*.6, y: py - HOOGTE*.1};
+    const c={x: px + (doel.x-px)*.12, y: py - HOOGTE*1.02};
     const t=f, u=1-f;
     return {x: u*u*px + 2*u*t*c.x + t*t*doel.x, y: u*u*py + 2*u*t*c.y + t*t*doel.y};
   };
@@ -9579,10 +9580,10 @@ $$(".stap-terug").forEach(b=>b.addEventListener("click",stapTerug));
       const nu=el.style.transform||tr(0,0,1);
       let zetje=nu;
       if(el===gekozen && kan){
-        /* Door langs de boog: in de richting waarin hij al lag. */
+        /* Door langs de boog: aan het eind loopt die vrijwel opzij. */
         const naam = el===knop.terug ? "terug" : "vooruit";
         const plek=knopPlek(naam,f,r), rust=knopPlek(naam,0,0);
-        zetje=tr(plek.x-rust.x + r*54, plek.y-rust.y - 22, 1.42);
+        zetje=tr(plek.x-rust.x + r*56, plek.y-rust.y - 10, 1.42);
       }
       klaar.push(el.animate([{transform:nu,opacity:getComputedStyle(el).opacity},{transform:zetje,opacity:0}],uit).finished);
     });
