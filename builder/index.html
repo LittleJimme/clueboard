@@ -294,8 +294,6 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .regel-tip:hover{border-color:var(--accent);background:var(--tint)}
 .regel-tip svg{width:13px;height:13px;flex:0 0 auto;color:var(--faint)}
 .regel-tip span:first-of-type{flex:1;min-width:0}
-.regel-tip .vink{flex:0 0 auto;color:var(--ok)}
-.regel-tip .vink svg{color:var(--ok)}
 /* Het bord in het klein: alleen ruimtekleur, objecten en wie waar staat. */
 .mini-bord{display:grid;gap:2px}
 .mini-cel{
@@ -1489,6 +1487,15 @@ textarea.inp{min-height:58px;resize:vertical}
   color:var(--ok);font:800 11px var(--ui)}
 .sm-ok svg{width:13px;height:13px;stroke-width:3}
 .sm-item .sm-slot{color:var(--accent);font-weight:800}
+/* De zwaarte van een regel: drie bolletjes, in dezelfde taal als de
+   niveau-bollen in de balk maar kleiner. Eén bol is licht, drie is zwaar. */
+.zw{display:inline-flex;gap:2.5px;align-items:center;flex:0 0 auto;margin-left:auto;padding-left:8px}
+.zw i{width:6px;height:6px;border-radius:50%;background:var(--panel);box-shadow:inset 0 0 0 1.2px var(--edge)}
+.zw i.aan{background:var(--accent-vlak);box-shadow:none}
+.sm-item:hover .zw i{box-shadow:inset 0 0 0 1.2px rgba(255,255,255,.55);background:transparent}
+.sm-item:hover .zw i.aan{background:#fff;box-shadow:none}
+.regel-tip .zw{padding-left:6px}
+.regel-tip .zw i{width:7px;height:7px}
 .sm-item:hover .sm-slot{color:#fff}
 .sm-item:hover .sm-ok{color:#fff}
 .sm-empty{padding:14px 12px;font:600 12px var(--read);color:var(--faint)}
@@ -5501,7 +5508,8 @@ function openSearchMenu(anchor, groups, onPick, placeholder){
         items.forEach(it => {
           html += '<div class="sm-item'+(it.on?' on':'')+'" data-v="'+e(String(it.v))+'">'+
                   (it.ok === undefined ? '' : '<span class="sm-ok">'+(it.ok?uiIcon('check'):'')+'</span>')+
-                  '<span>'+(it.lh !== undefined ? it.lh : e(it.l))+'</span></div>';
+                  '<span>'+(it.lh !== undefined ? it.lh : e(it.l))+'</span>'+
+                  (it.zw === undefined ? '' : zwaarteHtml(it.zw))+'</div>';
         });
       });
       body.innerHTML = hits ? html : '<div class="sm-empty">Niets gevonden.</div>';
@@ -5666,8 +5674,7 @@ function openRegelVenster(personId){
     '<button class="opl-sluit" data-sluit title="Sluiten">'+uiIcon('cross')+'</button></div>'+
     '<div class="regel-body">'+
       '<div class="regel-links"><div id="regelEditor"></div>'+
-        '<div class="regel-voorstellen"><div class="opl-sep">Voorstel regels</div>'+
-        '<div id="regelTips"></div></div></div>'+
+        '<div class="regel-voorstellen"><div id="regelTips"></div></div></div>'+
       '<div class="regel-rechts"><div class="opl-sep">Het bord</div><div id="regelBord"></div></div>'+
     '</div>'+
     '<div class="row"><button class="btn primary" data-sluit>Klaar</button></div></div>';
@@ -5764,18 +5771,83 @@ function miniBord(personId){
   return h;
 }
 
-/* ── Twee voorstellen die al kloppen ─────────────────
-   Uit verschillende categorieën, zodat je twee soorten aanwijzingen ziet en
-   niet twee keer dezelfde. */
-function regelVoorstellen(personId, hoeveel){
+/* ── De zwaarte van één regel ────────────────────────
+   Het niveau van een level volgt uit de ladder van oplostechnieken; dit is
+   het kleine broertje daarvan, voor één regel. Twee dingen tellen:
+
+   1. Het soort redenering. Een regel die alleen de persoon zelf noemt
+      ("stond in kolom 1") streept meteen vakjes weg: sport 1. Een regel over
+      één ander ("onder Agnes") werkt pas als die ander vaststaat: sport 5.
+      Een regel die iedereen nodig heeft ("de enige op een stoel", "naast de
+      meeste bomen") is pas te gebruiken door aan te nemen en te verwerpen:
+      sport 7. Dat volgt uit atomAfhankelijkheid.
+   2. De snoeikracht op dit bord: hoeveel van de vakjes waar deze persoon
+      mag staan verdraagt de regel nog, met de rest van het bord zoals het
+      nu staat? "In kolom 1" laat een op de zeven over, "niet in het
+      Kasteel" bijna alles. Laat een regel meer dan de helft staan, dan
+      schuift hij een stap omhoog.
+
+   Drie standen: 1 licht, 2 gemiddeld, 3 zwaar. Fijner is de meting niet. */
+const ZWAARTE_WOORD = { 1:'licht', 2:'gemiddeld', 3:'zwaar' };
+const ZWAARTE_UITLEG = {
+  1:'Streept meteen vakjes weg, alleen uit deze regel.',
+  2:'Werkt pas samen met een andere regel of persoon.',
+  3:'Pas bruikbaar door aannemen en verwerpen.'
+};
+/* Bordregels hebben geen persoon om vakjes voor te tellen; daar geldt het
+   soort regel. Wie iets moet tellen (lege rijen, precies twee personen op
+   een stoel) rekent zwaarder dan wie iets moet nakijken (geen lege ruimte). */
+const BORD_TELT = new Set(['empty-room-count','empty-column-count','empty-row-count',
+                           'room-person-total','count-on-kind','kind-neighbour-count',
+                           'role-left-of-empty-column']);
+/* Onthouden zolang het bord niet verandert: de kiezer opent dezelfde lijst
+   telkens opnieuw, en elke meting loopt alle vakjes langs. */
+const SNOEI_CACHE = new Map();
+function regelSnoei(id, args, personId){
+  if (!pos(personId)) return 1;
+  const sleutel = JSON.stringify([id, args, personId, S.people]);
+  if (SNOEI_CACHE.has(sleutel)) return SNOEI_CACHE.get(sleutel);
+  if (SNOEI_CACHE.size > 4000) SNOEI_CACHE.clear();
+  const uit = regelSnoeiMeet(id, args, personId);
+  SNOEI_CACHE.set(sleutel, uit);
+  return uit;
+}
+function regelSnoeiMeet(id, args, personId){
+  const kand = Object.values(S.tiles).filter(t => !t.off && t.status !== 'no' && personMayEnter(personId, t.room));
+  if (!kand.length) return 1;
+  const over = kand.filter(t => metBord(Object.assign({}, S.people, { [personId]: z(t.x, t.y) }),
+                                        () => atomTrue(id, args, personId))).length;
+  return over / kand.length;
+}
+function regelZwaarte(id, args, personId){
+  const def = ATOMS[id];
+  if (!def) return 2;
+  if (def.scope !== 'person' || !personId){
+    /* "Er waren geen lege kolommen" telt niets: dat is nakijken, geen tellen. */
+    const nul = args && ['count','persons'].some(k => k in args && +args[k] === 0);
+    return BORD_TELT.has(id) && !nul ? 3 : 2;
+  }
+  const afh = atomAfhankelijkheid(id);
+  if (afh === 'iedereen') return 3;
+  const basis = afh === 'paar' ? 2 : 1;
+  return Math.min(3, basis + (regelSnoei(id, args, personId) > 0.5 ? 1 : 0));
+}
+function zwaarteHtml(zw){
+  const n = Math.max(1, Math.min(3, zw || 2));
+  return '<span class="zw" title="'+e(ZWAARTE_WOORD[n]+': '+ZWAARTE_UITLEG[n])+'">'+
+    [1,2,3].map(i => '<i class="'+(i<=n?'aan':'')+'"></i>').join('')+'</span>';
+}
+
+/* ── Vier voorstellen die al kloppen ─────────────────
+   Twee lichte en twee zware, elk uit verschillende categorieën, zodat je
+   niet twee keer dezelfde soort aanwijzing ziet. Alle bruikbare regels
+   worden eerst geschud en dan op zwaarte gesorteerd: bij gelijke zwaarte
+   wisselt het voorstel dus per keer. */
+function regelVoorstellen(personId, perKant){
   const scope = personId ? 'person' : 'board';
   const ctx = { personId };
-  const uit = [], gezien = new Set();
-  const ids = atomScopeList(scope).filter(id => atomBruikbaar(id, ctx)).sort(() => Math.random() - 0.5);
-  for (const id of ids){
-    if (uit.length >= (hoeveel || 2)) break;
-    const cat = ATOMS[id].cat;
-    if (gezien.has(cat)) continue;
+  const alles = [];
+  atomScopeList(scope).filter(id => atomBruikbaar(id, ctx)).forEach(id => {
     const kaal = defaultArgs(id, ctx);
     let args = null;
     if (atomTrue(id, kaal, personId)) args = kaal;
@@ -5783,30 +5855,49 @@ function regelVoorstellen(personId, hoeveel){
       const raak = atomVariants(id, ctx).find(a => atomTrue(id, a, personId));
       if (raak) args = raak;
     }
-    if (!args) continue;
-    gezien.add(cat);
-    uit.push({ id, args, tekst: atomText(id, args, ctx) });
-  }
-  return uit;
+    if (!args) return;
+    alles.push({ id, args, cat: ATOMS[id].cat, tekst: atomText(id, args, ctx),
+                 zw: regelZwaarte(id, args, personId) });
+  });
+  alles.sort(() => Math.random() - 0.5);
+  const n = perKant || 2;
+  const kies = (lijst, gebruikt) => {
+    const uit = [], cats = new Set();
+    for (const v of lijst){
+      if (uit.length >= n) break;
+      if (gebruikt.has(v.id) || cats.has(v.cat)) continue;
+      cats.add(v.cat); gebruikt.add(v.id); uit.push(v);
+    }
+    return uit;
+  };
+  const gebruikt = new Set();
+  const licht = kies(alles.slice().sort((a,b) => a.zw - b.zw), gebruikt);
+  const zwaar = kies(alles.slice().sort((a,b) => b.zw - a.zw), gebruikt);
+  return { licht, zwaar };
 }
 
 function tekenVoorstellen(personId, scrim){
   const bak = scrim.querySelector('#regelTips');
-  const lijst = regelVoorstellen(personId, 2);
+  const v = regelVoorstellen(personId, 2);
+  const lijst = v.licht.concat(v.zwaar);
   if (!lijst.length){
     bak.innerHTML = '<p class="hint">Geen voorwaarde die hier meteen klopt.</p>';
     return;
   }
-  bak.innerHTML = lijst.map((v,i) =>
+  const tip = (r, i) =>
     '<button class="regel-tip" data-tip="'+i+'">'+uiIcon('plus')+
-    '<span>'+e(personId ? personName(personId) + ' ' + v.tekst : v.tekst)+'</span>'+
-    '<span class="vink">'+uiIcon('check')+'</span></button>').join('');
+    '<span>'+e(personId ? personName(personId) + ' ' + r.tekst : r.tekst)+'</span>'+
+    zwaarteHtml(r.zw)+'</button>';
+  let html = '';
+  if (v.licht.length) html += '<div class="opl-sep">Makkelijk</div>' + v.licht.map((r,i) => tip(r, i)).join('');
+  if (v.zwaar.length) html += '<div class="opl-sep">Lastig</div>' + v.zwaar.map((r,i) => tip(r, v.licht.length + i)).join('');
+  bak.innerHTML = html;
   bak.querySelectorAll('[data-tip]').forEach(b => b.onclick = () => {
-    const v = lijst[+b.dataset.tip];
+    const r = lijst[+b.dataset.tip];
     snapshot();
     initContent();
     if (!S.content.clues) S.content.clues = [];
-    S.content.clues.push(newClue(personId ? 'person' : 'board', personId, v.id, v.args));
+    S.content.clues.push(newClue(personId ? 'person' : 'board', personId, r.id, r.args));
     renderUI();
   });
 }
@@ -6071,12 +6162,21 @@ function unpackAtom(v){
 
 function openAtomPicker(anchor, scope, personId, onPick){
   const ctx = { personId };
-  const maak = (id, args) => ({
-    v: packAtom(id, args),
-    l: atomText(id, args, ctx),
-    lh: atomTextHtml(id, args, ctx),
-    ok: atomTrue(id, args, personId)
-  });
+  const maak = (id, args) => {
+    const it = {
+      v: packAtom(id, args),
+      l: atomText(id, args, ctx),
+      lh: atomTextHtml(id, args, ctx),
+      ok: atomTrue(id, args, personId)
+    };
+    /* De zwaarte meet elk vakje van het bord door en wordt daarom pas
+       berekend als de regel ook echt in beeld komt: bij het zoeken lopen
+       er honderden varianten langs waarvan er maar een wordt getoond. */
+    let zw;
+    Object.defineProperty(it, 'zw', { enumerable:true,
+      get: () => (zw === undefined ? (zw = regelZwaarte(id, args, personId)) : zw) });
+    return it;
+  };
 
   const groups = atomCategories(scope).map(cat => ({
     label: cat,
