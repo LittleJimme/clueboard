@@ -1129,9 +1129,7 @@ body[data-skin="medieval"] [data-floor="gravel"]::before{background-image:url("d
 
 /* Perkamenten naambordjes. */
 /* Het naambordje in de stijl van het spel: een licht plaatje met donkere
-   letters in de eigen letter van ClueBoard, in kapitalen met wat spatiëring.
-   Dezelfde kleuren in beide standen, want het bordje moet op elke vloer
-   leesbaar blijven. */
+   letters in de eigen letter van ClueBoard, in kapitalen met wat spatiëring. */
 body.vloer-v3 .room-label span{
   background:#F6F1E6;border:1px solid rgba(38,36,25,.16);border-radius:7px;
   color:#262419;font-family:var(--font-ui);font-weight:800;font-size:.92em;
@@ -1140,6 +1138,20 @@ body.vloer-v3 .room-label span{
   backdrop-filter:none;-webkit-backdrop-filter:none;
 }
 body.vloer-v3 .room-label.floating-top span,body.vloer-v3 .room-label.floating-down span{background:#FBF7EE}
+/* 's Nachts andersom: een donker bordje met lichte letters. Overdag valt een
+   licht plaatje niet op tussen lichte vloeren, maar 's nachts is het het
+   helderste vlak op het bord en trekt het alle aandacht naar de namen -- en
+   die zijn maar een bijschrift. Het bordje valt nu in de familie van de
+   nachtvloeren (die liggen rond L29-38, dit ligt eronder) en de letters halen
+   er ruim acht keer contrast op: rustig én leesbaar. */
+html:not([data-thema="licht"]) body.vloer-v3 .room-label span{
+  background:#2A1F20;border-color:rgba(240,232,226,.18);color:#D8CCC4;
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 2px 6px rgba(0,0,0,.34);
+}
+/* Wijkt het bordje uit voor een pion, dan ligt het over een vloer in plaats
+   van in de ruimte: dan een tikje lichter, zodat het los blijft lezen. */
+html:not([data-thema="licht"]) body.vloer-v3 .room-label.floating-top span,
+html:not([data-thema="licht"]) body.vloer-v3 .room-label.floating-down span{background:#332627}
 body[data-skin="medieval"]:not(.vloer-v3) .room-label span{
   background:linear-gradient(180deg,#F7EDD4,#E9DAB4);
   border:1px solid #B4A06C;border-bottom-width:2px;border-radius:5px;
@@ -8338,7 +8350,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.139";
+const PLAYER_APP_VERSION="0.9.140";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
