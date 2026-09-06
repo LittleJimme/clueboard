@@ -18,6 +18,7 @@ WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file_
 MAPPEN = [
     os.path.join("assets", "art", "objects"),
     os.path.join("assets", "art", "overlays"),
+    os.path.join("assets", "art", "walls"),
     os.path.join("assets", "characters"),
 ]
 KWALITEIT = 88
