@@ -1409,6 +1409,16 @@
   ],
   "rooms": [
     {
+      "article": "het",
+      "floor": "stone",
+      "group": "Kasteel",
+      "id": "castle",
+      "label": "Kasteel",
+      "themes": [
+        "medieval"
+      ]
+    },
+    {
       "article": "de",
       "floor": "marble",
       "group": "Kasteel",
@@ -2157,6 +2167,16 @@
       "themes": [
         "medieval",
         "modern"
+      ]
+    },
+    {
+      "article": "de",
+      "floor": "water",
+      "group": "Buiten",
+      "id": "moat",
+      "label": "Gracht",
+      "themes": [
+        "medieval"
       ]
     },
     {
