@@ -491,7 +491,14 @@ body.kijkstand::after{display:none}
 /* Het meetlatje voor de ruimtenamen hangt aan de body en moet blijven staan:
    op display:none meet het nul en past elke naam ineens op één regel. */
 body.kijkstand > *:not(#app):not(#labelMeter){display:none!important}
-body.kijkstand #app{background:none;display:block;height:auto}
+/* Het spelscherm is een telefoonscherm: #app is op 560 gezet en knipt af wat
+   daarbuiten valt. In de kijkstand is er geen scherm, alleen een bord, en dat
+   mag elke maat hebben -- anders werden de buitenste kolommen weggeknipt en
+   mat de kijkstand een lucht die er niet was. */
+body.kijkstand #app{background:none;display:block;height:auto;
+  max-width:none;width:auto;margin:0;overflow:visible}
+body.kijkstand #pane-board,body.kijkstand #boardViewport,
+body.kijkstand #screen-game{max-width:none;width:auto;min-width:0}
 body.kijkstand .screen:not(#screen-game){display:none!important}
 body.kijkstand #screen-game{display:block;height:auto;padding:0;background:none;animation:none}
 body.kijkstand #screen-game > *:not(#pane-board){display:none!important}
@@ -8350,7 +8357,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.140";
+const PLAYER_APP_VERSION="0.9.141";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -8462,21 +8469,57 @@ function kijkLucht(){
   const op=v=>Math.ceil(Math.max(0,v))+1;   /* een pixel speling tegen afronden */
   return {l:op(l),t:op(t),r:op(r),b:op(b)};
 }
+/* Wachten tot de tekeningen er zijn. Meteen na renderBoard staan de plaatjes
+   er nog niet, en juist die steken buiten het bord uit: een boom, de arm van
+   een katapult. Meten op dat moment levert een lucht van nul en dus een bord
+   dat later alsnog wordt afgesneden. Met een dak op de wachttijd, want een
+   plaatje dat nooit komt mag het antwoord niet ophouden. */
+function kijkBeeldenKlaar(){
+  const beelden=Array.prototype.slice.call($("#gridWrap").querySelectorAll("img"))
+    .filter(function(i){ return !i.complete; });
+  if(!beelden.length) return Promise.resolve();
+  return new Promise(function(klaar){
+    let open=beelden.length, gedaan=false;
+    const af=function(){ if(!--open && !gedaan){ gedaan=true; klaar(); } };
+    beelden.forEach(function(i){
+      i.addEventListener("load",af,{once:true});
+      i.addEventListener("error",af,{once:true});
+    });
+    setTimeout(function(){ if(!gedaan){ gedaan=true; klaar(); } },1500);
+  });
+}
 function startKijkstand(){
   document.body.classList.add("kijkstand");
   document.documentElement.classList.add("kijkstand");
   document.body.classList.remove("laden");
   const antwoord=(bron,bericht)=>{ try{ (bron||window.parent).postMessage(bericht,"*"); }catch(e){} };
+  /* Eén tekening tegelijk. Het wachten op de plaatjes maakt het tekenen
+     asynchroon, en de builder stuurt bij elke penseelstreek een nieuwe
+     opdracht: zonder rij lopen twee tekeningen door elkaar heen en hoort het
+     antwoord dat de builder gebruikt bij een bord dat er al niet meer is.
+     Alleen de laatste opdracht telt; wat daartussen zit is toch achterhaald. */
+  let bezig=false, laatste=null;
+  const pomp=async()=>{
+    if(bezig||!laatste) return;
+    bezig=true;
+    const opdracht=laatste; laatste=null;
+    try{ await teken(opdracht.d,opdracht.bron); }
+    finally{ bezig=false; if(laatste) pomp(); }
+  };
   window.addEventListener("message",ev=>{
     const d=ev.data;
     if(!d||d.type!=="clueboard:bord") return;
+    laatste={d:d,bron:ev.source};
+    pomp();
+  });
+  const teken=async(d,bron)=>{
     try{
       /* Geen volledige keuring: een bord in aanbouw heeft nog geen personen en
          geen aanwijzingen, en dat hoeft ook niet -- er wordt alleen getekend.
          Wat de tekenaar wél verwacht vullen we aan. */
       const lvl=d.level;
-      if(!lvl||!lvl.puzzle||!lvl.puzzle.tiles){ antwoord(ev.source,{type:"clueboard:bordfout",fout:"geen bord"}); return; }
-      if(!lvl.puzzle.rooms||!lvl.puzzle.rooms.length){ antwoord(ev.source,{type:"clueboard:bordfout",fout:"nog geen ruimtes"}); return; }
+      if(!lvl||!lvl.puzzle||!lvl.puzzle.tiles){ antwoord(bron,{type:"clueboard:bordfout",fout:"geen bord"}); return; }
+      if(!lvl.puzzle.rooms||!lvl.puzzle.rooms.length){ antwoord(bron,{type:"clueboard:bordfout",fout:"nog geen ruimtes"}); return; }
       lvl.puzzle.people=lvl.puzzle.people||{};
       if(!Array.isArray(lvl.puzzle.people.placements)) lvl.puzzle.people.placements=[];
       lvl.clues=lvl.clues||[];
@@ -8488,13 +8531,15 @@ function startKijkstand(){
       const vak=$("#boardStage");
       vak.style.padding="0";
       renderBoard();
-      /* Eerst tekenen zonder marge, dan meten hoeveel er uitsteekt, dan pas de
-         marge zetten: anders meet je je eigen opvulling mee. */
+      /* Eerst tekenen zonder marge, dan wachten tot de tekeningen er zijn, dan
+         meten hoeveel er uitsteekt, en pas daarna de marge zetten: anders meet
+         je je eigen opvulling mee, of een bord zonder zijn bomen. */
+      await kijkBeeldenKlaar();
       const lucht=kijkLucht();
       vak.style.padding=lucht.t+"px "+lucht.r+"px "+lucht.b+"px "+lucht.l+"px";
       const wrap=$("#gridWrap"), r=wrap.getBoundingClientRect();
       const stage=vak.getBoundingClientRect();
-      antwoord(ev.source,{type:"clueboard:bordklaar",
+      antwoord(bron,{type:"clueboard:bordklaar",
         breedte:Math.ceil(stage.width), hoogte:Math.ceil(stage.height),
         bordBreedte:Math.round(r.width), bordHoogte:Math.round(r.height),
         bordLinks:Math.round(r.left-stage.left), bordBoven:Math.round(r.top-stage.top),
@@ -8504,9 +8549,9 @@ function startKijkstand(){
         kolommen:M.bounds.cols, rijen:M.bounds.rows,
         minKolom:M.bounds.minC, minRij:M.bounds.minR});
     }catch(err){
-      antwoord(ev.source,{type:"clueboard:bordfout",fout:String(err&&err.message||err)});
+      antwoord(bron,{type:"clueboard:bordfout",fout:String(err&&err.message||err)});
     }
-  });
+  };
   antwoord(null,{type:"clueboard:kijkklaar"});
 }
 
