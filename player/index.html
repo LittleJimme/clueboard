@@ -3954,8 +3954,13 @@ function zetThemaKleur(){
   nieuw.name="theme-color"; nieuw.id="themeColorMeta"; nieuw.content=kleur;
   oud.parentNode.replaceChild(nieuw,oud);
 }
+/* Wie een nachtplaat heeft, moet bij het omzetten van de stand ook echt
+   omgezet worden. Dat ging op de klasse .prod, en die draagt alleen de
+   1x1-lichting: een bed of tafel van twee vakken hield na het wisselen zijn
+   nachttekening in de dagstand. Nu op data-slug, dat elke tekening met een
+   eigen dag- en nachtplaat draagt -- ook wat er later bijkomt. */
 function zetObjectThema(){
-  $$('#grid .objart.prod[data-slug], #hoogArt .objart.prod[data-slug]').forEach(el=>{
+  $$('#grid .objart[data-slug], #hoogArt .objart[data-slug]').forEach(el=>{
     const img=el.querySelector("img"); if(!img) return;
     zetBron(img,objectProdCandidates(el.dataset.slug));
   });
@@ -8255,7 +8260,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.135";
+const PLAYER_APP_VERSION="0.9.136";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
