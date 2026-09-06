@@ -4298,6 +4298,7 @@ function zoekOplossingen(opt){
      universeel zijn staat hier met naam; alles wat er niet in staat wacht
      op het volle bord. */
   const UNIVERSEEL = new Set(['alone-in-room','only-one-on-kind','closest-to-kind',
+                              'most-neighbours-of-kind',
                               'above-all-role','below-all-role','role-all-different-rooms']);
   const vroeg = r => !opt.geenSnoei && !r.clue.locked && r.clue.kind !== 'room-access'
     && (r.clue.terms || []).length > 0
@@ -6852,6 +6853,14 @@ function personNextToKind(q, kind){
   if (!t) return false;
   return objectsOfKind(kind).some(o => objTiles(o).some(x => adj(t, x)));
 }
+/* Hoeveel objecten van deze soort grenzen aan de tegel van deze persoon.
+   Telt objecten, niet tegels: een boom van twee tegels naast je telt als
+   één boom, niet als twee. */
+function neighbourCountOfKind(q, kind){
+  const t = pos(q);
+  if (!t) return 0;
+  return objectsOfKind(kind).filter(o => objTiles(o).some(x => adj(t, x))).length;
+}
 function emptyRooms(){ return S.rooms.map((_,i) => i).filter(i => roomTiles(i).length && !roomPeople(i).length); }
 function emptyColumns(){
   const out = [];
@@ -7288,6 +7297,17 @@ const ATOMS = {
                         const d=q=>Math.min.apply(null,os.map(o=>objDist(pos(q),o)));
                         const mine=d(p), all=Object.keys(S.people).map(d);
                         return mine===Math.min.apply(null,all) && all.filter(x=>x===mine).length===1; } },
+  /* Niet de afstand tot de dichtstbijzijnde, maar hoeveel er in totaal naast
+     je staan: bij drie bomen op een rij naast je scoort dat hoger dan bij
+     de meeste anderen die er hoogstens een hebben. Net als bij closest-to-kind
+     moet dat aantal uniek zijn, anders is er geen "de meeste" aan te wijzen. */
+  'most-neighbours-of-kind':{ scope:'person', cat:'Objecten', text:'bevond zich naast de meeste {objectKindPl}',
+                      slots:{objectKindPl:'objectKindPl'}, test:(p,a)=>{
+                        const os=objectsOfKind(a.objectKindPl); if(!os.length) return false;
+                        const n=q=>neighbourCountOfKind(q,a.objectKindPl);
+                        const mine=n(p); if(!mine) return false;
+                        const all=Object.keys(S.people).map(n);
+                        return mine===Math.max.apply(null,all) && all.filter(x=>x===mine).length===1; } },
 
   /* Personen */
   /* "samen met" kan van alles betekenen; de regel rekent op dezelfde ruimte,
@@ -7503,6 +7523,7 @@ const ATOM_SHORT = {
   'next-to-kind':'naast {objectKind}', 'next-to-object':'naast {object}',
   'same-row-as-kind':'op dezelfde rij als {objectKind}', 'same-col-as-kind':'in dezelfde kolom als {objectKind}',
   'only-one-on-kind':'de enige {vz} {objectKind}', 'closest-to-kind':'het dichtst bij {objectKind}',
+  'most-neighbours-of-kind':'naast de meeste {objectKindPl}',
   'with-person':'in hetzelfde gebied als {person}', 'with-role':'in hetzelfde gebied als {role}',
   'direction-of':'{compass} {person}', 'diagonal-of':'schuin naast {person}',
   'exact-offset':'precies {step} {axis} {updown} {person}', 'has-role':'{role}',
