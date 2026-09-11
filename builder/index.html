@@ -1379,6 +1379,18 @@ textarea.inp{min-height:58px;resize:vertical}
   -webkit-mask-size:100% 100%,100% calc(var(--top) * var(--s) + var(--d)/2);mask-size:100% 100%,100% calc(var(--top) * var(--s) + var(--d)/2);
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 .uiterlijk-portret.medaillon .beeld .ch{width:calc(550 * var(--s));height:calc(550 * var(--s));left:calc(var(--d)/2 - var(--midx) * var(--s));top:0}
+/* TIJDELIJK: schuifjes om het medaillon af te stellen. Gaat weg zodra de
+   maten vastliggen; de uitkomst wordt dan als vaste getallen in de regel
+   hierboven gezet. */
+.medaillon-proef{position:fixed;left:14px;bottom:14px;z-index:140;width:262px;
+  background:var(--panel);border:1.5px solid var(--edge);border-radius:12px;padding:10px 12px;
+  box-shadow:0 10px 30px rgba(21,26,51,.18);display:flex;flex-direction:column;gap:7px;font:700 11.5px var(--ui);color:var(--ink)}
+.medaillon-proef b{font-size:12px;display:flex;justify-content:space-between;align-items:center}
+.medaillon-proef label{display:grid;grid-template-columns:96px 1fr 34px;align-items:center;gap:6px;color:var(--muted)}
+.medaillon-proef input[type=range]{width:100%;margin:0}
+.medaillon-proef label span{text-align:right;font-family:var(--mono);color:var(--ink)}
+.medaillon-proef code{font:600 10.5px var(--mono);color:var(--muted);background:var(--tint);padding:5px 7px;border-radius:7px;user-select:all}
+.medaillon-proef button{font:700 11px var(--ui);padding:3px 8px;border-radius:7px;border:1.5px solid var(--edge);background:var(--panel);cursor:pointer}
 /* Edele en ridder staan hier zoals in de player: op de banier of het schild,
    geknipt door het binnenvlak van de vorm. Zelfde maten als daar. */
 .uiterlijk-portret[data-standing]{width:206px;height:206px;border-radius:0;border:0;background:none;box-shadow:none;overflow:visible}
@@ -1965,7 +1977,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v31</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v32</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -10380,6 +10392,39 @@ window.addEventListener('resize', () => { if (spelbordAan) spelbordBijwerken(); 
   window.addEventListener('resize', beoordeel);
   window.addEventListener('orientationchange', () => setTimeout(beoordeel, 250));
   beoordeel();
+})();
+</script>
+<!-- TIJDELIJK: schuifjes om het medaillon in het blok Uiterlijk af te stellen.
+     De uitkomst (de regel in het vakje) gaat als vaste getallen de CSS in en
+     dan verdwijnt dit paneel weer. -->
+<div id="medaillonProef" class="medaillon-proef">
+  <b>Medaillon afstellen <button type="button" id="mpReset">Standaard</button></b>
+  <label>Grootte cirkel <input type="range" id="mpGrootte" min="220" max="540" step="5"><span></span></label>
+  <label>Hoogte (midden) <input type="range" id="mpHoogte" min="220" max="560" step="5"><span></span></label>
+  <label>Op het scherm <input type="range" id="mpDoorsnee" min="110" max="260" step="2"><span></span></label>
+  <code id="mpUit"></code>
+</div>
+<script>
+(function(){
+  /* Grootte en hoogte in doekpixels (550-doek), zoals --top/--bodem in de
+     CSS; de doorsnee in schermpixels. Onthouden op dit toestel, zodat de
+     stand blijft staan bij een volgende keer openen. */
+  const SLEUTEL='clueboard:medaillonProef';
+  const standaard={ grootte:400, hoogte:400, d:176 };
+  let st=Object.assign({}, standaard);
+  try{ Object.assign(st, JSON.parse(localStorage.getItem(SLEUTEL)||'{}')); }catch(e){}
+  const stijl=document.createElement('style'); document.head.appendChild(stijl);
+  const el={ grootte:document.getElementById('mpGrootte'), hoogte:document.getElementById('mpHoogte'), d:document.getElementById('mpDoorsnee'), uit:document.getElementById('mpUit') };
+  function teken(){
+    const top=Math.round(st.hoogte-st.grootte/2), bodem=Math.round(st.hoogte+st.grootte/2);
+    stijl.textContent='.uiterlijk-portret.medaillon{--top:'+top+';--bodem:'+bodem+';--d:'+st.d+'px}';
+    ['grootte','hoogte','d'].forEach(k=>{ el[k].value=st[k]; el[k].nextElementSibling.textContent=st[k]; });
+    el.uit.textContent='--top:'+top+'; --bodem:'+bodem+'; --d:'+st.d+'px';
+    try{ localStorage.setItem(SLEUTEL, JSON.stringify(st)); }catch(e){}
+  }
+  ['grootte','hoogte','d'].forEach(k=>el[k].addEventListener('input',()=>{ st[k]=+el[k].value; teken(); }));
+  document.getElementById('mpReset').addEventListener('click',()=>{ st=Object.assign({}, standaard); teken(); });
+  teken();
 })();
 </script>
 </body>
