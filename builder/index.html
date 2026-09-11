@@ -220,6 +220,22 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .opl-blader button:disabled{opacity:.35;cursor:default}
 .opl-blader .opl-tel{font:700 12.5px var(--ui);color:var(--muted);min-width:86px;text-align:center}
 .opl-zet{width:100%;margin-top:10px}
+/* Onder het bord: regels die het aantal oplossingen verkleinen. Het effect
+   staat voorop ("4 → 2"), dan de zin, dan de zwaarte. Een sluiter krijgt
+   een knopje dat het niveau uitrekent dat het level dan zou krijgen. */
+.opl-rechts{max-width:420px}
+.opl-tips{margin-top:4px}
+.opl-tips .regel-tip{font-size:13.5px;padding:9px 11px;gap:9px;margin-bottom:6px;line-height:1.35}
+.opl-tips .regel-tip svg{flex:0 0 auto}
+.opl-effect{flex:0 0 auto;font:800 11.5px var(--mono);letter-spacing:.02em;white-space:nowrap;
+  color:var(--accent);background:var(--accent-dim);padding:3px 7px;border-radius:8px}
+.opl-effect.dicht{color:#2E7D4F;background:#E3F3E8}
+.opl-niveau{flex:0 0 auto;font:700 11px var(--ui);padding:3px 8px;border-radius:8px;cursor:pointer;
+  border:1.5px solid var(--edge);background:var(--panel);color:var(--muted)}
+.opl-niveau:hover{border-color:var(--accent);color:var(--accent)}
+.opl-niveau.klaar{border-color:transparent;background:var(--accent-dim);color:var(--accent);cursor:default}
+.opl-tips .opl-bezig{margin:6px 0}
+.opl-tips .hint{margin:6px 0;font-size:12.5px;color:var(--muted)}
 .dialog.opl-venster > .opl-kop,
 .dialog.opl-venster > .row{flex:0 0 auto}
 /* Naam en verhaal van het level, achter het potlood in de titelbalk. */
@@ -1923,7 +1939,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v24</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v25</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -3876,12 +3892,25 @@ function validate(){
 }
 
 /* Is het slachtoffer daadwerkelijk alleen met de dader? De vaste regel van het
-   slachtoffer beweert dat, dus dat moet op het bord ook kloppen. */
+   slachtoffer beweert dat, dus dat moet op het bord ook kloppen. Dit is het
+   oordeel over de plaatsing van de bouwer, met de aangewezen dader erbij. */
 function victimAloneWithCulprit(){
   if (!S.victim || !S.culprit || !S.people[S.victim] || !S.people[S.culprit]) return false;
   const room = S.tiles[S.people[S.victim]].room;
   const here = Object.keys(S.people).filter(q => S.tiles[S.people[q]].room === room);
   return here.length === 2 && here.indexOf(S.culprit) !== -1;
+}
+/* Dezelfde regel zoals de speler hem leest: het slachtoffer is alleen met
+   precies één ander, en wie dat is, dát is de dader. De speler weet niet wie
+   de bouwer heeft aangewezen, dus de teller en de graadmeter mogen daar ook
+   niet op leunen: met de dader erbij vonden ze minder oplossingen dan de
+   speler, en "uniek" was dan geen uniek. */
+function victimAloneWithOne(){
+  if (!S.victim || !S.people[S.victim]) return false;
+  const room = S.tiles[S.people[S.victim]].room;
+  let anderen = 0;
+  for (const q in S.people) if (q !== S.victim && S.tiles[S.people[q]].room === room) anderen++;
+  return anderen === 1;
 }
 
 /* Eén lijst met alle controlepunten. Groen op alle punten betekent klaar. */
@@ -3989,7 +4018,10 @@ function doeOplossingCheck(){
          de zoeker met wat meer lucht gewoon uitkomt. Alleen hier verhoogd:
          bepaalGraad() en doExport() gebruiken dezelfde zoeker en moeten juist
          snel blijven. */
-      try { r = zoekOplossingen({ ms: ZOEK_BUDGET_MS }); }
+      /* Meer oplossingen bewaren dan de twaalf van de zoeker: het effect van
+         een voorstel wordt op de bewaarde oplossingen afgelezen, en dat is
+         alleen exact als ze er allemaal zijn. */
+      try { r = zoekOplossingen({ ms: ZOEK_BUDGET_MS, tonen: VERKLEIN_BEWAAR }); }
       catch (err){ toast('Het zoeken liep vast: ' + err.message, 'bad'); }
       LAATSTE_CHECK = r ? r.status : '';
       const oplossingen = (r && r.oplossingen) || [];
@@ -4005,6 +4037,7 @@ function doeOplossingCheck(){
             '<button id="oplVolgende" title="Volgende oplossing">▸</button>'+
           '</div>'+
           '<button class="btn ghost opl-zet" id="oplZet">'+uiIcon('pawn')+' Zet deze op het bord</button>'+
+          (r.status === 'meer' ? '<div class="opl-sep">Regels die het aantal verkleinen</div><div class="opl-tips" id="oplTips"></div>' : '')+
           '</div></div>'
         : oplossingHtml(r);
       /* Sluitend level: dan hoort de moeilijkheid er meteen bij — compact,
@@ -4056,6 +4089,14 @@ function doeOplossingCheck(){
           sluit();
         };
         teken();
+        /* De voorstellen pas na het tekenen: het aflezen kost een tel, en het
+           venster moet eerst staan. Een voorstel aanklikken voegt de regel toe
+           en rekent meteen opnieuw, zodat je het aantal ziet zakken. */
+        const tips = body.querySelector('#oplTips');
+        if (tips){
+          tips.innerHTML = '<p class="opl-bezig">Voorstellen aflezen\u2026</p>';
+          setTimeout(() => tekenVerkleiners(r, tips, reken), 20);
+        }
       }
       body.querySelectorAll('[data-solve-person]').forEach(b => b.onclick = () => {
         selectEntity({ type:'person', id:b.dataset.solvePerson });
@@ -4074,6 +4115,136 @@ function doeOplossingCheck(){
      kost meer tijd dan het tellen van de oplossingen, en je wilt dat niet bij
      elke blik op dit venster. */
   reken();
+}
+
+/* ── Regels die het aantal oplossingen verkleinen ─────────
+   Een level dichtdraaien gaat het mooist stap voor stap: niet in één klap met
+   "stond in kolom 3", maar met regels die er twee van de vier afhalen en de
+   speler iets te redeneren geven. Daarom staan hier eerst de regels die het
+   aantal verlagen maar boven één houden, en apart daaronder wat het level in
+   één keer sluit.
+
+   Het effect wordt afgelezen aan de bewaarde oplossingen: een regel die op
+   het huidige bord waar is, blijft waar in een deel van de alternatieven, en
+   dat deel is het nieuwe aantal. Geen zoeker meer per voorstel dus -- alleen
+   de regel nakijken op elke bewaarde oplossing. Dat is exact zolang alle
+   oplossingen bewaard zijn (VERKLEIN_BEWAAR); daarboven is het een schatting
+   over de eerste, en staat dat erbij. */
+const VERKLEIN_BEWAAR = 60;
+function verkleinKandidaten(r){
+  const opl = r.oplossingen || [];
+  const personen = Object.keys(S.people).sort((a,b) => +a.slice(1) - +b.slice(1));
+  /* Wie op de meeste plekken voorkomt staat het minst vast; die eerst. */
+  const plekken = p => new Set(opl.map(o => o[p])).size;
+  const volg = personen.filter(p => p !== S.victim).sort((a,b) => plekken(b) - plekken(a));
+  const bestaand = new Set();
+  (S.content.clues || []).forEach(c => (c.terms || []).forEach(t => (t.any || []).forEach(a =>
+    bestaand.add((c.personId || '') + '|' + a.atom + '|' + JSON.stringify(a.args || {})))));
+  const uit = [];
+  const voeg = (scope, personId) => {
+    const ctx = { personId };
+    atomScopeList(scope).filter(id => atomBruikbaar(id, ctx)).forEach(id => {
+      /* Alle invullingen die nu kloppen, niet alleen de eerste: "op dezelfde
+         rij als een vaas" en "... als een standbeeld" snoeien heel anders. */
+      const varianten = Object.keys(ATOMS[id].slots || {}).length ? atomVariants(id, ctx, 120) : [defaultArgs(id, ctx)];
+      varianten.forEach(args => {
+        if (!atomTrue(id, args, personId)) return;
+        const sleutel = (personId || '') + '|' + id + '|' + JSON.stringify(args);
+        if (bestaand.has(sleutel)) return;
+        bestaand.add(sleutel);
+        const na = opl.filter(o => metBord(o, () => atomTrue(id, args, personId))).length;
+        if (!na || na >= opl.length) return;           /* haalt niets weg */
+        uit.push({ scope, personId, id, args, cat: ATOMS[id].cat, na });
+      });
+    });
+  };
+  volg.forEach(p => voeg('person', p));
+  voeg('board', null);
+  return uit;
+}
+/* Een handvol met spreiding: niet vier keer dezelfde persoon of dezelfde
+   soort regel. Plekregels ("in kolom 3") achteraan, want die zeggen het
+   meest en laten het minst te redeneren. */
+function kiesVerkleiners(lijst, n, perPersoon, perCat){
+  const uit = [], pers = {}, cats = {};
+  for (const v of lijst){
+    if (uit.length >= n) break;
+    const pk = v.personId || 'bord';
+    if ((pers[pk] || 0) >= perPersoon || (cats[v.cat] || 0) >= perCat) continue;
+    pers[pk] = (pers[pk] || 0) + 1; cats[v.cat] = (cats[v.cat] || 0) + 1;
+    uit.push(v);
+  }
+  return uit;
+}
+function tekenVerkleiners(r, bak, opnieuw){
+  const opl = r.oplossingen || [];
+  const alles = verkleinKandidaten(r);
+  alles.forEach(v => { const z = regelZwaarteInfo(v.id, v.args, v.personId); v.zw = z.zw; v.reden = z.reden; });
+  const plek = v => v.cat === 'Plek op het bord' ? 1 : 0;
+  /* Verkleinen: het kleinste overgebleven aantal eerst, maar nooit één; bij
+     gelijk aantal de lichtste regel eerst, plekregels achteraan. */
+  const verkleiners = kiesVerkleiners(
+    alles.filter(v => v.na > 1).sort((a,b) => a.na - b.na || plek(a) - plek(b) || a.zw - b.zw || Math.random() - .5),
+    5, 2, 2);
+  /* Sluiters: liever een zware dan een plekregel. */
+  const sluiters = kiesVerkleiners(
+    alles.filter(v => v.na === 1).sort((a,b) => plek(a) - plek(b) || b.zw - a.zw || Math.random() - .5),
+    3, 1, 1);
+  const schatting = r.aantal > opl.length;
+  const zin = v => v.personId ? personName(v.personId) + ' ' + atomText(v.id, v.args, { personId:v.personId })
+                              : atomText(v.id, v.args, {});
+  const tip = (v, i) =>
+    '<button class="regel-tip" data-tip="'+i+'" title="'+e(ZWAARTE_WOORD[v.zw]+(v.reden ? ': '+v.reden : ''))+'">'+
+      '<span class="opl-effect'+(v.na === 1 ? ' dicht' : '')+'">'+(schatting ? '\u2248 ' : '')+opl.length+' \u2192 '+v.na+'</span>'+
+      '<span>'+e(zin(v))+'</span>'+zwaarteHtml(v.zw, v.reden)+
+      (v.na === 1 ? '<button class="opl-niveau" data-niveau="'+i+'" title="Welk niveau krijgt het level met deze regel?">niveau?</button>' : '')+
+    '</button>';
+  const lijst = verkleiners.concat(sluiters);
+  let html = '';
+  if (!lijst.length){
+    html = '<p class="hint">Geen losse regel die nu klopt haalt hier iets af. Kijk in de tabel wie niet vastligt en schrijf voor die persoon een regel.</p>';
+  } else {
+    if (schatting) html += '<p class="hint">Meer dan '+opl.length+' oplossingen; het effect is afgelezen aan de eerste '+opl.length+'.</p>';
+    if (verkleiners.length) html += verkleiners.map((v,i) => tip(v, i)).join('');
+    else html += '<p class="hint">Alles wat nu klopt sluit het level in \u00e9\u00e9n keer; een tussenstap is er niet.</p>';
+    if (sluiters.length) html += '<div class="opl-sep">Sluit het level</div>' + sluiters.map((v,i) => tip(v, verkleiners.length + i)).join('');
+  }
+  bak.innerHTML = html;
+  /* Even proefdraaien met de regel erbij: eerst tellen, dan graderen. De
+     regel gaat er daarna weer uit; pas een klik op het voorstel houdt hem. */
+  const metRegel = (v, fn) => {
+    initContent();
+    const nieuw = newClue(v.scope, v.personId, v.id, v.args);
+    S.content.clues.push(nieuw);
+    try { return fn(); }
+    finally { const i = S.content.clues.indexOf(nieuw); if (i !== -1) S.content.clues.splice(i, 1); }
+  };
+  bak.querySelectorAll('[data-niveau]').forEach(b => b.onclick = ev => {
+    ev.stopPropagation();
+    if (b.classList.contains('klaar')) return;
+    const v = lijst[+b.dataset.niveau];
+    b.textContent = 'rekenen\u2026';
+    setTimeout(() => {
+      const g = metRegel(v, () => {
+        const r2 = zoekOplossingen({ ms: 4000 });
+        return r2.status === 'uniek' ? bepaalGraad(r2, 15000) : null;
+      });
+      b.classList.add('klaar');
+      b.textContent = g && g.graad ? 'niveau '+g.graad+'/5' : 'niet uniek';
+      if (g && g.graad) b.title = GRAAD_UITLEG[g.graad] || '';
+    }, 20);
+  });
+  bak.querySelectorAll('[data-tip]').forEach(b => b.onclick = () => {
+    const v = lijst[+b.dataset.tip];
+    snapshot();
+    initContent();
+    if (!S.content.clues) S.content.clues = [];
+    const nieuw = newClue(v.scope, v.personId, v.id, v.args);
+    S.content.clues.push(nieuw);
+    renderUI();
+    toast('Regel toegevoegd: ' + zin(v), 'good');
+    opnieuw();
+  });
 }
 
 /* Bouwstenen van de graadweergave. */
@@ -4434,16 +4605,17 @@ function zoekOplossingen(opt){
   /* Per diepte alle universele regels die vanaf daar meelopen. */
   const vroegTot = []; let lopend = [];
   vroegVanaf.forEach((lijst, i) => { lopend = lopend.concat(lijst); vroegTot[i] = lopend; });
-  /* De slachtofferregel op een half bord: iemand anders dan de dader bij het
-     slachtoffer in de ruimte, of de dader ergens anders, en het is al mis. */
+  /* De slachtofferregel op een half bord, zoals de speler hem leest: staat
+     er al een tweede ander bij het slachtoffer in het gebied, dan is het mis.
+     Wie de dader is telt hier niet mee -- de speler weet dat niet. */
   const slachtofferOk = () => {
-    const v = S.victim, c = S.culprit;
+    const v = S.victim;
     if (opt.geenSnoei || !v || !S.people[v]) return true;
     const room = S.tiles[S.people[v]].room;
+    let anderen = 0;
     for (const q in S.people){
-      if (q !== v && q !== c && S.tiles[S.people[q]].room === room) return false;
+      if (q !== v && S.tiles[S.people[q]].room === room && ++anderen > 1) return false;
     }
-    if (c && S.people[c] && S.tiles[S.people[c]].room !== room) return false;
     return true;
   };
   const kloptNa = i => {
@@ -4457,7 +4629,7 @@ function zoekOplossingen(opt){
       /* De vaste regel van het slachtoffer staat als tekst vast maar wordt
          niet door clueTrue nagerekend; voor de speler is het wél een
          aanwijzing, dus hij telt hier mee. */
-      if (!victimAloneWithCulprit()) return false;
+      if (!victimAloneWithOne()) return false;
     }
     return true;
   };
@@ -4613,7 +4785,7 @@ function staatKlopt(st){
       const beoordeelbaar = r.iedereen ? compleet : r.nodig.every(q => geplaatst.has(q));
       if (beoordeelbaar && !clueTrue(r.clue)) return false;
     }
-    if (compleet && !victimAloneWithCulprit()) return false;
+    if (compleet && !victimAloneWithOne()) return false;
     return true;
   });
 }
@@ -4917,8 +5089,8 @@ function sportAanname(st){
 /* ── De graad zelf ───────────────────────────────────
    Probeer het met steeds zwaarder gereedschap; de eerste sport waarmee het
    helemaal uitkomt bepaalt de graad. */
-function bepaalGraad(bekend){
-  GRAAD_DEADLINE = performance.now() + GRAAD_BUDGET_MS;
+function bepaalGraad(bekend, ms){
+  GRAAD_DEADLINE = performance.now() + (ms || GRAAD_BUDGET_MS);
   /* De oplossingscontrole is net gedaan? Dan niet nog eens zoeken. */
   const controle = (bekend && bekend.status) ? bekend : zoekOplossingen({ ms: GRAAD_BUDGET_MS });
   if (controle.status === 'onbepaald')
