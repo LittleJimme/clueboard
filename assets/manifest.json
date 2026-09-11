@@ -2721,13 +2721,13 @@
   ],
   "clothing": [
     { "id": "round-neck-tunic", "label": "Tuniek met ronde hals", "vast": false },
-    { "id": "split-neck-tunic", "label": "Tuniek met split", "vast": false },
-    { "id": "lace-up-tunic", "label": "Rijgtuniek", "vast": false },
-    { "id": "high-collar-doublet", "label": "Wambuis met hoge kraag", "vast": false },
-    { "id": "quilted-gambeson", "label": "Gambeson", "vast": false },
-    { "id": "leather-jerkin", "label": "Leren jerkin", "vast": false },
-    { "id": "hooded-mantle", "label": "Mantel met kap", "vast": false },
-    { "id": "fur-collar-mantle", "label": "Mantel met bontkraag", "vast": false }
+    { "id": "split-neck-tunic", "label": "Tuniek met split", "vast": true },
+    { "id": "lace-up-tunic", "label": "Rijgtuniek", "vast": true },
+    { "id": "high-collar-doublet", "label": "Wambuis met hoge kraag", "vast": true },
+    { "id": "quilted-gambeson", "label": "Gambeson", "vast": true },
+    { "id": "leather-jerkin", "label": "Leren jerkin", "vast": true },
+    { "id": "hooded-mantle", "label": "Mantel met kap", "vast": true },
+    { "id": "fur-collar-mantle", "label": "Mantel met bontkraag", "vast": true }
   ],
   "hairColors": [
     {

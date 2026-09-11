@@ -14,7 +14,8 @@ de speler niets te schuiven.
   Beards/<id>.png             -> baard/<id>.png
   Clothing/NN-<id>.png        -> kleding/<id>.png          (kleurt mee)
   Clothing/NN-<id>-vast.png   -> kleding/<id>-vast.png     (kleurt niet mee:
-                                 gespen, bont, leer, onderhemd; ligt erop)
+                                 gespen, bont, leer, onderhemd; ligt erop;
+                                 "NN-<id> copy.png" uit Photoshop telt ook)
 
 De kruisogen (ogen.png) zijn ooit uit Overlays gekomen; die worden hier
 alleen van 512 naar 550 gezet. Het oude shirt vervalt: de kleding neemt het
@@ -90,9 +91,9 @@ def main():
     kledingmap = os.path.join(PAK, "Clothing")
     vast = {}
     for f in sorted(os.listdir(kledingmap)):
-        m = re.match(r"\d+-(.+?)(-vast)?\.png$", f)
+        m = re.match(r"\d+-(.+?)(-vast| copy)?\.png$", f)
         if not m: continue
-        naam = m.group(1) + (m.group(2) or "")
+        naam = m.group(1) + ("-vast" if m.group(2) else "")
         schrijf(op_doek(Image.open(os.path.join(kledingmap, f))), os.path.join(DOEL, "kleding", naam + ".png"))
         if m.group(2): vast[m.group(1)] = True
         regels.append("kleding/" + naam)
