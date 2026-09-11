@@ -1388,7 +1388,7 @@ textarea.inp{min-height:58px;resize:vertical}
    De vormen (schijf, banier, schild) blijven staan waar ze staan. --zak is in
    doekpixels, --krimp een factor op het doek van 550. */
 .portret-podium{position:relative;flex:0 0 auto;--s:calc(180px / 370);--X0:21;
-  --krimp:0.96;--zak:24;--kruin:82;--marge:6;
+  --krimp:0.96;--zak:24;--kruin:82;--marge:18;
   --K:calc(var(--kruin) * var(--krimp) + var(--zak) - var(--marge));
   width:calc(506 * var(--s));height:calc((var(--Y1) - var(--Y0)) * var(--s))}
 /* De bovenkant van het vak volgt de kruin van dít personage (--kruin uit de
@@ -1412,7 +1412,7 @@ textarea.inp{min-height:58px;resize:vertical}
   left:calc((var(--midx) - (var(--bodem) - var(--top)) / 2 - var(--X0)) * var(--s));
   top:calc(-1 * var(--Y0) * var(--s))}
 .uiterlijk-portret.medaillon .schijf{position:absolute;left:0;top:calc(var(--top) * var(--s));width:var(--d);height:var(--d);box-sizing:border-box;
-  border-radius:50%;border:3px solid var(--pc,var(--edge));background:var(--ch-tint,#F3E9DA);box-shadow:0 3px 10px rgba(21,26,51,.2)}
+  border-radius:50%;border:4px solid var(--pc,var(--edge));background:var(--ch-tint,#F3E9DA);box-shadow:0 3px 10px rgba(21,26,51,.2)}
 .uiterlijk-portret.medaillon .beeld{position:absolute;inset:0;
   -webkit-mask-image:radial-gradient(circle calc(var(--d)/2 - 3px) at 50% calc(var(--top) * var(--s) + var(--d)/2),#000 calc(100% - 1px),transparent 100%),linear-gradient(#000,#000);
   mask-image:radial-gradient(circle calc(var(--d)/2 - 3px) at 50% calc(var(--top) * var(--s) + var(--d)/2),#000 calc(100% - 1px),transparent 100%),linear-gradient(#000,#000);
@@ -1437,7 +1437,7 @@ textarea.inp{min-height:58px;resize:vertical}
    schikt. Ter herinnering, uit het masker gemeten: banier binnenvlak y
    10,5%-89,5% van het vierkant, schild 15,0%-86,1%. */
 .uiterlijk-portret[data-standing="noble"]{--w:112.5;--x:-6;--y:14.1;--knip:61.5}
-.uiterlijk-portret[data-standing="knight"]{--w:109.9;--x:-4.2;--y:11.5;--knip:62}
+.uiterlijk-portret[data-standing="knight"]{--w:109.9;--x:-4.2;--y:13.2;--knip:62}
 .portret-podium > [data-standing]{--C:calc(550 * var(--s) * 100 / var(--w));
   width:var(--C);height:var(--C);
   left:calc(-1 * var(--X0) * var(--s) - var(--x) / 100 * var(--C));
@@ -2060,7 +2060,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v38</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v39</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">

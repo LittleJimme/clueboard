@@ -133,12 +133,20 @@ def main():
     # De kleding eerst: de hoofdlaag heeft de zomen nodig.
     kledingmap = os.path.join(PAK, "Clothing")
     vast, basis = {}, {}
+    rang = {}
     for f in sorted(os.listdir(kledingmap)):
-        m = re.match(r"\d+-(.+?)(-vast| copy)?\.png$", f)
+        m = re.match(r"\d+-(.+?)(-vast| copy(?: NIEUW)?)?\.png$", f)
         if not m: continue
-        dy = SCHUIF.get(m.group(1), 0)
-        if m.group(2): vast[m.group(1)] = verschuif(op_doek(Image.open(os.path.join(kledingmap, f))), dy)
-        else: basis[m.group(1)] = verschuif(op_doek(Image.open(os.path.join(kledingmap, f))), dy)
+        naam = m.group(1)
+        im = verschuif(op_doek(Image.open(os.path.join(kledingmap, f))), SCHUIF.get(naam, 0))
+        if not m.group(2):
+            basis[naam] = im
+            continue
+        # "07-hooded-mantle copy NIEUW.png" is de nieuwere vaste laag van
+        # hetzelfde stuk en gaat voor de oude " copy".
+        r = 2 if "NIEUW" in m.group(2) else 1
+        if r >= rang.get(naam, 0):
+            vast[naam], rang[naam] = im, r
     bank = json.loads(io.open(MANIFEST, encoding="utf-8").read())
     vrouw = set(k["id"] for k in bank.get("clothing", []) if k.get("gender") == "female")
 
