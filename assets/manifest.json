@@ -2516,7 +2516,7 @@
       "name": "warning"
     }
   ],
-  "version": 38,
+  "version": 40,
   "floorArt": {
     "note": "Vroeger het aantal geschilderde vloeren per soort in art/backgrounds/<thema>/; die vloeren staan nu buiten de repo (Design Department/60 Repo Sources/backgrounds) en de speler tekent de vloer uit CSS. Het getal doet niets meer. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.",
     "variants": {
@@ -2737,7 +2737,10 @@
     { "id": "quilted-gambeson", "label": "Gambeson", "vast": true },
     { "id": "leather-jerkin", "label": "Leren jerkin", "vast": true },
     { "id": "hooded-mantle", "label": "Mantel met kap", "vast": true },
-    { "id": "fur-collar-mantle", "label": "Mantel met bontkraag", "vast": true }
+    { "id": "fur-collar-mantle", "label": "Mantel met bontkraag", "vast": true },
+    { "id": "square-neck-kirtle", "label": "Jurk met vierkante hals", "vast": true, "gender": "female" },
+    { "id": "lace-front-bodice-blouse", "label": "Rijglijfje met blouse", "vast": true, "gender": "female" },
+    { "id": "noble-surcoat-mantle-gown", "label": "Japon met schoudermantel", "vast": true, "gender": "female" }
   ],
   "hairColors": [
     {
@@ -2756,9 +2759,19 @@
       "hex": "#7A4E2D"
     },
     {
+      "id": "light-brown",
+      "label": "Lichtbruin",
+      "hex": "#A2764A"
+    },
+    {
       "id": "auburn",
       "label": "Kastanje",
       "hex": "#9B4A2C"
+    },
+    {
+      "id": "ginger",
+      "label": "Rossig",
+      "hex": "#C2682B"
     },
     {
       "id": "dark-blond",
@@ -2766,12 +2779,27 @@
       "hex": "#B48A4A"
     },
     {
+      "id": "light-blond",
+      "label": "Lichtblond",
+      "hex": "#D9BC83"
+    },
+    {
+      "id": "iron-grey",
+      "label": "Staalgrijs",
+      "hex": "#77797D"
+    },
+    {
       "id": "silver",
       "label": "Zilvergrijs",
       "hex": "#A7A9AC"
+    },
+    {
+      "id": "white",
+      "label": "Wit",
+      "hex": "#DAD6D0"
     }
   ],
-  "characterNote": "Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ via assets/tools/import_personages.py. Doek 550 bij 550 sinds 2026-09-11: het oude doek van 512 met een rand van 19 px rondom, zelfde schaal; alles ligt 1:1 op elkaar, niets schuift. Van achter naar voor: hoofd, kleding, kleding-vast (alleen als clothing[].vast true is: gespen, bont, leer, onderhemd -- kleurt niet mee), haar, gezichtsbeharing (beards), en alleen bij het slachtoffer de kruisogen. Kleding en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). content.people[id].clothing is een id uit clothing; ontbreekt hij, dan kiezen speler en bouwer dezelfde vaste keuze uit de naam. hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. Een baard (content.people[id].beard, ids uit beards; none of ontbrekend = geen) ligt over het haar heen en kleurt altijd mee met de haarkleur; alleen voor mannen. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden. skinTones: vier huidtinten; light is de tint van de tekening zelf (base) en wordt niet omgekleurd; avoidHair zegt welke haarkleuren en avoidStyles welke kapsels de bouwer bij die tint niet vanzelf toekent; zelf kiezen mag altijd alles.",
+  "characterNote": "Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ via assets/tools/import_personages.py. Doek 550 bij 550 sinds 2026-09-11: het oude doek van 512 met een rand van 19 px rondom, zelfde schaal; alles ligt 1:1 op elkaar, niets schuift. Van achter naar voor: hoofd, kleding, kleding-vast (alleen als clothing[].vast true is: gespen, bont, leer, onderhemd -- kleurt niet mee), bij het slachtoffer de kruisogen, haar, gezichtsbeharing (beards) -- haar valt dus over de kruisogen heen. Kleding en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). content.people[id].clothing is een id uit clothing (gender female is alleen voor vrouwen, de rest mag iedereen dragen); ontbreekt hij, dan kiezen speler en bouwer dezelfde vaste keuze uit naam en geslacht. hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. Een baard (content.people[id].beard, ids uit beards; none of ontbrekend = geen) ligt over het haar heen en kleurt altijd mee met de haarkleur; alleen voor mannen. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden. skinTones: zes huidtinten van licht naar donker; light is de tint van de tekening zelf (base) en wordt niet omgekleurd -- een onbekende tint valt daarop terug, niet op de eerste uit de lijst; avoidHair zegt welke haarkleuren en avoidStyles welke kapsels de bouwer bij die tint niet vanzelf toekent; zelf kiezen mag altijd alles. De hoofdlaag is sinds 2026-09-12 Hoofd 3: hetzelfde hoofd met schouders erbij, zodat een lage halslijn huid laat zien; het importscript haalt de romp weg onder de zoom van de kortste mannenkleding, anders kijk je daar tegen een blote romp aan.",
   "skinTones": [
     {
       "id": "light",
@@ -2785,11 +2813,32 @@
       "hex": "#E2AC7C"
     },
     {
+      "id": "olive",
+      "label": "Olijf",
+      "hex": "#CE9A6A"
+    },
+    {
       "id": "tan",
       "label": "Bruin",
       "hex": "#B77A50",
       "avoidHair": [
         "dark-blond",
+        "light-blond",
+        "ginger",
+        "auburn"
+      ],
+      "avoidStyles": [
+        "ponytail"
+      ]
+    },
+    {
+      "id": "bronze",
+      "label": "Brons",
+      "hex": "#97623C",
+      "avoidHair": [
+        "dark-blond",
+        "light-blond",
+        "ginger",
         "auburn"
       ],
       "avoidStyles": [
@@ -2802,6 +2851,8 @@
       "hex": "#6E4530",
       "avoidHair": [
         "dark-blond",
+        "light-blond",
+        "ginger",
         "auburn"
       ],
       "avoidStyles": [
