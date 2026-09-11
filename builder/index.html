@@ -1362,21 +1362,23 @@ textarea.inp{min-height:58px;resize:vertical}
 .uiterlijk{display:flex;flex-direction:column;align-items:center;gap:10px;margin:4px 0 4px}
 .uiterlijk-portret{position:relative;width:176px;height:176px;border-radius:50%;overflow:hidden;
   border:3px solid var(--pc,var(--edge));background:var(--ch-tint,#F3E9DA);box-shadow:0 3px 10px rgba(21,26,51,.2)}
-/* Het medaillon: een schijf van oorhoogte tot net boven de laagste kledingpixel
-   (doek 550: y 200 tot 540, midden x 274), met het personage erop. Onder de
-   evenaar knipt de schijf hem af; erboven loopt hij gewoon door, zodat het
-   hoofd door de rand van de schijf heen steekt. De maten volgen uit die twee
-   doekpunten: 550/340 = 161,8% breed, en het doek begint 200/340 van de
-   schijf boven de schijf. --d is de doorsnee; al het andere rekent daarmee. */
-.uiterlijk-portret.medaillon{--d:176px;width:var(--d);height:calc(var(--d)*1.55);border-radius:0;border:0;background:none;box-shadow:none;overflow:visible}
-.uiterlijk-portret.medaillon .schijf{position:absolute;left:0;top:calc(var(--d)*.55);width:var(--d);height:var(--d);box-sizing:border-box;
+/* Het medaillon: een schijf met het personage erop. Onder de evenaar knipt
+   de schijf hem af; erboven loopt hij gewoon door, zodat het hoofd door de
+   rand van de schijf heen steekt. De schijf staat op het doek van 550 van
+   --top (net boven oorhoogte, de oren zitten op y 207) tot --bodem (ruim
+   onder de schouders, zodat de kleding in beeld is; de laagste kledingpixel
+   ligt op y 547), midden op x --midx. --d is de doorsnee op het scherm; --s
+   is dan de schaal van doekpixel naar schermpixel en al het andere volgt. */
+.uiterlijk-portret.medaillon{--d:176px;--top:200;--bodem:600;--midx:274;--s:calc(var(--d) / (var(--bodem) - var(--top)));
+  width:var(--d);height:calc(var(--top) * var(--s) + var(--d));border-radius:0;border:0;background:none;box-shadow:none;overflow:visible}
+.uiterlijk-portret.medaillon .schijf{position:absolute;left:0;top:calc(var(--top) * var(--s));width:var(--d);height:var(--d);box-sizing:border-box;
   border-radius:50%;border:3px solid var(--pc,var(--edge));background:var(--ch-tint,#F3E9DA);box-shadow:0 3px 10px rgba(21,26,51,.2)}
 .uiterlijk-portret.medaillon .beeld{position:absolute;inset:0;
-  -webkit-mask-image:radial-gradient(circle calc(var(--d)/2 - 3px) at 50% calc(var(--d)*1.05),#000 calc(100% - 1px),transparent 100%),linear-gradient(#000,#000);
-  mask-image:radial-gradient(circle calc(var(--d)/2 - 3px) at 50% calc(var(--d)*1.05),#000 calc(100% - 1px),transparent 100%),linear-gradient(#000,#000);
-  -webkit-mask-size:100% 100%,100% calc(var(--d)*1.05);mask-size:100% 100%,100% calc(var(--d)*1.05);
+  -webkit-mask-image:radial-gradient(circle calc(var(--d)/2 - 3px) at 50% calc(var(--top) * var(--s) + var(--d)/2),#000 calc(100% - 1px),transparent 100%),linear-gradient(#000,#000);
+  mask-image:radial-gradient(circle calc(var(--d)/2 - 3px) at 50% calc(var(--top) * var(--s) + var(--d)/2),#000 calc(100% - 1px),transparent 100%),linear-gradient(#000,#000);
+  -webkit-mask-size:100% 100%,100% calc(var(--top) * var(--s) + var(--d)/2);mask-size:100% 100%,100% calc(var(--top) * var(--s) + var(--d)/2);
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
-.uiterlijk-portret.medaillon .beeld .ch{width:161.8%;height:161.8%;left:-30.6%;top:calc(var(--d)*-.038)}
+.uiterlijk-portret.medaillon .beeld .ch{width:calc(550 * var(--s));height:calc(550 * var(--s));left:calc(var(--d)/2 - var(--midx) * var(--s));top:0}
 /* Edele en ridder staan hier zoals in de player: op de banier of het schild,
    geknipt door het binnenvlak van de vorm. Zelfde maten als daar. */
 .uiterlijk-portret[data-standing]{width:206px;height:206px;border-radius:0;border:0;background:none;box-shadow:none;overflow:visible}
@@ -1963,7 +1965,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v30</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v31</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
