@@ -1365,11 +1365,11 @@ textarea.inp{min-height:58px;resize:vertical}
 /* Het medaillon: een schijf met het personage erop. Onder de evenaar knipt
    de schijf hem af; erboven loopt hij gewoon door, zodat het hoofd door de
    rand van de schijf heen steekt. De schijf staat op het doek van 550 van
-   --top (net boven oorhoogte, de oren zitten op y 207) tot --bodem (ruim
-   onder de schouders, zodat de kleding in beeld is; de laagste kledingpixel
-   ligt op y 547), midden op x --midx. --d is de doorsnee op het scherm; --s
+   --top tot --bodem (afgesteld met schuifjes op 2026-09-11: 135 tot 505,
+   het voorhoofd tot net onder de schouders; de oren zitten op y 207, de
+   laagste kledingpixel op y 547), midden op x --midx. --d is de doorsnee op het scherm; --s
    is dan de schaal van doekpixel naar schermpixel en al het andere volgt. */
-.uiterlijk-portret.medaillon{--d:176px;--top:200;--bodem:600;--midx:274;--s:calc(var(--d) / (var(--bodem) - var(--top)));
+.uiterlijk-portret.medaillon{--d:180px;--top:135;--bodem:505;--midx:274;--s:calc(var(--d) / (var(--bodem) - var(--top)));
   width:var(--d);height:calc(var(--top) * var(--s) + var(--d));border-radius:0;border:0;background:none;box-shadow:none;overflow:visible}
 .uiterlijk-portret.medaillon .schijf{position:absolute;left:0;top:calc(var(--top) * var(--s));width:var(--d);height:var(--d);box-sizing:border-box;
   border-radius:50%;border:3px solid var(--pc,var(--edge));background:var(--ch-tint,#F3E9DA);box-shadow:0 3px 10px rgba(21,26,51,.2)}
@@ -1379,27 +1379,31 @@ textarea.inp{min-height:58px;resize:vertical}
   -webkit-mask-size:100% 100%,100% calc(var(--top) * var(--s) + var(--d)/2);mask-size:100% 100%,100% calc(var(--top) * var(--s) + var(--d)/2);
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 .uiterlijk-portret.medaillon .beeld .ch{width:calc(550 * var(--s));height:calc(550 * var(--s));left:calc(var(--d)/2 - var(--midx) * var(--s));top:0}
-/* TIJDELIJK: schuifjes om het medaillon af te stellen. Gaat weg zodra de
-   maten vastliggen; de uitkomst wordt dan als vaste getallen in de regel
-   hierboven gezet. */
-.medaillon-proef{position:fixed;left:14px;bottom:14px;z-index:140;width:262px;
-  background:var(--panel);border:1.5px solid var(--edge);border-radius:12px;padding:10px 12px;
-  box-shadow:0 10px 30px rgba(21,26,51,.18);display:flex;flex-direction:column;gap:7px;font:700 11.5px var(--ui);color:var(--ink)}
-.medaillon-proef b{font-size:12px;display:flex;justify-content:space-between;align-items:center}
-.medaillon-proef label{display:grid;grid-template-columns:96px 1fr 34px;align-items:center;gap:6px;color:var(--muted)}
-.medaillon-proef input[type=range]{width:100%;margin:0}
-.medaillon-proef label span{text-align:right;font-family:var(--mono);color:var(--ink)}
-.medaillon-proef code{font:600 10.5px var(--mono);color:var(--muted);background:var(--tint);padding:5px 7px;border-radius:7px;user-select:all}
-.medaillon-proef button{font:700 11px var(--ui);padding:3px 8px;border-radius:7px;border:1.5px solid var(--edge);background:var(--panel);cursor:pointer}
-/* Edele en ridder staan hier zoals in de player: op de banier of het schild,
-   geknipt door het binnenvlak van de vorm. Zelfde maten als daar. */
-.uiterlijk-portret[data-standing]{width:206px;height:206px;border-radius:0;border:0;background:none;box-shadow:none;overflow:visible}
+/* Edele en ridder: op de banier of het schild, met hetzelfde principe als het
+   medaillon. Het binnenvlak van de vorm beslaat dezelfde band van het doek
+   als de schijf (y 135 tot 505) en het personage staat er even groot op;
+   onder het midden van het vlak knipt de vorm hem af, erboven loopt hij door
+   en steekt het hoofd boven de vorm uit. De maten volgen uit het masker:
+   banier binnenvlak y 10,5%-89,5% van het vierkant (schaal 0,2135 %/px),
+   schild 15,0%-86,1% (0,1922 %/px); het vak van het gezicht loopt 30% boven
+   het vierkant door om het hoofd ruimte te geven, en het masker staat
+   onderin dat vak. */
+.uiterlijk-portret[data-standing]{border-radius:0;border:0;background:none;box-shadow:none;overflow:visible}
+.uiterlijk-portret[data-standing="noble"]{width:228px;height:228px}
+.uiterlijk-portret[data-standing="knight"]{width:253px;height:253px}
 .uiterlijk-portret .rc{position:absolute;inset:0;width:100%;height:100%;display:block}
-.uiterlijk-portret .gezicht{position:absolute;inset:0;overflow:hidden;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%}
-.uiterlijk-portret[data-standing="noble"] .gezicht{-webkit-mask-image:url("../assets/characters/ui/masker-banier.webp");mask-image:url("../assets/characters/ui/masker-banier.webp")}
-.uiterlijk-portret[data-standing="knight"] .gezicht{-webkit-mask-image:url("../assets/characters/ui/masker-schild.webp");mask-image:url("../assets/characters/ui/masker-schild.webp")}
-.uiterlijk-portret[data-standing="noble"] .gezicht .ch{width:98.8%;height:98.8%;left:.6%;top:3%}
-.uiterlijk-portret[data-standing="knight"] .gezicht .ch{width:96.7%;height:96.7%;left:1.7%;top:7.7%}
+.uiterlijk-portret .gezicht{position:absolute;left:0;right:0;bottom:0;top:-30%;overflow:visible;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:0 100%,0 0;mask-position:0 100%,0 0}
+.uiterlijk-portret[data-standing="noble"] .gezicht{
+  -webkit-mask-image:url("../assets/characters/ui/masker-banier.webp"),linear-gradient(#000,#000);mask-image:url("../assets/characters/ui/masker-banier.webp"),linear-gradient(#000,#000);
+  -webkit-mask-size:100% auto,100% 61.5%;mask-size:100% auto,100% 61.5%}
+.uiterlijk-portret[data-standing="knight"] .gezicht{
+  -webkit-mask-image:url("../assets/characters/ui/masker-schild.webp"),linear-gradient(#000,#000);mask-image:url("../assets/characters/ui/masker-schild.webp"),linear-gradient(#000,#000);
+  -webkit-mask-size:100% auto,100% 62%;mask-size:100% auto,100% 62%}
+.uiterlijk-portret[data-standing] .gezicht .ch{height:auto;bottom:auto;aspect-ratio:1/1}
+.uiterlijk-portret[data-standing="noble"] .gezicht .ch{width:117.4%;left:-8.4%;top:9%}
+.uiterlijk-portret[data-standing="knight"] .gezicht .ch{width:105.7%;left:-2.7%;top:14.7%}
 .ch{position:absolute;inset:0;display:block}
 .ch .ch-l{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:contain;pointer-events:none}
 /* Eén rij per kenmerk: pijl, waarde, pijl. Een volgend kenmerk krijgt
@@ -1977,7 +1981,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v32</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v33</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -10392,39 +10396,6 @@ window.addEventListener('resize', () => { if (spelbordAan) spelbordBijwerken(); 
   window.addEventListener('resize', beoordeel);
   window.addEventListener('orientationchange', () => setTimeout(beoordeel, 250));
   beoordeel();
-})();
-</script>
-<!-- TIJDELIJK: schuifjes om het medaillon in het blok Uiterlijk af te stellen.
-     De uitkomst (de regel in het vakje) gaat als vaste getallen de CSS in en
-     dan verdwijnt dit paneel weer. -->
-<div id="medaillonProef" class="medaillon-proef">
-  <b>Medaillon afstellen <button type="button" id="mpReset">Standaard</button></b>
-  <label>Grootte cirkel <input type="range" id="mpGrootte" min="220" max="540" step="5"><span></span></label>
-  <label>Hoogte (midden) <input type="range" id="mpHoogte" min="220" max="560" step="5"><span></span></label>
-  <label>Op het scherm <input type="range" id="mpDoorsnee" min="110" max="260" step="2"><span></span></label>
-  <code id="mpUit"></code>
-</div>
-<script>
-(function(){
-  /* Grootte en hoogte in doekpixels (550-doek), zoals --top/--bodem in de
-     CSS; de doorsnee in schermpixels. Onthouden op dit toestel, zodat de
-     stand blijft staan bij een volgende keer openen. */
-  const SLEUTEL='clueboard:medaillonProef';
-  const standaard={ grootte:400, hoogte:400, d:176 };
-  let st=Object.assign({}, standaard);
-  try{ Object.assign(st, JSON.parse(localStorage.getItem(SLEUTEL)||'{}')); }catch(e){}
-  const stijl=document.createElement('style'); document.head.appendChild(stijl);
-  const el={ grootte:document.getElementById('mpGrootte'), hoogte:document.getElementById('mpHoogte'), d:document.getElementById('mpDoorsnee'), uit:document.getElementById('mpUit') };
-  function teken(){
-    const top=Math.round(st.hoogte-st.grootte/2), bodem=Math.round(st.hoogte+st.grootte/2);
-    stijl.textContent='.uiterlijk-portret.medaillon{--top:'+top+';--bodem:'+bodem+';--d:'+st.d+'px}';
-    ['grootte','hoogte','d'].forEach(k=>{ el[k].value=st[k]; el[k].nextElementSibling.textContent=st[k]; });
-    el.uit.textContent='--top:'+top+'; --bodem:'+bodem+'; --d:'+st.d+'px';
-    try{ localStorage.setItem(SLEUTEL, JSON.stringify(st)); }catch(e){}
-  }
-  ['grootte','hoogte','d'].forEach(k=>el[k].addEventListener('input',()=>{ st[k]=+el[k].value; teken(); }));
-  document.getElementById('mpReset').addEventListener('click',()=>{ st=Object.assign({}, standaard); teken(); });
-  teken();
 })();
 </script>
 </body>
