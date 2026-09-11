@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-11T18:02:33",
+  "gemaakt": "2026-09-11T19:32:57",
   "levels": [
     {
       "file": "100v4 Test Level.json",
@@ -24,7 +24,7 @@
       }
     },
     {
-      "file": "10v5 Het Jachthuis.json",
+      "file": "10v6 Het Jachthuis.json",
       "content": {
         "title": "Het Jachthuis"
       },
@@ -38,14 +38,14 @@
       },
       "levelId": "lvl-mtpz6a4i6yb8m",
       "levelNumber": 10,
-      "levelVersion": 5,
+      "levelVersion": 6,
       "difficulty": {
         "graad": 4,
         "uitleg": "Veel aannemen en verwerpen, en de volgorde luistert."
       }
     },
     {
-      "file": "11v2 De Oude Gevangenis.json",
+      "file": "11v3 De Oude Gevangenis.json",
       "content": {
         "title": "De Oude Gevangenis"
       },
@@ -59,14 +59,14 @@
       },
       "levelId": "lvl-mtqb7483p9zcl",
       "levelNumber": 11,
-      "levelVersion": 2,
+      "levelVersion": 3,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
-      "file": "12v1 Het Hofbal.json",
+      "file": "12v2 Het Hofbal.json",
       "content": {
         "title": "Het Hofbal"
       },
@@ -80,7 +80,7 @@
       },
       "levelId": "lvl-mtx558868zpbr",
       "levelNumber": 12,
-      "levelVersion": 1,
+      "levelVersion": 2,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
@@ -192,7 +192,7 @@
       }
     },
     {
-      "file": "6v4 Het Fort.json",
+      "file": "6v6 Het Fort.json",
       "content": {
         "title": "Het Fort"
       },
@@ -206,28 +206,7 @@
       },
       "levelId": "lvl-mtkjs6belwg3k",
       "levelNumber": 6,
-      "levelVersion": 4,
-      "difficulty": {
-        "graad": 3,
-        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
-      }
-    },
-    {
-      "file": "6v5 Het Fort.json",
-      "content": {
-        "title": "Het Fort"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 9,
-          "rows": 9
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtkjs6belwg3k",
-      "levelNumber": 6,
-      "levelVersion": 5,
+      "levelVersion": 6,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."

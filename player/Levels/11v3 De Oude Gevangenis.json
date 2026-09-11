@@ -1,11 +1,11 @@
 {
   "levelNumber": 11,
-  "levelVersion": 2,
+  "levelVersion": 3,
   "levelId": "lvl-mtqb7483p9zcl",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-06T22:13:40.877Z",
+  "exportedAt": "2026-09-11T17:32:02.366Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -1295,6 +1295,22 @@
             ]
           }
         ]
+      },
+      {
+        "id": "clue-12",
+        "scope": "person",
+        "personId": "p1",
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "alone-in-room",
+                "args": {}
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -1432,6 +1448,27 @@
       "generatedText": "Adelbert bevond zich boven Boudewijn en stond op dezelfde rij als een krat.",
       "storyText": null,
       "holds": true
+    },
+    {
+      "id": "clue-12",
+      "scope": "person",
+      "personId": "p1",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "alone-in-room",
+              "args": {}
+            }
+          ]
+        }
+      ],
+      "text": "Adelbert was alleen in de ruimte.",
+      "generatedText": "Adelbert was alleen in de ruimte.",
+      "storyText": null,
+      "holds": true
     }
   ],
   "difficulty": {
@@ -1469,7 +1506,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 8,
+    "ms": 6,
     "override": null
   }
 }

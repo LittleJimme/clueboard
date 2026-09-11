@@ -1,11 +1,11 @@
 {
   "levelNumber": 6,
-  "levelVersion": 5,
+  "levelVersion": 6,
   "levelId": "lvl-mtkjs6belwg3k",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-03T14:50:00.201Z",
+  "exportedAt": "2026-09-11T17:31:57.340Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -2391,6 +2391,24 @@
             ]
           }
         ]
+      },
+      {
+        "id": "clue-9",
+        "scope": "person",
+        "personId": "p2",
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "closest-to-kind",
+                "args": {
+                  "objectKind": "Barrel"
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -2603,6 +2621,29 @@
       "generatedText": "Hugo bevond zich naast een boekenkast.",
       "storyText": null,
       "holds": true
+    },
+    {
+      "id": "clue-9",
+      "scope": "person",
+      "personId": "p2",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "closest-to-kind",
+              "args": {
+                "objectKind": "Barrel"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Bertram stond het dichtst bij een vat.",
+      "generatedText": "Bertram stond het dichtst bij een vat.",
+      "storyText": null,
+      "holds": true
     }
   ],
   "difficulty": {
@@ -2656,7 +2697,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 218,
+    "ms": 97,
     "override": null
   }
 }

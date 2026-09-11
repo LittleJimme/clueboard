@@ -1,11 +1,11 @@
 {
   "levelNumber": 12,
-  "levelVersion": 1,
+  "levelVersion": 2,
   "levelId": "lvl-mtx558868zpbr",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-11T15:58:43.683Z",
+  "exportedAt": "2026-09-11T17:32:02.985Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -1507,6 +1507,7 @@
         "id": "clue-1",
         "scope": "person",
         "personId": "p7",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1537,6 +1538,7 @@
         "id": "clue-3",
         "scope": "person",
         "personId": "p6",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1566,6 +1568,7 @@
         "id": "clue-4",
         "scope": "person",
         "personId": "p5",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1584,6 +1587,7 @@
         "id": "clue-5",
         "scope": "person",
         "personId": "p4",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1609,6 +1613,7 @@
         "id": "clue-7",
         "scope": "person",
         "personId": "p3",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1627,6 +1632,7 @@
         "id": "clue-8",
         "scope": "person",
         "personId": "p2",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1636,6 +1642,24 @@
                 "args": {
                   "dir8": "north",
                   "objectKind": "Carpet"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-9",
+        "scope": "person",
+        "personId": "p3",
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "same-diagonal-as",
+                "args": {
+                  "person": "p4"
                 }
               }
             ]
@@ -1823,6 +1847,29 @@
       "generatedText": "Anselm bevond zich boven de enige die op een tapijt stond.",
       "storyText": null,
       "holds": true
+    },
+    {
+      "id": "clue-9",
+      "scope": "person",
+      "personId": "p3",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "same-diagonal-as",
+              "args": {
+                "person": "p4"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Brand bevond zich op dezelfde diagonale lijn als Coenraad.",
+      "generatedText": "Brand bevond zich op dezelfde diagonale lijn als Coenraad.",
+      "storyText": null,
+      "holds": true
     }
   ],
   "difficulty": {
@@ -1868,7 +1915,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 14,
+    "ms": 18,
     "override": null
   }
 }

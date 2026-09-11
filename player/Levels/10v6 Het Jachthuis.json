@@ -1,11 +1,11 @@
 {
   "levelNumber": 10,
-  "levelVersion": 5,
+  "levelVersion": 6,
   "levelId": "lvl-mtpz6a4i6yb8m",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-06T20:31:09.471Z",
+  "exportedAt": "2026-09-11T17:32:00.171Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -1685,6 +1685,7 @@
         "id": "clue-1",
         "scope": "person",
         "personId": "p3",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1703,6 +1704,7 @@
         "id": "clue-2",
         "scope": "person",
         "personId": "p5",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1721,6 +1723,7 @@
         "id": "clue-3",
         "scope": "person",
         "personId": "p1",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1751,6 +1754,7 @@
         "id": "clue-10",
         "scope": "person",
         "personId": "p4",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1770,6 +1774,24 @@
                 "atom": "above-all-role",
                 "args": {
                   "rolePl": "knight"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-11",
+        "scope": "person",
+        "personId": "p1",
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "closest-to-kind",
+                "args": {
+                  "objectKind": "Boar"
                 }
               }
             ]
@@ -1915,6 +1937,29 @@
       "generatedText": "Coenraad stond in dezelfde kolom als een everzwijn en bevond zich boven alle ridders.",
       "storyText": null,
       "holds": true
+    },
+    {
+      "id": "clue-11",
+      "scope": "person",
+      "personId": "p1",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "closest-to-kind",
+              "args": {
+                "objectKind": "Boar"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Alwin stond het dichtst bij een everzwijn.",
+      "generatedText": "Alwin stond het dichtst bij een everzwijn.",
+      "storyText": null,
+      "holds": true
     }
   ],
   "difficulty": {
@@ -1952,7 +1997,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 1021,
+    "ms": 369,
     "override": null
   }
 }
