@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-07T00:14:37",
+  "gemaakt": "2026-09-11T18:02:33",
   "levels": [
     {
       "file": "100v4 Test Level.json",
@@ -60,6 +60,27 @@
       "levelId": "lvl-mtqb7483p9zcl",
       "levelNumber": 11,
       "levelVersion": 2,
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "12v1 Het Hofbal.json",
+      "content": {
+        "title": "Het Hofbal"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 7,
+          "rows": 7
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtx558868zpbr",
+      "levelNumber": 12,
+      "levelVersion": 1,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
