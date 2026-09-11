@@ -2516,7 +2516,7 @@
       "name": "warning"
     }
   ],
-  "version": 36,
+  "version": 37,
   "floorArt": {
     "note": "Vroeger het aantal geschilderde vloeren per soort in art/backgrounds/<thema>/; die vloeren staan nu buiten de repo (Design Department/60 Repo Sources/backgrounds) en de speler tekent de vloer uit CSS. Het getal doet niets meer. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.",
     "variants": {
@@ -2716,7 +2716,18 @@
     { "id": "chin-goatee", "label": "Sik", "gender": "male" },
     { "id": "forked-beard", "label": "Gevorkte baard", "gender": "male" },
     { "id": "moustache-chin-beard", "label": "Snor met sik", "gender": "male" },
-    { "id": "rounded-full-beard", "label": "Volle baard", "gender": "male" }
+    { "id": "rounded-full-beard", "label": "Volle baard", "gender": "male" },
+    { "id": "moustache", "label": "Snor", "gender": "male" }
+  ],
+  "clothing": [
+    { "id": "round-neck-tunic", "label": "Tuniek met ronde hals", "vast": false },
+    { "id": "split-neck-tunic", "label": "Tuniek met split", "vast": false },
+    { "id": "lace-up-tunic", "label": "Rijgtuniek", "vast": false },
+    { "id": "high-collar-doublet", "label": "Wambuis met hoge kraag", "vast": false },
+    { "id": "quilted-gambeson", "label": "Gambeson", "vast": false },
+    { "id": "leather-jerkin", "label": "Leren jerkin", "vast": false },
+    { "id": "hooded-mantle", "label": "Mantel met kap", "vast": false },
+    { "id": "fur-collar-mantle", "label": "Mantel met bontkraag", "vast": false }
   ],
   "hairColors": [
     {
@@ -2750,7 +2761,7 @@
       "hex": "#A7A9AC"
     }
   ],
-  "characterNote": "Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ (512px, zelfde canvas). Van achter naar voor: hoofd, shirt, haar, en alleen bij het slachtoffer de kruisogen; de lagen liggen 1:1 op elkaar, niets schuift. Shirt en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. Een baard (content.people[id].beard, ids uit beards; none of ontbrekend = geen) ligt tussen shirt en haar in en kleurt altijd mee met de haarkleur; alleen voor mannen. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden. skinTones: vier huidtinten; light is de tint van de tekening zelf (base) en wordt niet omgekleurd; avoidHair zegt welke haarkleuren de bouwer bij die tint niet vanzelf toekent.",
+  "characterNote": "Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ via assets/tools/import_personages.py. Doek 550 bij 550 sinds 2026-09-11: het oude doek van 512 met een rand van 19 px rondom, zelfde schaal; alles ligt 1:1 op elkaar, niets schuift. Van achter naar voor: hoofd, kleding, kleding-vast (alleen als clothing[].vast true is: gespen, bont, leer, onderhemd -- kleurt niet mee), baard, haar, en alleen bij het slachtoffer de kruisogen. Kleding en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). content.people[id].clothing is een id uit clothing; ontbreekt hij, dan kiezen speler en bouwer dezelfde vaste keuze uit de naam. hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. Een baard (content.people[id].beard, ids uit beards; none of ontbrekend = geen) ligt tussen shirt en haar in en kleurt altijd mee met de haarkleur; alleen voor mannen. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden. skinTones: vier huidtinten; light is de tint van de tekening zelf (base) en wordt niet omgekleurd; avoidHair zegt welke haarkleuren de bouwer bij die tint niet vanzelf toekent.",
   "skinTones": [
     {
       "id": "light",
