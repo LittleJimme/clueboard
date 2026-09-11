@@ -638,16 +638,16 @@
     }
   ],
   "personColors": {
-    "A": "#C79A3A",
-    "B": "#3E8DB5",
-    "C": "#694875",
-    "D": "#2E777C",
-    "E": "#285C49",
-    "F": "#7B7A32",
-    "G": "#79A8B0",
-    "H": "#75639A",
-    "I": "#79A85A",
-    "J": "#AAA0C8",
+    "A": "#D0A24E",
+    "B": "#5B93C2",
+    "C": "#8C6FA9",
+    "D": "#D98B4A",
+    "E": "#6FA45F",
+    "F": "#4E9A9C",
+    "G": "#B0705A",
+    "H": "#7E86B8",
+    "I": "#9AA854",
+    "J": "#A8759B",
     "K": "#84562B",
     "L": "#AFC79E",
     "M": "#E07A9A",
@@ -2534,52 +2534,52 @@
   "identityColors": [
     {
       "id": "C01",
-      "hex": "#C79A3A",
+      "hex": "#D0A24E",
       "victimOnly": false
     },
     {
       "id": "C02",
-      "hex": "#3E8DB5",
+      "hex": "#5B93C2",
       "victimOnly": false
     },
     {
       "id": "C03",
-      "hex": "#694875",
+      "hex": "#8C6FA9",
       "victimOnly": false
     },
     {
       "id": "C04",
-      "hex": "#2E777C",
+      "hex": "#D98B4A",
       "victimOnly": false
     },
     {
       "id": "C05",
-      "hex": "#285C49",
+      "hex": "#6FA45F",
       "victimOnly": false
     },
     {
       "id": "C06",
-      "hex": "#7B7A32",
+      "hex": "#4E9A9C",
       "victimOnly": false
     },
     {
       "id": "C07",
-      "hex": "#79A8B0",
+      "hex": "#B0705A",
       "victimOnly": false
     },
     {
       "id": "C08",
-      "hex": "#75639A",
+      "hex": "#7E86B8",
       "victimOnly": false
     },
     {
       "id": "C09",
-      "hex": "#79A85A",
+      "hex": "#9AA854",
       "victimOnly": false
     },
     {
       "id": "C10",
-      "hex": "#AAA0C8",
+      "hex": "#A8759B",
       "victimOnly": false
     },
     {
