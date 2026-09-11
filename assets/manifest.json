@@ -2637,7 +2637,7 @@
     {
       "id": "bald",
       "label": "Kaal",
-      "gender": "any"
+      "gender": "male"
     },
     {
       "id": "buzz-cut",
@@ -2674,10 +2674,16 @@
       "label": "Kort golvend",
       "gender": "male"
     },
+    { "id": "shaggy-ear-length", "label": "Warrig tot de oren", "gender": "male" },
+    { "id": "centre-curtains", "label": "Gordijntjes", "gender": "male" },
+    { "id": "brushed-back-neck-length", "label": "Achterover tot in de nek", "gender": "male" },
+    { "id": "side-swept-collar-length", "label": "Opzij tot de kraag", "gender": "male" },
+    { "id": "masculine-hair-bun", "label": "Knotje", "gender": "male" },
+    { "id": "mature-shoulder-waves", "label": "Golvend tot de schouders", "gender": "male" },
     {
       "id": "short-curls",
       "label": "Korte krullen",
-      "gender": "any"
+      "gender": "male"
     },
     {
       "id": "bob",

@@ -11,6 +11,7 @@ de speler niets te schuiven.
 
   Base/Hoofd 2.png            -> hoofd.png
   Hair/hair-<id>.png (1233)   -> haar/<id>.png
+  Hair/NN-<id>.png (550)      -> haar/<id>.png   (de latere levering)
   Beards/<id>.png             -> baard/<id>.png
   Clothing/NN-<id>.png        -> kleding/<id>.png          (kleurt mee)
   Clothing/NN-<id>-vast.png   -> kleding/<id>-vast.png     (kleurt niet mee:
@@ -72,7 +73,7 @@ def main():
 
     haarmap = os.path.join(PAK, "Hair")
     for f in sorted(os.listdir(haarmap)):
-        m = re.match(r"hair-(.+)\.png$", f)
+        m = re.match(r"(?:hair-|\d+-)(.+)\.png$", f)
         if not m: continue
         schrijf(uit_pakket(Image.open(os.path.join(haarmap, f))), os.path.join(DOEL, "haar", m.group(1) + ".png"))
         regels.append("haar/" + m.group(1))
