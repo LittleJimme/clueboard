@@ -641,7 +641,7 @@
     "A": "#C79A3A",
     "B": "#3E8DB5",
     "C": "#694875",
-    "D": "#E07A9A",
+    "D": "#2E777C",
     "E": "#285C49",
     "F": "#7B7A32",
     "G": "#79A8B0",
@@ -650,7 +650,7 @@
     "J": "#AAA0C8",
     "K": "#84562B",
     "L": "#AFC79E",
-    "M": "#2E777C",
+    "M": "#E07A9A",
     "N": "#4D5F96",
     "O": "#A85F36",
     "P": "#8C4F86",
@@ -2516,7 +2516,7 @@
       "name": "warning"
     }
   ],
-  "version": 40,
+  "version": 41,
   "floorArt": {
     "note": "Vroeger het aantal geschilderde vloeren per soort in art/backgrounds/<thema>/; die vloeren staan nu buiten de repo (Design Department/60 Repo Sources/backgrounds) en de speler tekent de vloer uit CSS. Het getal doet niets meer. De eerste heet floor-<id>.png, de volgende floor-<id>-2.png enzovoort. De player geeft twee kamers met dezelfde vloer een andere variant, zodat ze uit elkaar te houden blijven. De tegels dragen hun eigen rand en reliëf, zodat elk vakje als tegel leest.",
     "variants": {
@@ -2549,7 +2549,7 @@
     },
     {
       "id": "C04",
-      "hex": "#E07A9A",
+      "hex": "#2E777C",
       "victimOnly": false
     },
     {
@@ -2599,7 +2599,7 @@
     },
     {
       "id": "C14",
-      "hex": "#2E777C",
+      "hex": "#E07A9A",
       "victimOnly": false
     },
     {
@@ -2738,6 +2738,9 @@
     { "id": "leather-jerkin", "label": "Leren jerkin", "vast": true },
     { "id": "hooded-mantle", "label": "Mantel met kap", "vast": true },
     { "id": "fur-collar-mantle", "label": "Mantel met bontkraag", "vast": true },
+    { "id": "artisan-apron-tunic", "label": "Tuniek met werkschort", "vast": true },
+    { "id": "merchant-side-button-coat", "label": "Koopmansjas", "vast": true },
+    { "id": "scholar-folded-collar-robe", "label": "Geleerdengewaad", "vast": true },
     { "id": "square-neck-kirtle", "label": "Jurk met vierkante hals", "vast": true, "gender": "female" },
     { "id": "lace-front-bodice-blouse", "label": "Rijglijfje met blouse", "vast": true, "gender": "female" },
     { "id": "noble-surcoat-mantle-gown", "label": "Japon met schoudermantel", "vast": true, "gender": "female" }
@@ -2799,7 +2802,7 @@
       "hex": "#DAD6D0"
     }
   ],
-  "characterNote": "Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ via assets/tools/import_personages.py. Doek 550 bij 550 sinds 2026-09-11: het oude doek van 512 met een rand van 19 px rondom, zelfde schaal; alles ligt 1:1 op elkaar, niets schuift. Van achter naar voor: hoofd, kleding, kleding-vast (alleen als clothing[].vast true is: gespen, bont, leer, onderhemd -- kleurt niet mee), bij het slachtoffer de kruisogen, haar, gezichtsbeharing (beards) -- haar valt dus over de kruisogen heen. Kleding en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). content.people[id].clothing is een id uit clothing (gender female is alleen voor vrouwen, de rest mag iedereen dragen); ontbreekt hij, dan kiezen speler en bouwer dezelfde vaste keuze uit naam en geslacht. hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. Een baard (content.people[id].beard, ids uit beards; none of ontbrekend = geen) ligt over het haar heen en kleurt altijd mee met de haarkleur; alleen voor mannen. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden. skinTones: zes huidtinten van licht naar donker; light is de tint van de tekening zelf (base) en wordt niet omgekleurd -- een onbekende tint valt daarop terug, niet op de eerste uit de lijst; avoidHair zegt welke haarkleuren en avoidStyles welke kapsels de bouwer bij die tint niet vanzelf toekent; zelf kiezen mag altijd alles. De hoofdlaag is sinds 2026-09-12 Hoofd 3: hetzelfde hoofd met schouders erbij, zodat een lage halslijn huid laat zien; het importscript haalt de romp weg onder de zoom van de kortste mannenkleding, anders kijk je daar tegen een blote romp aan.",
+  "characterNote": "Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ via assets/tools/import_personages.py. Doek 550 bij 550 sinds 2026-09-11: het oude doek van 512 met een rand van 19 px rondom, zelfde schaal; alles ligt 1:1 op elkaar, niets schuift. Van achter naar voor: hoofd, kleding, kleding-vast (alleen als clothing[].vast true is: gespen, bont, leer, onderhemd -- kleurt niet mee), bij het slachtoffer de kruisogen, haar, gezichtsbeharing (beards) -- haar valt dus over de kruisogen heen. Kleding en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). content.people[id].clothing is een id uit clothing (gender female is alleen voor vrouwen, de rest mag iedereen dragen); ontbreekt hij, dan kiezen speler en bouwer dezelfde vaste keuze uit naam en geslacht. hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. Een baard (content.people[id].beard, ids uit beards; none of ontbrekend = geen) ligt over het haar heen en kleurt altijd mee met de haarkleur; alleen voor mannen. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden. skinTones: zes huidtinten van licht naar donker; light is de tint van de tekening zelf (base) en wordt niet omgekleurd -- een onbekende tint valt daarop terug, niet op de eerste uit de lijst; avoidHair zegt welke haarkleuren en Een levering die breder is dan 550 (koopmansjas 629, geleerdengewaad 696) is op schaal groter getekend en gaat bij de import mee op breedte; wat onderaan buiten het doek valt, valt eraf. hairTops en headTop zeggen waar het haar en het hoofd op het doek beginnen, zodat een portret boven de kruin geen lucht overlaat. avoidStyles zegt welke kapsels de bouwer bij die tint niet vanzelf toekent; zelf kiezen mag altijd alles. De hoofdlaag is sinds 2026-09-12 Hoofd 5 (een retouche van Hoofd 3): hetzelfde hoofd met schouders erbij, zodat een lage halslijn huid laat zien; het importscript haalt de romp weg onder de zoom van de kortste mannenkleding, anders kijk je daar tegen een blote romp aan.",
   "skinTones": [
     {
       "id": "light",

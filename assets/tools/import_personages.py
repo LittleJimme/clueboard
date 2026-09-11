@@ -60,9 +60,18 @@ def op_doek(im):
         return n
     # Een tekening die onderaan buiten het doek loopt (een japon tot op de
     # grond, het hoofd met schouders) staat linksboven op hetzelfde doek: het
-    # overschot valt eraf.
-    if im.size[0] == DOEK and im.size[1] > DOEK:
-        return im.crop((0, 0, DOEK, DOEK))
+    # overschot valt eraf. Komt hij op een breder doek (de koopmansjas op 629,
+    # het geleerdengewaad op 696), dan is hij op schaal groter aangeleverd en
+    # gaat hij mee op breedte -- bij het gewaad valt de vaste laag (die al op
+    # 550 staat) dan precies binnen de basis, en dat is de ijking.
+    if im.size[0] > DOEK:
+        im = im.resize((DOEK, round(im.size[1] * DOEK / im.size[0])), Image.LANCZOS)
+    if im.size[0] == DOEK and im.size[1] != DOEK:
+        n = Image.new("RGBA", (DOEK, DOEK), (0, 0, 0, 0))
+        n.paste(im.crop((0, 0, DOEK, min(DOEK, im.size[1]))), (0, 0))
+        return n
+    if im.size == (DOEK, DOEK):
+        return im
     raise SystemExit("onverwachte maat %s" % (im.size,))
 
 
@@ -93,7 +102,8 @@ def hoofd_laag(basis, vrouw):
     punt van het schild en onderaan het medaillon). Wat een langere tuniek of
     een japon bedekt, bedekt hij nog steeds; de halslijnen van de damenkleding
     liggen hoger dan de zoom en blijven dus staan."""
-    naam = "Hoofd 3.png" if os.path.exists(os.path.join(PAK, "Base", "Hoofd 3.png")) else "Hoofd 2.png"
+    naam = next(n for n in ("Hoofd 5.png", "Hoofd 3.png", "Hoofd 2.png")
+                if os.path.exists(os.path.join(PAK, "Base", n)))
     im = op_doek(Image.open(os.path.join(PAK, "Base", naam)))
     zoom = {}
     for ident, kleed in basis.items():
@@ -186,8 +196,27 @@ def main():
         p = os.path.join(DOEL, oud)
         if os.path.exists(p): os.remove(p); regels.append("weg: " + oud)
 
+    # Hoe hoog het haar reikt, per kapsel, en waar de hoofdlaag zelf begint.
+    # Een portret hoeft daarmee boven de kruin geen lucht meer over te laten.
+    toppen = {}
+    for f in sorted(os.listdir(os.path.join(DOEL, "haar"))):
+        if not f.endswith(".png"): continue
+        bb = Image.open(os.path.join(DOEL, "haar", f)).convert("RGBA").getchannel("A").getbbox()
+        if bb: toppen[f[:-4]] = bb[1]
+    hoofdtop = Image.open(os.path.join(DOEL, "hoofd.png")).convert("RGBA").getchannel("A").getbbox()[1]
+
     # De vast-vlaggen in de bank: alleen waar er echt een vaste laag ligt.
     s = io.open(MANIFEST, encoding="utf-8").read()
+    blok = ('  "hairTops": {\n'
+            + ',\n'.join('    "%s": %d' % (k, v) for k, v in sorted(toppen.items()))
+            + '\n  },\n  "headTop": %d,\n' % hoofdtop)
+    if '"hairTops"' in s:
+        i = s.index('  "hairTops": {')
+        j = s.index('\n', s.index('"headTop"', i)) + 1
+        s = s[:i] + blok + s[j:]
+    else:
+        s = s.replace('  "hairColors": [', blok + '  "hairColors": [')
+    regels.append("kruinhoogten: %d kapsels, hoofd begint op y %d" % (len(toppen), hoofdtop))
     def zet(m):
         ident = m.group(1)
         return '"id": "%s"%s"vast": %s' % (ident, m.group(2), "true" if vast.get(ident) else "false")
