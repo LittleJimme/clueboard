@@ -4724,17 +4724,22 @@ function characterHtml(person,opt){
   const kleur=person.color||"#5B6672";
   const kap=persoonKapsel(person);
   const dood=(o.dood!==undefined) ? !!o.dood : !!(typeof M!=="undefined" && M && person && person.id===M.victimId);
+  /* opt.lagen: "lijf" tekent alleen hoofd en kleding, "haar" alleen het haar,
+     de gezichtsbeharing en de kruisogen. Zo kan een portret het lijf in een
+     vorm knippen en het haar er vrij overheen laten vallen: twee spans op
+     dezelfde plek, en de laagvolgorde blijft dezelfde. */
+  const lijf=!o.lagen||o.lagen==="lijf", haar=!o.lagen||o.lagen==="haar";
   return '<span class="ch" aria-hidden="true">'
-    +chLaag("hoofd.png", huidTint(kap.skinTone).base ? null : huidTint(kap.skinTone).hex)
-    +chLaag("kleding/"+kap.clothing+".png",kleur)
-    /* De vaste delen van de kleding -- gespen, bont, leer, onderhemd -- zijn
-       een eigen laag op het ingekleurde doek en krijgen geen kwast. */
-    +(kledingVast(kap.clothing) ? chLaag("kleding/"+kap.clothing+"-vast.png") : "")
-    +(kap.hairStyle==="bald" ? "" : chLaag("haar/"+kap.hairStyle+".png",haarKleurHex(kap.hairColor)))
-    /* De gezichtsbeharing ligt óver het haar: een baard valt over de slapen
-       en een snor over een lok die in het gezicht hangt. */
-    +(kap.beard==="none" ? "" : chLaag("baard/"+kap.beard+".png",haarKleurHex(kap.hairColor)))
-    +(dood ? chLaag("ogen.png") : "")
+    +(lijf ? chLaag("hoofd.png", huidTint(kap.skinTone).base ? null : huidTint(kap.skinTone).hex)
+      +chLaag("kleding/"+kap.clothing+".png",kleur)
+      /* De vaste delen van de kleding -- gespen, bont, leer, onderhemd -- zijn
+         een eigen laag op het ingekleurde doek en krijgen geen kwast. */
+      +(kledingVast(kap.clothing) ? chLaag("kleding/"+kap.clothing+"-vast.png") : "") : "")
+    +(haar ? (kap.hairStyle==="bald" ? "" : chLaag("haar/"+kap.hairStyle+".png",haarKleurHex(kap.hairColor)))
+      /* De gezichtsbeharing ligt óver het haar: een baard valt over de slapen
+         en een snor over een lok die in het gezicht hangt. */
+      +(kap.beard==="none" ? "" : chLaag("baard/"+kap.beard+".png",haarKleurHex(kap.hairColor)))
+      +(dood ? chLaag("ogen.png") : "") : "")
     +'</span>';
 }
 
@@ -8669,7 +8674,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.155";
+const PLAYER_APP_VERSION="0.9.156";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en

@@ -1358,10 +1358,22 @@ textarea.inp{min-height:58px;resize:vertical}
 .lock-badge{flex:0 0 auto;font-size:11px}
 .pawn.forbidden{filter:drop-shadow(0 0 6px rgba(220,66,58,.95))}
 .pawn.forbidden .body{stroke:var(--crimson);stroke-width:7}
-/* Uiterlijk in de inspector: een groot rond portret boven de keuzes. */
-.uiterlijk{display:flex;flex-direction:column;align-items:center;gap:10px;margin:4px 0 4px}
-.uiterlijk-portret{position:relative;width:176px;height:176px;border-radius:50%;overflow:hidden;
-  border:3px solid var(--pc,var(--edge));background:var(--ch-tint,#F3E9DA);box-shadow:0 3px 10px rgba(21,26,51,.2)}
+/* Bovenaan het detailvak van een persoon: het portret, de naam eronder in
+   het sierlettertype, en daaronder Willekeurig en Bewerken. Het hoofd van een
+   edele steekt boven de banier uit, vandaar de ruimte erboven. */
+.portret-kop{display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:22px;margin-bottom:6px}
+.portret-naam{display:block;max-width:100%;margin:2px 0 0;padding:2px 10px;border:0;border-radius:9px;background:none;cursor:pointer;
+  font:600 26px/1.15 "Fraunces",Georgia,serif;letter-spacing:-.01em;color:var(--ink);text-align:center;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.portret-naam:hover{background:var(--tint)}
+.portret-naam.vast,.portret-naam.bewerk{cursor:default}
+.portret-naam.vast:hover,.portret-naam.bewerk:hover{background:none}
+.portret-naam.bewerk{width:100%;padding:0}
+.portret-naam.bewerk .insp-naam{margin:0}
+.portret-naam.bewerk .insp-naam-in{font:600 24px/1.15 "Fraunces",Georgia,serif;text-align:center;margin:0}
+.portret-knoppen{display:flex;gap:8px;justify-content:center}
+.portret-knoppen .btn{padding:8px 13px;font-size:12.5px}
+.uiterlijk-portret{position:relative;overflow:visible}
 /* Het medaillon: een schijf met het personage erop. Onder de evenaar knipt
    de schijf hem af; erboven loopt hij gewoon door, zodat het hoofd door de
    rand van de schijf heen steekt. De schijf staat op het doek van 550 van
@@ -1370,7 +1382,7 @@ textarea.inp{min-height:58px;resize:vertical}
    laagste kledingpixel op y 547), midden op x --midx. --d is de doorsnee op het scherm; --s
    is dan de schaal van doekpixel naar schermpixel en al het andere volgt. */
 .uiterlijk-portret.medaillon{--d:180px;--top:135;--bodem:505;--midx:274;--s:calc(var(--d) / (var(--bodem) - var(--top)));
-  width:var(--d);height:calc(var(--top) * var(--s) + var(--d));border-radius:0;border:0;background:none;box-shadow:none;overflow:visible}
+  width:var(--d);height:calc(var(--top) * var(--s) + var(--d))}
 .uiterlijk-portret.medaillon .schijf{position:absolute;left:0;top:calc(var(--top) * var(--s));width:var(--d);height:var(--d);box-sizing:border-box;
   border-radius:50%;border:3px solid var(--pc,var(--edge));background:var(--ch-tint,#F3E9DA);box-shadow:0 3px 10px rgba(21,26,51,.2)}
 .uiterlijk-portret.medaillon .beeld{position:absolute;inset:0;
@@ -1379,20 +1391,22 @@ textarea.inp{min-height:58px;resize:vertical}
   -webkit-mask-size:100% 100%,100% calc(var(--top) * var(--s) + var(--d)/2);mask-size:100% 100%,100% calc(var(--top) * var(--s) + var(--d)/2);
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
 .uiterlijk-portret.medaillon .beeld .ch{width:calc(550 * var(--s));height:calc(550 * var(--s));left:calc(var(--d)/2 - var(--midx) * var(--s));top:0}
+/* Het haar valt altijd vrij over de vorm: de tweede tekening (alleen haar,
+   gezichtsbeharing en kruisogen) krijgt geen masker. Zo wordt lang haar
+   nergens afgeknipt en blijft het lijf wel netjes in de vorm. */
+.uiterlijk-portret.medaillon .beeld.haar{-webkit-mask-image:none;mask-image:none}
 /* Edele en ridder: op de banier of het schild, met hetzelfde principe als het
    medaillon. Het binnenvlak van de vorm beslaat dezelfde band van het doek
    als de schijf (y 135 tot 505) en het personage staat er even groot op;
-   alleen de onderkant van de vorm knipt hem af -- de banier vanaf waar de
-   inkeping begint (y 82,2% van het vierkant), het schild vanaf waar het
-   smaller wordt (49,8%) -- daarboven loopt hij door, ook opzij, zodat lang
-   haar niet raar wordt afgesneden en het hoofd boven de vorm uitsteekt. De
-   maten volgen uit het masker: banier binnenvlak y 10,5%-89,5% van het
-   vierkant (schaal 0,2135 %/px), schild 15,0%-86,1% (0,1922 %/px); het vak
-   van het gezicht loopt 30% boven het vierkant door om het hoofd ruimte te
-   geven, en het masker staat onderin dat vak. */
-.uiterlijk-portret[data-standing]{border-radius:0;border:0;background:none;box-shadow:none;overflow:visible}
-.uiterlijk-portret[data-standing="noble"]{width:240px;height:240px}
-.uiterlijk-portret[data-standing="knight"]{width:266px;height:266px}
+   onder de evenaar (--knip, % van het gezichtsvak) knipt de vorm het lijf
+   af, erboven loopt het door en steekt het hoofd boven de vorm uit; het haar
+   heeft geen masker en valt overal vrij overheen. De maten volgen uit het
+   masker: banier binnenvlak y 10,5%-89,5% van het vierkant (schaal 0,2135
+   %/px), schild 15,0%-86,1% (0,1922 %/px); het vak van het gezicht loopt 30%
+   boven het vierkant door om het hoofd ruimte te geven, en het masker staat
+   onderin dat vak. --w/--x/--y is de stand van het doek in dat vak (%). */
+.uiterlijk-portret[data-standing="noble"]{width:240px;height:240px;--w:117.4;--x:-8.4;--y:11;--knip:61.5}
+.uiterlijk-portret[data-standing="knight"]{width:266px;height:266px;--w:105.7;--x:-2.7;--y:16.7;--knip:62}
 /* Alleen de rand is goud of zilver (ui/banier-rand, ui/schild-rand: de plaat
    zonder binnenvlak); het binnenvlak is een vlak in de lichte tint van de
    persoon, geknipt met hetzelfde masker als het gezicht. */
@@ -1406,28 +1420,43 @@ textarea.inp{min-height:58px;resize:vertical}
   -webkit-mask-position:0 100%,0 0;mask-position:0 100%,0 0}
 .uiterlijk-portret[data-standing="noble"] .gezicht{
   -webkit-mask-image:url("../assets/characters/ui/masker-banier.webp"),linear-gradient(#000,#000);mask-image:url("../assets/characters/ui/masker-banier.webp"),linear-gradient(#000,#000);
-  -webkit-mask-size:100% auto,100% 86.3%;mask-size:100% auto,100% 86.3%}
+  -webkit-mask-size:100% auto,100% calc(var(--knip) * 1%);mask-size:100% auto,100% calc(var(--knip) * 1%)}
 .uiterlijk-portret[data-standing="knight"] .gezicht{
   -webkit-mask-image:url("../assets/characters/ui/masker-schild.webp"),linear-gradient(#000,#000);mask-image:url("../assets/characters/ui/masker-schild.webp"),linear-gradient(#000,#000);
-  -webkit-mask-size:100% auto,100% 61.4%;mask-size:100% auto,100% 61.4%}
-.uiterlijk-portret[data-standing] .gezicht .ch{height:auto;bottom:auto;aspect-ratio:1/1}
-.uiterlijk-portret[data-standing="noble"] .gezicht .ch{width:117.4%;left:-8.4%;top:9%}
-.uiterlijk-portret[data-standing="knight"] .gezicht .ch{width:105.7%;left:-2.7%;top:14.7%}
+  -webkit-mask-size:100% auto,100% calc(var(--knip) * 1%);mask-size:100% auto,100% calc(var(--knip) * 1%)}
+.uiterlijk-portret[data-standing] .gezicht.haar{-webkit-mask-image:none;mask-image:none}
+.uiterlijk-portret[data-standing] .gezicht .ch{height:auto;bottom:auto;aspect-ratio:1/1;
+  width:calc(var(--w) * 1%);left:calc(var(--x) * 1%);top:calc(var(--y) * 1%)}
 .ch{position:absolute;inset:0;display:block}
 .ch .ch-l{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:contain;pointer-events:none}
-/* Eén rij per kenmerk: pijl, waarde, pijl. Een volgend kenmerk krijgt
-   dezelfde rij eronder. */
-.uiterlijk-rij{display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
-/* Breed genoeg voor "Gezichtsbeharing" op één regel. */
-.uiterlijk-cat{min-width:96px;text-align:right;font:700 11.5px var(--ui);color:var(--faint);letter-spacing:.02em;white-space:nowrap}
+/* Het venster Uiterlijk: links de persoon groot, rechts per kenmerk een rij
+   met de categorie, pijl, waarde, pijl en daaronder een schuifje over
+   dezelfde lijst. */
+.modal-box.uit-venster{width:min(920px,94vw);display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:28px;padding:26px 30px 24px}
+.uit-links{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding-top:44px}
+.uit-links .uiterlijk-portret.medaillon{--d:320px}
+.uit-links .uiterlijk-portret[data-standing="noble"]{width:420px;height:420px}
+.uit-links .uiterlijk-portret[data-standing="knight"]{width:466px;height:466px}
+.uit-links .portret-naam{font-size:32px}
+.uit-rechts h3{margin:0 0 4px}
+.uit-rij{margin:12px 0 0}
+.uit-kop{display:flex;align-items:center;gap:8px}
+.uit-kop .uiterlijk-cat{flex:1;min-width:0;text-align:left;font-size:12px}
+.uit-kop .uiterlijk-waarde{min-width:122px}
+.uit-schuif{display:block;width:100%;margin:7px 0 0;accent-color:var(--accent);cursor:pointer}
+.uit-onder{display:flex;gap:8px;justify-content:flex-end;margin-top:24px}
+.uiterlijk-cat{font:700 11.5px var(--ui);color:var(--faint);letter-spacing:.02em;white-space:nowrap}
 .uiterlijk-pijl{width:30px;height:30px;border-radius:999px;border:1.5px solid var(--edge);background:var(--tint);
   color:var(--ink);font:700 18px/1 var(--ui);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0 0 2px}
 .uiterlijk-pijl:hover{background:var(--tint-2)}
 .uiterlijk-waarde{min-width:132px;text-align:center;font:700 12.5px var(--ui);color:var(--ink)}
-.haar-kleuren{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
-.haar-swatch{width:22px;height:22px;border-radius:50%;border:2px solid var(--edge);cursor:pointer;padding:0;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
-.haar-swatch.on{border-color:var(--accent-diep);box-shadow:0 0 0 2px var(--accent-vlak)}
+/* TIJDELIJK: de proefschuifjes voor banier en schild. */
+#vormProef{position:fixed;left:14px;bottom:14px;z-index:900;width:280px;padding:12px 14px;border-radius:12px;background:var(--panel);
+  box-shadow:0 10px 30px rgba(0,0,0,.25);font:600 11.5px var(--ui);color:var(--ink)}
+#vormProef .vp-kop{font-weight:800;margin-bottom:4px}
+#vormProef label{display:block;margin:7px 0 0}
+#vormProef input{display:block;width:100%;margin:2px 0 0}
+#vormProef .vp-uit{margin-top:8px;font:11px var(--mono);color:var(--muted);user-select:all;word-break:break-all}
 .role-row{display:flex;gap:7px;margin:10px 0 4px}
 .role-btn{
   flex:1;padding:9px 6px;border-radius:10px;background:var(--tint);border:1.5px solid var(--edge);
@@ -1990,7 +2019,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v34</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v35</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -2411,17 +2440,35 @@ function kapselStandaard(name,gender){
   const h=hashCode(String(name||"")+"|"+(gender||"x"));
   const tinten=huidTinten();
   const skinTone=tinten.length ? tinten[Math.floor(h/9973)%tinten.length].id : "light";
-  /* Wat de bank bij deze huidtint afraadt (avoidStyles, bv. een paardenstaart
-     bij een donkere huid) krijgt niemand vanzelf; zelf kiezen mag het wel. */
-  const mijd=huidTint(skinTone).avoidStyles||[];
-  const alleStijlen=haarStijlenVoor(gender);
-  const stijlen=alleStijlen.filter(st=>!mijd.includes(st.id)).length ? alleStijlen.filter(st=>!mijd.includes(st.id)) : alleStijlen;
-  const kleuren=haarKleurenVoor(skinTone);
+  const stijlen=haarStijlenVoorHuid(gender,skinTone), kleuren=haarKleurenVoor(skinTone);
   return {
     hairStyle: stijlen.length ? stijlen[h%stijlen.length].id : kapselTerugval(gender),
     hairColor: kleuren.length ? kleuren[Math.floor(h/97)%kleuren.length].id : "deep-brown",
     skinTone,
     clothing: kledingStandaard(name)
+  };
+}
+/* Wat de bank bij deze huidtint afraadt (avoidStyles, bv. een paardenstaart
+   bij een donkere huid) krijgt niemand vanzelf; zelf kiezen mag het wel. */
+function haarStijlenVoorHuid(gender,skin){
+  const mijd=huidTint(skin).avoidStyles||[], alle=haarStijlenVoor(gender);
+  const rest=alle.filter(st=>!mijd.includes(st.id));
+  return rest.length?rest:alle;
+}
+/* Een nieuw gezicht bij elke druk op de knop: echt willekeurig, met dezelfde
+   vermijdregels als de vaste toewijzing, en hier ook een kans op een baard. */
+function kapselWillekeurig(gender){
+  const kies=l=>l[Math.floor(Math.random()*l.length)];
+  const tinten=huidTinten();
+  const skinTone=tinten.length ? kies(tinten).id : "light";
+  const stijlen=haarStijlenVoorHuid(gender,skinTone), kleuren=haarKleurenVoor(skinTone);
+  const baarden=baardenVoor(gender).filter(b=>b.id!=="none"), kleding=kledingLijst();
+  return {
+    hairStyle: stijlen.length ? kies(stijlen).id : kapselTerugval(gender),
+    hairColor: kleuren.length ? kies(kleuren).id : "deep-brown",
+    skinTone,
+    beard: baarden.length && Math.random()<.5 ? kies(baarden).id : "none",
+    clothing: kleding.length ? kies(kleding).id : "round-neck-tunic"
   };
 }
 /* Wat er getekend wordt. Een level zonder deze velden (van vóór het
@@ -2529,17 +2576,22 @@ function characterHtml(person,opt){
   const kleur=person.color||"#5B6672";
   const kap=persoonKapsel(person);
   const dood=(o.dood!==undefined) ? !!o.dood : !!(typeof M!=="undefined" && M && person && person.id===M.victimId);
+  /* opt.lagen: "lijf" tekent alleen hoofd en kleding, "haar" alleen het haar,
+     de gezichtsbeharing en de kruisogen. Zo kan een portret het lijf in een
+     vorm knippen en het haar er vrij overheen laten vallen: twee spans op
+     dezelfde plek, en de laagvolgorde blijft dezelfde. */
+  const lijf=!o.lagen||o.lagen==="lijf", haar=!o.lagen||o.lagen==="haar";
   return '<span class="ch" aria-hidden="true">'
-    +chLaag("hoofd.png", huidTint(kap.skinTone).base ? null : huidTint(kap.skinTone).hex)
-    +chLaag("kleding/"+kap.clothing+".png",kleur)
-    /* De vaste delen van de kleding -- gespen, bont, leer, onderhemd -- zijn
-       een eigen laag op het ingekleurde doek en krijgen geen kwast. */
-    +(kledingVast(kap.clothing) ? chLaag("kleding/"+kap.clothing+"-vast.png") : "")
-    +(kap.hairStyle==="bald" ? "" : chLaag("haar/"+kap.hairStyle+".png",haarKleurHex(kap.hairColor)))
-    /* De gezichtsbeharing ligt óver het haar: een baard valt over de slapen
-       en een snor over een lok die in het gezicht hangt. */
-    +(kap.beard==="none" ? "" : chLaag("baard/"+kap.beard+".png",haarKleurHex(kap.hairColor)))
-    +(dood ? chLaag("ogen.png") : "")
+    +(lijf ? chLaag("hoofd.png", huidTint(kap.skinTone).base ? null : huidTint(kap.skinTone).hex)
+      +chLaag("kleding/"+kap.clothing+".png",kleur)
+      /* De vaste delen van de kleding -- gespen, bont, leer, onderhemd -- zijn
+         een eigen laag op het ingekleurde doek en krijgen geen kwast. */
+      +(kledingVast(kap.clothing) ? chLaag("kleding/"+kap.clothing+"-vast.png") : "") : "")
+    +(haar ? (kap.hairStyle==="bald" ? "" : chLaag("haar/"+kap.hairStyle+".png",haarKleurHex(kap.hairColor)))
+      /* De gezichtsbeharing ligt óver het haar: een baard valt over de slapen
+         en een snor over een lok die in het gezicht hangt. */
+      +(kap.beard==="none" ? "" : chLaag("baard/"+kap.beard+".png",haarKleurHex(kap.hairColor)))
+      +(dood ? chLaag("ogen.png") : "") : "")
     +'</span>';
 }
 
@@ -2560,6 +2612,145 @@ function autoAssignKapsels(){
     if (c.hairAuto === false && geldig) return;
     const std = kapselStandaard(c.name, c.gender);
     c.hairStyle = std.hairStyle; c.hairColor = std.hairColor; c.skinTone = std.skinTone; c.hairAuto = true;
+  });
+}
+
+/* Willekeurig: een nieuw uiterlijk voor deze persoon, passend bij geslacht en
+   huidtint. Vanaf nu zelf gekozen, dus de naam laat het met rust. */
+function willekeurigUiterlijk(p){
+  initContent();
+  const c = S.content.people[p]; if (!c) return;
+  snapshot();
+  Object.assign(c, kapselWillekeurig(c.gender));
+  c.hairAuto = false;
+}
+
+/* Het portret van een persoon zoals de speler het ziet: dorpeling op het
+   medaillon, edele op de banier, ridder op het schild. Het lijf valt in de
+   vorm (geknipt door het masker), het haar valt er vrij overheen: twee
+   tekeningen op dezelfde plek, zie characterHtml(lagen). */
+function portretHtml(p){
+  initContent();
+  const c = S.content.people[p] || {};
+  const kap = persoonKapsel(c);
+  const persoon = { name:c.name, gender:c.gender, color:personColor(p),
+                    hairStyle:kap.hairStyle, hairColor:kap.hairColor, skinTone:kap.skinTone, beard:kap.beard, clothing:kap.clothing };
+  const dood = roleOf(p) === 'victim';
+  const lijf = characterHtml(persoon, { dood, lagen:'lijf' });
+  const haar = characterHtml(persoon, { dood, lagen:'haar' });
+  const stand = personRoleOf(p);
+  const stijl = '--pc:'+e(personColor(p))+';--ch-tint:'+e(mix(personColor(p),'#FFFFFF',.86));
+  if (stand === 'noble' || stand === 'knight')
+    return '<div class="uiterlijk-portret" data-standing="'+stand+'" style="'+stijl+'">'
+      +'<span class="vulling"></span>'
+      +'<img class="rc" alt="" draggable="false" src="'+chPad('ui/'+(stand==='noble'?'banier':'schild')+'-rand.png')+chBust()+'">'
+      +'<div class="gezicht">'+lijf+'</div><div class="gezicht haar">'+haar+'</div></div>';
+  return '<div class="uiterlijk-portret medaillon" style="'+stijl+'"><span class="schijf"></span>'
+      +'<div class="beeld">'+lijf+'</div><div class="beeld haar">'+haar+'</div></div>';
+}
+
+/* Het venster Uiterlijk: links de persoon groot, rechts elk kenmerk met
+   pijltjes en een schuifje. Elke keuze is meteen te zien; sluiten met Klaar,
+   de sluier of Escape. Eén stap terug (undo) voor het hele venster. */
+function openUiterlijkVenster(p){
+  initContent();
+  if (!S.content.people[p]) return;
+  snapshot();
+  const modal = document.createElement('div');
+  modal.className = 'modal-dialog';
+  modal.innerHTML = '<div class="modal-scrim"></div><div class="modal-box uit-venster">'
+    +'<div class="uit-links"></div><div class="uit-rechts"></div></div>';
+  document.body.appendChild(modal);
+  const close = () => { modal.remove(); document.removeEventListener('keydown', onKey); renderUI(); };
+  const onKey = ev => { if (ev.key === 'Escape') close(); };
+  document.addEventListener('keydown', onKey);
+  modal.querySelector('.modal-scrim').onclick = close;
+
+  const VELDEN = [
+    ['Haar',             'hairStyle', c => haarStijlenVoor(c.gender)],
+    ['Gezichtsbeharing', 'beard',     c => baardenVoor(c.gender)],
+    ['Haarkleur',        'hairColor', () => haarKleuren()],
+    ['Huid',             'skinTone',  () => huidTinten()],
+    ['Kleding',          'clothing',  () => kledingLijst()],
+  ];
+  const lijstVoor = veld => VELDEN.find(v => v[1] === veld)[2](S.content.people[p]);
+  const links = modal.querySelector('.uit-links'), rechts = modal.querySelector('.uit-rechts');
+  const tekenLinks = () => { links.innerHTML = portretHtml(p) + '<div class="portret-naam vast">'+e(personName(p))+'</div>'; };
+  const tekenRechts = () => {
+    const c = S.content.people[p], kap = persoonKapsel(c);
+    let html = '<h3>Uiterlijk</h3>';
+    VELDEN.forEach(([cat, veld, lijstVan]) => {
+      const lijst = lijstVan(c);
+      /* Een vrouw kent maar één stand gezichtsbeharing: geen rij. */
+      if (lijst.length < 2) return;
+      const i = Math.max(0, lijst.findIndex(x => x.id === kap[veld]));
+      html += '<div class="uit-rij" data-veld="'+veld+'">'
+        +'<div class="uit-kop"><span class="uiterlijk-cat">'+cat+'</span>'
+        +'<button class="uiterlijk-pijl" data-stap="'+veld+'" data-richting="-1" title="Vorige">&#8249;</button>'
+        +'<span class="uiterlijk-waarde">'+e(lijst[i].label || '')+'</span>'
+        +'<button class="uiterlijk-pijl" data-stap="'+veld+'" data-richting="1" title="Volgende">&#8250;</button></div>'
+        +'<input class="uit-schuif" type="range" min="0" max="'+(lijst.length-1)+'" value="'+i+'" data-schuif="'+veld+'">'
+        +'</div>';
+    });
+    /* Niet data-klaar: dat attribuut zet de inkleurwachter op elke laag. */
+    html += '<div class="uit-onder"><button class="btn ghost" data-uit-willekeurig>'+uiIcon('sparkle')+' Willekeurig</button>'
+      +'<button class="btn primary" data-uit-klaar>'+uiIcon('check')+' Klaar</button></div>';
+    rechts.innerHTML = html;
+    rechts.querySelectorAll('[data-stap]').forEach(b => b.onclick = () => stap(b.dataset.stap, +b.dataset.richting || 1));
+    rechts.querySelectorAll('[data-schuif]').forEach(s => s.oninput = () => zet(s.dataset.schuif, +s.value));
+    rechts.querySelector('[data-uit-willekeurig]').onclick = () => { willekeurigUiterlijk(p); tekenLinks(); tekenRechts(); };
+    rechts.querySelector('[data-uit-klaar]').onclick = close;
+  };
+  /* Eén kenmerk zetten. De andere worden vastgezet op wat ze nu zijn, want
+     vanaf nu is het uiterlijk zelf gekozen. Alleen de waarde en het schuifje
+     van deze rij worden bijgewerkt, zodat een sleep niet onder je vandaan
+     getekend wordt. */
+  const zet = (veld, i) => {
+    const c = S.content.people[p], lijst = lijstVoor(veld);
+    if (!lijst.length) return;
+    const kap = persoonKapsel(c);
+    c.hairStyle = kap.hairStyle; c.hairColor = kap.hairColor; c.skinTone = kap.skinTone; c.beard = kap.beard; c.clothing = kap.clothing;
+    i = ((i % lijst.length) + lijst.length) % lijst.length;
+    c[veld] = lijst[i].id; c.hairAuto = false;
+    tekenLinks();
+    const rij = rechts.querySelector('.uit-rij[data-veld="'+veld+'"]');
+    if (rij){
+      rij.querySelector('.uiterlijk-waarde').textContent = lijst[i].label || '';
+      rij.querySelector('.uit-schuif').value = i;
+    }
+  };
+  const stap = (veld, richting) => {
+    const lijst = lijstVoor(veld), kap = persoonKapsel(S.content.people[p]);
+    zet(veld, Math.max(0, lijst.findIndex(x => x.id === kap[veld])) + richting);
+  };
+  tekenLinks(); tekenRechts();
+}
+
+/* TIJDELIJK (2026-09-12): schuifjes om de stand van het personage op de banier
+   en het schild te bepalen. De waarden komen in de CSS; daarna weghalen. */
+const VORM_PROEF = { noble:{ w:117.4, x:-8.4, y:11, knip:61.5 }, knight:{ w:105.7, x:-2.7, y:16.7, knip:62 } };
+function vormProefStijl(){
+  let st = $('vormProefStijl');
+  if (!st){ st = document.createElement('style'); st.id = 'vormProefStijl'; document.head.appendChild(st); }
+  st.textContent = Object.keys(VORM_PROEF).map(k => { const v = VORM_PROEF[k];
+    return '.uiterlijk-portret[data-standing="'+k+'"]{--w:'+v.w+';--x:'+v.x+';--y:'+v.y+';--knip:'+v.knip+'}'; }).join('\n');
+}
+function vormProefPaneel(stand){
+  let pan = $('vormProef');
+  if (!stand){ if (pan) pan.remove(); return; }
+  if (!pan){ pan = document.createElement('div'); pan.id = 'vormProef'; document.body.appendChild(pan); }
+  const v = VORM_PROEF[stand];
+  const uit = () => 'noble: '+JSON.stringify(VORM_PROEF.noble)+'<br>knight: '+JSON.stringify(VORM_PROEF.knight);
+  const rij = (naam, k, min, max) => '<label>'+naam+' <b>'+v[k]+'</b><input type="range" data-k="'+k+'" min="'+min+'" max="'+max+'" step=".1" value="'+v[k]+'"></label>';
+  pan.innerHTML = '<div class="vp-kop">Proef: '+(stand==='noble'?'banier':'schild')+'</div>'
+    + rij('Vorm hoger (persoon omlaag, % van vak)', 'y', 0, 30)
+    + rij('Grootte persoon %', 'w', 80, 140)
+    + rij('Persoon opzij %', 'x', -25, 10)
+    + rij('Lijf knippen vanaf % van vak', 'knip', 40, 90)
+    + '<div class="vp-uit">'+uit()+'</div>';
+  pan.querySelectorAll('input').forEach(i => i.oninput = () => {
+    v[i.dataset.k] = +i.value; i.previousElementSibling.textContent = i.value;
+    vormProefStijl(); pan.querySelector('.vp-uit').innerHTML = uit();
   });
 }
 
@@ -9550,7 +9741,15 @@ function selectieNaam(){
   const sel = selectedEntity;
   if (!sel) return (MODES[buildMode] || {}).title || 'Selectie';
   if (sel.type === 'boardclues') return 'Algemene regels';
-  if (sel.type === 'person') return personName(sel.id) || 'Naamloze persoon';
+  if (sel.type === 'person'){
+    /* Bij de personen staat de naam onder het portret; de kop zegt dan wat
+       hij in de zaak is. */
+    if (buildMode !== 'clues'){
+      const r = roleOf(sel.id);
+      return r === 'victim' ? 'Slachtoffer' : r === 'culprit' ? 'Dader' : 'Verdachte';
+    }
+    return personName(sel.id) || 'Naamloze persoon';
+  }
   if (sel.type === 'room'){
     const i = +String(sel.id).slice(5) - 1;
     return roomName(i) || 'Ruimte';
@@ -9647,6 +9846,9 @@ function inspectorHead(){
           ' · ' + kindBadges(o.kind, objectFootprint(o));
   }
   else if (sel.type === 'person'){
+    /* In de stap Personen staat het portret bovenaan met de naam eronder;
+       dit kopblok is er dan te veel. Bij de regels blijft het als houvast. */
+    if (buildMode !== 'clues') return '';
     const p = sel.id;
     ico = miniPawn(p, roleOf(p));
     naam = inspStand.naamEdit
@@ -9684,6 +9886,9 @@ function renderInspector(){
   const vak = $('detailVak');
   const sel = selectedEntity;
   const key = sel ? sel.type + ':' + (sel.key || sel.id) : '';
+  /* TIJDELIJK: de proefschuifjes voor banier en schild. */
+  vormProefPaneel(sel && sel.type === 'person' && buildMode !== 'clues'
+                  && ['noble','knight'].includes(personRoleOf(sel.id)) ? personRoleOf(sel.id) : null);
   if (key !== inspStand.key) inspStand = { key, naamEdit:false, extraVeld:false };
   if (vak){
     const menuKnop = $('inspMenuBtn');
@@ -9834,6 +10039,18 @@ function renderInspector(){
       if (buildMode === 'clues'){
         html += renderClueEditor(p);
       } else {
+        /* Bovenaan de kolom: het portret zoals de speler het ziet, met de
+           naam eronder (de naam is zelf de knop om hem aan te passen).
+           Willekeurig geeft bij elke druk een nieuw gezicht; Bewerken opent
+           het venster met alle kenmerken. */
+        html += '<div class="portret-kop">'+portretHtml(p)
+          +(inspStand.naamEdit
+              ? '<div class="portret-naam bewerk">'+naamRegel('person', p, c.name, 'Persoon '+p.slice(1))+'</div>'
+              : '<button class="portret-naam" data-naam-bewerk title="Naam aanpassen">'+e(personName(p))+'</button>')
+          +'<div class="portret-knoppen">'
+            +'<button class="btn ghost" data-uit-willekeurig title="Een ander uiterlijk, net zo lang tot het bevalt">'+uiIcon('sparkle')+' Willekeurig</button>'
+            +'<button class="btn ghost" data-uit-bewerken title="Haar, huid, kleding en meer zelf kiezen">'+uiIcon('pencil')+' Bewerken</button>'
+          +'</div></div>';
         html += '<div class="role-row">'+
           '<button class="role-btn '+(role==='culprit'?'on':'')+'" data-role="culprit">'+uiIcon('culprit')+' Dader</button>'+
           '<button class="role-btn '+(role==='victim' ?'on':'')+'" data-role="victim">'+uiIcon('skull')+' Slachtoffer</button></div>';
@@ -9859,51 +10076,6 @@ function renderInspector(){
           '<p class="field-note">'+(c.genderAuto === false
             ? 'Zelf gekozen. Leeg je de naam, dan blijft deze keuze staan.'
             : 'Volgt uit de naam <b>'+e(c.name || '')+'</b>. Klik om het te wijzigen.')+'</p>';
-        /* Uiterlijk: het portret zoals de speler het ziet, met de kapsels
-           die bij dit geslacht horen en de zes haarkleuren. Andere kenmerken
-           (attributes) komen later; het veld reist nu al mee in de export. */
-        {
-          const kap = persoonKapsel({ name:c.name, gender:c.gender, hairStyle:c.hairStyle, hairColor:c.hairColor, skinTone:c.skinTone, beard:c.beard, clothing:c.clothing });
-          const voorbeeld = characterHtml({ name:c.name, gender:c.gender, color:personColor(p),
-                                           hairStyle:kap.hairStyle, hairColor:kap.hairColor, skinTone:kap.skinTone, beard:kap.beard, clothing:kap.clothing },
-                                         { dood: role === 'victim' });
-          const baard = baardenVoor(c.gender).find(b => b.id === kap.beard);
-          const kleding = kledingLijst().find(k => k.id === kap.clothing);
-          const stijlen = haarStijlenVoor(c.gender);
-          const huidige = stijlen.find(h => h.id === kap.hairStyle) || stijlen[0];
-          const kleur = haarKleuren().find(k => k.id === kap.hairColor);
-          const huid = huidTint(kap.skinTone);
-          /* Edele of ridder: dan staat het portret hier ook op de banier of
-             het schild, zodat je ziet wat de speler ziet. */
-          const stand = personRoleOf(p);
-          const stijl = '--pc:'+e(personColor(p))+';--ch-tint:'+e(mix(personColor(p),'#FFFFFF',.86));
-          const portret = (stand === 'noble' || stand === 'knight')
-            ? '<div class="uiterlijk-portret" data-standing="'+stand+'" style="'+stijl+'">'
-                +'<span class="vulling"></span>'
-                +'<img class="rc" alt="" draggable="false" src="'+chPad('ui/'+(stand==='noble'?'banier':'schild')+'-rand.png')+chBust()+'">'
-                +'<div class="gezicht">'+voorbeeld+'</div></div>'
-            : '<div class="uiterlijk-portret medaillon" style="'+stijl+'"><span class="schijf"></span><div class="beeld">'+voorbeeld+'</div></div>';
-          /* Eén rij per kenmerk: de categorie links van de pijl, dan pijl,
-             waarde, pijl. Een volgend kenmerk (baard) krijgt dezelfde rij. */
-          const rij = (cat, veld, label) => '<div class="uiterlijk-rij">'
-            +'<span class="uiterlijk-cat">'+cat+'</span>'
-            +'<button class="uiterlijk-pijl" data-stap="'+veld+'" data-richting="-1" title="Vorige">&#8249;</button>'
-            +'<span class="uiterlijk-waarde">'+e(label || '')+'</span>'
-            +'<button class="uiterlijk-pijl" data-stap="'+veld+'" data-richting="1" title="Volgende">&#8250;</button>'
-            +'</div>';
-          html += '<label class="field">Uiterlijk</label>'+
-            '<div class="uiterlijk">'+portret
-              +rij('Haar', 'hairStyle', huidige ? huidige.label : '')
-              /* Alleen een man heeft een baard te kiezen; bij een vrouw is er
-                 maar een stand en hoort de rij er niet te staan. */
-              +(baardenVoor(c.gender).length > 1 ? rij('Gezichtsbeharing', 'beard', baard ? baard.label : 'Geen') : '')
-              +rij('Haarkleur', 'hairColor', kleur ? kleur.label : '')
-              +rij('Huid', 'skinTone', huid ? huid.label : '')
-              +rij('Kleding', 'clothing', kleding ? kleding.label : '')
-            +'</div>'+
-            (c.hairAuto === false ? '' :
-              '<p class="field-note">Willekeurig gekozen bij de naam, passend bij het geslacht. Klik om het te wijzigen.</p>');
-        }
         if ((c.description||'').trim() || inspStand.extraVeld){
           html += '<label class="field">Omschrijving</label><textarea class="inp" data-cp="description" placeholder="Korte beschrijving...">'+e(c.description||'')+'</textarea>';
         }
@@ -9952,28 +10124,19 @@ function wireInspector(box){
     renderUI();
   });
 
-  /* Door een kenmerk bladeren. Zelf gekozen betekent: de naam laat het
-     uiterlijk vanaf nu met rust; de andere kenmerken worden dan vastgezet
-     op wat ze nu zijn. */
-  const stapUiterlijk = (veld, richting) => {
-    if (!selectedEntity) return;
-    snapshot();
-    initContent();
-    const c = S.content.people[selectedEntity.id];
-    const kap = persoonKapsel(c);
-    const lijst = veld === 'hairStyle' ? haarStijlenVoor(c.gender)
-                : veld === 'hairColor' ? haarKleuren()
-                : veld === 'beard'     ? baardenVoor(c.gender)
-                : veld === 'clothing'  ? kledingLijst()
-                : huidTinten();
-    if (!lijst.length) return;
-    let i = lijst.findIndex(x => x.id === kap[veld]);
-    i = (i + richting + lijst.length) % lijst.length;
-    c.hairStyle = kap.hairStyle; c.hairColor = kap.hairColor; c.skinTone = kap.skinTone; c.beard = kap.beard; c.clothing = kap.clothing;
-    c[veld] = lijst[i].id; c.hairAuto = false;
-    renderUI();
+  /* De portretknoppen: een nieuw gezicht per druk (alleen het detailvak
+     tekent opnieuw, zodat je door kunt klikken), het venster met alle
+     kenmerken, en de naam eronder is zelf de knop om hem aan te passen. */
+  const willekeurig = box.querySelector('[data-uit-willekeurig]');
+  if (willekeurig) willekeurig.onclick = () => { if (!selectedEntity) return; willekeurigUiterlijk(selectedEntity.id); renderInspector(); };
+  const bewerken = box.querySelector('[data-uit-bewerken]');
+  if (bewerken) bewerken.onclick = () => { if (selectedEntity) openUiterlijkVenster(selectedEntity.id); };
+  const naamKnop = box.querySelector('[data-naam-bewerk]');
+  if (naamKnop) naamKnop.onclick = () => {
+    inspStand.naamEdit = true; renderInspector();
+    const inp = document.querySelector('#inspector .insp-naam-in');
+    if (inp){ inp.focus(); inp.select(); }
   };
-  box.querySelectorAll('[data-stap]').forEach(b => b.onclick = () => stapUiterlijk(b.dataset.stap, +b.dataset.richting || 1));
   box.querySelectorAll('[data-gender]').forEach(b => b.onclick = () => {
     if (!selectedEntity) return;
     snapshot();
