@@ -399,27 +399,42 @@
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "light",
+        "hairStyle": "half-up",
+        "hairColor": "light-blond",
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       },
       "p2": {
         "name": "Victor",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "bronze",
+        "hairStyle": "wavy-crop",
+        "hairColor": "light-brown",
+        "clothing": "quilted-gambeson",
+        "beard": "moustache"
       },
       "p3": {
         "name": "Cunera",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "light",
+        "hairStyle": "bob",
+        "hairColor": "light-brown",
+        "clothing": "lace-front-bodice-blouse",
+        "beard": "none"
       }
     },
     "rooms": {

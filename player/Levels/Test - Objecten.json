@@ -1476,9 +1476,11 @@
         "hairStyle": "long-curls",
         "hairColor": "dark-blond",
         "skinTone": "light",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "lace-up-tunic",
+        "beard": "none"
       },
       "p2": {
         "name": "Bela",
@@ -1488,21 +1490,25 @@
         "hairStyle": "short-curls",
         "hairColor": "soft-black",
         "skinTone": "deep",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": false
+        "genderAuto": false,
+        "clothing": "leather-jerkin",
+        "beard": "moustache"
       },
       "p3": {
         "name": "Christiaen",
         "role": "knight",
         "gender": "male",
         "description": "",
-        "hairStyle": "short-curls",
+        "hairStyle": "masculine-hair-bun",
         "hairColor": "soft-black",
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "hooded-mantle",
+        "beard": "chin-goatee"
       },
       "p4": {
         "name": "Dorothea",
@@ -1514,7 +1520,9 @@
         "skinTone": "medium",
         "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "split-neck-tunic",
+        "beard": "none"
       },
       "p5": {
         "name": "Everhard",
@@ -1524,9 +1532,11 @@
         "hairStyle": "side-part",
         "hairColor": "dark-blond",
         "skinTone": "medium",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "fur-collar-mantle",
+        "beard": "none"
       },
       "p6": {
         "name": "Victor",
@@ -1536,9 +1546,11 @@
         "hairStyle": "swept-back",
         "hairColor": "auburn",
         "skinTone": "light",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": false
+        "genderAuto": false,
+        "clothing": "round-neck-tunic",
+        "beard": "small-simple-beard"
       }
     },
     "rooms": {

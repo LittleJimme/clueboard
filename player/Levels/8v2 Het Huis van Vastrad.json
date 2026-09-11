@@ -1,6 +1,6 @@
 {
   "levelNumber": 8,
-  "levelVersion": 1,
+  "levelVersion": 2,
   "levelId": "lvl-mtoerjfvn40r6",
   "format": "clueboard-level",
   "version": 11,
@@ -975,7 +975,9 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "split-neck-tunic",
+        "beard": "none"
       },
       "p2": {
         "name": "Baldwin",
@@ -987,7 +989,9 @@
         "skinTone": "medium",
         "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "hooded-mantle",
+        "beard": "none"
       },
       "p3": {
         "name": "Cunera",
@@ -999,7 +1003,9 @@
         "skinTone": "medium",
         "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "square-neck-kirtle",
+        "beard": "none"
       },
       "p4": {
         "name": "Doriaan",
@@ -1009,9 +1015,11 @@
         "hairStyle": "wavy-crop",
         "hairColor": "soft-black",
         "skinTone": "tan",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "round-neck-tunic",
+        "beard": "chin-curtain"
       },
       "p5": {
         "name": "Elske",
@@ -1023,7 +1031,9 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "noble-surcoat-mantle-gown",
+        "beard": "none"
       },
       "p6": {
         "name": "Vastrad",
@@ -1035,7 +1045,9 @@
         "skinTone": "deep",
         "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       }
     },
     "rooms": {

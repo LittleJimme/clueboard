@@ -3601,108 +3601,168 @@
         "role": "villager",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "bronze",
+        "hairStyle": "long-wavy",
+        "hairColor": "warm-brown",
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       },
       "p2": {
         "name": "Bertram",
         "role": "noble",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "bronze",
+        "hairStyle": "side-swept-collar-length",
+        "hairColor": "deep-brown",
+        "clothing": "merchant-side-button-coat",
+        "beard": "forked-beard"
       },
       "p3": {
         "name": "Cunera",
         "role": "villager",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "light",
+        "hairStyle": "shoulder-straight",
+        "hairColor": "white",
+        "clothing": "quilted-gambeson",
+        "beard": "none"
       },
       "p4": {
         "name": "Diederik",
         "role": "villager",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "tan",
+        "hairStyle": "mature-shoulder-waves",
+        "hairColor": "warm-brown",
+        "clothing": "fur-collar-mantle",
+        "beard": "soft-chevron-moustache"
       },
       "p5": {
         "name": "Elske",
         "role": "noble",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "bronze",
+        "hairStyle": "long-curls",
+        "hairColor": "iron-grey",
+        "clothing": "leather-jerkin",
+        "beard": "none"
       },
       "p6": {
         "name": "Floris",
         "role": "villager",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "F",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "medium",
+        "hairStyle": "brushed-back-neck-length",
+        "hairColor": "auburn",
+        "clothing": "lace-up-tunic",
+        "beard": "chin-curtain"
       },
       "p7": {
         "name": "Godfried",
         "role": "villager",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "G",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "bronze",
+        "hairStyle": "half-up",
+        "hairColor": "warm-brown",
+        "clothing": "lace-front-bodice-blouse",
+        "beard": "none"
       },
       "p8": {
         "name": "Hilde",
         "role": "knight",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "H",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "deep",
+        "hairStyle": "undercut",
+        "hairColor": "iron-grey",
+        "clothing": "split-neck-tunic",
+        "beard": "none"
       },
       "p9": {
         "name": "Ivo",
         "role": "villager",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "I",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "deep",
+        "hairStyle": "bob",
+        "hairColor": "light-brown",
+        "clothing": "square-neck-kirtle",
+        "beard": "none"
       },
       "p10": {
         "name": "Jutta",
         "role": "knight",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "J",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "olive",
+        "hairStyle": "shaggy-ear-length",
+        "hairColor": "light-blond",
+        "clothing": "hooded-mantle",
+        "beard": "none"
       },
       "p11": {
         "name": "Victor",
         "role": "villager",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "olive",
+        "hairStyle": "ponytail",
+        "hairColor": "soft-black",
+        "clothing": "round-neck-tunic",
+        "beard": "none"
       },
       "p12": {
         "name": "Lieve",
         "role": "knight",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "L",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "medium",
+        "hairStyle": "wavy-crop",
+        "hairColor": "light-brown",
+        "clothing": "artisan-apron-tunic",
+        "beard": "none"
       }
     },
     "rooms": {

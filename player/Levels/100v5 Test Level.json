@@ -1,6 +1,6 @@
 {
   "levelNumber": 100,
-  "levelVersion": 4,
+  "levelVersion": 5,
   "levelId": "lvl-mtppube2ms7g0",
   "format": "clueboard-level",
   "version": 11,
@@ -1587,9 +1587,11 @@
         "hairStyle": "bald",
         "hairColor": "soft-black",
         "skinTone": "deep",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "artisan-apron-tunic",
+        "beard": "forked-beard"
       },
       "p2": {
         "name": "Verena",
@@ -1599,9 +1601,11 @@
         "hairStyle": "shoulder-straight",
         "hairColor": "deep-brown",
         "skinTone": "deep",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "lace-up-tunic",
+        "beard": "none"
       },
       "p3": {
         "name": "Beatrix",
@@ -1611,9 +1615,11 @@
         "hairStyle": "long-curls",
         "hairColor": "silver",
         "skinTone": "medium",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "noble-surcoat-mantle-gown",
+        "beard": "none"
       },
       "p4": {
         "name": "Cyriel",
@@ -1623,9 +1629,11 @@
         "hairStyle": "undercut",
         "hairColor": "dark-blond",
         "skinTone": "medium",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "hooded-mantle",
+        "beard": "none"
       },
       "p5": {
         "name": "Diederik",
@@ -1635,33 +1643,39 @@
         "hairStyle": "wavy-crop",
         "hairColor": "warm-brown",
         "skinTone": "deep",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "fur-collar-mantle",
+        "beard": "none"
       },
       "p6": {
         "name": "Edzard",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairStyle": "wavy-crop",
+        "hairStyle": "masculine-hair-bun",
         "hairColor": "warm-brown",
         "skinTone": "deep",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "round-neck-tunic",
+        "beard": "none"
       },
       "p7": {
         "name": "Francina",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairStyle": "ponytail",
+        "hairStyle": "long-wavy",
         "hairColor": "soft-black",
         "skinTone": "tan",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "F",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       },
       "p8": {
         "name": "Gerlach",
@@ -1671,9 +1685,11 @@
         "hairStyle": "short-crop",
         "hairColor": "warm-brown",
         "skinTone": "light",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "G",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "high-collar-doublet",
+        "beard": "none"
       }
     },
     "rooms": {

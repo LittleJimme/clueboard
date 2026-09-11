@@ -1,8 +1,8 @@
 {
-  "gemaakt": "2026-09-11T19:32:57",
+  "gemaakt": "2026-09-12T01:34:34",
   "levels": [
     {
-      "file": "100v4 Test Level.json",
+      "file": "100v5 Test Level.json",
       "content": {
         "title": "Test Level"
       },
@@ -16,7 +16,7 @@
       },
       "levelId": "lvl-mtppube2ms7g0",
       "levelNumber": 100,
-      "levelVersion": 4,
+      "levelVersion": 5,
       "test": true,
       "difficulty": {
         "graad": 1,
@@ -24,7 +24,7 @@
       }
     },
     {
-      "file": "10v6 Het Jachthuis.json",
+      "file": "10v7 Het Jachthuis.json",
       "content": {
         "title": "Het Jachthuis"
       },
@@ -38,14 +38,14 @@
       },
       "levelId": "lvl-mtpz6a4i6yb8m",
       "levelNumber": 10,
-      "levelVersion": 6,
+      "levelVersion": 7,
       "difficulty": {
         "graad": 4,
         "uitleg": "Veel aannemen en verwerpen, en de volgorde luistert."
       }
     },
     {
-      "file": "11v3 De Oude Gevangenis.json",
+      "file": "11v4 De Oude Gevangenis.json",
       "content": {
         "title": "De Oude Gevangenis"
       },
@@ -59,14 +59,14 @@
       },
       "levelId": "lvl-mtqb7483p9zcl",
       "levelNumber": 11,
-      "levelVersion": 3,
+      "levelVersion": 4,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
-      "file": "12v2 Het Hofbal.json",
+      "file": "12v3 Het Hofbal.json",
       "content": {
         "title": "Het Hofbal"
       },
@@ -80,14 +80,14 @@
       },
       "levelId": "lvl-mtx558868zpbr",
       "levelNumber": 12,
-      "levelVersion": 2,
+      "levelVersion": 3,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
-      "file": "1v4 Herberg de Doortocht.json",
+      "file": "1v5 Herberg de Doortocht.json",
       "content": {
         "title": "Herberg de Doortocht"
       },
@@ -101,14 +101,14 @@
       },
       "levelId": "lvl-1a05ef2624294473",
       "levelNumber": 1,
-      "levelVersion": 4,
+      "levelVersion": 5,
       "difficulty": {
         "graad": 2,
         "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {
-      "file": "2v3 Een hinderlaag vol struikrovers.json",
+      "file": "2v4 Een hinderlaag vol struikrovers.json",
       "content": {
         "title": "Een hinderlaag vol struikrovers"
       },
@@ -122,14 +122,14 @@
       },
       "levelId": "lvl-1a05ef262400984c",
       "levelNumber": 2,
-      "levelVersion": 3,
+      "levelVersion": 4,
       "difficulty": {
         "graad": 2,
         "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {
-      "file": "3v4 De Watermolen.json",
+      "file": "3v5 De Watermolen.json",
       "content": {
         "title": "De Watermolen"
       },
@@ -143,14 +143,14 @@
       },
       "levelId": "lvl-mtj6rhpxaokxv",
       "levelNumber": 3,
-      "levelVersion": 4,
+      "levelVersion": 5,
       "difficulty": {
         "graad": 2,
         "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {
-      "file": "4v4 De Kathedraal.json",
+      "file": "4v5 De Kathedraal.json",
       "content": {
         "title": "De Kathedraal"
       },
@@ -164,14 +164,14 @@
       },
       "levelId": "lvl-mtk2htyogtdow",
       "levelNumber": 4,
-      "levelVersion": 4,
+      "levelVersion": 5,
       "difficulty": {
         "graad": 2,
         "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {
-      "file": "5v10 De Kerkers.json",
+      "file": "5v11 De Kerkers.json",
       "content": {
         "title": "De Kerkers"
       },
@@ -185,14 +185,14 @@
       },
       "levelId": "lvl-mtk57guwn6i9e",
       "levelNumber": 5,
-      "levelVersion": 10,
+      "levelVersion": 11,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
-      "file": "6v6 Het Fort.json",
+      "file": "6v7 Het Fort.json",
       "content": {
         "title": "Het Fort"
       },
@@ -206,14 +206,14 @@
       },
       "levelId": "lvl-mtkjs6belwg3k",
       "levelNumber": 6,
-      "levelVersion": 6,
+      "levelVersion": 7,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
-      "file": "7v1 De Troonzaal.json",
+      "file": "7v2 De Troonzaal.json",
       "content": {
         "title": "De Troonzaal"
       },
@@ -227,14 +227,14 @@
       },
       "levelId": "lvl-mtmqoqlw2ucfc",
       "levelNumber": 7,
-      "levelVersion": 3,
+      "levelVersion": 2,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
-      "file": "8v1 Het Huis van Vastrad.json",
+      "file": "8v2 Het Huis van Vastrad.json",
       "content": {
         "title": "Het Huis van Vastrad"
       },
@@ -248,14 +248,14 @@
       },
       "levelId": "lvl-mtoerjfvn40r6",
       "levelNumber": 8,
-      "levelVersion": 1,
+      "levelVersion": 2,
       "difficulty": {
         "graad": 2,
         "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {
-      "file": "9v13 Achter de Gracht.json",
+      "file": "9v14 Achter de Gracht.json",
       "content": {
         "title": "Achter de Gracht"
       },
@@ -269,7 +269,7 @@
       },
       "levelId": "lvl-mtpsczg45i82s",
       "levelNumber": 9,
-      "levelVersion": 13,
+      "levelVersion": 14,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."

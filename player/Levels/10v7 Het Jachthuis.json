@@ -1,6 +1,6 @@
 {
   "levelNumber": 10,
-  "levelVersion": 6,
+  "levelVersion": 7,
   "levelId": "lvl-mtpz6a4i6yb8m",
   "format": "clueboard-level",
   "version": 11,
@@ -1360,7 +1360,9 @@
         "skinTone": "medium",
         "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "fur-collar-mantle",
+        "beard": "none"
       },
       "p2": {
         "name": "Vastrad",
@@ -1372,7 +1374,9 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "merchant-side-button-coat",
+        "beard": "moustache"
       },
       "p3": {
         "name": "Bavo",
@@ -1384,7 +1388,9 @@
         "skinTone": "tan",
         "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "artisan-apron-tunic",
+        "beard": "none"
       },
       "p4": {
         "name": "Coenraad",
@@ -1396,19 +1402,23 @@
         "skinTone": "tan",
         "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "split-neck-tunic",
+        "beard": "soft-chevron-moustache"
       },
       "p5": {
         "name": "Diederik",
         "role": "knight",
         "gender": "male",
         "description": "",
-        "hairStyle": "wavy-crop",
+        "hairStyle": "masculine-hair-bun",
         "hairColor": "warm-brown",
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "leather-jerkin",
+        "beard": "none"
       }
     },
     "rooms": {

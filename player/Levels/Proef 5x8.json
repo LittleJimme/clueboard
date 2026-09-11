@@ -860,45 +860,70 @@
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "tan",
+        "hairStyle": "long-wavy",
+        "hairColor": "iron-grey",
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       },
       "p2": {
         "name": "Victor",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "bronze",
+        "hairStyle": "short-crop",
+        "hairColor": "white",
+        "clothing": "lace-up-tunic",
+        "beard": "none"
       },
       "p3": {
         "name": "Cunera",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "medium",
+        "hairStyle": "long-curls",
+        "hairColor": "deep-brown",
+        "clothing": "merchant-side-button-coat",
+        "beard": "none"
       },
       "p4": {
         "name": "Diederik",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "deep",
+        "hairStyle": "buzz-cut",
+        "hairColor": "warm-brown",
+        "clothing": "hooded-mantle",
+        "beard": "moustache"
       },
       "p5": {
         "name": "Elske",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "deep",
+        "hairStyle": "shoulder-straight",
+        "hairColor": "iron-grey",
+        "clothing": "round-neck-tunic",
+        "beard": "none"
       }
     },
     "rooms": {

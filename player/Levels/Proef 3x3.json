@@ -311,27 +311,42 @@
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "olive",
+        "hairStyle": "bob",
+        "hairColor": "deep-brown",
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       },
       "p2": {
         "name": "Bertram",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "light",
+        "hairStyle": "undercut",
+        "hairColor": "soft-black",
+        "clothing": "merchant-side-button-coat",
+        "beard": "none"
       },
       "p3": {
         "name": "Cunera",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "tan",
+        "hairStyle": "long-wavy",
+        "hairColor": "warm-brown",
+        "clothing": "split-neck-tunic",
+        "beard": "none"
       }
     },
     "rooms": {

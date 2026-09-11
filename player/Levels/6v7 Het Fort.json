@@ -1,6 +1,6 @@
 {
   "levelNumber": 6,
-  "levelVersion": 6,
+  "levelVersion": 7,
   "levelId": "lvl-mtkjs6belwg3k",
   "format": "clueboard-level",
   "version": 11,
@@ -1836,7 +1836,9 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "lace-front-bodice-blouse",
+        "beard": "none"
       },
       "p2": {
         "name": "Bertram",
@@ -1848,7 +1850,9 @@
         "skinTone": "deep",
         "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "hooded-mantle",
+        "beard": "none"
       },
       "p3": {
         "name": "Colijn",
@@ -1860,7 +1864,9 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "artisan-apron-tunic",
+        "beard": "chin-curtain"
       },
       "p4": {
         "name": "Dirk",
@@ -1872,19 +1878,23 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "split-neck-tunic",
+        "beard": "moustache"
       },
       "p5": {
         "name": "Edzard",
         "role": "villager",
         "gender": "male",
         "description": "",
-        "hairStyle": "short-curls",
+        "hairStyle": "shaggy-ear-length",
         "hairColor": "soft-black",
         "skinTone": "medium",
         "hairAuto": false,
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "merchant-side-button-coat",
+        "beard": "none"
       },
       "p6": {
         "name": "Femke",
@@ -1896,7 +1906,9 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "F",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "noble-surcoat-mantle-gown",
+        "beard": "none"
       },
       "p7": {
         "name": "Geertruide",
@@ -1908,19 +1920,23 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "G",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "square-neck-kirtle",
+        "beard": "none"
       },
       "p8": {
         "name": "Vibeke",
         "role": "knight",
         "gender": "female",
         "description": "",
-        "hairStyle": "bob",
+        "hairStyle": "half-up",
         "hairColor": "soft-black",
         "skinTone": "medium",
         "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "leather-jerkin",
+        "beard": "none"
       },
       "p9": {
         "name": "Hugo",
@@ -1932,7 +1948,9 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "H",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "round-neck-tunic",
+        "beard": "none"
       }
     },
     "rooms": {

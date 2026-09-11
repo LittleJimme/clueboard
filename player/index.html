@@ -1431,7 +1431,7 @@ html:not([data-thema="licht"]) .note-cross img{opacity:.74}
    als de persoon een stand heeft. Slachtoffer of verdachte zie je nergens meer
    staan: het slachtoffer is rood, en meer hoef je niet te weten. */
 .pawn{
-  position:absolute;width:80%;height:80%;border-radius:999px;z-index:5;
+  position:absolute;width:90%;height:90%;border-radius:999px;z-index:5;
   display:flex;align-items:center;justify-content:center;
   background:var(--pc);
   border:max(1.5px,calc(var(--cell)*.05)) solid var(--board-ink);
@@ -1853,12 +1853,13 @@ div.deelnemers.breed{grid-template-columns:repeat(12,1fr);max-width:820px}
 div.deelnemers .dl-in{margin-top:-6px}
 div.deelnemers.breed .dl-in{margin-top:-10px}
 div.deelnemer{gap:2px}
+div.deelnemer .portret-podium{--s:calc(var(--dl,88px) / 370)}
 .dl-merken{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:2px}
 /* Personages op het bord (keuze in de instellingen): het personage staat groot
    op de tegel, met zijn letter als klein merkje ernaast. */
 body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;border:0;box-shadow:none}
 .pawn.personage{width:100%;height:100%;overflow:visible}
-.pawn.personage .portret-podium{--s:calc(var(--cell) / 400);position:absolute;left:50%;bottom:4%;transform:translateX(-50%)}
+.pawn.personage .portret-podium{--s:calc(var(--cell) / 360);position:absolute;left:50%;bottom:2%;transform:translateX(-50%)}
 .pawn.personage .init{position:absolute;right:-2%;bottom:0;z-index:3;
   width:calc(var(--cell)*.36);height:calc(var(--cell)*.36);border-radius:999px;
   display:flex;align-items:center;justify-content:center;
@@ -4694,10 +4695,30 @@ function hexRgb(hex){ const m=/^#?([0-9a-f]{6})$/i.exec(hex||""); const n=m?pars
    Op één bord waren dat er ruim veertig, samen tientallen megabytes -- op een
    telefoon precies het werk waar hij op hapert. */
 const CH_MAAT=256;
+/* Inkleuren gaat in een rij, hooguit twee tegelijk. Bij het openen van een
+   level kwamen er tientallen inkleuringen tegelijk binnen -- elk portret op
+   het introvel vraagt zijn lagen zodra hij in het document staat -- en op een
+   telefoon sneuvelde daar een deel van: Safari gaf geen canvas of geen blob
+   meer terug, en iemand stond kaal of zonder lijf op het vel. In de rij
+   gebeurt precies hetzelfde werk, alleen netjes achter elkaar; wie wacht,
+   krijgt gewoon zijn belofte. */
+const CH_RIJ=[]; let CH_BEZIG=0; const CH_TEGELIJK=2;
+function chInRij(werk){
+  return new Promise((ok,nee)=>{
+    CH_RIJ.push(()=>Promise.resolve().then(werk).then(ok,nee));
+    chRijStap();
+  });
+}
+function chRijStap(){
+  while(CH_BEZIG<CH_TEGELIJK && CH_RIJ.length){
+    const w=CH_RIJ.shift(); CH_BEZIG++;
+    w().then(()=>{ CH_BEZIG--; chRijStap(); },()=>{ CH_BEZIG--; chRijStap(); });
+  }
+}
 function chKleur(laag,hex){
   const sleutel=laag+"|"+hex.toLowerCase();
   if(CH_CACHE.has(sleutel)) return CH_CACHE.get(sleutel);
-  const p=chLaadBron(laag).then(img=>{
+  const p=chLaadBron(laag).then(img=>chInRij(()=>{
     const bron=Math.max(img.naturalWidth,img.naturalHeight)||CH_MAAT;
     const f=Math.min(1,CH_MAAT/bron);
     const W=Math.max(1,Math.round(img.naturalWidth*f)),H=Math.max(1,Math.round(img.naturalHeight*f));
@@ -4726,8 +4747,8 @@ function chKleur(laag,hex){
     return new Promise(ok=>{
       if(!c.toBlob || typeof URL==="undefined" || !URL.createObjectURL){ ok(c.toDataURL("image/png")); return; }
       c.toBlob(b=>ok(b ? URL.createObjectURL(b) : c.toDataURL("image/png")),"image/png");
-    }).then(url=>{ CH_CACHE.set(sleutel,url); return url; });
-  }).catch(e=>{
+    });
+  })).then(url=>{ CH_CACHE.set(sleutel,url); return url; }).catch(e=>{
     /* Niet bewaren wat niet gelukt is, anders krijgt elke volgende vraag om
        deze laag dezelfde mislukking terug. */
     if(CH_CACHE.get(sleutel)===p) CH_CACHE.delete(sleutel);
@@ -4746,7 +4767,7 @@ function chVul(img,poging){
   (typeof r==="string") ? zet(r) : r.then(zet).catch(()=>{
     /* Mislukt inkleuren laat de ongekleurde laag staan; even later nog eens
        proberen, want meestal was het een verzoek dat sneuvelde. */
-    if(nog<2 && img.isConnected) setTimeout(()=>chVul(img,nog+1), 500*(nog+1));
+    if(nog<4 && img.isConnected) setTimeout(()=>chVul(img,nog+1), 700*(nog+1));
   });
 }
 /* Komt de tekening zelf niet aan, dan is er niets te zien: geen hoofd, geen
@@ -8761,7 +8782,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.161";
+const PLAYER_APP_VERSION="0.9.162";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9191,9 +9212,12 @@ function showLevelDetail(levelIndex){
   /* Zo groot als er past: het vel hoort niet te scrollen, dus de portretten
      krimpen mee met het aantal rijen -- en bij weinig personen worden ze juist
      royaal. */
-  const ruimte=Math.max(240, window.innerHeight - (breed?330:290));
-  const maat=Math.max(breed?74:64, Math.min(breed?150:116,
-    Math.floor((ruimte/Math.max(rijen.length,1) - 46)/1.36)));
+  /* Op een telefoon scrolt het vel sowieso -- de titel en de tekst zijn daar al
+     een scherm -- dus daar staan de portretten op een vaste, leesbare maat. */
+  const ruimte=Math.max(240, window.innerHeight - 330);
+  const maat=breed
+    ? Math.max(74, Math.min(150, Math.floor((ruimte/Math.max(rijen.length,1) - 46)/1.36)))
+    : 92;
   host.style.setProperty("--dl",maat+"px");
   allen.forEach((pe,ix)=>{
     const isV=pe.id===M.victimId;
@@ -9204,7 +9228,10 @@ function showLevelDetail(levelIndex){
     /* Elke rij onder de eerste schuift een tikje omhoog, zodat de rijen in
        elkaar vallen en de groep bij elkaar staat. */
     if((rijNr[ix]||0)>0) rij.classList.add("dl-in");
-    rij.appendChild(personPortrait(pe,{size:maat}));
+    /* Geen vaste maat: het portret volgt --dl van het vel, zodat het meekrimpt
+       als het vel zichzelf passend maakt. Met een vaste maat krompen alleen de
+       rijen en vielen de namen achter de portretten. */
+    rij.appendChild(personPortrait(pe,{}));
     const tekst=document.createElement("div");
     tekst.className="dl-tekst";
     /* Dezelfde tags als in de rechterkolom, zodat een rol er overal hetzelfde
@@ -9241,9 +9268,9 @@ function showLevelDetail(levelIndex){
   /* En het hoort niet te hoeven scrollen. Past het niet, dan krimpen de
      portretten tot het wél past: de titel, de tekst en de bordregels staan
      vast, dus de deelnemers geven mee. */
-  if(sc){
+  if(sc && breed){
     let m=maat;
-    for(let i=0;i<10 && sc.scrollHeight>sc.clientHeight+2 && m>(breed?72:56); i++){
+    for(let i=0;i<10 && sc.scrollHeight>sc.clientHeight+2 && m>72; i++){
       m=Math.round(m*0.92);
       host.style.setProperty("--dl",m+"px");
     }

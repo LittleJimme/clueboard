@@ -1,6 +1,6 @@
 {
   "levelNumber": 11,
-  "levelVersion": 3,
+  "levelVersion": 4,
   "levelId": "lvl-mtqb7483p9zcl",
   "format": "clueboard-level",
   "version": 11,
@@ -967,9 +967,11 @@
         "hairStyle": "bald",
         "hairColor": "warm-brown",
         "skinTone": "tan",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "artisan-apron-tunic",
+        "beard": "none"
       },
       "p2": {
         "name": "Boudewijn",
@@ -979,9 +981,11 @@
         "hairStyle": "crew-cut",
         "hairColor": "soft-black",
         "skinTone": "tan",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "fur-collar-mantle",
+        "beard": "chin-goatee"
       },
       "p3": {
         "name": "Casimir",
@@ -991,9 +995,11 @@
         "hairStyle": "short-crop",
         "hairColor": "soft-black",
         "skinTone": "tan",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "split-neck-tunic",
+        "beard": "none"
       },
       "p4": {
         "name": "Doriaan",
@@ -1003,9 +1009,11 @@
         "hairStyle": "wavy-crop",
         "hairColor": "soft-black",
         "skinTone": "tan",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "hooded-mantle",
+        "beard": "none"
       },
       "p5": {
         "name": "Valentijn",
@@ -1015,9 +1023,11 @@
         "hairStyle": "side-part",
         "hairColor": "warm-brown",
         "skinTone": "light",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "round-neck-tunic",
+        "beard": "none"
       }
     },
     "rooms": {

@@ -1,6 +1,6 @@
 {
   "levelNumber": 12,
-  "levelVersion": 2,
+  "levelVersion": 3,
   "levelId": "lvl-mtx558868zpbr",
   "format": "clueboard-level",
   "version": 11,
@@ -1243,7 +1243,9 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "split-neck-tunic",
+        "beard": "forked-beard"
       },
       "p2": {
         "name": "Anselm",
@@ -1253,9 +1255,11 @@
         "hairStyle": "buzz-cut",
         "hairColor": "warm-brown",
         "skinTone": "tan",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "rounded-full-beard"
       },
       "p3": {
         "name": "Brand",
@@ -1265,9 +1269,11 @@
         "hairStyle": "undercut",
         "hairColor": "deep-brown",
         "skinTone": "light",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "round-neck-tunic",
+        "beard": "chin-curtain"
       },
       "p4": {
         "name": "Coenraad",
@@ -1279,7 +1285,9 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "high-collar-doublet",
+        "beard": "straight-cut-beard"
       },
       "p5": {
         "name": "Duncan",
@@ -1291,7 +1299,9 @@
         "skinTone": "deep",
         "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "hooded-mantle",
+        "beard": "moustache"
       },
       "p6": {
         "name": "Egbert",
@@ -1303,19 +1313,23 @@
         "skinTone": "tan",
         "hairAuto": false,
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "fur-collar-mantle",
+        "beard": "none"
       },
       "p7": {
         "name": "Filips",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairStyle": "buzz-cut",
+        "hairStyle": "brushed-back-neck-length",
         "hairColor": "auburn",
         "skinTone": "light",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "F",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "leather-jerkin",
+        "beard": "small-natural-moustache"
       }
     },
     "rooms": {

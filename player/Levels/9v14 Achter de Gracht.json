@@ -1,6 +1,6 @@
 {
   "levelNumber": 9,
-  "levelVersion": 13,
+  "levelVersion": 14,
   "levelId": "lvl-mtpsczg45i82s",
   "format": "clueboard-level",
   "version": 11,
@@ -1762,9 +1762,11 @@
         "hairStyle": "side-part",
         "hairColor": "warm-brown",
         "skinTone": "light",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "leather-jerkin",
+        "beard": "none"
       },
       "p2": {
         "name": "Agnes",
@@ -1776,19 +1778,23 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "noble-surcoat-mantle-gown",
+        "beard": "none"
       },
       "p3": {
         "name": "Berthold",
         "role": "knight",
         "gender": "male",
         "description": "",
-        "hairStyle": "side-part",
+        "hairStyle": "wavy-crop",
         "hairColor": "silver",
         "skinTone": "light",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "fur-collar-mantle",
+        "beard": "none"
       },
       "p4": {
         "name": "Casimir",
@@ -1798,9 +1804,11 @@
         "hairStyle": "short-crop",
         "hairColor": "soft-black",
         "skinTone": "tan",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "merchant-side-button-coat",
+        "beard": "none"
       },
       "p5": {
         "name": "Dina",
@@ -1812,19 +1820,23 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": false
+        "genderAuto": false,
+        "clothing": "lace-up-tunic",
+        "beard": "none"
       },
       "p6": {
         "name": "Edzard",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairStyle": "wavy-crop",
+        "hairStyle": "side-swept-collar-length",
         "hairColor": "warm-brown",
         "skinTone": "deep",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "artisan-apron-tunic",
+        "beard": "none"
       },
       "p7": {
         "name": "Femke",
@@ -1836,7 +1848,9 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "F",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "high-collar-doublet",
+        "beard": "none"
       }
     },
     "rooms": {

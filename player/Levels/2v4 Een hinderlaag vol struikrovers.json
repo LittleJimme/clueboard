@@ -1,6 +1,6 @@
 {
   "levelNumber": 2,
-  "levelVersion": 3,
+  "levelVersion": 4,
   "levelId": "lvl-1a05ef262400984c",
   "format": "clueboard-level",
   "version": 11,
@@ -1405,8 +1405,10 @@
         "hairStyle": "crew-cut",
         "hairColor": "soft-black",
         "skinTone": "light",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "round-neck-tunic",
+        "beard": "none"
       },
       "p2": {
         "name": "Baldwin",
@@ -1417,8 +1419,10 @@
         "hairStyle": "short-curls",
         "hairColor": "warm-brown",
         "skinTone": "medium",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "artisan-apron-tunic",
+        "beard": "none"
       },
       "p3": {
         "name": "Cyriel",
@@ -1429,8 +1433,10 @@
         "hairStyle": "undercut",
         "hairColor": "dark-blond",
         "skinTone": "medium",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "lace-up-tunic",
+        "beard": "none"
       },
       "p4": {
         "name": "Dorothy",
@@ -1441,8 +1447,10 @@
         "hairStyle": "wavy-crop",
         "hairColor": "warm-brown",
         "skinTone": "medium",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "hooded-mantle",
+        "beard": "small-simple-beard"
       },
       "p5": {
         "name": "Eleanor",
@@ -1453,8 +1461,10 @@
         "hairStyle": "buzz-cut",
         "hairColor": "deep-brown",
         "skinTone": "tan",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       },
       "p6": {
         "name": "Fulbert",
@@ -1462,11 +1472,13 @@
         "description": "",
         "gender": "male",
         "genderAuto": true,
-        "hairStyle": "wavy-crop",
+        "hairStyle": "side-part",
         "hairColor": "auburn",
         "skinTone": "medium",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "split-neck-tunic",
+        "beard": "moustache-chin-beard"
       },
       "p7": {
         "name": "Vladimir",
@@ -1474,11 +1486,13 @@
         "description": "",
         "gender": "male",
         "genderAuto": true,
-        "hairStyle": "buzz-cut",
+        "hairStyle": "bald",
         "hairColor": "silver",
         "skinTone": "light",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "fur-collar-mantle",
+        "beard": "none"
       }
     },
     "rooms": {

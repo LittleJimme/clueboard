@@ -622,45 +622,70 @@
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "olive",
+        "hairStyle": "long-wavy",
+        "hairColor": "light-brown",
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       },
       "p2": {
         "name": "Bertram",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "deep",
+        "hairStyle": "side-swept-collar-length",
+        "hairColor": "iron-grey",
+        "clothing": "split-neck-tunic",
+        "beard": "none"
       },
       "p3": {
         "name": "Cunera",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "light",
+        "hairStyle": "ponytail",
+        "hairColor": "warm-brown",
+        "clothing": "high-collar-doublet",
+        "beard": "none"
       },
       "p4": {
         "name": "Diederik",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "light",
+        "hairStyle": "short-crop",
+        "hairColor": "soft-black",
+        "clothing": "fur-collar-mantle",
+        "beard": "straight-cut-beard"
       },
       "p5": {
         "name": "Elske",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "deep",
+        "hairStyle": "bob",
+        "hairColor": "iron-grey",
+        "clothing": "square-neck-kirtle",
+        "beard": "none"
       }
     },
     "rooms": {

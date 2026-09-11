@@ -1148,54 +1148,84 @@
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "light",
+        "hairStyle": "bob",
+        "hairColor": "white",
+        "clothing": "high-collar-doublet",
+        "beard": "none"
       },
       "p2": {
         "name": "Bertram",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "tan",
+        "hairStyle": "bald",
+        "hairColor": "light-brown",
+        "clothing": "split-neck-tunic",
+        "beard": "none"
       },
       "p3": {
         "name": "Cunera",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "olive",
+        "hairStyle": "shoulder-straight",
+        "hairColor": "dark-blond",
+        "clothing": "lace-up-tunic",
+        "beard": "none"
       },
       "p4": {
         "name": "Diederik",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "bronze",
+        "hairStyle": "shaggy-ear-length",
+        "hairColor": "light-brown",
+        "clothing": "leather-jerkin",
+        "beard": "none"
       },
       "p5": {
         "name": "Elske",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "medium",
+        "hairStyle": "long-wavy",
+        "hairColor": "ginger",
+        "clothing": "artisan-apron-tunic",
+        "beard": "none"
       },
       "p6": {
         "name": "Floris",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "F",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "tan",
+        "hairStyle": "short-curls",
+        "hairColor": "deep-brown",
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       }
     },
     "rooms": {

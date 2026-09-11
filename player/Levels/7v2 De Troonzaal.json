@@ -1,6 +1,6 @@
 {
   "levelNumber": 7,
-  "levelVersion": 3,
+  "levelVersion": 2,
   "levelId": "lvl-mtmqoqlw2ucfc",
   "format": "clueboard-level",
   "version": 11,
@@ -1074,7 +1074,9 @@
         "skinTone": "deep",
         "hairAuto": false,
         "nameLetter": "A",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       },
       "p2": {
         "name": "Baldwin",
@@ -1086,7 +1088,9 @@
         "skinTone": "medium",
         "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "high-collar-doublet",
+        "beard": "none"
       },
       "p3": {
         "name": "Clementia",
@@ -1098,19 +1102,23 @@
         "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "square-neck-kirtle",
+        "beard": "none"
       },
       "p4": {
         "name": "Diederik",
         "role": "knight",
         "gender": "male",
         "description": "",
-        "hairStyle": "short-curls",
+        "hairStyle": "crew-cut",
         "hairColor": "deep-brown",
         "skinTone": "medium",
         "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": false
+        "genderAuto": false,
+        "clothing": "leather-jerkin",
+        "beard": "chin-curtain"
       },
       "p5": {
         "name": "Vastrad",
@@ -1122,7 +1130,9 @@
         "skinTone": "medium",
         "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "clothing": "hooded-mantle",
+        "beard": "none"
       }
     },
     "rooms": {

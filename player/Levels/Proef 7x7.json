@@ -1071,63 +1071,98 @@
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "V",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "medium",
+        "hairStyle": "half-up",
+        "hairColor": "white",
+        "clothing": "noble-surcoat-mantle-gown",
+        "beard": "none"
       },
       "p2": {
         "name": "Bertram",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "B",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "bronze",
+        "hairStyle": "side-swept-collar-length",
+        "hairColor": "silver",
+        "clothing": "lace-up-tunic",
+        "beard": "straight-cut-beard"
       },
       "p3": {
         "name": "Cunera",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "C",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "medium",
+        "hairStyle": "shoulder-straight",
+        "hairColor": "white",
+        "clothing": "quilted-gambeson",
+        "beard": "none"
       },
       "p4": {
         "name": "Diederik",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "D",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "deep",
+        "hairStyle": "crew-cut",
+        "hairColor": "white",
+        "clothing": "split-neck-tunic",
+        "beard": "moustache-chin-beard"
       },
       "p5": {
         "name": "Elske",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "E",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "tan",
+        "hairStyle": "long-curls",
+        "hairColor": "warm-brown",
+        "clothing": "high-collar-doublet",
+        "beard": "none"
       },
       "p6": {
         "name": "Floris",
         "role": "",
         "gender": "male",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "F",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "tan",
+        "hairStyle": "bald",
+        "hairColor": "deep-brown",
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       },
       "p7": {
         "name": "Godfried",
         "role": "",
         "gender": "female",
         "description": "",
-        "hairAuto": true,
+        "hairAuto": false,
         "nameLetter": "G",
-        "genderAuto": true
+        "genderAuto": true,
+        "skinTone": "deep",
+        "hairStyle": "long-wavy",
+        "hairColor": "silver",
+        "clothing": "hooded-mantle",
+        "beard": "none"
       }
     },
     "rooms": {

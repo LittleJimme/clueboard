@@ -536,7 +536,9 @@
         "hairColor": "soft-black",
         "skinTone": "light",
         "hairAuto": false,
-        "attributes": {}
+        "attributes": {},
+        "clothing": "merchant-side-button-coat",
+        "beard": "none"
       },
       "p2": {
         "name": "Beatrix",
@@ -549,7 +551,9 @@
         "hairColor": "warm-brown",
         "skinTone": "medium",
         "hairAuto": false,
-        "attributes": {}
+        "attributes": {},
+        "clothing": "quilted-gambeson",
+        "beard": "none"
       },
       "p3": {
         "name": "Constantijn",
@@ -561,8 +565,10 @@
         "hairStyle": "swept-back",
         "hairColor": "auburn",
         "skinTone": "medium",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "leather-jerkin",
+        "beard": "none"
       },
       "p4": {
         "name": "Valentijn",
@@ -574,8 +580,10 @@
         "hairStyle": "side-part",
         "hairColor": "warm-brown",
         "skinTone": "light",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "artisan-apron-tunic",
+        "beard": "soft-chevron-moustache"
       }
     },
     "rooms": {

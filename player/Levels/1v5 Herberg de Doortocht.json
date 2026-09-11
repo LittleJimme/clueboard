@@ -1,6 +1,6 @@
 {
   "levelNumber": 1,
-  "levelVersion": 4,
+  "levelVersion": 5,
   "levelId": "lvl-1a05ef2624294473",
   "format": "clueboard-level",
   "version": 11,
@@ -881,7 +881,9 @@
         "hairColor": "auburn",
         "skinTone": "light",
         "hairAuto": false,
-        "attributes": {}
+        "attributes": {},
+        "clothing": "scholar-folded-collar-robe",
+        "beard": "none"
       },
       "p2": {
         "name": "Bart",
@@ -892,8 +894,10 @@
         "hairStyle": "wavy-crop",
         "hairColor": "warm-brown",
         "skinTone": "medium",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "hooded-mantle",
+        "beard": "none"
       },
       "p3": {
         "name": "Clementia",
@@ -905,7 +909,9 @@
         "hairColor": "warm-brown",
         "skinTone": "light",
         "hairAuto": false,
-        "attributes": {}
+        "attributes": {},
+        "clothing": "merchant-side-button-coat",
+        "beard": "none"
       },
       "p4": {
         "name": "Duncan",
@@ -916,8 +922,10 @@
         "hairStyle": "crew-cut",
         "hairColor": "soft-black",
         "skinTone": "medium",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "lace-up-tunic",
+        "beard": "none"
       },
       "p5": {
         "name": "Elias",
@@ -925,11 +933,13 @@
         "description": "",
         "gender": "male",
         "genderAuto": true,
-        "hairStyle": "crew-cut",
+        "hairStyle": "undercut",
         "hairColor": "soft-black",
         "skinTone": "deep",
         "hairAuto": false,
-        "attributes": {}
+        "attributes": {},
+        "clothing": "split-neck-tunic",
+        "beard": "none"
       },
       "p6": {
         "name": "Victor",
@@ -940,8 +950,10 @@
         "hairStyle": "swept-back",
         "hairColor": "auburn",
         "skinTone": "light",
-        "hairAuto": true,
-        "attributes": {}
+        "hairAuto": false,
+        "attributes": {},
+        "clothing": "quilted-gambeson",
+        "beard": "none"
       }
     },
     "rooms": {
