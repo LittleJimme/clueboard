@@ -2710,6 +2710,14 @@
       "gender": "female"
     }
   ],
+  "beards": [
+    { "id": "none", "label": "Geen", "gender": "any" },
+    { "id": "chin-curtain", "label": "Ringbaard", "gender": "male" },
+    { "id": "chin-goatee", "label": "Sik", "gender": "male" },
+    { "id": "forked-beard", "label": "Gevorkte baard", "gender": "male" },
+    { "id": "moustache-chin-beard", "label": "Snor met sik", "gender": "male" },
+    { "id": "rounded-full-beard", "label": "Volle baard", "gender": "male" }
+  ],
   "hairColors": [
     {
       "id": "soft-black",
@@ -2742,7 +2750,7 @@
       "hex": "#A7A9AC"
     }
   ],
-  "characterNote": "Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ (512px, zelfde canvas). Van achter naar voor: hoofd, shirt, haar, en alleen bij het slachtoffer de kruisogen; de lagen liggen 1:1 op elkaar, niets schuift. Shirt en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden. skinTones: vier huidtinten; light is de tint van de tekening zelf (base) en wordt niet omgekleurd; avoidHair zegt welke haarkleuren de bouwer bij die tint niet vanzelf toekent.",
+  "characterNote": "Characters zijn PNG-lagen uit Design Department/50 Handoff to Claude/PNG Asset Pack, runtime in assets/characters/ (512px, zelfde canvas). Van achter naar voor: hoofd, shirt, haar, en alleen bij het slachtoffer de kruisogen; de lagen liggen 1:1 op elkaar, niets schuift. Shirt en haar worden op het moment ingekleurd (hue/verzadiging van de doelkleur, licht/donker van de tekening). hairStyle/hairColor staan in content.people; ontbreken ze, dan side-part in deep-brown. Een baard (content.people[id].beard, ids uit beards; none of ontbrekend = geen) ligt tussen shirt en haar in en kleurt altijd mee met de haarkleur; alleen voor mannen. hairStyles met available:false zijn nog niet geleverd en worden niet aangeboden. skinTones: vier huidtinten; light is de tint van de tekening zelf (base) en wordt niet omgekleurd; avoidHair zegt welke haarkleuren de bouwer bij die tint niet vanzelf toekent.",
   "skinTones": [
     {
       "id": "light",
