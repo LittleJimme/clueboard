@@ -81,8 +81,11 @@ def main():
     baardmap = os.path.join(PAK, "Beards")
     for f in sorted(os.listdir(baardmap)):
         if not f.endswith(".png"): continue
-        schrijf(op_doek(Image.open(os.path.join(baardmap, f))), os.path.join(DOEL, "baard", f))
-        regels.append("baard/" + f[:-4])
+        # "04-straight-cut-beard.png" heet in de bank straight-cut-beard: het
+        # nummer is de volgorde van de levering, geen deel van de naam.
+        naam = re.sub(r"^\d+-", "", f[:-4])
+        schrijf(op_doek(Image.open(os.path.join(baardmap, f))), os.path.join(DOEL, "baard", naam + ".png"))
+        regels.append("baard/" + naam)
 
     ogen = os.path.join(DOEL, "ogen.png")
     if os.path.exists(ogen):
@@ -108,6 +111,17 @@ def main():
             regels.append("kleding/" + naam + "-vast")
         schrijf(im, os.path.join(DOEL, "kleding", naam + ".png"))
         regels.append("kleding/" + naam + ("  (uitgestanst)" if naam in vast else ""))
+
+    # De rand van de banier en het schild los: de plaat zonder het
+    # binnenvlak. De bouwer legt daaronder een vlak in de lichte tint van de
+    # persoon, zodat alleen de rand goud of zilver is.
+    for vorm in ("banier", "schild"):
+        plaat = Image.open(os.path.join(DOEL, "ui", vorm + ".png")).convert("RGBA")
+        masker = Image.open(os.path.join(DOEL, "ui", "masker-" + vorm + ".png")).convert("RGBA").getchannel("A")
+        rand = plaat.copy()
+        rand.putalpha(ImageChops.multiply(plaat.getchannel("A"), ImageChops.invert(masker)))
+        schrijf(rand, os.path.join(DOEL, "ui", vorm + "-rand.png"))
+        regels.append("ui/" + vorm + "-rand")
 
     for oud in ("shirt.png", "shirt.webp"):
         p = os.path.join(DOEL, oud)
