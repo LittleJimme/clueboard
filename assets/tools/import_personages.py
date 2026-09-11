@@ -24,7 +24,7 @@ over. Daarna: python assets/tools/maak_webp.py, en de vast-vlaggen in
 manifest.json worden hier bijgezet op wat er ligt.
 """
 import io, json, os, re, sys
-from PIL import Image
+from PIL import Image, ImageChops
 
 WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 PAK = os.path.join(WORTEL, "Design Department", "50 Handoff to Claude", "PNG Asset Pack", "Characters")
@@ -90,14 +90,24 @@ def main():
         regels.append("ogen")
 
     kledingmap = os.path.join(PAK, "Clothing")
-    vast = {}
+    vast, basis = {}, {}
     for f in sorted(os.listdir(kledingmap)):
         m = re.match(r"\d+-(.+?)(-vast| copy)?\.png$", f)
         if not m: continue
-        naam = m.group(1) + ("-vast" if m.group(2) else "")
-        schrijf(op_doek(Image.open(os.path.join(kledingmap, f))), os.path.join(DOEL, "kleding", naam + ".png"))
-        if m.group(2): vast[m.group(1)] = True
-        regels.append("kleding/" + naam)
+        if m.group(2): vast[m.group(1)] = op_doek(Image.open(os.path.join(kledingmap, f)))
+        else: basis[m.group(1)] = op_doek(Image.open(os.path.join(kledingmap, f)))
+    for naam, im in basis.items():
+        if naam in vast:
+            # De vaste laag wordt uit de basis gestanst. Anders telt het leer
+            # of het bont mee in de toon waarop de kwast inkleurt, en krijgt
+            # het onderhemd van de jerkin een verkeerde kleur; en langs de rand
+            # van een gesp schemert anders een gekleurd randje door.
+            im = im.copy()
+            im.putalpha(ImageChops.multiply(im.getchannel("A"), ImageChops.invert(vast[naam].getchannel("A"))))
+            schrijf(vast[naam], os.path.join(DOEL, "kleding", naam + "-vast.png"))
+            regels.append("kleding/" + naam + "-vast")
+        schrijf(im, os.path.join(DOEL, "kleding", naam + ".png"))
+        regels.append("kleding/" + naam + ("  (uitgestanst)" if naam in vast else ""))
 
     for oud in ("shirt.png", "shirt.webp"):
         p = os.path.join(DOEL, oud)
