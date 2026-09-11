@@ -2738,8 +2738,10 @@ body.desktop.in-game #modalIntro .scroll-wenk{display:none}
 }
 
 /* ── Panelen ── */
-body.in-game .sheet{background:var(--kaart);border:1px solid var(--lijn);color:var(--inkt);box-shadow:var(--sch2)}
-body.in-game .sheet h3{font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--inkt);letter-spacing:0}
+/* Ook op de uitslag: "Wie is de dader?" gaat daar open, en zonder dit vel
+   stond die vraag in de lichte basisopmaak op een donkere bladzijde. */
+body.in-game .sheet,body.in-end .sheet{background:var(--kaart);border:1px solid var(--lijn);color:var(--inkt);box-shadow:var(--sch2)}
+body.in-game .sheet h3,body.in-end .sheet h3{font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--inkt);letter-spacing:0}
 body.in-game .sheet p,body.in-game .sheet ol,body.in-game .set-uitleg{color:var(--inkt-2)}
 body.in-game .set-kop{margin:14px 2px 7px;font:800 10.5px var(--font-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--dof)}
 body.in-game .set-kop:first-of-type{margin-top:2px}
@@ -2878,7 +2880,7 @@ body.in-game .kop-knop.thema-knop i{
 /* Op een telefoon staat de uitleg niet meer als los vraagteken in de kop maar
    onderin de instellingen, waar de rest van de hulp ook staat. */
 body.in-game:not(.desktop) #btnHelpTop{display:none}
-body.in-game .modal .backdrop{background:rgba(0,0,0,.42)}
+body.in-game .modal .backdrop,body.in-end .modal .backdrop{background:rgba(0,0,0,.42)}
 /* Meldingen en de hintvraag: hetzelfde papier, dezelfde gouden knop als de
    rest van het spel. Het oude zegel is weg. */
 body.in-game .sheet.melding{max-width:380px;padding:24px 22px 20px;border-radius:22px}
@@ -2903,27 +2905,27 @@ body.in-game .notitie-rij small{flex:0 0 auto;font-size:11.5px;font-weight:600;c
 body.in-game .sheet.melding p{font-size:15px;line-height:1.55;color:var(--inkt-2)}
 body.in-game .sheet.melding p b{color:var(--inkt);font-weight:800}
 body.in-game .sheet.melding .row{margin-top:16px;gap:10px}
-body.in-game .modal:not(.sheet-modal) .btn{
+body.in-game .modal:not(.sheet-modal) .btn,body.in-end .modal:not(.sheet-modal) .btn{
   background:var(--goud);color:var(--goud-op);border:1px solid var(--goud-diep);border-radius:999px;
   font-family:var(--font-display);font-weight:600;font-size:16.5px;letter-spacing:0;height:46px;padding:0 18px;
   box-shadow:var(--sch1);text-shadow:none;flex:1}
-body.in-game .modal:not(.sheet-modal) .btn.ghost{background:var(--kaart-2);color:var(--inkt);border:1px solid var(--lijn);box-shadow:none}
+body.in-game .modal:not(.sheet-modal) .btn.ghost,body.in-end .modal:not(.sheet-modal) .btn.ghost{background:var(--kaart-2);color:var(--inkt);border:1px solid var(--lijn);box-shadow:none}
 /* De keuzerijen in "Wie is de dader?" stonden nog op de lichte tokens uit de
    basisopmaak: witte kaarten met een lichte rand op een donker vel. Ze delen
    nu de kaartkleur van het spel, en de naam staat in de schreefletter waarin
    namen overal staan. */
-body.in-game .opt{
+body.in-game .opt,body.in-end .opt{
   background:var(--kaart-2);border:1px solid var(--lijn);color:var(--inkt);
   box-shadow:none;border-radius:14px;
 }
-body.in-game .opt .av{border-color:var(--lijn)}
-body.in-game .opt b{font-family:var(--font-display);font-weight:600;font-size:16px;letter-spacing:0;color:var(--inkt)}
-body.in-game .opt.selected{border-color:var(--goud);background:var(--kaart);
+body.in-game .opt .av,body.in-end .opt .av{border-color:var(--lijn)}
+body.in-game .opt b,body.in-end .opt b{font-family:var(--font-display);font-weight:600;font-size:16px;letter-spacing:0;color:var(--inkt)}
+body.in-game .opt.selected,body.in-end .opt.selected{border-color:var(--goud);background:var(--kaart);
   box-shadow:0 0 0 2px rgba(201,147,47,.28)}
-body.in-game .modal:not(.sheet-modal) .btn.danger{
+body.in-game .modal:not(.sheet-modal) .btn.danger,body.in-end .modal:not(.sheet-modal) .btn.danger{
   background:var(--zaak-rood,#C0564A);color:#FFF;border:1px solid rgba(0,0,0,.28);box-shadow:none}
-body.in-game .modal:not(.sheet-modal) .btn[disabled]{opacity:.45}
-body.in-game .modal:not(.sheet-modal) .btn:active{transform:translateY(1px);box-shadow:none}
+body.in-game .modal:not(.sheet-modal) .btn[disabled],body.in-end .modal:not(.sheet-modal) .btn[disabled]{opacity:.45}
+body.in-game .modal:not(.sheet-modal) .btn:active,body.in-end .modal:not(.sheet-modal) .btn:active{transform:translateY(1px);box-shadow:none}
 /* De skin legt op elk vak een kamerwaas in ::after; het geselecteerde vak
    moet daar bovenuit komen, dus hier met meer gewicht. */
 body.in-game .tile.selected::after{
@@ -3518,9 +3520,14 @@ body.in-end #screen-end{padding:0;justify-content:flex-start;overflow:hidden;dis
 .uitslag-voet{flex:0 0 auto;max-width:520px;width:100%;margin:0 auto;
   padding:12px 22px calc(12px + env(safe-area-inset-bottom));
   border-top:1px solid var(--lijn-zacht);background:var(--grond)}
-.uitslag-voet{display:flex;gap:10px}
+.uitslag-voet{display:flex;flex-wrap:wrap;gap:10px}
 .uitslag-voet .btn{flex:1 1 0;width:auto;min-width:0}
 .uitslag-voet .btn[hidden]{display:none}
+/* "Wijs de dader aan" krijgt een eigen regel: in de kapitalen van deze voet
+   is dat label te lang om naast een tweede knop te staan zonder af te breken.
+   Twee keer, want op desktop weegt de kolomregel zwaarder. */
+.uitslag-voet #btnEndAccuse,
+body.desktop.in-end #screen-end .uitslag-voet #btnEndAccuse{flex:1 1 100%}
 @keyframes uitslagIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .uitslag-beeld{position:relative;width:128px;height:128px;margin:22px auto 14px}
 /* Alleen de ring draait een kwartslag (zodat hij bovenaan begint); het
@@ -3691,9 +3698,11 @@ body.in-game .clue-card.done::before{background:var(--goud)}
       </div>
       <div class="uitslag-lijst" id="endDetails"></div>
     </div>
-    <!-- Klopt alles, dan mag je door naar het menu; anders is er maar een
-         weg: terug naar het bord om verder te puzzelen. -->
-    <div class="uitslag-voet"><button class="btn ghost" id="btnEndMenu" hidden>Naar het menu</button><button class="btn" id="btnEndBack">Terug naar het bord</button></div>
+    <!-- De dader aanwijzen kan altijd vanaf hier: de uitslag is precies de
+         plek waar je merkt dat het nog moet. Klopt alles, dan mag je door naar
+         het menu; anders is er verder maar een weg: terug naar het bord om
+         verder te puzzelen. -->
+    <div class="uitslag-voet"><button class="btn ghost" id="btnEndAccuse">Wijs de dader aan</button><button class="btn ghost" id="btnEndMenu" hidden>Naar het menu</button><button class="btn" id="btnEndBack">Terug naar het bord</button></div>
   </section>
 </div>
 
@@ -8424,7 +8433,11 @@ function bewaarVoltooid(raw,ms){
   }catch(e){}
 }
 function checkSolution(){
-  elapsed=Date.now()-startTime; stopTimer();
+  /* Alleen bijwerken zolang de klok echt loopt. Kom je hier een tweede keer
+     -- de dader aanwijzen vanaf de uitslag -- dan staat de klok stil en zou
+     een verse aftrek van startTime alle tijd op de uitslag meerekenen. */
+  if(timerId) elapsed=Date.now()-startTime;
+  stopTimer();
   let correct=0; const details=[];
   M.people.forEach(p=>{
     const mine=placed.get(p.id)||null, truth=M.solution.get(p.id)||null;
@@ -8436,6 +8449,13 @@ function checkSolution(){
   uitslagPerfect=perfect;
   if(perfect){ bewaarVoltooid(currentRaw,elapsed); wisBezig(currentRaw); }
   { const mb=$("#btnEndMenu"); if(mb) mb.hidden=!perfect; }
+  /* De dader aanwijzen blijft bereikbaar zolang de zaak niet rond is; staat
+     alles goed en is de dader juist, dan valt er niets meer aan te wijzen. */
+  { const ab=$("#btnEndAccuse");
+    if(ab){
+      ab.hidden = perfect && accusedResult===true;
+      ab.textContent = accused ? "Andere dader aanwijzen" : "Wijs de dader aan";
+    } }
   const card=document.querySelector("#screen-end .uitslag");
   if(card){ card.classList.toggle("win",perfect); card.classList.toggle("lose",!perfect); }
   haptic(perfect?[16,60,26,60,40]:[46,70,46]);
@@ -8540,7 +8560,7 @@ function openAccuse(){
   M.people.forEach(p=>{
     if(p.id===M.victimId) return;
     const b=document.createElement("button");
-    b.className="opt"; b.type="button";
+    b.className="opt"; b.type="button"; b.dataset.person=p.id;
     b.innerHTML='<div class="av">'+characterHtml(p)+'</div><div><b>'+esc(p.name)+'</b>'
       +(p.standingLabel?'<div style="font-size:12px;color:var(--faint)">'+esc(p.standingLabel)+'</div>':'')
       +'</div>';
@@ -8554,6 +8574,12 @@ function openAccuse(){
   });
   const btn=$("#btnAccuseConfirm");
   btn.disabled=true; btn.textContent="Bevestig"; delete btn.dataset.person;
+  /* Wie je eerder beschuldigde staat al aangewezen: je ziet je vorige keuze
+     en hoeft alleen te veranderen wat je wilt veranderen. */
+  if(accused){
+    const eerder=list.querySelector('.opt[data-person="'+accused+'"]');
+    if(eerder) eerder.click();
+  }
   openModal("#modalAccuse");
 }
 
@@ -8603,7 +8629,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.150";
+const PLAYER_APP_VERSION="0.9.151";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -10040,10 +10066,14 @@ $("#btnRestart").addEventListener("click",()=>{
 });
 
 $("#btnCheck").addEventListener("click",onCheckClick);
+$("#btnEndAccuse").addEventListener("click",openAccuse);
 $("#btnAccuseConfirm").addEventListener("click",e=>{
   const pid=e.currentTarget.dataset.person; if(!pid) return;
   accused=pid;
-  accusedResult=(pid===M.culpritId); // plaatsing staat al vast te kloppen op dit punt
+  /* Wie de dader is staat los van waar iedereen stond: je kunt de dader
+     goed hebben met een pion verkeerd, en omgekeerd. De uitslag laat beide
+     apart zien. */
+  accusedResult=(pid===M.culpritId);
   haptic([12,40,12]);
   closeModal($("#modalAccuse"));
   checkSolution();
