@@ -4516,6 +4516,14 @@ const ROLE_LABELS=(function(){
 })();
 function roleLabel(r){ return r ? (ROLE_LABELS[r]||String(r).charAt(0).toUpperCase()+String(r).slice(1)) : null; }
 
+/* Dorpeling is de rol die iedereen heeft die geen edele of ridder is: een
+   technisch feit, geen kenmerk. Het merkje ervan zegt dus niets en blijft weg
+   -- wie geen merkje draagt is dorpeling, en zijn ronde medaillon zegt het al.
+   De rolhint blijft wel staan waar het bord gebieden voor edelen heeft: daar
+   is het geen etiket maar een regel van het spel. */
+function rolLabel(p){
+  return (p && p.standingLabel && p.standing !== "villager") ? p.standingLabel : "";
+}
 /* Slachtoffer of verdachte staat nergens meer als woord op het bord: het
    slachtoffer is rood en dat is genoeg. De dader blijft tot het einde gewoon
    een verdachte, anders verklap je de puzzel meteen. */
@@ -7150,7 +7158,7 @@ function paintBoard(){
       const pawn=document.createElement("div");
       pawn.className="pawn "+role+(pid===justPlaced?" land":"")+(alsPersonage?" personage":"");
       pawn.style.setProperty("--pc",p.color);
-      pawn.title=p.name+(p.standingLabel?" \u2014 "+p.standingLabel:"");
+      pawn.title=p.name+(rolLabel(p)?" \u2014 "+rolLabel(p):"");
       if(alsPersonage) pawn.appendChild(personPortrait(p,{}));
 
       const init=document.createElement("span");
@@ -7956,7 +7964,7 @@ function personButton(p,tileId,t,x,y){
   b.style.setProperty("--pc-tekst",opKleur(p.color));
   b.style.setProperty("--ch-tint",mixHex(p.color,"#FFFFFF",.86));
   if(personRole(p)==="victim") b.classList.add("victim");
-  b.title=p.name+(p.standingLabel?" \u2014 "+p.standingLabel:"");
+  b.title=p.name+(rolLabel(p)?" \u2014 "+rolLabel(p):"");
 
   /* Het poppetje: eigen gezicht, shirt in de kleur van de persoon. Staat er
      een eigen tekening in assets/art/characters/, dan komt die eroverheen. */
@@ -8208,7 +8216,7 @@ function personCard(clues,p,done){
     el.textContent=tekst;
     merkjes.appendChild(el);
   };
-  if(p.standing && p.standingLabel) merk(p.standing,p.standingLabel);
+  if(rolLabel(p)) merk(p.standing,rolLabel(p));
   /* Een dier is geen verdachte: het merkje zegt wat het wel is. */
   if(p.dier){
     card.classList.add("getuige");
@@ -8417,7 +8425,7 @@ function detailHtml(cs,p){
     const isV=p.id===M.victimId;
     const merken=[];
     if(isV) merken.push('<span class="badge tag victim">Slachtoffer</span>');
-    if(p.standingLabel) merken.push('<span class="badge tag '+esc(p.standing||"")+'">'+esc(p.standingLabel)+'</span>');
+    if(rolLabel(p)) merken.push('<span class="badge tag '+esc(p.standing||"")+'">'+esc(rolLabel(p))+'</span>');
     if(p.dier) merken.push('<span class="badge tag getuige">Getuige</span>');
     if(p.dier && p.dead) merken.push('<span class="badge tag victim">Gedood</span>');
     if(revealed && p.id===M.culpritId) merken.push('<span class="badge tag victim">Dader</span>');
@@ -8924,7 +8932,7 @@ function openAccuse(){
     const b=document.createElement("button");
     b.className="opt"; b.type="button"; b.dataset.person=p.id;
     b.innerHTML='<div class="av">'+characterHtml(p)+'</div><div><b>'+esc(p.name)+'</b>'
-      +(p.standingLabel?'<div style="font-size:12px;color:var(--faint)">'+esc(p.standingLabel)+'</div>':'')
+      +(rolLabel(p)?'<div style="font-size:12px;color:var(--faint)">'+esc(rolLabel(p))+'</div>':'')
       +'</div>';
     b.addEventListener("click",()=>{
       list.querySelectorAll(".opt").forEach(o=>o.classList.remove("selected"));
@@ -8991,7 +8999,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.171";
+const PLAYER_APP_VERSION="0.9.172";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9328,7 +9336,11 @@ function isAlgemeneRegel(tekst){
 function getBoardRules(raw){
   const content=raw.content||{};
   const src=(Array.isArray(raw.clues)&&raw.clues.length)?raw.clues:(content.clues||[]);
-  return src.filter(c=>c && !c.personId && (c.text||c.storyText) && !isAlgemeneRegel(c.text||c.storyText));
+  /* Een regel over een dier hoort bij dat dier, net als een regel over een
+     persoon bij die persoon: het introvel toont hem dus niet als bordregel --
+     het dier staat er zelf bij, met zijn eigen kaart in het dossier. */
+  return src.filter(c=>c && !c.personId && !c.subjectAnimal &&
+    (c.text||c.storyText) && !isAlgemeneRegel(c.text||c.storyText));
 }
 
 function showLevelDetail(levelIndex){
@@ -9455,7 +9467,7 @@ function showLevelDetail(levelIndex){
       +'<span class="dl-merken">'
       +(isV?'<span class="badge tag victim">Slachtoffer</span>':'')
       +(pe.dier?'<span class="badge tag getuige">Getuige</span>':'')
-      +(pe.standingLabel?'<span class="badge tag '+esc(pe.standing||"")+'">'+esc(pe.standingLabel)+'</span>':'')
+      +(rolLabel(pe)?'<span class="badge tag '+esc(pe.standing||"")+'">'+esc(rolLabel(pe))+'</span>':'')
       +'</span>';
     rij.appendChild(tekst);
     host.appendChild(rij);

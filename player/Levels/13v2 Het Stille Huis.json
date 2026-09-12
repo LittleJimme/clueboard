@@ -1,11 +1,11 @@
 {
   "levelNumber": 13,
-  "levelVersion": 1,
+  "levelVersion": 2,
   "levelId": "lvl-mty5rdqzj9tjl",
   "format": "clueboard-level",
-  "version": 11,
+  "version": 12,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-12T09:03:43.447Z",
+  "exportedAt": "2026-09-12T12:33:18.657Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -282,29 +282,8 @@
         }
       },
       {
-        "id": "obj-11",
-        "name": "Vaas 1",
-        "kind": "Vase",
-        "kindLabel": "Vaas",
-        "shape": "single",
-        "shapeLabel": "losse tegel",
-        "type": "blocked",
-        "typeLabel": "blokkeert",
-        "roomId": "room-1",
-        "size": 1,
-        "tiles": [
-          "c2r4"
-        ],
-        "bounds": {
-          "minColumn": 2,
-          "maxColumn": 2,
-          "minRow": 4,
-          "maxRow": 4
-        }
-      },
-      {
         "id": "obj-12",
-        "name": "Vaas 2",
+        "name": "Vaas 1",
         "kind": "Vase",
         "kindLabel": "Vaas",
         "shape": "single",
@@ -385,9 +364,112 @@
           "minRow": 6,
           "maxRow": 6
         }
+      },
+      {
+        "id": "obj-19",
+        "name": "Vaas 2",
+        "kind": "Vase",
+        "kindLabel": "Vaas",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-1",
+        "size": 1,
+        "tiles": [
+          "c2r3"
+        ],
+        "bounds": {
+          "minColumn": 2,
+          "maxColumn": 2,
+          "minRow": 3,
+          "maxRow": 3
+        }
+      },
+      {
+        "id": "obj-20",
+        "name": "Wolf",
+        "kind": "Wolf",
+        "kindLabel": "Wolf",
+        "shape": "single",
+        "shapeLabel": "losse tegel",
+        "type": "blocked",
+        "typeLabel": "blokkeert",
+        "roomId": "room-3",
+        "size": 1,
+        "tiles": [
+          "c6r6"
+        ],
+        "bounds": {
+          "minColumn": 6,
+          "maxColumn": 6,
+          "minRow": 6,
+          "maxRow": 6
+        }
       }
     ],
-    "walls": [],
+    "walls": [
+      {
+        "id": "wall-1",
+        "kind": "Door",
+        "kindLabel": "Deur",
+        "name": "Deur",
+        "anchorTile": "c2r5",
+        "side": "north",
+        "orientation": "horizontal",
+        "tiles": [
+          "c2r5",
+          "c2r4"
+        ],
+        "occupiable": false,
+        "note": null
+      },
+      {
+        "id": "wall-2",
+        "kind": "Door",
+        "kindLabel": "Deur",
+        "name": "Deur",
+        "anchorTile": "c4r6",
+        "side": "west",
+        "orientation": "vertical",
+        "tiles": [
+          "c4r6",
+          "c3r6"
+        ],
+        "occupiable": false,
+        "note": null
+      },
+      {
+        "id": "wall-3",
+        "kind": "Door",
+        "kindLabel": "Deur",
+        "name": "Deur",
+        "anchorTile": "c5r2",
+        "side": "west",
+        "orientation": "vertical",
+        "tiles": [
+          "c5r2",
+          "c4r2"
+        ],
+        "occupiable": false,
+        "note": null
+      },
+      {
+        "id": "wall-4",
+        "kind": "Door",
+        "kindLabel": "Deur",
+        "name": "Deur",
+        "anchorTile": "c4r5",
+        "side": "north",
+        "orientation": "horizontal",
+        "tiles": [
+          "c4r5",
+          "c4r4"
+        ],
+        "occupiable": false,
+        "note": null
+      }
+    ],
     "tiles": [
       {
         "id": "c1r1",
@@ -537,9 +619,9 @@
         "column": 2,
         "row": 3,
         "roomId": "room-1",
-        "status": "neutral",
-        "statusLabel": "vrije vloer",
-        "objectId": null,
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-19",
         "matId": null,
         "personId": null
       },
@@ -603,9 +685,9 @@
         "column": 2,
         "row": 4,
         "roomId": "room-1",
-        "status": "blocked",
-        "statusLabel": "geblokkeerd object",
-        "objectId": "obj-11",
+        "status": "neutral",
+        "statusLabel": "vrije vloer",
+        "objectId": null,
         "matId": null,
         "personId": null
       },
@@ -779,11 +861,26 @@
         "column": 6,
         "row": 6,
         "roomId": "room-3",
-        "status": "neutral",
-        "statusLabel": "vrije vloer",
-        "objectId": null,
+        "status": "blocked",
+        "statusLabel": "geblokkeerd object",
+        "objectId": "obj-20",
         "matId": null,
         "personId": null
+      }
+    ],
+    "witnesses": [
+      {
+        "id": "obj-20",
+        "kind": "Wolf",
+        "kindLabel": "Wolf",
+        "article": "de",
+        "name": "de wolf",
+        "portret": "dieren/wolf.png",
+        "dead": false,
+        "tileId": "c6r6",
+        "column": 6,
+        "row": 6,
+        "roomId": "room-3"
       }
     ],
     "people": {
@@ -1047,7 +1144,9 @@
         "kind": "Carpet",
         "note": "",
         "quals": [],
-        "ownerId": ""
+        "ownerId": "",
+        "getuige": false,
+        "gedood": false
       },
       "obj-4": {
         "label": "",
@@ -1055,7 +1154,9 @@
         "kind": "Easel",
         "note": "",
         "quals": [],
-        "ownerId": ""
+        "ownerId": "",
+        "getuige": false,
+        "gedood": false
       },
       "obj-6": {
         "label": "",
@@ -1063,7 +1164,9 @@
         "kind": "Plant",
         "note": "",
         "quals": [],
-        "ownerId": ""
+        "ownerId": "",
+        "getuige": false,
+        "gedood": false
       },
       "obj-7": {
         "label": "",
@@ -1071,7 +1174,9 @@
         "kind": "Crate",
         "note": "",
         "quals": [],
-        "ownerId": ""
+        "ownerId": "",
+        "getuige": false,
+        "gedood": false
       },
       "obj-9": {
         "label": "",
@@ -1079,7 +1184,9 @@
         "kind": "Table",
         "note": "",
         "quals": [],
-        "ownerId": ""
+        "ownerId": "",
+        "getuige": false,
+        "gedood": false
       },
       "obj-10": {
         "label": "",
@@ -1087,23 +1194,19 @@
         "kind": "Statue",
         "note": "",
         "quals": [],
-        "ownerId": ""
+        "ownerId": "",
+        "getuige": false,
+        "gedood": false
       },
-      "obj-11": {
+      "obj-12": {
         "label": "",
         "name": "Vaas 1",
         "kind": "Vase",
         "note": "",
         "quals": [],
-        "ownerId": ""
-      },
-      "obj-12": {
-        "label": "",
-        "name": "Vaas 2",
-        "kind": "Vase",
-        "note": "",
-        "quals": [],
-        "ownerId": ""
+        "ownerId": "",
+        "getuige": false,
+        "gedood": false
       },
       "obj-13": {
         "label": "",
@@ -1111,7 +1214,9 @@
         "kind": "Chair",
         "note": "",
         "quals": [],
-        "ownerId": ""
+        "ownerId": "",
+        "getuige": false,
+        "gedood": false
       },
       "obj-14": {
         "label": "",
@@ -1119,7 +1224,9 @@
         "kind": "Chair",
         "note": "",
         "quals": [],
-        "ownerId": ""
+        "ownerId": "",
+        "getuige": false,
+        "gedood": false
       },
       "obj-18": {
         "label": "",
@@ -1127,7 +1234,29 @@
         "kind": "Chair",
         "note": "",
         "quals": [],
-        "ownerId": ""
+        "ownerId": "",
+        "getuige": false,
+        "gedood": false
+      },
+      "obj-19": {
+        "label": "",
+        "name": "Vaas 2",
+        "kind": "Vase",
+        "note": "",
+        "quals": [],
+        "ownerId": "",
+        "getuige": false,
+        "gedood": false
+      },
+      "obj-20": {
+        "label": "",
+        "name": "Wolf",
+        "kind": "Wolf",
+        "note": "",
+        "quals": [],
+        "ownerId": "",
+        "getuige": true,
+        "gedood": false
       }
     },
     "clues": [
@@ -1142,6 +1271,7 @@
         "id": "clue-17",
         "scope": "person",
         "personId": "p3",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1160,6 +1290,7 @@
         "id": "clue-18",
         "scope": "person",
         "personId": "p1",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1171,6 +1302,17 @@
                 }
               }
             ]
+          },
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "sees-person",
+                "args": {
+                  "person": "p4"
+                }
+              }
+            ]
           }
         ]
       },
@@ -1178,6 +1320,7 @@
         "id": "clue-19",
         "scope": "person",
         "personId": "p4",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1197,6 +1340,7 @@
         "id": "clue-24",
         "scope": "board",
         "personId": null,
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1213,6 +1357,7 @@
         "id": "clue-29",
         "scope": "person",
         "personId": "p6",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1231,6 +1376,7 @@
         "id": "clue-30",
         "scope": "person",
         "personId": "p2",
+        "locked": false,
         "terms": [
           {
             "not": false,
@@ -1239,6 +1385,24 @@
                 "atom": "only-one-on-kind",
                 "args": {
                   "objectKind": "Chair"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-32",
+        "scope": "board",
+        "personId": null,
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "animal-sees-culprit",
+                "args": {
+                  "animal": "obj-20"
                 }
               }
             ]
@@ -1256,6 +1420,7 @@
       "terms": [],
       "text": "Het slachtoffer was alleen met zijn moordenaar.",
       "generatedText": "Het slachtoffer was alleen met zijn moordenaar.",
+      "subjectAnimal": null,
       "storyText": null,
       "holds": true
     },
@@ -1279,6 +1444,7 @@
       ],
       "text": "Coenraad stond het dichtst bij een krat.",
       "generatedText": "Coenraad stond het dichtst bij een krat.",
+      "subjectAnimal": null,
       "storyText": null,
       "holds": true
     },
@@ -1298,10 +1464,22 @@
               }
             }
           ]
+        },
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "sees-person",
+              "args": {
+                "person": "p4"
+              }
+            }
+          ]
         }
       ],
-      "text": "Alwin bevond zich naast de Eetkamer, in een ander gebied.",
-      "generatedText": "Alwin bevond zich naast de Eetkamer, in een ander gebied.",
+      "text": "Alwin bevond zich naast de Eetkamer, in een ander gebied en kon Duncan zien.",
+      "generatedText": "Alwin bevond zich naast de Eetkamer, in een ander gebied en kon Duncan zien.",
+      "subjectAnimal": null,
       "storyText": null,
       "holds": true
     },
@@ -1326,6 +1504,7 @@
       ],
       "text": "Duncan had een vrouw precies één rij onder zich.",
       "generatedText": "Duncan had een vrouw precies één rij onder zich.",
+      "subjectAnimal": null,
       "storyText": null,
       "holds": true
     },
@@ -1347,6 +1526,7 @@
       ],
       "text": "In elke ruimte stond minstens één persoon.",
       "generatedText": "In elke ruimte stond minstens één persoon.",
+      "subjectAnimal": null,
       "storyText": null,
       "holds": true
     },
@@ -1370,6 +1550,7 @@
       ],
       "text": "Elsbeth was in een ruimte met twee personen.",
       "generatedText": "Elsbeth was in een ruimte met twee personen.",
+      "subjectAnimal": null,
       "storyText": null,
       "holds": true
     },
@@ -1393,6 +1574,31 @@
       ],
       "text": "Berthold was de enige die op een stoel zat.",
       "generatedText": "Berthold was de enige die op een stoel zat.",
+      "subjectAnimal": null,
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-32",
+      "scope": "board",
+      "personId": null,
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "animal-sees-culprit",
+              "args": {
+                "animal": "obj-20"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "De wolf kon de moordenaar zien.",
+      "generatedText": "De wolf kon de moordenaar zien.",
+      "subjectAnimal": "obj-20",
       "storyText": null,
       "holds": true
     }
@@ -1436,7 +1642,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 25,
+    "ms": 30,
     "override": null
   }
 }

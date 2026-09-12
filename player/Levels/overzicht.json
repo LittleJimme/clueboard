@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-12T11:08:51",
+  "gemaakt": "2026-09-12T14:35:05",
   "levels": [
     {
       "file": "100v5 Test Level.json",
@@ -87,7 +87,7 @@
       }
     },
     {
-      "file": "13v1 Het Stille Huis.json",
+      "file": "13v2 Het Stille Huis.json",
       "content": {
         "title": "Het Stille Huis"
       },
@@ -101,7 +101,7 @@
       },
       "levelId": "lvl-mty5rdqzj9tjl",
       "levelNumber": 13,
-      "levelVersion": 1,
+      "levelVersion": 2,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
