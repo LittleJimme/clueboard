@@ -635,6 +635,9 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
    dikke rand aan één kant, een deur een gouden latje in die rand, een hoog
    object (boom, standbeeld) krijgt een topje zodat je ziet dat het uitsteekt,
    en een mat is een object waar iemand op kan zitten. */
+.hb-c.diervak{background:#E6D9BE}
+.hb-c .hb-dier{width:74%;height:74%;display:block;color:#5A4A33}
+.hb-c .hb-dier svg{width:100%;height:100%;display:block}
 .hb-c.zicht{background:#F2DFA8}
 .hb-c.mat{background:#D2B98E}
 .hb-c.hoog{background:#4E5D3C;box-shadow:inset 0 0 0 1px rgba(20,30,10,.4)}
@@ -988,6 +991,7 @@ function helpBord(regels, opt){
       let inner="";
       if(c==="#") cls+=" blok";
       else if(c==="^"){ cls+=" blok hoog"; inner='<b class="top">\u25b2</b>'; }
+      else if(c==="@"){ cls+=" diervak"; inner=HB_DIER; }
       else if(c==="_") cls+=" leeg";
       else if(c==="x"||c==="X"){
         const vertraag=(o.golf?x*150:0);
@@ -1047,6 +1051,12 @@ const R=(beeld,kop,...regels)=>({beeld,kop,tekst:regels.map(t=>"<p>"+t+"</p>").j
    uitleg met een voorbeeldbordje. De speler ziet ze achter de i op een
    regelkaart en in de uitleg onder "Alle regels". Deze tabel staat in het
    menu en in de player hetzelfde; de atoomnamen zijn die van de bouwer. */
+/* Een dier in een voorbeeldbordje: een kopje met twee oren. Geen emoji, en
+   geen icoon uit de bank -- het hoofdmenu heeft die bank niet, en deze tabel
+   staat in beide apps hetzelfde. */
+const HB_DIER = '<b class="hb-dier"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
+  + '<path d="M12 4.6l3.2 2.4h1.8l-.6 3.1c.9 1 1 2.4.4 3.6-.9 1.9-2.7 3.1-4.8 3.1s-3.9-1.2-4.8-3.1'
+  + 'c-.6-1.2-.5-2.6.4-3.6L7.6 7h1.8z"/></svg></b>';
 const REGEL_GEB = [[0,0,"g-nw"],[1,0,"g-no"],[0,1,"g-zw"],[1,1,"g-zo"]];
 const REGEL_GEB_GOUD = REGEL_GEB.map(c => [c[0], c[1], c[2] + " goud"]);
 const REGEL_FAMILIES = [
@@ -1123,6 +1133,12 @@ const REGEL_FAMILIES = [
     tekst:["Trek de lijn van hart naar hart: blijft die vrij, dan zie je elkaar. Ook schuin en met een sprong als het paard in het schaakspel; personen staan niet in de weg.",
            "Een <b>hoog object</b> (boom, standbeeld, huisje, katapult, watermolen, boekenkast) staat midden op zijn vak: op de lijn houdt het tegen (A ziet C niet), ernaast niet (B ziet C).",
            "Een <b>muur</b> houdt alles tegen, behalve waar een <b>deur</b> of <b>poort</b> zit: daar kijk je door, ook schuin (C ziet E)."] },
+  { id:"dieren", kop:"Een dier als getuige",
+    atomen:["animal-with-person","animal-with-victim","animal-next-to-person","animal-sees-person",
+            "animal-sees-victim","animal-sees-culprit","animal-sees-nobody","animal-killed"],
+    beeld:()=>helpBord(["A...",".@..","....","..V."],{lijn:[[1,1,2,3,"ok"]]}),
+    tekst:["Soms staat er een dier op het bord. Het is geen verdachte en je plaatst het niet — het stond er, en het heeft iets gezien.",
+           "De regels erover werken als bij een persoon: <b>in hetzelfde gebied als</b>, <b>naast</b>, <b>kon zien</b>. Ook <b>de moordenaar</b> kan erin staan, en een dier kan zelf <b>door de dader gedood</b> zijn."] },
   { id:"slachtoffer", kop:"Het slachtoffer",
     atomen:[],
     beeld:()=>helpBord(["VB..","....","...A","..C."],{gebied:REGEL_GEB}),
