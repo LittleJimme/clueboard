@@ -1867,13 +1867,16 @@ body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;
   background:var(--pc);border:max(1.5px,calc(var(--cell)*.035)) solid var(--board-ink);
   font:800 calc(var(--cell)*.19)/1 var(--font-ui);box-shadow:0 2px 5px rgba(21,26,51,.34)}
 /* Het laadschermpje bij het openen van een level. */
+/* Het laadscherm neemt de achtergrond van de pagina zelf (--grond), dus in
+   donkere modus is het donker. Tekst in het sierlettertype, en wat groter:
+   dit is het eerste wat je van een zaak ziet. */
 #laadScherm{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
-  background:var(--papier,var(--panel,#F4F1EA));transition:opacity .24s ease}
+  background:var(--grond);transition:opacity .24s ease}
 #laadScherm.weg{opacity:0;pointer-events:none}
-#laadScherm .lz-kern{display:flex;flex-direction:column;align-items:center;gap:14px;
-  font:800 12.5px var(--font-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--dof,#8A8378)}
-#laadScherm .lz-ring{width:44px;height:44px;border-radius:50%;
-  border:3px solid var(--lijn,#DDD6C8);border-top-color:var(--goud,#C9A227);animation:lzDraai .9s linear infinite}
+#laadScherm .lz-kern{display:flex;flex-direction:column;align-items:center;gap:20px;
+  font:600 22px/1.2 var(--font-display);letter-spacing:0;color:var(--inkt-2)}
+#laadScherm .lz-ring{width:62px;height:62px;border-radius:50%;
+  border:4px solid var(--lijn);border-top-color:var(--goud);animation:lzDraai .9s linear infinite}
 @keyframes lzDraai{to{transform:rotate(360deg)}}
 .rbtn .rolband .txt{color:inherit}
 
@@ -3322,7 +3325,7 @@ body.in-game #modalIntro .sheet{
   /* Dezelfde ondergrond als het spel: zo is er op een breed scherm geen
      kolom met een andere tint te zien. */
   background:var(--grond);border:0}
-body.in-game #modalIntro .intro-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;text-align:center;padding:2px 0 6px;
+body.in-game #modalIntro .intro-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;text-align:center;padding:2px 0 6px;
   /* De schuifbalk zou dwars door de cover lopen; het duwtje onderin zegt al
      dat er meer is. */
   scrollbar-width:none;-ms-overflow-style:none;
@@ -7479,7 +7482,10 @@ function openRadial(center,tileId){
   const vol=N>=10;
   const btnSize=Math.max(38,Math.min(vol?68:82,Math.floor(Math.min(chord-8,size*(vol?0.17:0.21)))));
   ring.style.setProperty("--rbtn",btnSize+"px");
-  ring.style.setProperty("--rlbl",Math.max(10,Math.min(vol?14:17,Math.round(btnSize*0.21)))+"px");
+  ring.style.setProperty("--rlbl",Math.max(10,Math.min(vol?14:(N>=8?14.5:17),Math.round(btnSize*0.21)))+"px");
+  /* Een naam mag niet breder worden dan de afstand tussen twee buren op de
+     ring: bij acht personen raakten ze elkaar net. */
+  ring.style.setProperty("--rmax",Math.max(56,Math.round(chord-12))+"px");
   ring.style.setProperty("--rsub",Math.max(9,Math.min(12,Math.round(btnSize*0.18)))+"px");
   /* Krap in de ring: dan alleen de rol tonen, niet ook nog de stand. */
   ring.classList.toggle("crowded",btnSize<58);
@@ -7522,6 +7528,20 @@ function openRadial(center,tileId){
     const ang=(N===1)? -Math.PI/2 : (-Math.PI/2 - SPAN/2 + (i/(N-1))*SPAN);
     ring.appendChild(personButton(p,tileId,t,Math.cos(ang)*radius,Math.sin(ang)*radius));
   });
+
+  /* Past een naam niet in de ruimte tussen twee buren, dan wordt hij voor deze
+     kring een maatje kleiner. Afkappen is geen optie: je kiest hier juist op
+     naam. */
+  {
+    const ruim=Math.max(56,Math.round(chord-12));
+    ring.querySelectorAll(".rbtn .lbl").forEach(l=>{
+      let f=parseFloat(getComputedStyle(l).fontSize)||14;
+      for(let i=0;i<8 && l.scrollWidth>ruim && f>9.5; i++){
+        f=Math.round((f-1)*10)/10;
+        l.style.fontSize=f+"px";
+      }
+    });
+  }
 
   /* De hulpknop staat in de opening onderaan de ring. */
   const util=document.createElement("button");
@@ -8802,7 +8822,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.163";
+const PLAYER_APP_VERSION="0.9.164";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9233,11 +9253,16 @@ function showLevelDetail(levelIndex){
      krimpen mee met het aantal rijen -- en bij weinig personen worden ze juist
      royaal. */
   /* Op een telefoon scrolt het vel sowieso -- de titel en de tekst zijn daar al
-     een scherm -- dus daar staan de portretten op een vaste, leesbare maat. */
+     een scherm -- dus daar staan de portretten op een vaste, leesbare maat. Wel
+     nooit breder dan hun eigen cel: het vak van een portret is 1,37 keer de
+     doorsnee van de schijf, en wat daarbuiten valt maakte het vel zijwaarts
+     schuifbaar. */
   const ruimte=Math.max(240, window.innerHeight - 330);
-  const maat=breed
+  const vak=(($("#introScroll")||{}).clientWidth)||host.clientWidth||Math.round(window.innerWidth*0.9);
+  const celBreed=vak/kol*breedteVan(breed?4:3);
+  const maat=Math.max(58, Math.min(breed
     ? Math.max(74, Math.min(150, Math.floor((ruimte/Math.max(rijen.length,1) - 46)/1.36)))
-    : 92;
+    : 92, Math.floor(celBreed/1.37)));
   host.style.setProperty("--dl",maat+"px");
   allen.forEach((pe,ix)=>{
     const isV=pe.id===M.victimId;
