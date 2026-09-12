@@ -2060,7 +2060,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v42</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v43</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -3241,33 +3241,35 @@ function wallsOnTile(k){
   return Object.keys(S.walls || {}).filter(key => wallTiles(key).indexOf(k) !== -1);
 }
 /* ── Zicht ──────────────────────────────────────────────
-   Binnen je eigen ruimte zie je iedereen: over de rij, over de kolom, schuin,
-   en ook met een sprong zoals die van het paard uit het schaakspel. Die
-   vrijheid is geen luxe. Twee personen staan nooit in dezelfde rij of kolom
-   (bordregel), en precies op één diagonaal staan is zeldzaam -- met alleen
-   rechte en diagonale lijnen zou "kon Beatrix zien" dus bijna nooit kunnen
-   kloppen en was de regelsoort waardeloos.
+   Trek de lijn van hart naar hart. Blijft die vrij, dan zie je elkaar: over
+   de rij, over de kolom, schuin, en ook met een sprong zoals die van het
+   paard uit het schaakspel. Die vrijheid is geen luxe. Twee personen staan
+   nooit in dezelfde rij of kolom (bordregel), dus "recht vooruit" bestaat
+   tussen twee personen niet, en precies op één diagonaal staan is zeldzaam.
+   Met alleen rechte en diagonale lijnen zou "kon Beatrix zien" dus bijna
+   nooit kunnen kloppen -- en "alleen recht door een deur" betekende in de
+   praktijk: nooit door een deur.
 
-   Wat het zicht tegenhoudt is een object dat boven zijn vak uitsteekt (in de
-   bank gemerkt met `hoog`: standbeeld, boom, huisje, katapult, watermolen,
-   boekenkast) -- maar alleen als het écht in de kijklijn staat. Zo'n object
-   vult het hart van zijn vak en niet de hoeken: loopt de lijn er verder dan
-   ZICHT_STRAAL van dat hart langs, dan kijk je er gewoon langs. Daarmee
-   volgt het model precies wat een mens op het bord ziet:
+   Twee dingen houden de lijn tegen, en ze liggen op verschillende plekken:
 
-     - ligt het vak op de lijn (recht of diagonaal ertussen), afstand 0:
-       het zicht is weg;
-     - bij een paardensprong is de afstand altijd 0,45 vak: je kijkt er
-       altijd langs, ook met een boom op een van de twee vakken ertussen;
-     - een boom die een half vak naast de lijn staat, telt niet.
+     - een MUUR ligt op de RAND tussen twee vakken die niet in dezelfde
+       ruimte liggen (en om het bord heen). Kruist de lijn zo'n rand, dan is
+       het zicht weg -- tenzij er in die rand een deur of poort zit (bankvlag
+       `doorzicht`), en dat mag onder elke hoek. Loopt de lijn precies door
+       een hoekpunt, dan komen daar vier vakken samen: die moeten dan
+       allemaal in dezelfde ruimte liggen, want door de naad tussen twee
+       muren heen kijk je niet;
+     - een HOOG OBJECT (bankvlag `hoog`: standbeeld, boom, huisje, katapult,
+       watermolen, boekenkast) staat midden op zijn VAK. Ligt dat vak op de
+       lijn, dan is het zicht weg; loopt de lijn er verder dan ZICHT_STRAAL
+       van het hart vandaan langs, dan kijk je er gewoon langs. Bij een
+       paardensprong is die afstand altijd 0,45 vak, dus daar kijk je altijd
+       langs -- ook met een boom op een van de vakken ertussen.
 
-   Door een muur kijk je nooit. Door een deur of poort (bankvlag `doorzicht`)
-   wel, maar alleen recht vooruit over de rij of de kolom: schuin door een
-   deuropening turen telt niet.
-
-   Personen houden het zicht niet tegen; alleen de vakken tellen. Zo hangt het
-   antwoord alleen van de twee uiteinden af en niet van wie er verder staat --
-   wat de zoeker nodig heeft om "kon niemand zien" vroeg te kunnen snoeien. */
+   Personen houden het zicht niet tegen; alleen de vakken en de randen
+   tellen. Zo hangt het antwoord alleen van de twee uiteinden af en niet van
+   wie er verder staat -- wat de zoeker nodig heeft om "kon niemand zien" al
+   op een half bord af te kunnen keuren. */
 const ZICHT_STRAAL = 0.38;
 function objectHoog(kind){ const m = AssetBank.meta(kind); return !!(m && m.hoog); }
 function tegelHoog(t){
@@ -3307,27 +3309,62 @@ function zichtVakken(a, b){
     }
   return uit.sort((p,q) => p.langs - q.langs).map(p => S.tiles[z(p.x,p.y)] || null);
 }
-/* Zicht van vak a naar vak b. Symmetrisch: zichtVakken levert dezelfde
-   verzameling in omgekeerde volgorde, en grensDoorzichtig kijkt aan beide
-   kanten van de grens. */
+/* Kruist de kijklijn een muur waar geen opening in zit? Alles in dubbele
+   coördinaten: een vakhart is dan even, een rand of hoekpunt oneven, en al
+   het rekenwerk blijft in hele getallen. Zo is "loopt de lijn precies door
+   dit hoekpunt?" een exacte vraag in plaats van een afronding. */
+function zichtMuurVrij(a, b){
+  const ax = 2*a.x, ay = 2*a.y, dx = 2*(b.x-a.x), dy = 2*(b.y-a.y);
+  const uit = (px,py,qx,qy) => px*qy - py*qx;
+  const kamer = t => (t && !t.off) ? t.room : null;
+  const x0 = Math.min(a.x,b.x), x1 = Math.max(a.x,b.x);
+  const y0 = Math.min(a.y,b.y), y1 = Math.max(a.y,b.y);
+  /* Snijdt de lijn deze rand écht? Raakt hij alleen een uiteinde van de rand
+     (een hoekpunt), dan telt dat hier niet: de hoekpunten komen hieronder
+     apart aan de beurt. */
+  const snijdt = (px,py,qx,qy) => {
+    const d1 = uit(qx-px, qy-py, ax-px, ay-py);
+    const d2 = uit(qx-px, qy-py, ax+dx-px, ay+dy-py);
+    const d3 = uit(dx, dy, px-ax, py-ay);
+    const d4 = uit(dx, dy, qx-ax, qy-ay);
+    return d1 !== 0 && d2 !== 0 && (d1 > 0) !== (d2 > 0)
+        && d3 !== 0 && d4 !== 0 && (d3 > 0) !== (d4 > 0);
+  };
+  const randVrij = (T,U,px,py,qx,qy) => {
+    const rT = kamer(T), rU = kamer(U);
+    if (rT !== null && rT === rU) return true;            /* geen muur */
+    if (!snijdt(px,py,qx,qy)) return true;                /* de lijn komt er niet langs */
+    if (rT === null || rU === null) return false;         /* de rand van het bord */
+    return grensDoorzichtig(T,U);                         /* een deur of poort erin */
+  };
+  for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++){
+    if (x < x1 && !randVrij(S.tiles[z(x,y)], S.tiles[z(x+1,y)],
+                            2*x+1, 2*y-1, 2*x+1, 2*y+1)) return false;
+    if (y < y1 && !randVrij(S.tiles[z(x,y)], S.tiles[z(x,y+1)],
+                            2*x-1, 2*y+1, 2*x+1, 2*y+1)) return false;
+  }
+  /* De hoekpunten waar de lijn precies door heen gaat: daar komen vier vakken
+     samen en raakt hij geen enkele rand halverwege. Liggen die vier niet
+     allemaal in dezelfde ruimte, dan gaat de lijn door de naad tussen twee
+     muren -- en daar kijk je niet door. */
+  for (let x = x0; x < x1; x++) for (let y = y0; y < y1; y++){
+    const cx = 2*x+1 - ax, cy = 2*y+1 - ay;
+    if (uit(dx, dy, cx, cy) !== 0) continue;              /* niet op de lijn */
+    const langs = cx*dx + cy*dy;
+    if (langs <= 0 || langs >= dx*dx + dy*dy) continue;   /* niet ertussen */
+    const vier = [S.tiles[z(x,y)], S.tiles[z(x+1,y)], S.tiles[z(x,y+1)], S.tiles[z(x+1,y+1)]];
+    const r = kamer(vier[0]);
+    if (r === null || !vier.every(t => kamer(t) === r)) return false;
+  }
+  return true;
+}
+/* Zicht van vak a naar vak b. Symmetrisch: de muren liggen op randen (die
+   kruis je van beide kanten hetzelfde) en zichtVakken levert dezelfde
+   verzameling in omgekeerde volgorde. */
 function zichtlijn(a, b){
   if (!a || !b || a.off || b.off || (a.x === b.x && a.y === b.y)) return false;
-  const recht = (a.x === b.x || a.y === b.y);
-  /* Buiten de rechte rij of kolom blijft het zicht binnen één ruimte: door een
-     deuropening kijk je recht vooruit, niet schuin. */
-  if (!recht && a.room !== b.room) return false;
-  const pad = zichtVakken(a, b);
-  let vorige = a;
-  for (let i = 0; i < pad.length; i++){
-    const t = pad[i];
-    if (!t || t.off) return false;                        /* gat in het bord */
-    if (tegelHoog(t)) return false;                       /* boom, beeld, huisje */
-    if (t.room !== vorige.room && (!recht || !grensDoorzichtig(vorige, t))) return false;
-    vorige = t;
-  }
-  /* Recht vooruit liggen de vakken op een rij, dus de laatste grens -- die
-     naar b zelf -- hoort er ook bij. Schuin is a.room al gelijk aan b.room. */
-  return recht ? (b.room === vorige.room || grensDoorzichtig(vorige, b)) : true;
+  if (!zichtMuurVrij(a, b)) return false;
+  return zichtVakken(a, b).every(t => t && !t.off && !tegelHoog(t));
 }
 function wallsOfKind(kind){
   return Object.keys(S.walls || {}).filter(key => S.walls[key].kind === kind);
@@ -8258,10 +8295,10 @@ const ATOMS = {
   'has-role':       { scope:'person', cat:'Rollen', text:'was {role}',
                       slots:{role:'role'}, test:(p,a)=>personRoleOf(p)===a.role },
 
-  /* Zicht: binnen je eigen ruimte in elke richting (ook een paardensprong),
-     recht vooruit ook door een deur of poort, en nooit door een muur of langs
-     een object dat boven zijn vak uitsteekt. Het rekenwerk staat in
-     zichtlijn(); de uitleg van het model staat daarboven. */
+  /* Zicht: de lijn van hart naar hart moet vrij zijn. Muren tegenhouden
+     tenzij er een deur of poort in zit (ook schuin), hoge objecten houden
+     tegen als ze op de lijn staan. Het rekenwerk staat in zichtlijn(); de
+     uitleg van het model staat daarboven. */
   'sees-person':    { scope:'person', cat:'Zicht', text:'kon {person} zien',
                       slots:{person:'person'}, test:(p,a)=>!!S.people[a.person] && zichtlijn(pos(p), pos(a.person)) },
   'sees-nobody':    { scope:'person', cat:'Zicht', text:'kon niemand zien',
