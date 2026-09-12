@@ -1663,6 +1663,10 @@ textarea.inp{min-height:58px;resize:vertical}
 }
 .sm-search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-dim)}
 .sm-body{overflow-y:auto;flex:1;padding-bottom:4px}
+/* Een regelzin die met een ingevuld woord begint ("het varken kon...") hoort
+   ook in de keuzelijst met een hoofdletter te staan; die eerste letter zit in
+   een eigen span, dus ::first-letter pakt hem. */
+.sm-zin::first-letter{text-transform:uppercase}
 .sm-group{
   padding:8px 12px 4px;font:700 9.5px var(--mono);letter-spacing:.1em;
   text-transform:uppercase;color:var(--faint);
@@ -2060,7 +2064,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v44</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v45</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -6290,7 +6294,7 @@ function openSearchMenu(anchor, groups, onPick, placeholder){
         items.forEach(it => {
           html += '<div class="sm-item'+(it.on?' on':'')+'" data-v="'+e(String(it.v))+'">'+
                   (it.ok === undefined ? '' : '<span class="sm-ok">'+(it.ok?uiIcon('check'):'')+'</span>')+
-                  '<span>'+(it.lh !== undefined ? it.lh : e(it.l))+'</span>'+
+                  '<span class="sm-zin">'+(it.lh !== undefined ? it.lh : e(it.l))+'</span>'+
                   (it.zw === undefined ? '' : zwaarteHtml(it.zw, it.zwr))+'</div>';
         });
       });
@@ -6446,6 +6450,11 @@ function atomHtml(clue, ti, ai, a, form){
 
 let REGEL_VENSTER = null;
 
+/* Een dier komt hier binnen als "dier:obj-7"; de rest is een persoon of, leeg,
+   het hele bord. */
+function dierUitSleutel(s){
+  return String(s || '').indexOf('dier:') === 0 ? String(s).slice(5) : null;
+}
 function openRegelVenster(personId){
   if (REGEL_VENSTER) REGEL_VENSTER.sluit();
   initContent();
@@ -6477,15 +6486,24 @@ function openRegelVenster(personId){
 }
 
 function tekenRegelVenster(personId, scrim){
+  const dier = dierUitSleutel(personId);
+  const wie = dier ? null : personId;
   const kop = scrim.querySelector('#regelKop');
-  if (kop) kop.textContent = personId ? 'Regels van ' + personName(personId) : 'Regels over het hele bord';
+  if (kop) kop.textContent = dier
+    ? 'Regels over ' + dierNaam(dierById(dier) || {})
+    : wie ? 'Regels van ' + personName(wie) : 'Regels over het hele bord';
 
   const box = scrim.querySelector('#regelEditor');
-  box.innerHTML = personId ? renderClueEditor(personId, true) : renderBoardClueEditor(true);
+  box.innerHTML = dier ? renderDierClueEditor(dier, true)
+    : wie ? renderClueEditor(wie, true) : renderBoardClueEditor(true);
   wireClueEditor(box);
 
-  scrim.querySelector('#regelBord').innerHTML = miniBord(personId);
-  tekenVoorstellen(personId, scrim);
+  scrim.querySelector('#regelBord').innerHTML = miniBord(wie);
+  /* Voorstellen zijn er voor personen; een dier heeft er te weinig vormen
+     voor om er iets te kiezen te hebben. */
+  if (dier) scrim.querySelector('#regelTips').innerHTML =
+    '<p class="hint">Kies een regel met de plusknop hierboven.</p>';
+  else tekenVoorstellen(wie, scrim);
 }
 
 /* Wit of donker op deze kleur? Dezelfde afweging als op het bord zelf: kies
@@ -6764,6 +6782,27 @@ function renderClueEditor(p, groot){
   return html;
 }
 
+/* ── Regels van één dier ────────────────────────────────
+   Dezelfde twee weergaven als bij een persoon. De plusknop vult dit dier al
+   in en toont alleen de categorie Dieren: een regel maken vanuit het dier
+   zelf, in plaats van hem tussen de algemene regels moeten zoeken. */
+function renderDierClueEditor(animalId, groot){
+  const o = dierById(animalId);
+  if (!o) return '<p class="empty-hint">Dit dier doet niet meer mee als getuige.</p>';
+  const mine = dierRegels(animalId);
+  let html = '';
+  if (!mine.length){
+    html += '<p class="empty-hint">Nog geen regels over '+e(dierNaam(o))+'. '+
+            'Het dier staat er dan alleen maar bij.</p>';
+  } else {
+    mine.forEach(c => html += (groot ? clueHtml(c) : clueSummaryHtml(c)));
+  }
+  html += groot
+    ? '<button class="btn-add" data-add-dier="'+e(animalId)+'">＋ Regel toevoegen</button>'
+    : '<button class="btn-add" data-regelvenster="dier:'+e(animalId)+'">＋ Regel toevoegen</button>';
+  return html;
+}
+
 /* ── Algemene regels over het bord ──────────────────────── */
 function renderBoardClueEditor(groot){
   const list = boardClues();
@@ -6792,6 +6831,17 @@ function wireClueEditor(box){
       S.content.clues.push(nieuw);
       renderUI();
     });
+  });
+
+  box.querySelectorAll('[data-add-dier]').forEach(b => b.onclick = ev => {
+    const dier = b.dataset.addDier;
+    openAtomPicker(ev.currentTarget, 'board', null, (id, args) => {
+      snapshot();
+      const nieuw = newClue('board', null, id, args);
+      if (!S.content.clues) S.content.clues = [];
+      S.content.clues.push(nieuw);
+      renderUI();
+    }, { cat:'Dieren', vast:{ animal:dier, animalDood:dier } });
   });
 
   box.querySelectorAll('[data-add-board]').forEach(b => b.onclick = ev => {
@@ -7003,9 +7053,19 @@ function unpackAtom(v){
   catch (err){ return { id:String(v).slice(0, i), args:null }; }
 }
 
-function openAtomPicker(anchor, scope, personId, onPick){
+/* opt.cat beperkt de lijst tot één categorie; opt.vast zet invulplekken vast
+   (het dier waar de regel over gaat kiest de plusknop al voor je, en dat hoort
+   in de lijst niet te kunnen wisselen). */
+function openAtomPicker(anchor, scope, personId, onPick, opt){
+  opt = opt || {};
   const ctx = { personId };
-  const maak = (id, args) => {
+  const vast = args => {
+    const uit = Object.assign({}, args || {});
+    Object.keys(opt.vast || {}).forEach(nm => { if (nm in uit) uit[nm] = opt.vast[nm]; });
+    return uit;
+  };
+  const maak = (id, argsIn) => {
+    const args = vast(argsIn);
     const it = {
       v: packAtom(id, args),
       l: atomText(id, args, ctx),
@@ -7022,10 +7082,10 @@ function openAtomPicker(anchor, scope, personId, onPick){
     return it;
   };
 
-  const groups = atomCategories(scope).map(cat => ({
+  const groups = atomCategories(scope).filter(cat => !opt.cat || cat === opt.cat).map(cat => ({
     label: cat,
     items: atomScopeList(scope).filter(id => ATOMS[id].cat === cat && atomBruikbaar(id, ctx)).map(id => {
-      const kaal = defaultArgs(id, ctx);
+      const kaal = vast(defaultArgs(id, ctx));
       /* Staat de eerste invulling toevallig al goed op het bord, dan is dat
          de regel die je ziet. Zo niet, dan zoekt hij er een die wel klopt:
          een regel aanklikken die meteen waar is scheelt drie keer doorklikken,
@@ -7033,7 +7093,7 @@ function openAtomPicker(anchor, scope, personId, onPick){
          achteraf. */
       let args = kaal;
       if (!atomTrue(id, kaal, personId)){
-        const raak = atomVariants(id, ctx).find(a => atomTrue(id, a, personId));
+        const raak = atomVariants(id, ctx).map(vast).find(a => atomTrue(id, a, personId));
         if (raak) args = raak;
       }
       const it = maak(id, args);
@@ -7044,13 +7104,20 @@ function openAtomPicker(anchor, scope, personId, onPick){
         .join(' ');
       let cache = null;
       it.vars = () => cache || (cache = atomVariants(id, ctx).map(a => maak(id, a)));
+      /* Met een vastgezette invulplek verschillen de varianten alleen nog in
+         de rest; dubbele zinnen vallen weg. */
+      if (Object.keys(opt.vast || {}).length){
+        const kaalVars = it.vars;
+        it.vars = () => { const gezien = new Set();
+          return kaalVars().filter(v => !gezien.has(v.v) && gezien.add(v.v)); };
+      }
       return it;
     })
   }));
 
   openSearchMenu(anchor, groups, v => {
     const p = unpackAtom(v);
-    onPick(p.id, p.args || defaultArgs(p.id, ctx));
+    onPick(p.id, vast(p.args || defaultArgs(p.id, ctx)));
   }, 'Zoek een voorwaarde...');
 }
 
@@ -7722,6 +7789,7 @@ function getuigen(){
 }
 /* "de wolf", "het varken": lidwoord uit de bank. */
 function dierNaam(o){ return objectArticle(o.kind) + ' ' + objectLabel(o.kind).toLowerCase(); }
+function hoofdletterNL(s){ s = String(s || ''); return s.charAt(0).toUpperCase() + s.slice(1); }
 function dierTegel(o){ return o && o.tiles.length ? S.tiles[o.tiles[0]] : null; }
 function dierById(eid){ return getuigen().find(o => 'obj-' + o.num === String(eid)) || null; }
 /* Wie stond er bij het slachtoffer? Dat is de moordenaar zoals de speler hem
@@ -8811,7 +8879,11 @@ function clueSentence(clue, markeer){
     return join + inner;
   }).join(' ');
   const line = (subject && !eersteNoemtZelf ? subject + ' ' : '') + body;
-  return line.charAt(0).toUpperCase() + line.slice(1) + (/[.!?]$/.test(line) ? '' : '.');
+  /* De eerste letter, niet het eerste teken: begint de zin met een ingevuld
+     woord ("het varken kon..."), dan staat daar eerst een markeerteken en
+     bleef de hoofdletter anders uit. */
+  const metHoofd = line.replace(/^([]*)(.)/, (_, m, ch) => m + ch.toUpperCase());
+  return metHoofd + (/[.!?]$/.test(line) ? '' : '.');
 }
 
 /* Dezelfde zin als HTML, met de invulbare woorden vet. Voor de lijst in de
@@ -8847,7 +8919,10 @@ function newClue(scope, personId, atomId, args){
   };
 }
 function cluesFor(personId){ return (S.content.clues||[]).filter(c => c.scope === 'person' && c.personId === personId); }
-function boardClues(){ return (S.content.clues||[]).filter(c => c.scope === 'board'); }
+/* Algemene regels: alles over het bord behalve wat over een dier gaat -- dat
+   staat bij dat dier. Zo staat elke regel op precies één plek. */
+function boardClues(){ return (S.content.clues||[]).filter(c => c.scope === 'board' && !clueDier(c)); }
+function dierRegels(animalId){ return (S.content.clues||[]).filter(c => clueDier(c) === animalId); }
 
 /* ── Selectie- en hover-highlight op het bord (Fase C) ── */
 function clearHoverHighlight(){ document.querySelectorAll('.cell.hoverlit').forEach(c=>c.classList.remove('hoverlit')); }
@@ -9864,6 +9939,25 @@ function renderLeftPanel(){
           });
           html += '</div>';
         }
+        /* De getuigen: dieren met een eigen regelblok. Ze staan onder de
+           personen, met hun pictogram uit de bank. */
+        if (buildMode === 'clues' && getuigen().length){
+          html += '<div class="group-head" style="cursor:default;"><span class="tw" style="opacity:0">'+uiIcon('chevron')+'</span>Getuigen</div>';
+          html += '<div class="left-compact-list">';
+          getuigen().forEach(o => {
+            const id = 'obj-' + o.num;
+            const mine = dierRegels(id);
+            const ok = mine.length > 0 && mine.every(clueTrue);
+            const bad = mine.length > 0 && !ok;
+            html += '<div class="person-row '+(sel.type==='dierclues'&&sel.id===id?'on':'')+'" data-dier-clues="'+e(id)+'">'+
+              '<span class="badge '+(ok?'ok':bad?'bad':'no')+'">'+(ok?mine.length:bad?uiIcon('cross'):uiIcon('warning'))+'</span>'+
+              '<span class="mini">'+objectIconTag(o.kind,'')+'</span>'+
+              '<span class="nm">'+e(hoofdletterNL(dierNaam(o)))+'</span>'+
+              (o.gedood ? '<span class="pr-tag wie-slachtoffer">gedood</span>' : '')+
+            '</div>';
+          });
+          html += '</div>';
+        }
         if (buildMode === 'clues'){
           const bc = boardClues();
           const bcOk = bc.length > 0 && bc.every(clueTrue);
@@ -9911,6 +10005,8 @@ function renderLeftPanel(){
   });
   panel.querySelectorAll('[data-board-clues]').forEach(el => el.onclick = () =>
     selectEntity({ type:'boardclues', id:'board' }));
+  panel.querySelectorAll('[data-dier-clues]').forEach(el => el.onclick = () =>
+    selectEntity({ type:'dierclues', id: el.dataset.dierClues }));
 
 }
 
@@ -9982,7 +10078,7 @@ function openInspMenu(anker){
         inspStand.naamEdit = true; renderInspector();
         focusIn('#inspector .insp-naam-in');
       });
-    } else if (sel.type !== 'boardclues'){
+    } else if (sel.type !== 'boardclues' && sel.type !== 'dierclues'){
       menuItem(dd, uiIcon('pencil')+' Naam aanpassen', () => {
         close();
         inspStand.naamEdit = true; renderInspector();
@@ -9999,7 +10095,7 @@ function openInspMenu(anker){
       if (sel.type === 'wall')  { const w = (S.walls||{})[sel.key]; return w && (w.note||'').trim(); }
       return true;
     })();
-    if (!heeftVeld && sel.type !== 'boardclues' && !inspStand.extraVeld){
+    if (!heeftVeld && sel.type !== 'boardclues' && sel.type !== 'dierclues' && !inspStand.extraVeld){
       menuItem(dd, uiIcon('note')+' '+veldNaam+' toevoegen', () => {
         close();
         inspStand.extraVeld = true; renderInspector();
@@ -10070,11 +10166,15 @@ function openInspMenu(anker){
 /* De kop van het detailvak is de naam van wat je beetpakt; zonder selectie
    valt hij terug op de bouwmodus. */
 const SEL_KOP = { room:'Ruimte', person:'Persoon', object:'Object',
-                  wall:'Muurobject', boardclues:'Bordregels' };
+                  wall:'Muurobject', boardclues:'Bordregels', dierclues:'Getuige' };
 function selectieNaam(){
   const sel = selectedEntity;
   if (!sel) return (MODES[buildMode] || {}).title || 'Selectie';
   if (sel.type === 'boardclues') return 'Algemene regels';
+  if (sel.type === 'dierclues'){
+    const o = dierById(sel.id);
+    return o ? hoofdletterNL(dierNaam(o)) : 'Getuige';
+  }
   if (sel.type === 'person'){
     /* Bij de personen staat de naam onder het portret; de kop zegt dan wat
        hij in de zaak is. */
@@ -10139,6 +10239,18 @@ function inspectorHead(){
            '<span class="insp-txt"><span class="insp-naam-vast">Algemene regels</span>'+
            '<span class="insp-sub">'+
            list.length+' regel'+(list.length===1?'':'s')+' · over het hele bord</span></span></div>';
+  }
+
+  if (sel.type === 'dierclues'){
+    const o = dierById(sel.id);
+    if (!o) return '';
+    const list = dierRegels(sel.id);
+    return '<div class="insp-head"><span class="insp-ico">'+objectIconTag(o.kind,'')+'</span>'+
+           '<span class="insp-txt"><span class="insp-naam-vast">'+e(hoofdletterNL(dierNaam(o)))+'</span>'+
+           '<span class="insp-sub">getuige · '+list.length+' regel'+(list.length===1?'':'s')+
+           ' · in '+e(roomNameArt(dierTegel(o).room))+
+           (o.gedood ? ' · <span class="kindbadge no">ook gedood</span>' : '')+
+           '</span></span></div>';
   }
 
   if (sel.type === 'wall'){
@@ -10227,7 +10339,7 @@ function renderInspector(){
       menuKnop.dataset.gebonden = '1';
       menuKnop.onclick = ev => { ev.stopPropagation(); openInspMenu(menuKnop); };
     }
-    if (menuKnop) menuKnop.classList.toggle('hidden', !sel || sel.type === 'boardclues');
+    if (menuKnop) menuKnop.classList.toggle('hidden', !sel || sel.type === 'boardclues' || sel.type === 'dierclues');
   }
   if (!sel){
     box.innerHTML = buildMode === 'board'
@@ -10244,6 +10356,10 @@ function renderInspector(){
 
     if (sel.type === 'boardclues'){
       html += renderBoardClueEditor();
+    }
+
+    else if (sel.type === 'dierclues'){
+      html += renderDierClueEditor(sel.id);
     }
 
     else if (sel.type === 'room'){
