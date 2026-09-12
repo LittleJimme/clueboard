@@ -1597,6 +1597,10 @@ textarea.inp{min-height:58px;resize:vertical}
   padding:1px 5px;border-radius:5px;transition:all .14s;
 }
 .clue-del:hover{color:var(--crimson);background:#FBE4E3}
+/* De reden onder een zichtregel die niet klopt. */
+.zicht-waarom{display:block;margin-top:5px;font:600 11.5px var(--ui);color:var(--muted);line-height:1.45}
+.clue-note.zicht-waarom{display:flex;gap:6px;align-items:flex-start}
+.clue-note.zicht-waarom svg{width:13px;height:13px;flex:0 0 auto;margin-top:1px}
 .clue-note{font:600 11px var(--read);color:var(--gold);margin-top:6px}
 
 .clue-sentence{font:600 13px/2.1 var(--read);color:var(--ink)}
@@ -2064,7 +2068,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v45</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v46</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -3317,10 +3321,11 @@ function zichtVakken(a, b){
    coördinaten: een vakhart is dan even, een rand of hoekpunt oneven, en al
    het rekenwerk blijft in hele getallen. Zo is "loopt de lijn precies door
    dit hoekpunt?" een exacte vraag in plaats van een afronding. */
-function zichtMuurVrij(a, b){
+function zichtMuurVrij(a, b, waarom){
   const ax = 2*a.x, ay = 2*a.y, dx = 2*(b.x-a.x), dy = 2*(b.y-a.y);
   const uit = (px,py,qx,qy) => px*qy - py*qx;
   const kamer = t => (t && !t.off) ? t.room : null;
+  const meld = m => { if (waarom && !waarom.length) waarom.push(m); };
   const x0 = Math.min(a.x,b.x), x1 = Math.max(a.x,b.x);
   const y0 = Math.min(a.y,b.y), y1 = Math.max(a.y,b.y);
   /* Snijdt de lijn deze rand écht? Raakt hij alleen een uiteinde van de rand
@@ -3338,8 +3343,17 @@ function zichtMuurVrij(a, b){
     const rT = kamer(T), rU = kamer(U);
     if (rT !== null && rT === rU) return true;            /* geen muur */
     if (!snijdt(px,py,qx,qy)) return true;                /* de lijn komt er niet langs */
-    if (rT === null || rU === null) return false;         /* de rand van het bord */
-    return grensDoorzichtig(T,U);                         /* een deur of poort erin */
+    if (rT === null || rU === null){                      /* de rand van het bord */
+      meld('de rand van het bord bij ' + tileId(T || U));
+      return false;
+    }
+    if (grensDoorzichtig(T,U)) return true;               /* een deur of poort erin */
+    const sleutel = wallsOnTile(z(T.x,T.y)).find(k => wallTiles(k).indexOf(z(U.x,U.y)) !== -1);
+    meld(sleutel
+      ? wallNameArt(sleutel) + ' tussen ' + tileId(T) + ' en ' + tileId(U) + ' laat geen zicht door'
+      : 'de muur tussen ' + tileId(T) + ' en ' + tileId(U) + ' (' +
+        roomNameArt(T.room) + ' en ' + roomNameArt(U.room) + ')');
+    return false;
   };
   for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++){
     if (x < x1 && !randVrij(S.tiles[z(x,y)], S.tiles[z(x+1,y)],
@@ -3358,17 +3372,72 @@ function zichtMuurVrij(a, b){
     if (langs <= 0 || langs >= dx*dx + dy*dy) continue;   /* niet ertussen */
     const vier = [S.tiles[z(x,y)], S.tiles[z(x+1,y)], S.tiles[z(x,y+1)], S.tiles[z(x+1,y+1)]];
     const r = kamer(vier[0]);
-    if (r === null || !vier.every(t => kamer(t) === r)) return false;
+    if (r === null || !vier.every(t => kamer(t) === r)){
+      meld('de lijn gaat precies door de hoek van de muur tussen ' +
+           tileId(S.tiles[z(x,y)]) + ' en ' + tileId(S.tiles[z(x+1,y+1)]));
+      return false;
+    }
   }
   return true;
 }
 /* Zicht van vak a naar vak b. Symmetrisch: de muren liggen op randen (die
    kruis je van beide kanten hetzelfde) en zichtVakken levert dezelfde
    verzameling in omgekeerde volgorde. */
-function zichtlijn(a, b){
+function zichtlijn(a, b, waarom){
   if (!a || !b || a.off || b.off || (a.x === b.x && a.y === b.y)) return false;
-  if (!zichtMuurVrij(a, b)) return false;
-  return zichtVakken(a, b).every(t => t && !t.off && !tegelHoog(t));
+  if (!zichtMuurVrij(a, b, waarom)) return false;
+  const pad = zichtVakken(a, b);
+  for (let i = 0; i < pad.length; i++){
+    const t = pad[i];
+    if (!t || t.off){
+      if (waarom && !waarom.length) waarom.push('een gat in het bord in de lijn');
+      return false;
+    }
+    if (tegelHoog(t)){
+      if (waarom && !waarom.length)
+        waarom.push(objNameArt(S.objects[t.obj]) + ' op ' + tileId(t) + ' staat in de lijn');
+      return false;
+    }
+  }
+  return true;
+}
+/* Waarom lukt dit zicht niet? Eén regel tekst, voor onder een zichtregel die
+   niet klopt: "vijf tegels ertussen en toch geen zicht" is aan een kruisje
+   niet te zien. Leeg als er wél zicht is. */
+function zichtWaarom(a, b){
+  if (!a || !b) return 'een van de twee staat niet op het bord';
+  if (a.x === b.x && a.y === b.y) return 'ze staan op hetzelfde vak';
+  const waarom = [];
+  if (zichtlijn(a, b, waarom)) return '';
+  return waarom[0] || 'er staat iets in de lijn';
+}
+/* De uitleg bij een zichtregel die niet klopt. Welke twee vakken het zijn
+   haalt hij uit de regel zelf, dus hier staat één keer welke vorm waar naar
+   kijkt. */
+function zichtRegelWaarom(clue){
+  if (!clue || clue.locked) return '';
+  const dier = id => { const o = dierById(id); return o ? dierTegel(o) : null; };
+  const persoon = q => (q && S.people[q]) ? pos(q) : null;
+  const paren = [];
+  (clue.terms || []).forEach(t => (t.any || []).forEach(a => {
+    const g = a.args || {}, over = a.over || clue.personId;
+    if (a.atom === 'sees-person')        paren.push([persoon(over), persoon(g.person), personName(over), personName(g.person)]);
+    else if (a.atom === 'animal-sees-person') paren.push([dier(g.animal), persoon(g.person), slotLabel('animal', g.animal), personName(g.person)]);
+    else if (a.atom === 'animal-sees-victim') paren.push([dier(g.animal), persoon(S.victim), slotLabel('animal', g.animal), 'het slachtoffer']);
+    else if (a.atom === 'sees-kind' || a.atom === 'animal-sees-nobody' || a.atom === 'sees-nobody'
+          || a.atom === 'animal-sees-culprit'){
+      /* Deze vormen kijken naar meer dan één doel; dan zegt een enkele
+         reden niets. */
+      paren.push(null);
+    }
+  }));
+  if (!paren.length || paren.some(p => !p)) return '';
+  for (const [t, u, na, nb] of paren){
+    if (!t || !u) continue;
+    const reden = zichtWaarom(t, u);
+    if (reden) return na + ' naar ' + nb + ': ' + reden + '.';
+  }
+  return '';
 }
 function wallsOfKind(kind){
   return Object.keys(S.walls || {}).filter(key => S.walls[key].kind === kind);
@@ -6353,6 +6422,13 @@ function clueHtml(clue){
             uiIcon('pencil')+'</button>'+
           '<button class="clue-del" data-del-clue="'+clue.id+'" title="Regel verwijderen">'+uiIcon('cross')+'</button></div>';
 
+  /* Een zichtregel die niet klopt, zegt waarom: welke muur, welke boom of
+     welke hoek er tussen staat. Anders zoek je het op het bord bij elkaar. */
+  if (!ok){
+    const reden = zichtRegelWaarom(clue);
+    if (reden) html += '<div class="clue-note zicht-waarom">'+uiIcon('eye')+' '+e(reden)+'</div>';
+  }
+
   /* Schrijft de auteur zijn eigen zin, dan is dat wat de speler leest. De
      regel eronder blijft staan en blijft leidend: die wordt gecontroleerd,
      en aan die zin zie je of je eigen tekst nog klopt met wat je bedoelde. */
@@ -8895,7 +8971,8 @@ function clueSentenceHtml(clue){
   return e(ruw).split('\u0001').join('<b>').split('\u0002').join('</b>');
 }
 
-/* Een regel in de kolom: lezen en aanklikken, niet bewerken. */
+/* Een regel in de kolom: lezen en aanklikken, niet bewerken. Klopt een
+   zichtregel niet, dan staat de reden eronder. */
 function clueSummaryHtml(clue){
   const ok = clueTrue(clue);
   const ruim = clueOverbepaald(clue);
@@ -8904,7 +8981,9 @@ function clueSummaryHtml(clue){
     'data-open-regel="'+clue.id+'" title="Openen in de regelbewerker">'+
     '<span class="truth '+(ok?(ruim?'warn':'ok'):'no')+'">'+
       uiIcon(clue.locked ? 'lock' : ok?(ruim?'warning':'check'):'cross')+'</span>'+
-    '<span class="clue-rij-zin">'+(eigen ? e(clue.storyText.trim()) : clueSentenceHtml(clue))+'</span>'+
+    '<span class="clue-rij-zin">'+(eigen ? e(clue.storyText.trim()) : clueSentenceHtml(clue))+
+      (ok ? '' : (function(){ const r = zichtRegelWaarom(clue);
+        return r ? '<span class="zicht-waarom">'+e(r)+'</span>' : ''; })())+'</span>'+
   '</button>';
 }
 
