@@ -2060,7 +2060,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v41</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v42</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -3241,17 +3241,34 @@ function wallsOnTile(k){
   return Object.keys(S.walls || {}).filter(key => wallTiles(key).indexOf(k) !== -1);
 }
 /* ── Zicht ──────────────────────────────────────────────
-   Kijken gaat in een rechte lijn: over de rij, de kolom of schuin. De schuine
-   lijn is nodig, want twee personen staan nooit in dezelfde rij of kolom --
-   zonder diagonaal zou "kon Beatrix zien" altijd onwaar zijn. De grens tussen
-   twee gebieden is een muur en houdt het zicht tegen, tenzij er in die grens
-   een muurobject met `doorzicht` zit (deur, poort); schuin gaat de lijn door
-   het hoekpunt tussen vier vakken en kan daarom alleen als die vier in één
-   gebied liggen. Een object dat boven zijn vak uitsteekt (in de bank gemerkt
-   met `hoog`: standbeeld, boom, huisje, katapult, watermolen, boekenkast)
-   houdt het ook tegen; langs alle andere objecten en langs personen kijk je
-   gewoon heen. Alleen tegels tellen, geen personen: zo hangt het antwoord
-   alleen van de twee eindpunten af. */
+   Binnen je eigen ruimte zie je iedereen: over de rij, over de kolom, schuin,
+   en ook met een sprong zoals die van het paard uit het schaakspel. Die
+   vrijheid is geen luxe. Twee personen staan nooit in dezelfde rij of kolom
+   (bordregel), en precies op één diagonaal staan is zeldzaam -- met alleen
+   rechte en diagonale lijnen zou "kon Beatrix zien" dus bijna nooit kunnen
+   kloppen en was de regelsoort waardeloos.
+
+   Wat het zicht tegenhoudt is een object dat boven zijn vak uitsteekt (in de
+   bank gemerkt met `hoog`: standbeeld, boom, huisje, katapult, watermolen,
+   boekenkast) -- maar alleen als het écht in de kijklijn staat. Zo'n object
+   vult het hart van zijn vak en niet de hoeken: loopt de lijn er verder dan
+   ZICHT_STRAAL van dat hart langs, dan kijk je er gewoon langs. Daarmee
+   volgt het model precies wat een mens op het bord ziet:
+
+     - ligt het vak op de lijn (recht of diagonaal ertussen), afstand 0:
+       het zicht is weg;
+     - bij een paardensprong is de afstand altijd 0,45 vak: je kijkt er
+       altijd langs, ook met een boom op een van de twee vakken ertussen;
+     - een boom die een half vak naast de lijn staat, telt niet.
+
+   Door een muur kijk je nooit. Door een deur of poort (bankvlag `doorzicht`)
+   wel, maar alleen recht vooruit over de rij of de kolom: schuin door een
+   deuropening turen telt niet.
+
+   Personen houden het zicht niet tegen; alleen de vakken tellen. Zo hangt het
+   antwoord alleen van de twee uiteinden af en niet van wie er verder staat --
+   wat de zoeker nodig heeft om "kon niemand zien" vroeg te kunnen snoeien. */
+const ZICHT_STRAAL = 0.38;
 function objectHoog(kind){ const m = AssetBank.meta(kind); return !!(m && m.hoog); }
 function tegelHoog(t){
   const o = t && t.obj && S.objects[t.obj];
@@ -3270,30 +3287,47 @@ function grensDoorzichtig(t, u){
   const m = AssetBank.meta(w.kind);
   return !!(m && m.doorzicht);
 }
-/* Schuin kijken gaat door het hoekpunt tussen vier vakken: alleen als die
-   vier in hetzelfde gebied liggen raakt de lijn geen muur. */
-function hoekDoorzichtig(t, u){
-  const o1 = S.tiles[z(t.x, u.y)], o2 = S.tiles[z(u.x, t.y)];
-  return [u, o1, o2].every(q => q && !q.off && q.room === t.room);
+/* De vakken waar de kijklijn doorheen gaat: hun hart ligt binnen
+   ZICHT_STRAAL van de lijn tussen de twee harten, en hun projectie valt
+   tussen de uiteinden. De uiteinden zelf horen er niet bij -- de boom die je
+   bekijkt houdt zijn eigen zicht niet tegen. Op volgorde van dichtbij naar
+   ver, zodat een muur onderweg bij de goede buur wordt nagekeken. */
+function zichtVakken(a, b){
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const len2 = dx*dx + dy*dy, len = Math.sqrt(len2);
+  const uit = [];
+  for (let x = Math.min(a.x,b.x); x <= Math.max(a.x,b.x); x++)
+    for (let y = Math.min(a.y,b.y); y <= Math.max(a.y,b.y); y++){
+      if ((x === a.x && y === a.y) || (x === b.x && y === b.y)) continue;
+      const px = x - a.x, py = y - a.y;
+      const langs = (px*dx + py*dy) / len2;
+      if (langs <= 0 || langs >= 1) continue;
+      if (Math.abs(px*dy - py*dx) / len >= ZICHT_STRAAL) continue;
+      uit.push({ x, y, langs });
+    }
+  return uit.sort((p,q) => p.langs - q.langs).map(p => S.tiles[z(p.x,p.y)] || null);
 }
-/* Rechte zichtlijn van tegel a naar tegel b: rij, kolom of diagonaal, a is
-   niet b. Het eindpunt zelf mag hoog zijn (je ziet de boom wel), wat ertussen
-   staat niet; buiten het bord houdt het op. */
+/* Zicht van vak a naar vak b. Symmetrisch: zichtVakken levert dezelfde
+   verzameling in omgekeerde volgorde, en grensDoorzichtig kijkt aan beide
+   kanten van de grens. */
 function zichtlijn(a, b){
-  if (!a || !b || (a.x === b.x && a.y === b.y)) return false;
-  const dx = Math.sign(b.x - a.x), dy = Math.sign(b.y - a.y);
-  const schuin = !!(dx && dy);
-  if (schuin && Math.abs(b.x - a.x) !== Math.abs(b.y - a.y)) return false;
-  let t = a;
-  for (let stap = 0; stap < 40; stap++){
-    const u = S.tiles[z(t.x + dx, t.y + dy)];
-    if (!u || u.off) return false;
-    if (schuin ? !hoekDoorzichtig(t, u) : !grensDoorzichtig(t, u)) return false;
-    if (u.x === b.x && u.y === b.y) return true;
-    if (tegelHoog(u)) return false;
-    t = u;
+  if (!a || !b || a.off || b.off || (a.x === b.x && a.y === b.y)) return false;
+  const recht = (a.x === b.x || a.y === b.y);
+  /* Buiten de rechte rij of kolom blijft het zicht binnen één ruimte: door een
+     deuropening kijk je recht vooruit, niet schuin. */
+  if (!recht && a.room !== b.room) return false;
+  const pad = zichtVakken(a, b);
+  let vorige = a;
+  for (let i = 0; i < pad.length; i++){
+    const t = pad[i];
+    if (!t || t.off) return false;                        /* gat in het bord */
+    if (tegelHoog(t)) return false;                       /* boom, beeld, huisje */
+    if (t.room !== vorige.room && (!recht || !grensDoorzichtig(vorige, t))) return false;
+    vorige = t;
   }
-  return false;
+  /* Recht vooruit liggen de vakken op een rij, dus de laatste grens -- die
+     naar b zelf -- hoort er ook bij. Schuin is a.room al gelijk aan b.room. */
+  return recht ? (b.room === vorige.room || grensDoorzichtig(vorige, b)) : true;
 }
 function wallsOfKind(kind){
   return Object.keys(S.walls || {}).filter(key => S.walls[key].kind === kind);
@@ -8224,9 +8258,10 @@ const ATOMS = {
   'has-role':       { scope:'person', cat:'Rollen', text:'was {role}',
                       slots:{role:'role'}, test:(p,a)=>personRoleOf(p)===a.role },
 
-  /* Zicht: in een rechte lijn over de rij, de kolom of schuin; niet door
-     muren, wel door deuren en poorten, en niet langs objecten die boven hun
-     vak uitsteken. Het rekenwerk staat in zichtlijn(). */
+  /* Zicht: binnen je eigen ruimte in elke richting (ook een paardensprong),
+     recht vooruit ook door een deur of poort, en nooit door een muur of langs
+     een object dat boven zijn vak uitsteekt. Het rekenwerk staat in
+     zichtlijn(); de uitleg van het model staat daarboven. */
   'sees-person':    { scope:'person', cat:'Zicht', text:'kon {person} zien',
                       slots:{person:'person'}, test:(p,a)=>!!S.people[a.person] && zichtlijn(pos(p), pos(a.person)) },
   'sees-nobody':    { scope:'person', cat:'Zicht', text:'kon niemand zien',

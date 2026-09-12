@@ -606,6 +606,12 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
 .hb-c.m-z{box-shadow:inset 0 -3px 0 #2A2118,inset 0 0 0 1px rgba(90,70,40,.18)}
 .hb-c.m-w{box-shadow:inset 3px 0 0 #2A2118,inset 0 0 0 1px rgba(90,70,40,.18)}
 .hb-c.m-o{box-shadow:inset -3px 0 0 #2A2118,inset 0 0 0 1px rgba(90,70,40,.18)}
+/* De kijklijnen in een zichtvoorbeeld: goud als het zicht er is, rood
+   gestreept als er iets in de weg staat. De lijn loopt van hart naar hart. */
+.hb{position:relative}
+.hb-lijnen{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;overflow:visible}
+.hb-lijnen .hl{stroke:#C9A227;stroke-width:2.4;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.hb-lijnen .hl.nee{stroke:#DC4A46;stroke-dasharray:3.5 3}
 .hb-c.deur::before{content:"";position:absolute;background:#C9A227;border-radius:2px;z-index:2}
 .hb-c.d-w::before{left:-1px;top:22%;bottom:22%;width:5px}
 .hb-c.d-o::before{right:-1px;top:22%;bottom:22%;width:5px}
@@ -945,6 +951,14 @@ function helpBord(regels, opt){
       h+='<span class="'+cls+'">'+inner+'</span>';
     });
   });
+  /* De kijklijnen van de zichtregels, van hart naar hart van een vak. */
+  if((o.lijn||[]).length){
+    const mx=x=>((x+0.5)/kolommen*100).toFixed(2), my=y=>((y+0.5)/rijen*100).toFixed(2);
+    h+='<svg class="hb-lijnen" viewBox="0 0 100 100" preserveAspectRatio="none">'
+      +o.lijn.map(l=>'<line class="hl'+(l[4]==="nee"?" nee":"")+'" x1="'+mx(l[0])
+          +'" y1="'+my(l[1])+'" x2="'+mx(l[2])+'" y2="'+my(l[3])+'"/>').join("")
+      +'</svg>';
+  }
   return h+"</div>";
 }
 /* De compacte rolcontainer uit de goedgekeurde referentie: banier voor de
@@ -1055,10 +1069,10 @@ const REGEL_FAMILIES = [
            "<b>Iedereen in zijn eigen gebied</b>: wie een gebied naar zich vernoemd heeft, staat daar."] },
   { id:"zicht", kop:"Zicht",
     atomen:["sees-person","sees-nobody","sees-kind"],
-    beeld:()=>helpBord(["A.^.",".B.C","D..."],{gebied:[[3,0,"g-w"],[3,1,"g-w"],[3,2,"g-w"]],deur:[[3,1,"w"]],zicht:[[1,0],[1,1],[2,1],[1,2],[2,2]]}),
-    tekst:["Kijken gaat in een rechte lijn: over de rij, de kolom of schuin. Personen staan elkaar niet in de weg.",
-           "Door een <b>muur</b> kijk je nooit; over de rij of kolom wel door een <b>deur</b> of <b>poort</b>. Schuin kijk je alleen binnen één gebied. A ziet B schuin, B ziet C door de deur, D kijkt tegen de muur.",
-           "Langs objecten kijk je gewoon heen, behalve langs objecten die boven hun vak uitsteken: <b>standbeeld, boom, huisje, katapult, watermolen en boekenkast</b>. A ziet niet voorbij de boom."] },
+    beeld:()=>helpBord(["A..B",".^..","..C."],{lijn:[[0,0,3,0,"ok"],[3,0,2,2,"ok"],[0,0,2,2,"nee"]]}),
+    tekst:["In je eigen gebied zie je iedereen: over de rij, de kolom, schuin, en ook met een sprong zoals het paard in het schaakspel. Personen staan elkaar niet in de weg.",
+           "Een object dat boven zijn vak uitsteekt — <b>standbeeld, boom, huisje, katapult, watermolen, boekenkast</b> — houdt het zicht tegen als het op de lijn staat. Staat het ernaast, dan kijk je erlangs: A ziet B, B ziet C, A ziet C niet.",
+           "Door een <b>muur</b> kijk je nooit; door een <b>deur</b> of <b>poort</b> alleen recht vooruit."] },
   { id:"slachtoffer", kop:"Het slachtoffer",
     atomen:[],
     beeld:()=>helpBord(["VB..","....","...A","..C."],{gebied:REGEL_GEB}),
