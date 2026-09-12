@@ -103,7 +103,8 @@ PROJECT_CONTEXT.md
   - bij selectie-wissel;
   - bij stap-wissel;
   - vóór export.
-- Personen met naam tonen een klein label onder hun pion.
+- Op het bord draagt een persoon alleen zijn fiche met de letter, zoals in de
+  player; namen staan in de kolom links en niet onder de pion.
 - Benoemde ruimtes tonen een subtiel label op het bord.
 
 ## Werkwijze

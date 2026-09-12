@@ -934,6 +934,14 @@ body.spelweergave .pawn.personage .portret-podium[data-vorm="noble"],
 body.spelweergave .pawn.personage .portret-podium[data-vorm="knight"]{bottom:-12%}
 /* Het slachtoffer valt niet om: zijn portret draagt de kruisogen al. */
 body.spelweergave .cell .pawn.personage.victim{transform:none;animation:none}
+/* Het letterfiche naast het portret -- dezelfde maten als .pawn.personage .init
+   in player/index.html; houd ze gelijk. */
+body.spelweergave .pawn.personage .init{position:absolute;right:-2%;bottom:0;z-index:3;
+  width:calc(var(--pion-cel,44px) * .36);height:calc(var(--pion-cel,44px) * .36);border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--pion-kleur,#8A93A6);color:var(--pion-inkt,#fff);
+  border:max(1.5px, calc(var(--pion-cel,44px) * .035)) solid var(--stroke);
+  font:800 calc(var(--pion-cel,44px) * .19)/1 var(--ui);box-shadow:0 2px 5px rgba(21,26,51,.34)}
 .bord-knop{
   width:34px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;
   border:1.5px solid var(--edge);border-radius:9px;background:var(--panel);color:var(--muted);
@@ -985,14 +993,6 @@ body.spelweergave .cell .pawn.personage.victim{transform:none;animation:none}
   border-radius:999px;padding:1px 7px;font:700 9.5px/1.5 var(--mono);white-space:nowrap;
   animation:fadeIn .2s ease both;
 }
-/* Klein naamlabel onder een pion. */
-.plabel{
-  position:absolute;bottom:1%;left:50%;transform:translateX(-50%);z-index:5;pointer-events:none;
-  background:#fff;color:var(--stroke);border:1.5px solid var(--stroke);border-radius:999px;
-  padding:0 6px;font:800 9px/1.5 var(--mono);white-space:nowrap;
-  animation:fadeIn .2s ease both;
-}
-.plabel.missing{opacity:.6}
 /* Klein label boven de pion: de soort persoon (bv. Edele). */
 /* Recht boven het naamlabel (dat op bottom:1% staat), niet boven de pion. */
 .slabel{
@@ -2095,7 +2095,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v48</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v49</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -4349,7 +4349,16 @@ function renderCell(k){
   const node = document.createElement('div');
   node.className = 'pawn ' + role + (fout ? ' forbidden' : '') + (alsPersonage ? ' personage' : '');
   node.dataset.sig = sig;
-  node.innerHTML = alsPersonage ? portretHtml(p) : pawnSVG(p, role, t.x + '_' + t.y);
+  if (alsPersonage){
+    /* Het portret draagt geen letter; die komt er als klein fiche bij, op
+       dezelfde plek als in de speler. */
+    const kleur = personColor(p);
+    node.style.setProperty('--pion-kleur', kleur);
+    node.style.setProperty('--pion-inkt', letterOpKleur(kleur));
+    node.innerHTML = portretHtml(p) + '<span class="init">' + e(personLetter(p)) + '</span>';
+  } else {
+    node.innerHTML = pawnSVG(p, role, t.x + '_' + t.y);
+  }
   el.append(node);
   if (stand){
     const slab = document.createElement('div');
@@ -4359,15 +4368,9 @@ function renderCell(k){
     el.append(slab);
     clampLabelToGrid(slab);
   }
-  /* Naamlabel onder de pion (CLAUDE.md: personen met naam tonen een klein label). */
-  if (nm || buildMode === 'people'){
-    const lab = document.createElement('div');
-    lab.className = 'plabel' + (nm ? '' : ' missing');
-    lab.textContent = nm || p.toUpperCase();
-    lab.title = nm || p.toUpperCase();
-    el.append(lab);
-    clampLabelToGrid(lab);
-  }
+  /* Geen naamlabel onder de pion: het fiche draagt zijn letter, net als in de
+     speler, en de namen staan in de kolom links. Drie namen naast elkaar op een
+     klein bord lopen toch over elkaar heen. */
 }
 
 /* Schuift een label horizontaal bij zodat een naam die breder is dan de tegel
@@ -6632,7 +6635,7 @@ function tekenRegelVenster(personId, scrim){
   const wie = dier ? null : personId;
   const kop = scrim.querySelector('#regelKop');
   if (kop) kop.textContent = dier
-    ? 'Regels over ' + dierNaam(dierById(dier) || {})
+    ? 'Regels over ' + dierNaam(dierById(dier) || objectByExportId(dier) || { kind:'' })
     : wie ? 'Regels van ' + personName(wie) : 'Regels over het hele bord';
 
   const box = scrim.querySelector('#regelEditor');
@@ -6930,19 +6933,40 @@ function renderClueEditor(p, groot){
    zelf, in plaats van hem tussen de algemene regels moeten zoeken. */
 function renderDierClueEditor(animalId, groot){
   const o = dierById(animalId);
-  if (!o) return '<p class="empty-hint">Dit dier doet niet meer mee als getuige.</p>';
   const mine = dierRegels(animalId);
   let html = '';
+  /* Doet het dier niet meer mee -- er staat een tweede van zijn soort, het
+     vinkje is eraf, of het dier is van het bord gehaald -- dan blijven zijn
+     regels hier gewoon staan. Een regel die nergens te zien is, is een regel
+     die je niet kunt repareren en niet kunt wissen. */
+  if (!o) html += '<p class="empty-hint">'+dierWaarschuwing(animalId)+'</p>';
   if (!mine.length){
-    html += '<p class="empty-hint">Nog geen regels over '+e(dierNaam(o))+'. '+
-            'Het dier staat er dan alleen maar bij.</p>';
+    if (o) html += '<p class="empty-hint">Nog geen regels over '+e(dierNaam(o))+'. '+
+                   'Het dier staat er dan alleen maar bij.</p>';
   } else {
     mine.forEach(c => html += (groot ? clueHtml(c) : clueSummaryHtml(c)));
   }
-  html += groot
+  if (o) html += groot
     ? '<button class="btn-add" data-add-dier="'+e(animalId)+'">＋ Regel toevoegen</button>'
     : '<button class="btn-add" data-regelvenster="dier:'+e(animalId)+'">＋ Regel toevoegen</button>';
   return html;
+}
+/* Waarom doet dit dier niet meer mee? Zeg het erbij: het verschil tussen "het
+   vinkje staat uit" en "er staat een tweede wolf" bepaalt wat je eraan doet. */
+function dierWaarschuwing(animalId){
+  const o = objectByExportId(animalId);
+  if (!o || !o.tiles.length)
+    return 'Dit dier staat niet meer op het bord. Zijn regels kloppen daarom niet; '+
+           'pas ze aan of wis ze hieronder.';
+  if (!objectDier(o.kind))
+    return 'Dit object is geen dier meer, dus zijn regels kloppen niet.';
+  if (!dierUniek(o))
+    return 'Er staat nog '+e(dierNaam(o))+' op het bord, dus de speler kan niet aanwijzen '+
+           'welk dier de regel bedoelt. Haal die ander weg, of wis deze regels.';
+  if (!o.getuige)
+    return e(hoofdletterNL(dierNaam(o)))+' doet niet meer mee als getuige. Zet dat weer aan '+
+           'bij het dier, of wis deze regels.';
+  return 'Dit dier doet niet meer mee als getuige.';
 }
 
 /* ── Algemene regels over het bord ──────────────────────── */
@@ -7079,11 +7103,15 @@ function wireClueEditor(box){
     openRegelVenster(b.dataset.regelvenster || null);
   });
 
-  /* Een regel uit de kolom: openen waar hij te bewerken is. */
+  /* Een regel uit de kolom: openen waar hij te bewerken is. Een regel over een
+     dier hoort bij dat dier -- hij staat niet tussen de bordregels, dus zonder
+     deze omleiding ging er een leeg venster open. */
   box.querySelectorAll('[data-open-regel]').forEach(b => b.onclick = ev => {
     ev.stopPropagation();
     const clue = clueById(b.dataset.openRegel);
-    openRegelVenster(clue && clue.scope === 'person' ? clue.personId : null);
+    if (!clue) return;
+    const dier = clueDier(clue);
+    openRegelVenster(dier ? 'dier:' + dier : (clue.scope === 'person' ? clue.personId : null));
   });
 
   box.querySelectorAll('[data-story]').forEach(b => b.onclick = ev => {
@@ -8218,7 +8246,7 @@ function slotLabel(type, value, ctx){
      de sleutel. De regel krijgt zelf een kruisje, dat is het signaal. */
   if (type === 'animal' || type === 'animalDood'){
     const o = objectByExportId(value);
-    return o ? dierNaam(o) : String(value);
+    return o ? dierNaam(o) : 'een dier dat er niet meer staat';
   }
   if (type === 'objectKind')   return 'een ' + objectLabel(value).toLowerCase();
   if (type === 'objectKindPl') return objectPlural(value);
@@ -9068,6 +9096,16 @@ function cluesFor(personId){ return (S.content.clues||[]).filter(c => c.scope ==
    staat bij dat dier. Zo staat elke regel op precies één plek. */
 function boardClues(){ return (S.content.clues||[]).filter(c => c.scope === 'board' && !clueDier(c)); }
 function dierRegels(animalId){ return (S.content.clues||[]).filter(c => clueDier(c) === animalId); }
+/* Over welke dieren gaan er regels? Uit de regels zelf, dus ook over een dier
+   dat geen getuige meer is -- anders raakt zo'n regel onvindbaar. */
+function dierRegelDieren(){
+  const uit = [];
+  (S.content.clues||[]).forEach(c => {
+    const d = clueDier(c);
+    if (d && uit.indexOf(d) === -1) uit.push(d);
+  });
+  return uit.sort((a,b) => (+String(a).split('-')[1] || 0) - (+String(b).split('-')[1] || 0));
+}
 
 /* ── Selectie- en hover-highlight op het bord (Fase C) ── */
 function clearHoverHighlight(){ document.querySelectorAll('.cell.hoverlit').forEach(c=>c.classList.remove('hoverlit')); }
@@ -10085,20 +10123,26 @@ function renderLeftPanel(){
           html += '</div>';
         }
         /* De getuigen: dieren met een eigen regelblok. Ze staan onder de
-           personen, met hun pictogram uit de bank. */
-        if (buildMode === 'clues' && getuigen().length){
+           personen, met hun pictogram uit de bank. Een dier dat niet meer
+           meedoet maar nog regels heeft staat er ook bij, rood: anders zijn
+           die regels nergens meer te vinden. */
+        const dierRijen = getuigen().map(o => 'obj-' + o.num);
+        dierRegelDieren().forEach(id => { if (dierRijen.indexOf(id) === -1) dierRijen.push(id); });
+        if (buildMode === 'clues' && dierRijen.length){
           html += '<div class="group-head" style="cursor:default;"><span class="tw" style="opacity:0">'+uiIcon('chevron')+'</span>Getuigen</div>';
           html += '<div class="left-compact-list">';
-          getuigen().forEach(o => {
-            const id = 'obj-' + o.num;
+          dierRijen.forEach(id => {
+            const meedoet = dierById(id), obj = objectByExportId(id);
             const mine = dierRegels(id);
-            const ok = mine.length > 0 && mine.every(clueTrue);
+            const ok = !!meedoet && mine.length > 0 && mine.every(clueTrue);
             const bad = mine.length > 0 && !ok;
-            html += '<div class="person-row '+(sel.type==='dierclues'&&sel.id===id?'on':'')+'" data-dier-clues="'+e(id)+'">'+
+            html += '<div class="person-row '+(sel.type==='dierclues'&&sel.id===id?'on':'')+
+                    (meedoet?'':' is-dader')+'" data-dier-clues="'+e(id)+'">'+
               '<span class="badge '+(ok?'ok':bad?'bad':'no')+'">'+(ok?mine.length:bad?uiIcon('cross'):uiIcon('warning'))+'</span>'+
-              '<span class="mini">'+objectIconTag(o.kind,'')+'</span>'+
-              '<span class="nm">'+e(hoofdletterNL(dierNaam(o)))+'</span>'+
-              (o.gedood ? '<span class="pr-tag wie-slachtoffer">gedood</span>' : '')+
+              '<span class="mini">'+(obj?objectIconTag(obj.kind,''):uiIcon('warning'))+'</span>'+
+              '<span class="nm">'+e(obj?hoofdletterNL(dierNaam(obj)):'Weg van het bord')+'</span>'+
+              (meedoet && meedoet.gedood ? '<span class="pr-tag wie-slachtoffer">gedood</span>' : '')+
+              (meedoet ? '' : '<span class="pr-tag wie-dader">doet niet mee</span>')+
             '</div>';
           });
           html += '</div>';
@@ -10387,12 +10431,16 @@ function inspectorHead(){
   }
 
   if (sel.type === 'dierclues'){
-    const o = dierById(sel.id);
-    if (!o) return '';
+    const meedoet = dierById(sel.id), o = meedoet || objectByExportId(sel.id);
     const list = dierRegels(sel.id);
+    /* Het dier kan van het bord zijn; zijn regels staan er dan nog wel. */
+    if (!o) return '<div class="insp-head"><span class="insp-ico">'+uiIcon('warning')+'</span>'+
+      '<span class="insp-txt"><span class="insp-naam-vast">Weg van het bord</span>'+
+      '<span class="insp-sub">'+list.length+' regel'+(list.length===1?'':'s')+' zonder dier</span></span></div>';
     return '<div class="insp-head"><span class="insp-ico">'+objectIconTag(o.kind,'')+'</span>'+
            '<span class="insp-txt"><span class="insp-naam-vast">'+e(hoofdletterNL(dierNaam(o)))+'</span>'+
-           '<span class="insp-sub">getuige · '+list.length+' regel'+(list.length===1?'':'s')+
+           '<span class="insp-sub">'+(meedoet?'getuige':'<span class="kindbadge no">doet niet mee</span>')+
+           ' · '+list.length+' regel'+(list.length===1?'':'s')+
            ' · in '+e(roomNameArt(dierTegel(o).room))+
            (o.gedood ? ' · <span class="kindbadge no">ook gedood</span>' : '')+
            '</span></span></div>';
