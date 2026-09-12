@@ -1126,6 +1126,42 @@
       {
         "gender": "male",
         "name": "Aldric"
+      },
+      {
+        "gender": "male",
+        "name": "Arend"
+      },
+      {
+        "gender": "male",
+        "name": "Aart"
+      },
+      {
+        "gender": "male",
+        "name": "Abel"
+      },
+      {
+        "gender": "male",
+        "name": "Alexander"
+      },
+      {
+        "gender": "female",
+        "name": "Adelheid"
+      },
+      {
+        "gender": "female",
+        "name": "Aafke"
+      },
+      {
+        "gender": "female",
+        "name": "Alida"
+      },
+      {
+        "gender": "female",
+        "name": "Anna"
+      },
+      {
+        "gender": "female",
+        "name": "Aldegonde"
       }
     ],
     "B": [
@@ -1168,6 +1204,42 @@
       {
         "gender": "female",
         "name": "Bertrada"
+      },
+      {
+        "gender": "male",
+        "name": "Bartel"
+      },
+      {
+        "gender": "male",
+        "name": "Bernaard"
+      },
+      {
+        "gender": "male",
+        "name": "Boudolf"
+      },
+      {
+        "gender": "male",
+        "name": "Bouke"
+      },
+      {
+        "gender": "female",
+        "name": "Barbara"
+      },
+      {
+        "gender": "female",
+        "name": "Beatrijs"
+      },
+      {
+        "gender": "female",
+        "name": "Bregje"
+      },
+      {
+        "gender": "female",
+        "name": "Berta"
+      },
+      {
+        "gender": "female",
+        "name": "Belia"
       }
     ],
     "C": [
@@ -1210,6 +1282,42 @@
       {
         "gender": "female",
         "name": "Clara"
+      },
+      {
+        "gender": "male",
+        "name": "Cornelis"
+      },
+      {
+        "gender": "male",
+        "name": "Claes"
+      },
+      {
+        "gender": "male",
+        "name": "Christoffel"
+      },
+      {
+        "gender": "male",
+        "name": "Cunibert"
+      },
+      {
+        "gender": "female",
+        "name": "Christina"
+      },
+      {
+        "gender": "female",
+        "name": "Catharina"
+      },
+      {
+        "gender": "female",
+        "name": "Cecilia"
+      },
+      {
+        "gender": "female",
+        "name": "Cunegonde"
+      },
+      {
+        "gender": "female",
+        "name": "Carla"
       }
     ],
     "D": [
@@ -1252,6 +1360,38 @@
       {
         "gender": "male",
         "name": "Doriaan"
+      },
+      {
+        "gender": "male",
+        "name": "Dolf"
+      },
+      {
+        "gender": "male",
+        "name": "Diederic"
+      },
+      {
+        "gender": "male",
+        "name": "Dieric"
+      },
+      {
+        "gender": "female",
+        "name": "Digna"
+      },
+      {
+        "gender": "female",
+        "name": "Duifje"
+      },
+      {
+        "gender": "female",
+        "name": "Deliana"
+      },
+      {
+        "gender": "female",
+        "name": "Dorothee"
+      },
+      {
+        "gender": "female",
+        "name": "Dymphna"
       }
     ],
     "E": [
@@ -1294,6 +1434,42 @@
       {
         "gender": "female",
         "name": "Elske"
+      },
+      {
+        "gender": "male",
+        "name": "Ewout"
+      },
+      {
+        "gender": "male",
+        "name": "Eppo"
+      },
+      {
+        "gender": "male",
+        "name": "Evert"
+      },
+      {
+        "gender": "male",
+        "name": "Engelbert"
+      },
+      {
+        "gender": "female",
+        "name": "Eefje"
+      },
+      {
+        "gender": "female",
+        "name": "Elisabeth"
+      },
+      {
+        "gender": "female",
+        "name": "Emma"
+      },
+      {
+        "gender": "female",
+        "name": "Erica"
+      },
+      {
+        "gender": "female",
+        "name": "Eva"
       }
     ],
     "F": [
@@ -1336,6 +1512,34 @@
       {
         "gender": "male",
         "name": "Frans"
+      },
+      {
+        "gender": "male",
+        "name": "Focko"
+      },
+      {
+        "gender": "male",
+        "name": "Fromont"
+      },
+      {
+        "gender": "female",
+        "name": "Fijtje"
+      },
+      {
+        "gender": "female",
+        "name": "Filippa"
+      },
+      {
+        "gender": "female",
+        "name": "Froukje"
+      },
+      {
+        "gender": "female",
+        "name": "Frederika"
+      },
+      {
+        "gender": "female",
+        "name": "Fenne"
       }
     ],
     "G": [
@@ -1378,6 +1582,42 @@
       {
         "gender": "female",
         "name": "Gerarda"
+      },
+      {
+        "gender": "male",
+        "name": "Gozewijn"
+      },
+      {
+        "gender": "male",
+        "name": "Gerrit"
+      },
+      {
+        "gender": "male",
+        "name": "Geerlof"
+      },
+      {
+        "gender": "male",
+        "name": "Gilles"
+      },
+      {
+        "gender": "female",
+        "name": "Gerburg"
+      },
+      {
+        "gender": "female",
+        "name": "Grietje"
+      },
+      {
+        "gender": "female",
+        "name": "Gonda"
+      },
+      {
+        "gender": "female",
+        "name": "Gisela"
+      },
+      {
+        "gender": "female",
+        "name": "Geeske"
       }
     ],
     "H": [
@@ -1420,6 +1660,34 @@
       {
         "gender": "female",
         "name": "Hendrina"
+      },
+      {
+        "gender": "male",
+        "name": "Herman"
+      },
+      {
+        "gender": "male",
+        "name": "Hubrecht"
+      },
+      {
+        "gender": "male",
+        "name": "Heyman"
+      },
+      {
+        "gender": "male",
+        "name": "Hildebrand"
+      },
+      {
+        "gender": "female",
+        "name": "Hasse"
+      },
+      {
+        "gender": "female",
+        "name": "Hillegonde"
+      },
+      {
+        "gender": "female",
+        "name": "Hanneke"
       }
     ],
     "I": [
@@ -1462,6 +1730,30 @@
       {
         "gender": "female",
         "name": "Ilse"
+      },
+      {
+        "gender": "male",
+        "name": "Isbrand"
+      },
+      {
+        "gender": "male",
+        "name": "Idzard"
+      },
+      {
+        "gender": "male",
+        "name": "Irmbrecht"
+      },
+      {
+        "gender": "male",
+        "name": "Iwein"
+      },
+      {
+        "gender": "female",
+        "name": "Ingrid"
+      },
+      {
+        "gender": "female",
+        "name": "Iefke"
       }
     ],
     "J": [
@@ -1504,6 +1796,34 @@
       {
         "gender": "female",
         "name": "Jannetje"
+      },
+      {
+        "gender": "male",
+        "name": "Jacob"
+      },
+      {
+        "gender": "male",
+        "name": "Jelle"
+      },
+      {
+        "gender": "male",
+        "name": "Jurriaan"
+      },
+      {
+        "gender": "male",
+        "name": "Jonas"
+      },
+      {
+        "gender": "female",
+        "name": "Johanna"
+      },
+      {
+        "gender": "female",
+        "name": "Jozefien"
+      },
+      {
+        "gender": "female",
+        "name": "Jorinde"
       }
     ],
     "K": [
@@ -1546,6 +1866,38 @@
       {
         "gender": "male",
         "name": "Koert"
+      },
+      {
+        "gender": "male",
+        "name": "Kristiaan"
+      },
+      {
+        "gender": "male",
+        "name": "Krelis"
+      },
+      {
+        "gender": "male",
+        "name": "Kasper"
+      },
+      {
+        "gender": "male",
+        "name": "Kornelis"
+      },
+      {
+        "gender": "female",
+        "name": "Kaatje"
+      },
+      {
+        "gender": "female",
+        "name": "Kornelia"
+      },
+      {
+        "gender": "female",
+        "name": "Koosje"
+      },
+      {
+        "gender": "female",
+        "name": "Kunne"
       }
     ],
     "L": [
@@ -1588,6 +1940,38 @@
       {
         "gender": "female",
         "name": "Lena"
+      },
+      {
+        "gender": "male",
+        "name": "Lubbert"
+      },
+      {
+        "gender": "male",
+        "name": "Loncke"
+      },
+      {
+        "gender": "male",
+        "name": "Leonard"
+      },
+      {
+        "gender": "male",
+        "name": "Leendert"
+      },
+      {
+        "gender": "female",
+        "name": "Lucia"
+      },
+      {
+        "gender": "female",
+        "name": "Leonora"
+      },
+      {
+        "gender": "female",
+        "name": "Lijsje"
+      },
+      {
+        "gender": "female",
+        "name": "Lievina"
       }
     ],
     "V": [
@@ -1630,6 +2014,38 @@
       {
         "gender": "female",
         "name": "Vibeke"
+      },
+      {
+        "gender": "male",
+        "name": "Vranck"
+      },
+      {
+        "gender": "male",
+        "name": "Volkaert"
+      },
+      {
+        "gender": "male",
+        "name": "Vitus"
+      },
+      {
+        "gender": "female",
+        "name": "Vrouwke"
+      },
+      {
+        "gender": "female",
+        "name": "Victoria"
+      },
+      {
+        "gender": "female",
+        "name": "Vedastine"
+      },
+      {
+        "gender": "female",
+        "name": "Violante"
+      },
+      {
+        "gender": "female",
+        "name": "Valentina"
       }
     ]
   },
