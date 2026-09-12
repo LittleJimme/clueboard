@@ -907,6 +907,21 @@ body.spelweergave .grid[data-step="4"] .cell.no{opacity:1}
 /* De pion staat op een getekende vloer in plaats van op een vlakke kleur;
    een randje eromheen houdt hem leesbaar. */
 body.spelweergave .cell .pawn{filter:drop-shadow(0 2px 3px rgba(10,8,4,.5))}
+/* In de spelweergave staat het personage er zelf, op dezelfde plek en maat
+   als in de speler: het podium rekent met de maat van een vakje (--pion-cel,
+   gezet door zetPionCel) en staat met zijn voeten op de onderrand. Dezelfde
+   getallen als .pawn.personage in player/index.html -- houd ze gelijk. */
+body.spelweergave .cell .pawn.personage{inset:0;filter:none;animation:none}
+/* Het rollabel kan weg: de vorm achter het portret zegt het al, en dorpeling
+   staat op iedereen die geen edele of ridder is. De naam blijft, die heeft de
+   bouwer nodig. */
+body.spelweergave .cell .slabel{display:none}
+body.spelweergave .pawn.personage .portret-podium{--s:calc(var(--pion-cel,44px) / 376);
+  position:absolute;left:50%;bottom:2%;transform:translateX(-50%)}
+body.spelweergave .pawn.personage .portret-podium[data-vorm="noble"],
+body.spelweergave .pawn.personage .portret-podium[data-vorm="knight"]{bottom:-12%}
+/* Het slachtoffer valt niet om: zijn portret draagt de kruisogen al. */
+body.spelweergave .cell .pawn.personage.victim{transform:none;animation:none}
 .bord-knop{
   width:34px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;
   border:1.5px solid var(--edge);border-radius:9px;background:var(--panel);color:var(--muted);
@@ -2068,7 +2083,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v46</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v47</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -4268,7 +4283,13 @@ function renderCell(k){
   const nm = (S.content && S.content.people && S.content.people[p]) ? S.content.people[p].name : '';
   const stand = personRoleOf(p);
   const fout = !personMayEnter(p, t.room) || rijKolomConflict(p);
-  const sig = p + '|' + role + '|' + nm + '|' + step + '|' + (fout ? 'x' : '') + '|' + stand;
+  /* In de spelweergave staat er geen pion maar het personage zelf, zoals de
+     speler hem ziet. De kenmerken van het uiterlijk horen dan in de sleutel:
+     verandert er een kapsel, dan moet het portret opnieuw. */
+  const alsPersonage = document.body.classList.contains('spelweergave');
+  const uit = alsPersonage ? JSON.stringify(persoonKapsel(S.content.people[p] || {})) : '';
+  const sig = p + '|' + role + '|' + nm + '|' + step + '|' + (fout ? 'x' : '') + '|' + stand
+            + '|' + (alsPersonage ? 'prt' + uit : 'pion');
   const oldStand = el.querySelector('.slabel');
   if (oldPawn && oldPawn.dataset.sig === sig) return;
   if (oldPawn) oldPawn.remove();
@@ -4281,9 +4302,9 @@ function renderCell(k){
     el.append(chalk);
   }
   const node = document.createElement('div');
-  node.className = 'pawn ' + role + (fout ? ' forbidden' : '');
+  node.className = 'pawn ' + role + (fout ? ' forbidden' : '') + (alsPersonage ? ' personage' : '');
   node.dataset.sig = sig;
-  node.innerHTML = pawnSVG(p, role, t.x + '_' + t.y);
+  node.innerHTML = alsPersonage ? portretHtml(p) : pawnSVG(p, role, t.x + '_' + t.y);
   el.append(node);
   if (stand){
     const slab = document.createElement('div');
@@ -10995,6 +11016,13 @@ function spelbordCel(){
      moet passen in de krapste richting. */
   return Math.min(g.clientWidth / S.cols, g.clientHeight / S.rows);
 }
+/* Een personage op het bord rekent met de maat van een vakje, net als in de
+   speler (--cell daar). De bouwer meet die maat toch al voor het venstertje,
+   dus hij zet hem hier als variabele op het raster. */
+function zetPionCel(cel){
+  const g = $('grid');
+  if (g && cel) g.style.setProperty('--pion-cel', cel.toFixed(2) + 'px');
+}
 function spelbordBijwerken(){
   if (!spelbordAan || !spelbordKlaar || spelbordBezig) return;
   if (spelbordWacht) return;
@@ -11009,6 +11037,7 @@ function spelbordStuur(){
   const cel = spelbordCel();
   if (!cel) return;
   spelbordLaatsteCel = cel;
+  zetPionCel(cel);
   let level = null;
   spelbordBezig = true;
   try { level = buildExport(true); }
@@ -11043,6 +11072,7 @@ function spelbordPlaats(d){
      venstertje nog op de oude maat, dan liggen de vakjes een haar naast
      elkaar: dan nog één keer tekenen op de nieuwe maat. */
   const cel = spelbordCel();
+  zetPionCel(cel);
   if (Math.abs(cel - spelbordLaatsteCel) > 0.25){ spelbordStuur(); return; }
   spelbordEl.width = d.breedte;
   spelbordEl.height = d.hoogte;
@@ -11060,6 +11090,10 @@ function zetSpelweergave(aan, bewaren){
     knop.setAttribute('aria-pressed', spelbordAan ? 'true' : 'false');
   }
   if (spelbordEl && !spelbordAan) spelbordEl.classList.remove('aan');
+  /* De pionnen wisselen mee: in de spelweergave staat het personage er zelf,
+     daarbuiten de pion met zijn letter. Dat zit in renderCell, dus die moet
+     na het omzetten van de klasse nog een keer langs. */
+  if (typeof renderBoardCells === 'function') renderBoardCells();
   if (spelbordAan){ spelbordLaad(); spelbordBijwerken(); }
   if (bewaren !== false){
     try { localStorage.setItem(SPELWEERGAVE_SLEUTEL, spelbordAan ? '1' : '0'); } catch (e){}

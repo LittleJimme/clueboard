@@ -1868,7 +1868,9 @@ body.desktop.in-game #modalIntro div.intro-scroll{grid-template-columns:minmax(3
    op de tegel, met zijn letter als klein merkje ernaast. */
 body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;border:0;box-shadow:none}
 .pawn.personage{width:100%;height:100%;overflow:visible}
-.pawn.personage .portret-podium{--s:calc(var(--cell) / 360);position:absolute;left:50%;bottom:2%;transform:translateX(-50%)}
+/* 376, niet 360: een tikje kleiner op het vakje, zodat er lucht om het
+   personage blijft en de vloer eronder te zien is. */
+.pawn.personage .portret-podium{--s:calc(var(--cell) / 376);position:absolute;left:50%;bottom:2%;transform:translateX(-50%)}
 .pawn.personage .portret-podium[data-vorm="noble"],.pawn.personage .portret-podium[data-vorm="knight"]{bottom:-12%}
 .pawn.personage .init{position:absolute;right:-2%;bottom:0;z-index:3;
   width:calc(var(--cell)*.36);height:calc(var(--cell)*.36);border-radius:999px;
@@ -2542,6 +2544,10 @@ body.desktop.in-game .clue-card{cursor:pointer;padding-right:14px}
    rechterkolom, en daar is elke regel een knop naar zijn uitleg. Een i op de
    kaart zou dezelfde weg twee keer aanbieden. */
 body.desktop.in-game .clue-card .kaart-knoppen,body.desktop.in-game .clue-row.victim .kaart-knoppen{display:none}
+/* Rijen die alleen op desktop bestaan (volledig scherm). */
+.alleen-desktop{display:none}
+body.desktop .alleen-desktop{display:flex}
+body.desktop .alleen-desktop[hidden]{display:none}
 body.desktop.in-game .clue-row.victim{padding-right:14px;cursor:pointer}
 body.desktop.in-game .clue-card .memo-merk{right:10px}
 body.desktop.in-game .clue-card .notitie-merk{right:10px}
@@ -2575,10 +2581,34 @@ body.desktop.in-game .mode-switch button{padding:0 16px;min-width:0;gap:7px;heig
 body.desktop.in-game .mode-switch button svg{width:16px;height:16px}
 body.desktop.in-game .bord-tip{display:block;grid-column:1;font:600 12.5px var(--font-ui);color:var(--dof);line-height:1.4;padding-right:8px;text-align:left}
 body.desktop.in-game .bord-tip b{color:var(--inkt-2);font-weight:800}
+/* ══ Een maatje kleiner op desktop ══════════════════════
+   Op een dertieninch laptop voelde de spelkant ingezoomd: brede kolommen aan
+   weerszijden en grote letters. Dit blok zet het chroom ongeveer acht procent
+   kleiner -- de kolommen, de kop, de kaarten en het detailpaneel -- en het
+   bord krijgt de ruimte die daarmee vrijkomt (dat vult zijn kolom zelf, zie
+   fitBoard). Alles staat bij elkaar, zodat het in één keer bij te stellen is. */
+body.desktop.in-game #screen-game{grid-template-columns:minmax(386px,.86fr) minmax(380px,1.52fr) minmax(266px,304px)}
+body.desktop.in-game .game-head{padding:11px 0 8px}
+body.desktop.in-game .kop-links{padding-left:18px;gap:12px}
+body.desktop.in-game .kop-rechts{padding-right:18px}
+body.desktop.in-game .kop-titel{gap:10px}
+body.desktop.in-game .kop-titel b{font-size:20px}
+body.desktop.in-game .kop-titel span{font-size:10px}
+body.desktop.in-game .kop-knop{width:37px;height:37px;min-width:37px}
+body.desktop.in-game .game-head .head-icon{width:33px;height:33px;min-width:33px}
+body.desktop.in-game .mode-switch button{padding:0 14px;height:28px;font-size:11px}
+body.desktop.in-game #pane-board{padding:14px 38px 4px}
+body.desktop.in-game #cluesList{padding:8px 10px 10px;gap:6px}
+body.desktop.in-game .clue-card{padding:7px 6px;border-radius:13px}
+body.desktop.in-game .clue-card .lijf .name,body.desktop.in-game .clue-row .who b{font-size:17.5px}
+body.desktop.in-game .clue-card .txt,body.desktop.in-game .clue-row .txt{font-size:13px}
+body.desktop.in-game .clue-row.victim{padding:7px 6px}
+body.desktop.in-game .bord-tip{font-size:11.5px}
+body.desktop.in-game #detailBody .ru-tekst{font-size:12.5px}
 /* Op een smaller desktopvenster is er minder ruimte naast de schakelaar. */
 @media (max-width:1360px){
-  body.desktop.in-game .bord-tip{font-size:11.5px;line-height:1.35}
-  body.desktop.in-game .clue-card .lijf .name,body.desktop.in-game .clue-row .who b{font-size:17.5px}
+  body.desktop.in-game .bord-tip{font-size:11px;line-height:1.35}
+  body.desktop.in-game .clue-card .lijf .name,body.desktop.in-game .clue-row .who b{font-size:16.5px}
 }
 /* De hintknop staat in de werkbalk, niet zwevend over het bord. */
 /* De hintknop hoort bij het bord, dus links onderin die kolom; hij staat er
@@ -2709,14 +2739,14 @@ body.desktop.in-game .detail-terug svg{transform:rotate(-90deg)}
 body.desktop.in-game #detailBody .pd-kop{flex-direction:column;align-items:center;gap:2px;padding:2px 0 0;text-align:center}
 body.desktop.in-game #detailBody .pd-portret{padding:0}
 body.desktop.in-game #detailBody .pd-wie{flex:0 0 auto;width:100%;text-align:center}
-body.desktop.in-game #detailBody .pd-naam{font-size:26px;line-height:1.1}
+body.desktop.in-game #detailBody .pd-naam{font-size:24px;line-height:1.1}
 body.desktop.in-game #detailBody .pd-rol{justify-content:center;margin-top:5px}
 body.desktop.in-game #detailBody .pd-omschrijving{text-align:center;margin-top:8px}
 body.desktop.in-game #detailBody .pd-hint{flex-direction:row;text-align:center;justify-content:center;margin-top:8px}
 body.desktop.in-game #detailBody .pd-omschrijving{font-size:13px}
-body.desktop.in-game #detailBody .pd-label{text-align:right;margin:14px 0 6px}
+body.desktop.in-game #detailBody .pd-label{text-align:right;margin:12px 0 5px;font-size:9.5px}
 body.desktop.in-game #detailBody .pd-regels{text-align:right}
-body.desktop.in-game #detailBody .pd-regel{flex-direction:row-reverse;font-size:14px;padding:9px 11px;gap:8px}
+body.desktop.in-game #detailBody .pd-regel{flex-direction:row-reverse;font-size:13px;padding:8px 10px;gap:8px}
 body.desktop.in-game #detailBody .pd-regel-i{margin:0 auto 0 0}
 body.desktop.in-game #detailBody .pd-notitie{text-align:left;font-size:13.5px}
 
@@ -2792,12 +2822,12 @@ body.desktop.in-game .clue-card.geselecteerd .txt .regel+.regel{border-top-color
 body.in-game .clue-card.board{background:var(--goud-zacht);border-color:var(--goud-lijn);
   border-left:1px solid var(--goud-lijn)}
 /* De bordregels: bovenaan, en duidelijker aanwezig dan de kaartjes eronder. */
-body.desktop.in-game .clue-card.board{padding:10px 14px 11px;gap:4px;background:var(--goud-zacht);border:1px solid var(--goud-lijn);border-left:4px solid var(--goud)}
-body.desktop.in-game .clue-card.board .name{font-size:11.5px}
-body.desktop.in-game .clue-card.board .txt{font-size:14px;line-height:1.4}
+body.desktop.in-game .clue-card.board{padding:8px 12px 9px;gap:4px;background:var(--goud-zacht);border:1px solid var(--goud-lijn);border-left:4px solid var(--goud)}
+body.desktop.in-game .clue-card.board .name{font-size:11px}
+body.desktop.in-game .clue-card.board .txt{font-size:13px;line-height:1.4}
 body.desktop.in-game .clue-card.board .txt .regel{padding:3px 0 3px 15px}
 body.desktop.in-game .clue-card.board .txt .regel::before{top:9px}
-body.desktop.in-game .clue-card.board .txt .regel.algemeen{font-size:12.5px}
+body.desktop.in-game .clue-card.board .txt .regel.algemeen{font-size:11.5px}
 
 /* Instellingen: geen venstertje midden op het scherm, maar een lade die
    uit de kop over de linkerkolom naar beneden klapt. De breedte van die
@@ -3990,6 +4020,13 @@ body.in-game .clue-card.done::before{background:var(--goud)}
     <button class="set-row schakel keuze-rij" id="rowKleinObject" type="button" aria-pressed="false">
       <span class="set-mini" data-mini="klein"></span>
       <span class="set-tekst"><b>Kleine objecten</b><small>Alles blijft binnen zijn eigen vakje.</small></span>
+      <span class="schuif"><i></i></span>
+    </button>
+    <!-- Volledig scherm: alleen op desktop, want een telefoonbrowser doet dit
+         zelf (en iOS kent het niet). -->
+    <button class="set-row schakel keuze-rij alleen-desktop" id="rowVolledig" type="button" aria-pressed="false">
+      <span class="ic" data-icon="grid"></span>
+      <span class="set-tekst"><b>Volledig scherm</b><small>Het spel vult je hele beeld.</small></span>
       <span class="schuif"><i></i></span>
     </button>
     <div class="set-kop">Assistentie</div>
@@ -6080,9 +6117,10 @@ const DEUR_PLAAT = {
   v:{scharnier:0.288, midden:0.467, span:0.885, knoppen:0.652, knop:0.237, hoogte:2.124}
 };
 /* Hoe breed een deur op het bord staat, van pilaar tot pilaar, in vakjes:
-   ruim de helft van een vak. Een heel vak was te veel van het goede, een
-   derde te schriel. */
-const DEUR_BREEDTE = 0.64;
+   ruim tweederde van een vak. Een heel vak was te veel van het goede, een
+   derde te schriel -- en met 0,64 las de opening nog te smal om er echt als
+   doorkijk te staan. */
+const DEUR_BREEDTE = 0.70;
 /* Meervakstekeningen uit de nieuwe lichting: gerenderd op een doek dat precies
    zo breed is als hun vak, met de marges er al in en met een eigen nacht- en
    schaduwplaat ernaast. Niet oprekken en niets bijstellen dus -- de tekening
@@ -8193,7 +8231,7 @@ function personCard(clues,p,done){
      het introscherm, zodat je een persoon overal op dezelfde manier herkent. */
   const kop=document.createElement("div");
   kop.className="kop";
-  kop.appendChild(personPortrait(p,{size:isDesktop()?76:68}));
+  kop.appendChild(personPortrait(p,{size:isDesktop()?70:68}));
   card.appendChild(kop);
 
   /* Naam, rol en regel staan in één tekstkolom naast het portret; niets
@@ -8347,7 +8385,7 @@ function renderClues(){
     row.className="clue-row victim";
     const av=document.createElement("div");
     av.className="av";
-    av.appendChild(personPortrait(victimBoven,{size:isDesktop()?76:68}));
+    av.appendChild(personPortrait(victimBoven,{size:isDesktop()?70:68}));
     row.appendChild(av);
     const body=document.createElement("div");
     body.className="body";
@@ -8472,7 +8510,7 @@ function bindDetail(box,p,cs){
     if(c) toonRegelUitleg([c],p);
   }));
   if(!p) return;
-  const h=box.querySelector(".pd-portret"); if(h) h.appendChild(personPortrait(p,{size:isDesktop()?150:112}));
+  const h=box.querySelector(".pd-portret"); if(h) h.appendChild(personPortrait(p,{size:isDesktop()?138:112}));
   const ta=box.querySelector("#pdNotitie");
   if(!ta) return;
   ta.value=persoonNotitie(p.id);
@@ -8999,7 +9037,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.172";
+const PLAYER_APP_VERSION="0.9.173";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -10649,6 +10687,43 @@ maatSchuif("golfHoog","golfHoogGetal","clueboard:golfHoog",
     applyVisibility();
     if(M) paintBoard();
   });
+}
+
+/* ── Volledig scherm ────────────────────────────────────
+   Op een laptop is het spelvlak wat het chroom van de browser overlaat; wie
+   het hele beeld wil, zet dat hier aan. Alleen op desktop: een telefoon doet
+   dit zelf, en iOS kent de schakelaar niet. De stand komt van de browser, niet
+   van ons -- ook Escape en F11 komen hier voorbij. */
+function volledigKan(){
+  const el=document.documentElement;
+  return !!(el.requestFullscreen || el.webkitRequestFullscreen);
+}
+function volledigAan(){
+  return !!(document.fullscreenElement || document.webkitFullscreenElement);
+}
+function zetVolledig(){
+  const el=document.documentElement;
+  try{
+    if(volledigAan()){
+      if(document.exitFullscreen) document.exitFullscreen();
+      else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+    } else {
+      if(el.requestFullscreen) el.requestFullscreen();
+      else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    }
+  }catch(e){}
+}
+function tekenVolledig(){
+  const knop=$("#rowVolledig");
+  if(!knop) return;
+  knop.hidden=!volledigKan();
+  knop.setAttribute("aria-pressed",volledigAan()?"true":"false");
+}
+{ const knop=$("#rowVolledig");
+  if(knop) knop.addEventListener("click",()=>{ zetVolledig(); setTimeout(tekenVolledig,120); });
+  document.addEventListener("fullscreenchange",tekenVolledig);
+  document.addEventListener("webkitfullscreenchange",tekenVolledig);
+  tekenVolledig();
 }
 
 /* De plaatjes in het instellingenvel: elk laat zien wat de keuze ernaast

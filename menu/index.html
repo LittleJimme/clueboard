@@ -681,6 +681,11 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
   transition:border-color .15s;
 }
 .thema-knop:hover{border-color:var(--accent-lijn)}
+/* Volledig scherm: alleen waar de browser het kent, en niet op een telefoon --
+   die vult het scherm zelf al. */
+.volledig-knop svg{width:17px;height:17px}
+.volledig-knop.aan{background:var(--inkt);border-color:var(--inkt);color:var(--grond)}
+@media (max-width:760px){ .volledig-knop{display:none!important} }
 .thema-knop i{
   width:15px;height:15px;border-radius:50%;display:block;
   background:linear-gradient(135deg,var(--accent-vlak) 50%, var(--inkt) 50%);
@@ -744,6 +749,9 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
   <div class="balk-in">
     <div class="balk-links">
       <button class="thema-knop" id="btnThema" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
+      <button class="thema-knop volledig-knop" id="btnVolledig" type="button" title="Volledig scherm" aria-label="Volledig scherm" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5.6A1.6 1.6 0 0 1 5.6 4H9M15 4h3.4A1.6 1.6 0 0 1 20 5.6V9M20 15v3.4a1.6 1.6 0 0 1-1.6 1.6H15M9 20H5.6A1.6 1.6 0 0 1 4 18.4V15"/></svg>
+      </button>
       <button class="vraag-knop plus-knop" id="btnZelf" type="button" title="Eigen level spelen of bouwen" aria-label="Eigen level spelen of bouwen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
       </button>
@@ -1306,6 +1314,28 @@ $("#uitlegKeuze").addEventListener("click",e=>{
   const b=e.target.closest("button[data-set]");
   if(b) zetUitlegSet(b.dataset.set);
 });
+/* ── Volledig scherm ────────────────────────────────────
+   Eén knop in de balk: het menu en het spel dat je erna opent vullen dan het
+   hele beeld. De stand komt van de browser, dus Escape en F11 komen hier ook
+   voorbij. */
+(function(){
+  const knop=$("#btnVolledig"), el=document.documentElement;
+  if(!knop) return;
+  const kan=!!(el.requestFullscreen||el.webkitRequestFullscreen);
+  const aan=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+  const teken=()=>{ knop.hidden=!kan; knop.classList.toggle("aan",aan());
+    knop.setAttribute("aria-pressed",aan()?"true":"false"); };
+  knop.addEventListener("click",()=>{
+    try{
+      if(aan()){ (document.exitFullscreen||document.webkitExitFullscreen).call(document); }
+      else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); }
+    }catch(e){}
+    setTimeout(teken,120);
+  });
+  document.addEventListener("fullscreenchange",teken);
+  document.addEventListener("webkitfullscreenchange",teken);
+  teken();
+})();
 $("#btnUitleg").addEventListener("click",()=>{ zetUitlegSet("spelen"); openModal("#modalUitleg"); });
 $("#stapTerug").addEventListener("click",()=>{ if(uitlegStap>0){ uitlegStap--; tekenUitleg(); } });
 $("#stapVerder").addEventListener("click",()=>{
