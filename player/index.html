@@ -2538,18 +2538,10 @@ body.desktop.in-game .clue-row .who b{font-size:19px;padding:0;border:0;backgrou
 /* Een kaart is op desktop één klikvlak; de band rechts en het slepen zijn
    telefoongebaren. De gekozen kaart draagt een gouden rand. */
 body.desktop.in-game .clue-card{cursor:pointer;padding-right:14px}
-body.desktop.in-game .clue-card .kaart-knoppen,body.desktop.in-game .clue-row.victim .kaart-knoppen{display:contents}
-body.desktop.in-game .clue-card .info.open,body.desktop.in-game .clue-row.victim .info.open{display:none}
-/* De i zit linksboven, tegenover de merkjes rechts; het vinkje van wie al
-   staat schuift ernaast. Op de bordregels staat hij rechts, want daar staat
-   het opschrift links. */
-body.desktop.in-game .clue-card .info.uitleg,body.desktop.in-game .clue-row.victim .info.uitleg{position:absolute;top:6px;left:6px;width:22px;height:22px;flex:none;
-  border-radius:999px;background:var(--kaart-2);color:var(--dof);border:1px solid var(--lijn);display:flex;align-items:center;justify-content:center;padding:0;opacity:.85;z-index:2}
-body.desktop.in-game .clue-card .info.uitleg:hover,body.desktop.in-game .clue-row.victim .info.uitleg:hover{opacity:1;color:var(--goud)}
-body.desktop.in-game .clue-card .info.uitleg svg,body.desktop.in-game .clue-row.victim .info.uitleg svg{width:14px;height:14px;transform:none}
-body.desktop.in-game .clue-card.geselecteerd .info.uitleg,body.desktop.in-game .clue-row.victim.geselecteerd .info.uitleg{background:rgba(255,255,255,.18);color:#FBF6EA;border-color:transparent}
-body.desktop.in-game .clue-card.board .info.uitleg{left:auto;right:8px;top:8px}
-body.desktop.in-game .clue-card .tick{left:32px}
+/* Op desktop dragen de kaarten geen knoppen: de kaart zelf opent de
+   rechterkolom, en daar is elke regel een knop naar zijn uitleg. Een i op de
+   kaart zou dezelfde weg twee keer aanbieden. */
+body.desktop.in-game .clue-card .kaart-knoppen,body.desktop.in-game .clue-row.victim .kaart-knoppen{display:none}
 body.desktop.in-game .clue-row.victim{padding-right:14px;cursor:pointer}
 body.desktop.in-game .clue-card .memo-merk{right:10px}
 body.desktop.in-game .clue-card .notitie-merk{right:10px}
@@ -6855,8 +6847,11 @@ function deurenOpBord(cell){
     const room=M.rooms.get(tl.roomId);
     return !!(room && roomWallStyle(room).edel);
   };
+  /* Een poort heeft nog geen eigen tekening. Tot die er is leent hij het
+     deurelement: een opening in de muur die je ziet en waar je door kijkt.
+     In de regels blijft het een poort -- alleen het beeld is geleend. */
   (M.walls||[]).forEach(w=>{
-    if(!w || w.kind!=="Door" || !w.anchorTile) return;
+    if(!w || (w.kind!=="Door" && w.kind!=="Gate") || !w.anchorTile) return;
     const t=M.tiles.get(w.anchorTile); if(!t) return;
     const x0=(t.column-bb.minC)*cell, y0=(t.row-bb.minR)*cell;
     const kant=String(w.side||"").toLowerCase();
@@ -8996,7 +8991,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.170";
+const PLAYER_APP_VERSION="0.9.171";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
