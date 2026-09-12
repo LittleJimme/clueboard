@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-12T11:05:24",
+  "gemaakt": "2026-09-12T11:08:51",
   "levels": [
     {
       "file": "100v5 Test Level.json",
@@ -21,27 +21,6 @@
       "difficulty": {
         "graad": 1,
         "uitleg": "Elke stap volgt rechtstreeks uit één aanwijzing."
-      }
-    },
-    {
-      "file": "103v1 Het Stille Huis.json",
-      "content": {
-        "title": "Het Stille Huis"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 6,
-          "rows": 6
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mty5rdqzj9tjl",
-      "levelNumber": 103,
-      "levelVersion": 1,
-      "difficulty": {
-        "graad": 3,
-        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
@@ -102,6 +81,27 @@
       "levelId": "lvl-mtx558868zpbr",
       "levelNumber": 12,
       "levelVersion": 3,
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "13v1 Het Stille Huis.json",
+      "content": {
+        "title": "Het Stille Huis"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 6,
+          "rows": 6
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mty5rdqzj9tjl",
+      "levelNumber": 13,
+      "levelVersion": 1,
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
