@@ -2716,8 +2716,7 @@ body.desktop.in-game #detailBody .pd-omschrijving{font-size:13px}
 body.desktop.in-game #detailBody .pd-label{text-align:right;margin:14px 0 6px}
 body.desktop.in-game #detailBody .pd-regels{text-align:right}
 body.desktop.in-game #detailBody .pd-regel{flex-direction:row-reverse;font-size:14px;padding:9px 11px;gap:8px}
-body.desktop.in-game #detailBody .pd-voet{flex-direction:row-reverse;margin-top:0;padding-top:0;border-top:0}
-body.desktop.in-game #detailBody .pd-plek-tekst{flex:1;text-align:right}
+body.desktop.in-game #detailBody .pd-regel-i{margin:0 auto 0 0}
 body.desktop.in-game #detailBody .pd-notitie{text-align:left;font-size:13.5px}
 
 /* De persoonskaartjes: geen gekleurde streep meer aan de linkerkant, maar
@@ -3208,22 +3207,6 @@ body.in-game #modalClue .sheet::-webkit-scrollbar{width:0}
 .pd-schild{flex:0 0 auto;width:56px;height:56px;display:flex;align-items:center;justify-content:center}
 .pd-schild .ic{width:40px;height:40px;color:var(--goud)}
 .pd-schild .ic svg{width:100%;height:100%}
-/* Voetnoot: het plattegrondje klein, met de plek ernaast. Een gimmick die
-   fijn is om even te zien, niet iets om mee te werken. */
-.pd-voet{display:flex;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--lijn-zacht)}
-.pd-plek-tekst b{display:block;font-family:var(--font-display);font-weight:600;font-size:15px;line-height:1.15;color:var(--inkt)}
-.pd-plek-tekst span{display:block;margin-top:2px;font:700 11.5px var(--font-ui);color:var(--dof)}
-.mini-bord{display:grid;gap:1.5px;flex:0 0 auto;width:72px}
-.mb-c{position:relative;aspect-ratio:1;border-radius:3px;background:var(--kaart-2);box-shadow:inset 0 0 0 1px rgba(120,100,70,.16);
-  display:flex;align-items:center;justify-content:center;font:800 7.5px var(--font-ui)}
-.mb-c.leeg{background:none!important;box-shadow:none}
-/* Een geblokkeerd vakje houdt zijn kamerkleur, maar valt terug: daar hoeft
-   niemand meer te kijken. */
-.mb-c.blok{opacity:.45}
-.mb-c.blok::before{content:"";position:absolute;inset:22%;border-radius:2px;background:var(--dof);opacity:.85}
-.mb-c.hier,.mb-c.noot{box-shadow:inset 0 0 0 1px rgba(120,100,70,.16)}
-.mb-c.noot::after{content:"";width:34%;height:34%;border-radius:50%;background:var(--goud);opacity:.85}
-.mb-c.hier{background:var(--goud)!important;color:var(--goud-op);opacity:1;z-index:1;box-shadow:0 0 0 1.5px var(--goud)}
 .pd-kop{display:flex;align-items:center;gap:14px;padding:4px 40px 0 0}
 .pd-portret{flex:0 0 auto;display:flex;justify-content:center;padding:10px 6px 10px 2px}
 .pd-wie{flex:1;min-width:0}
@@ -3247,16 +3230,13 @@ body.in-game #modalClue .sheet::-webkit-scrollbar{width:0}
 .pd-notitie::placeholder{color:var(--dof);opacity:.8}
 .pd-regel .ic svg{width:100%;height:100%}
 .pd-regel.leeg{color:var(--dof);font-style:italic}
-/* "Wat betekent deze regel?": de uitleg van de regelsoort, ingeklapt op de
-   telefoon en open op desktop. Dezelfde blokjes als achter de i op een kaart. */
-.ru-details{margin-top:12px}
-.ru-details summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;
-  background:var(--kaart-2);border:1px solid var(--lijn);font:700 13px var(--font-ui);color:var(--inkt)}
-.ru-details summary::-webkit-details-marker{display:none}
-.ru-details summary::before{content:"i";flex:0 0 auto;width:18px;height:18px;border-radius:999px;background:var(--goud);color:var(--goud-op);
-  font:800 11px/18px var(--font-display);text-align:center}
-.ru-details[open] summary{border-radius:12px 12px 0 0}
-.ru-details .ru-lijst{margin-top:0;border:1px solid var(--lijn);border-top:0;border-radius:0 0 12px 12px;padding:10px}
+/* Een regel in het venster is een knop naar de uitleg van zijn soort; het
+   ronde i'tje zegt dat er iets achter zit. */
+button.pd-regel{width:100%;appearance:none;-webkit-appearance:none;cursor:pointer;text-align:left;
+  font-family:var(--font-ui);transition:border-color .15s}
+button.pd-regel:hover{border-color:var(--goud)}
+.pd-regel-i{flex:0 0 auto;align-self:center;margin-left:auto;width:18px;height:18px;border-radius:999px;
+  background:var(--goud);color:var(--goud-op);font:800 11px/18px var(--font-display);text-align:center}
 .ru-lijst{display:flex;flex-direction:column;gap:10px;margin-top:8px;text-align:left}
 .ru{display:flex;gap:12px;align-items:flex-start;padding:10px;border-radius:14px;background:var(--kaart-2);border:1px solid var(--lijn-zacht)}
 .ru-beeld{flex:0 0 auto;display:flex;align-items:center;justify-content:center}
@@ -3266,10 +3246,48 @@ body.in-game #modalClue .sheet::-webkit-scrollbar{width:0}
 .ru-tekst p{margin:0 0 5px}
 .ru-tekst p:last-child{margin-bottom:0}
 .ru-tekst p b{color:var(--inkt)}
+/* ── Het regelboek ──
+   Vijftien regelsoorten als vijftien kaartjes doorbladeren leest slecht: je
+   ziet niet wat er is en niet waar je bent. Hier staat links de lijst en
+   rechts het voorbeeld met de uitleg. Op een smal scherm onder elkaar. */
+#modalRegelboek .sheet{max-width:min(1060px,96vw);width:100%;height:min(720px,90vh);
+  display:flex;flex-direction:column;padding:18px;text-align:left;overflow:hidden}
+.boek-kop{flex:0 0 auto;padding-right:46px;margin-bottom:12px}
+.boek-kop h3{margin:0;font-family:var(--font-display);font-weight:600;font-size:26px;line-height:1.1;color:var(--inkt)}
+.boek-kop p{margin:3px 0 0;color:var(--dof);font:600 12.5px var(--font-ui)}
+.boek-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,232px) minmax(0,1fr);gap:18px}
+.boek-lijst{overflow:auto;display:flex;flex-direction:column;gap:2px;padding-right:6px;border-right:1px solid var(--lijn-zacht)}
+.boek-lijst::-webkit-scrollbar,.boek-uitleg::-webkit-scrollbar{width:0}
+.boek-lijst button{display:block;width:100%;text-align:left;border:0;background:none;cursor:pointer;
+  padding:9px 11px;border-radius:10px;color:var(--inkt-2);font:700 13.5px var(--font-ui)}
+.boek-lijst button:hover{background:var(--kaart-2)}
+.boek-lijst button.aan{background:var(--goud);color:var(--goud-op)}
+.boek-uitleg{overflow:auto;padding-right:4px}
+.boek-titel{margin:0 0 10px;font-family:var(--font-display);font-weight:600;font-size:24px;line-height:1.15;color:var(--inkt)}
+.boek-beeld{display:flex;align-items:center;justify-content:center;padding:14px;margin-bottom:14px;
+  background:var(--kaart-2);border:1px solid var(--lijn-zacht);border-radius:16px}
+.boek-beeld .hb{width:210px}
+.boek-tekst{color:var(--inkt-2);font-size:14.5px;line-height:1.6}
+.boek-tekst p{margin:0 0 9px}
+.boek-tekst p:last-child{margin-bottom:0}
+.boek-tekst b{color:var(--inkt)}
+@media (max-width:720px){
+  #modalRegelboek .sheet{height:min(640px,88vh);padding:16px}
+  .boek-body{grid-template-columns:1fr;gap:10px}
+  .boek-lijst{flex:0 0 auto;max-height:28vh;border-right:0;border-bottom:1px solid var(--lijn-zacht);padding:0 0 6px}
+  .boek-beeld .hb{width:170px}
+}
+/* De ingang naar het boek staat naast de twee tabbladen van de uitleg. */
+.help-kies-rij{flex:0 0 auto;display:flex;align-items:center;gap:8px;margin:0 42px 12px 0}
+.keuze-boek{flex:0 0 auto;display:flex;align-items:center;gap:6px;height:38px;padding:0 12px;border-radius:999px;
+  border:1px solid var(--lijn);background:var(--kaart-2);color:var(--inkt-2);font:800 12px var(--font-ui);cursor:pointer}
+.keuze-boek:hover{border-color:var(--goud);color:var(--inkt)}
+.keuze-boek .ic{width:15px;height:15px;display:block}
+.keuze-boek .ic svg{width:100%;height:100%}
+@media (max-width:430px){ .keuze-boek .lbl{display:none} .keuze-boek{padding:0 10px} }
 .ru-kop{margin:0 0 4px;font-family:var(--font-display);font-weight:600;font-size:22px;line-height:1.15;padding-right:40px}
 .ru-regels{display:flex;flex-direction:column;gap:6px;margin:4px 0 12px}
 .ru-regel{font-size:15px;line-height:1.45;color:var(--inkt)}
-body.desktop.in-game #detailBody .ru-details summary{flex-direction:row-reverse;text-align:right}
 /* De kolom rechts is smal: bordje boven, tekst eronder, anders staat er een
    woord per regel naast het bordje. */
 body.desktop.in-game #detailBody .ru{flex-direction:column;align-items:stretch;gap:8px}
@@ -3346,12 +3364,11 @@ html[data-thema="licht"] .stap-vel.titelkaart .help-merk-licht{display:block}
    gekozen naam door, zoals het knopje in de schakelaars van de instellingen.
    De knoppen zelf zijn doorzichtig -- de gewone knopachtergrond gaf hier een
    lichtgrijze pil op de donkere kaart, alsof hij uit een ander spel kwam. */
-.help-keuze{position:relative;flex:0 0 auto;display:flex;padding:3px;margin:0 40px 12px 0;border-radius:999px;
+.help-keuze{position:relative;flex:1;min-width:0;display:flex;padding:3px;margin:0;border-radius:999px;
   background:var(--kaart-2);border:1px solid var(--lijn)}
-.help-keuze::before{content:"";position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px) / 3);border-radius:999px;
+.help-keuze::before{content:"";position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:999px;
   background:var(--goud);box-shadow:0 1px 3px rgba(0,0,0,.28);transition:transform .22s cubic-bezier(.2,.8,.3,1)}
 .help-keuze[data-aan="regels"]::before{transform:translateX(100%)}
-.help-keuze[data-aan="alle"]::before{transform:translateX(200%)}
 /* Drie namen in één schuifje: op een smalle telefoon past dat alleen zonder
    letterafstand en met een iets kleinere letter. */
 .help-keuze button{position:relative;flex:1;min-width:0;height:32px;padding:0 2px;border:0;border-radius:999px;background:none;
@@ -3894,10 +3911,14 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   <div class="backdrop" data-close></div>
   <div class="sheet stap-vel" id="helpBody">
     <button class="sluit" data-close aria-label="Sluiten">✕</button>
-    <div class="help-keuze" id="helpKeuze">
-      <button type="button" data-set="spelen" class="aan">Zo speel je</button>
-      <button type="button" data-set="regels">Spelregels</button>
-      <button type="button" data-set="alle">Alle regels</button>
+    <div class="help-kies-rij">
+      <div class="help-keuze" id="helpKeuze">
+        <button type="button" data-set="spelen" class="aan">Zo speel je</button>
+        <button type="button" data-set="regels">Basis spelregels</button>
+      </div>
+      <button class="keuze-boek" id="btnRegelboek" type="button" title="Alle regelsoorten op een rij">
+        <span class="ic"><span data-icon="list"></span></span><span class="lbl">Alle regels</span>
+      </button>
     </div>
     <div class="stap-teller" id="helpTeller"></div>
     <h3 id="helpKop">Hoe speel je?</h3>
@@ -4049,6 +4070,22 @@ body.in-game .clue-card.done::before{background:var(--goud)}
 <div class="modal" id="modalClue">
   <div class="backdrop" data-close></div>
   <div class="sheet" id="clueDetail"></div>
+</div>
+
+<!-- Alle regelsoorten op een rij: links de lijst, rechts de uitleg. -->
+<div class="modal" id="modalRegelboek">
+  <div class="backdrop" data-close></div>
+  <div class="sheet" id="regelboek">
+    <button class="sheet-sluit pd-sluit" type="button" data-close aria-label="Sluiten"><span data-icon="cross"></span></button>
+    <div class="boek-kop">
+      <h3>Alle regels</h3>
+      <p>Elke soort aanwijzing die in een zaak kan staan, met een voorbeeld.</p>
+    </div>
+    <div class="boek-body">
+      <nav class="boek-lijst" id="boekLijst"></nav>
+      <div class="boek-uitleg" id="boekUitleg"></div>
+    </div>
+  </div>
 </div>
 
 <!-- Achter de i op een regelkaart: wat deze regelsoort betekent. -->
@@ -8286,34 +8323,6 @@ function bewaarNotitie(pid,tekst){
 /* Klein plattegrondje van het echte bord: geen kleuren, alleen de vorm, de
    scheidingen tussen ruimtes en één gouden vakje. Zo zie je in één blik waar
    iemand staat, zonder het bord erbij te hoeven pakken. */
-function miniBord(personId){
-  if(!M||!M.bounds) return "";
-  const b=M.bounds;
-  const hier=placed.get(personId)||null;
-  const noot=new Set();
-  notes.forEach((n,id)=>{ if(n.marks&&n.marks.get(personId)) noot.add(id); });
-  const pe=M.peopleById.get(personId);
-  const letter=(pe&&pe.name?pe.name.charAt(0):"?").toUpperCase();
-  const licht=document.documentElement.dataset.thema==="licht";
-  let h='<div class="mini-bord" style="grid-template-columns:repeat('+b.cols+',1fr)">';
-  for(let r=b.minR;r<=b.maxR;r++) for(let c=b.minC;c<=b.maxC;c++){
-    const t=M.tiles.get("c"+c+"r"+r);
-    if(!t){ h+='<span class="mb-c leeg"></span>'; continue; }
-    let cls="mb-c";
-    const room=M.rooms.get(t.roomId);
-    /* Heel licht de kleur van de kamer: genoeg om de indeling te herkennen,
-       niet zo veel dat het bordje een tweede speelbord wordt. */
-    const rk=(room&&room.color)?room.color:"#DCE3EF";
-    const stijl=' style="background:'+(licht?mixHex(rk,"#FFFFFF",.46):mixHex(rk,"#2E2122",.58))+'"';
-    if(t.status==="blocked") cls+=" blok";
-    let inner="";
-    if(t.id===hier){ cls+=" hier"; inner=esc(letter); }
-    else if(noot.has(t.id)) cls+=" noot";
-    h+='<span class="'+cls+'"'+stijl+'>'+inner+'</span>';
-  }
-  return h+"</div>";
-}
-
 /* Wat vertelt de rol over waar iemand kan staan? Alleen tonen als het bord
    echt voorbehouden gebieden heeft; anders zegt het niets. */
 function rolHint(p){
@@ -8353,39 +8362,34 @@ function detailHtml(cs,p){
       +'<p class="pd-omschrijving">Gelden voor iedereen op het bord.</p></div></div>';
     html+='<div class="pd-label">'+(cs.length>1?'De regels':'De regel')+'</div>';
   }
-  /* De uitleg van de regelsoort, ingeklapt op de telefoon en open op desktop. */
-  const fams=regelFamilies(cs,p);
-  const uitleg=fams.length?'<details class="ru-details"'+(isDesktop()?' open':'')+'><summary>'
-    +(cs.length>1?'Wat betekenen deze regels?':'Wat betekent deze regel?')+'</summary>'+regelUitlegHtml(fams)+'</details>':'';
+  /* Elke regel is een knop: hij opent wat die soort regel betekent. Dat is
+     dezelfde uitleg als achter de i op de kaart, dus hoeft er hier niet ook
+     nog ingeklapt onder te staan. */
   const regels='<div class="pd-regels">'+(cs.length
-    ? cs.map(c=>'<div class="pd-regel"><span class="ic">'+AssetBank.ui("badge")+'</span><div>'+highlightClueText(c.text)+'</div></div>').join("")
+    ? cs.map((c,i)=>'<button type="button" class="pd-regel" data-regel="'+i+'" title="Wat betekent deze regel?">'
+        +'<span class="ic">'+AssetBank.ui("badge")+'</span><div>'+highlightClueText(c.text)+'</div>'
+        +'<span class="pd-regel-i">i</span></button>').join("")
     : '<div class="pd-regel leeg"><div>Over deze persoon is niets bekend. Wat er overblijft, moet uit de andere regels komen.</div></div>')+'</div>';
   if(p){
-    const tid=placed.get(p.id)||null;
-    const t=tid?M.tiles.get(tid):null;
-    const room=t?M.rooms.get(t.roomId):null;
-    let noten=0; notes.forEach(n=>{ if(n.marks&&n.marks.get(p.id)) noten++; });
-    const notitie='<div class="pd-label">Jouw notities</div>'
+    /* Wie het is, wat je van hem weet, en wat jij erover opschrijft. Waar hij
+       staat zie je op het bord zelf: een plattegrondje erbij was een tweede
+       bord dat alleen ruimte kostte. */
+    html+='<div class="pd-label">Wat je weet</div>'+regels
+      +'<div class="pd-label">Jouw notities</div>'
       +'<textarea class="pd-notitie" id="pdNotitie" rows="1" placeholder="Wat denk je over '+esc(p.name)+'? Bijvoorbeeld: kan niet in de tuin, want…"></textarea>';
-    /* Het plattegrondje: klein, naast een korte plaatsaanduiding. */
-    const plaats='<div class="pd-voet">'+miniBord(p.id)
-      +'<div class="pd-plek-tekst">'
-      +(t?'<b>Kolom '+t.column+', rij '+t.row+'</b><span>'+esc(room&&room.name?room.name:"op het bord")+'</span>'
-         :'<b>Nog niet geplaatst</b><span>'+(noten?(noten===1?"1 vakje aangemerkt":noten+" vakjes aangemerkt"):"nog geen letters op het bord")+'</span>')
-      +'</div></div>';
-    /* Van boven naar beneden zoals je iemand leest: wie het is, wat je van
-       hem weet, waar hij staat, en onderaan wat jij erover opschrijft. Op de
-       telefoon staat de notitie tussen de regels en het plattegrondje, want
-       daar is het plattegrondje de voetnoot van het venster. */
-    html+=isDesktop()
-      ? '<div class="pd-label">Wat je weet</div>'+regels+uitleg+'<div class="pd-label">Plaats</div>'+plaats+notitie
-      : '<div class="pd-label">Wat je weet</div>'+regels+uitleg+notitie+plaats;
-  } else html+=regels+uitleg;
+  } else html+=regels;
   html+='<div class="row"><button class="btn" data-close>Sluiten</button></div>';
   return html;
 }
-/* Portret en notitieveld tot leven brengen in de gegeven bak. */
-function bindDetail(box,p){
+/* Portret, notitieveld en de regelknoppen tot leven brengen in de gegeven
+   bak. De regels zitten er ook bij als er geen persoon is: bordregels hebben
+   net zo goed een uitleg. */
+function bindDetail(box,p,cs){
+  $$(".pd-regel[data-regel]",box).forEach(b=>b.addEventListener("click",e=>{
+    e.stopPropagation();
+    const c=(cs||[])[+b.dataset.regel];
+    if(c) toonRegelUitleg([c],p);
+  }));
   if(!p) return;
   const h=box.querySelector(".pd-portret"); if(h) h.appendChild(personPortrait(p,{size:isDesktop()?150:112}));
   const ta=box.querySelector("#pdNotitie");
@@ -8405,7 +8409,7 @@ function showClueDetail(cs,p){
   if(isDesktop()){ toonDetail(cs,p); return; }
   const box=$("#clueDetail");
   box.innerHTML=detailHtml(cs,p);
-  const bewaar=bindDetail(box,p);
+  const bewaar=bindDetail(box,p,cs);
   if(bewaar){
     /* Bij sluiten meteen bewaren en het merkje op de kaart bijwerken. */
     $$("[data-close]",$("#modalClue")).forEach(el=>el.addEventListener("click",()=>{
@@ -8429,7 +8433,7 @@ function tekenDetail(){
   if(detailSel && (detailSel.p || (detailSel.cs&&detailSel.cs.length))){
     box.innerHTML='<button type="button" class="detail-terug" id="detailTerug">'+icon("chevron",{sw:2.4})+' Sluiten</button>'
       +detailHtml(detailSel.cs,detailSel.p);
-    bindDetail(box,detailSel.p);
+    bindDetail(box,detailSel.p,detailSel.cs);
     const terug=box.querySelector("#detailTerug");
     if(terug) terug.addEventListener("click",()=>{ detailSel=null; tekenDetail(); renderClues(); });
     return;
@@ -8914,7 +8918,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.168";
+const PLAYER_APP_VERSION="0.9.169";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9725,94 +9729,85 @@ const REGEL_FAMILIES = [
   { id:"plek", kop:"Plek op het bord",
     atomen:["in-column","in-row","in-half","on-board-edge","in-board-corner","on-board-side"],
     beeld:()=>helpBord(["....","A...","....","...C"],{licht:[[3,3]]}),
-    tekst:["<b>Rijen</b> tel je van boven naar beneden, <b>kolommen</b> van links naar rechts: A staat op de tweede rij, in de eerste kolom.",
-           "De <b>rand</b> is elk vak aan de buitenkant van het bord; een <b>hoek van het bord</b> is waar twee randen samenkomen, zoals bij C.",
-           "De <b>bovenste helft</b> zijn de bovenste rijen, de <b>linkerhelft</b> de linkerkolommen."] },
+    tekst:["<b>Rijen</b> tellen van boven, <b>kolommen</b> van links: A staat op rij 2, in kolom 1.",
+           "De <b>rand</b> is de buitenkant van het bord, een <b>hoek</b> waar twee randen samenkomen (C). De <b>bovenste helft</b> zijn de bovenste rijen."] },
   { id:"gebied", kop:"In een gebied",
     atomen:["in-room","in-room-kind","in-largest-room","in-smallest-room","may-enter-room","next-to-room-other"],
     beeld:()=>helpBord(["A...","....","...B","...."],{gebied:REGEL_GEB}),
-    tekst:["Een <b>gebied</b> is een benoemd deel van het bord met een rand eromheen: een kamer, een tuin, een stal. A staat in het gebied linksboven, B niet.",
-           "<b>Was in de keuken</b>: op een van de vakken van dat gebied. De <b>grootste</b> of <b>kleinste</b> ruimte tel je in vakken.",
-           "<b>Naast een gebied</b>: direct naast een vak ervan, maar er zelf niet in."] },
+    tekst:["Een <b>gebied</b> is een benoemd deel met een rand eromheen: een kamer, een tuin, een stal. A staat erin, B niet.",
+           "<b>Naast een gebied</b>: ernaast, er zelf niet in. <b>Grootste</b> en <b>kleinste</b> tel je in vakken."] },
   { id:"samen", kop:"Alleen of samen",
     atomen:["alone-in-room","room-person-count","with-person","with-role","alone-with-role"],
     beeld:()=>helpBord(["AB..","....","...C","...."],{gebied:REGEL_GEB}),
-    tekst:["<b>Alleen</b>: er was niemand anders in het gebied, ook het slachtoffer niet. C staat alleen.",
-           "<b>In hetzelfde gebied als</b>: allebei in dat gebied, anderen mogen erbij. <b>Alleen met</b>: precies die twee.",
-           "<b>Een ruimte met drie personen</b> telt iedereen in dat gebied, de persoon zelf meegerekend."] },
+    tekst:["<b>Alleen</b>: niemand anders in het gebied, ook het slachtoffer niet. C staat alleen.",
+           "<b>In hetzelfde gebied als</b>: anderen mogen erbij staan. <b>Alleen met</b>: precies die twee."] },
   { id:"object", kop:"Op een object",
     atomen:["on-object-kind","on-object","on-free-floor","only-one-on-kind","count-on-kind","room-of-only-on-kind","dir-of-only-on-kind"],
     beeld:()=>helpBord(["....",".A..","..#.","...."],{mat:[[1,1],[3,3]]}),
-    tekst:["Op een <b>stoel</b>, <b>bed</b>, <b>bank</b> of <b>tapijt</b> kan iemand staan of zitten: A zit op een stoel, de stoel rechtsonder is leeg. Het donkere vak is een tafel: daar staat nooit iemand.",
-           "<b>Op vrije vloer</b>: een vak zonder object.",
-           "<b>De enige op een stoel</b>: niemand anders zat op een stoel, ook het slachtoffer niet."] },
+    tekst:["Op een <b>stoel</b>, <b>bed</b>, <b>bank</b> of <b>tapijt</b> kan iemand staan. Op het donkere vak (een tafel) nooit.",
+           "<b>Op vrije vloer</b>: een vak zonder object. <b>De enige op een stoel</b>: niemand anders zat er op een."] },
   { id:"naast", kop:"Naast",
     atomen:["next-to-kind","next-to-object","not-next-to-kind","next-to-same-kind","most-neighbours-of-kind","every-object-has-neighbour","every-kind-has-neighbour","kind-neighbour-count"],
     beeld:()=>helpBord(["...",".B.","..."],{licht:[[1,0],[0,1],[2,1],[1,2]]}),
-    tekst:["<b>Naast</b> is direct boven, onder, links of rechts, én in hetzelfde gebied. Schuin telt niet.",
-           "<b>Naast de meeste bomen</b>: meer bomen naast zich dan wie ook. <b>Naast twee dezelfde meubels</b>: precies twee van één soort ernaast.",
-           "<b>Naast elk object stond iemand</b> geldt voor het hele bord: geen enkel object zonder buur."] },
-  { id:"rijkolom", kop:"Op dezelfde rij of kolom",
+    tekst:["<b>Naast</b> is boven, onder, links of rechts, en in hetzelfde gebied. Schuin telt niet.",
+           "<b>Naast de meeste bomen</b>: meer bomen naast zich dan wie ook."] },
+  { id:"rijkolom", kop:"Zelfde rij of kolom",
     atomen:["same-row-as-kind","same-col-as-kind"],
     beeld:()=>helpBord(["A..#","....",".#..","...."],{licht:[[1,0],[2,0],[3,0]]}),
-    tekst:["<b>Op dezelfde rij als een boom</b>: de boom staat ergens in jouw rij, hoe ver ook. A staat op dezelfde rij als het object rechtsboven, niet als het andere.",
-           "<b>In dezelfde kolom als</b>: recht boven of onder je, op welke afstand ook."] },
+    tekst:["<b>Op dezelfde rij</b> of <b>in dezelfde kolom</b> als een object: hoe ver weg maakt niet uit.",
+           "A deelt zijn rij met het object rechtsboven, niet met het andere."] },
   { id:"dichtst", kop:"Het dichtst bij",
     atomen:["closest-to-kind"],
     beeld:()=>helpBord(["A...","..#.","....","B..."]),
-    tekst:["Afstand tel je in vakken over rijen en kolommen, niet schuin. A staat drie vakken van het object, B vier: A staat er het dichtst bij.",
-           "Staan twee personen even dichtbij, dan is niemand <b>de dichtstbijzijnde</b> en klopt de regel niet."] },
+    tekst:["Afstand tel je in vakken over rij en kolom, niet schuin: A staat er drie vandaan, B vier.",
+           "Staan twee personen even dichtbij, dan is er geen <b>dichtstbijzijnde</b> en klopt de regel niet."] },
   { id:"richting", kop:"Boven, onder, links, rechts",
     atomen:["direction-of","exact-offset","gender-row-offset","person-on-kind-dir","above-all-role","below-all-role"],
     beeld:()=>helpBord(["..B.","....","A...","...."]),
-    tekst:["<b>Boven</b>, <b>onder</b>, <b>links van</b> en <b>rechts van</b> gaan over het hele bord, niet alleen over het vak ernaast: A stond onder B, ook al staan ze niet in dezelfde kolom.",
-           "<b>Precies twee rijen boven</b>: het verschil in rijen is twee, de kolom doet er niet toe.",
-           "<b>Boven alle ridders</b>: hoger op het bord dan elke ridder."] },
+    tekst:["Deze gelden over het hele bord, niet alleen het vak ernaast: A stond <b>onder</b> B, in een andere kolom.",
+           "<b>Precies twee rijen boven</b>: alleen het verschil in rijen telt."] },
   { id:"schuin", kop:"Schuin",
     atomen:["diagonal-of","same-diagonal-as"],
     beeld:()=>helpBord(["A..",".B.","..C"],{licht:[[0,0],[1,1],[2,2]]}),
-    tekst:["<b>Schuin naast</b>: op het vak diagonaal ernaast, in hetzelfde gebied.",
-           "<b>Op dezelfde diagonale lijn</b>: schuin op één lijn, hoe ver ook. A, B en C staan op dezelfde diagonale lijn."] },
-  { id:"hoek", kop:"Een hoek van een gebied",
+    tekst:["<b>Schuin naast</b>: het vak diagonaal ernaast.",
+           "<b>Op dezelfde diagonale lijn</b>: schuin op een lijn, hoe ver ook — zoals A, B en C."] },
+  { id:"hoek", kop:"Hoek van een gebied",
     atomen:["in-room-corner"],
     beeld:()=>helpBord(["...","...","_._"],{licht:[[0,0],[2,0],[1,2]]}),
     tekst:["Een <b>hoek</b> is een vak waar twee randen van het gebied samenkomen.",
-           "Een gebied met een grillige vorm heeft dus meer hoeken dan vier; de opgelichte vakken zijn hier allemaal een hoek."] },
+           "Een grillig gebied heeft er dus meer dan vier: hier zijn alle drie de lichte vakken een hoek."] },
   { id:"rollen", kop:"Rollen",
     atomen:["has-role","in-restricted-room","role-all-different-rooms","role-all-same-room","role-left-of-empty-column"],
     beeld:()=>helpBord(["A...","....","..B.","...."],{gebied:REGEL_GEB_GOUD}),
-    tekst:["Sommige personen hebben een <b>rol</b>: edele, ridder of dorpeling. Je ziet het aan de vorm achter het portret.",
-           "Een gebied met een <b>gouden rand</b> is voor edelen: edelen staan altijd daar, dorpelingen nooit, ridders mogen overal.",
-           "<b>Elke ridder in een ander gebied</b> gaat over alle ridders samen; <b>meteen links van een lege kolom</b>: de kolom direct rechts van hem is leeg."] },
-  { id:"muur", kop:"Bij een deur, raam of poort",
+    tekst:["Een <b>rol</b> — edele, ridder of dorpeling — zie je aan de vorm achter het portret.",
+           "Een gebied met een <b>gouden rand</b> is voor edelen: edelen staan daar altijd, dorpelingen nooit, ridders overal."] },
+  { id:"muur", kop:"Bij een deur of raam",
     atomen:["at-wall-kind","before-wall-kind","at-wall"],
     beeld:()=>helpBord(["....",".A..","....","...."],{gebied:[[2,0,"g-w"],[2,1,"g-w"],[2,2,"g-w"],[2,3,"g-w"],[3,0,""],[3,1,""],[3,2,""],[3,3,""]],deur:[[2,1,"w"]]}),
     tekst:["Deuren, ramen en poorten zitten in de muur tussen twee gebieden.",
-           "<b>Bij een deur</b> of <b>voor een deur</b>: op een vak dat aan die deur grenst, aan welke kant van de muur ook. A staat bij de deur."] },
+           "<b>Bij een deur</b>: op een vak dat eraan grenst, aan welke kant van de muur ook."] },
   { id:"bezetting", kop:"Leeg en vol",
     atomen:["no-empty-room","owners-in-own-room","empty-room-count","room-person-total","empty-column-count","empty-row-count"],
     beeld:()=>helpBord(["A...","....","..B.","...C"],{gebied:REGEL_GEB}),
-    tekst:["Deze regels gaan over het hele bord: <b>in elk gebied stond iemand</b>, <b>er waren twee lege gebieden</b>, <b>in de keuken stonden precies twee personen</b>.",
-           "Een <b>lege rij</b> of <b>lege kolom</b> is er een waar niemand staat. Hier is de tweede rij leeg.",
-           "<b>Iedereen in zijn eigen gebied</b>: wie een gebied naar zich vernoemd heeft, staat daar."] },
+    tekst:["Over het hele bord: <b>in elk gebied stond iemand</b>, <b>twee lege gebieden</b>, <b>in de keuken precies twee personen</b>.",
+           "Een <b>lege rij</b> of <b>lege kolom</b> is er een waar niemand staat; hier is rij 2 leeg."] },
   { id:"zicht", kop:"Zicht",
     atomen:["sees-person","sees-nobody","sees-kind"],
     beeld:()=>helpBord(["A..B.",".^..E","..C.."],
       {muur:[[3,0,"o"],[3,1,"o"],[3,2,"o"]],deur:[[3,1,"o"]],
        lijn:[[3,0,2,2,"ok"],[2,2,4,1,"ok"],[0,0,2,2,"nee"]]}),
-    tekst:["Trek de lijn van hart naar hart: blijft die vrij, dan zie je elkaar. Over de rij, de kolom, schuin, en ook met een sprong zoals het paard in het schaakspel. Personen staan elkaar niet in de weg.",
-           "Een <b>hoog object</b> — standbeeld, boom, huisje, katapult, watermolen, boekenkast — staat midden op zijn vak: staat het op de lijn, dan zie je niets (A ziet C niet). Staat het ernaast, dan kijk je erlangs (B ziet C).",
-           "Een <b>muur</b> ligt op de rand tussen twee vakken en houdt alles tegen, behalve waar een <b>deur</b> of <b>poort</b> zit: daar kijk je door, ook schuin (C ziet E)."] },
+    tekst:["Trek de lijn van hart naar hart: blijft die vrij, dan zie je elkaar. Ook schuin en met een sprong als het paard in het schaakspel; personen staan niet in de weg.",
+           "Een <b>hoog object</b> (boom, standbeeld, huisje, katapult, watermolen, boekenkast) staat midden op zijn vak: op de lijn houdt het tegen (A ziet C niet), ernaast niet (B ziet C).",
+           "Een <b>muur</b> houdt alles tegen, behalve waar een <b>deur</b> of <b>poort</b> zit: daar kijk je door, ook schuin (C ziet E)."] },
   { id:"slachtoffer", kop:"Het slachtoffer",
     atomen:[],
     beeld:()=>helpBord(["VB..","....","...A","..C."],{gebied:REGEL_GEB}),
-    tekst:["<b>Het slachtoffer was alleen met zijn moordenaar</b>: in het gebied van het slachtoffer stond precies één ander, en dat is de dader. Hier is dat B.",
+    tekst:["<b>Alleen met zijn moordenaar</b>: in het gebied van het slachtoffer stond precies een ander — en dat is de dader. Hier B.",
            "Het slachtoffer staat op het vak dat als laatste overblijft."] },
   { id:"algemeen", kop:"Een algemene regel", inLijst:false,
     atomen:[],
     beeld:()=>helpBord(["A...",".B..","..C.","...V"]),
-    tekst:["Deze regel geldt voor het hele bord en staat er zoals hij bedoeld is: lees hem letterlijk.",
-           "Elke regel is waar voor de oplossing; samen laten ze maar één opstelling over."] }
+    tekst:["Deze regel geldt voor het hele bord; lees hem letterlijk."] }
 ];
 const REGEL_FAMILIE_VAN = {};
 REGEL_FAMILIES.forEach(f => f.atomen.forEach(a => { REGEL_FAMILIE_VAN[a] = f.id; }));
@@ -9846,11 +9841,51 @@ function toonRegelUitleg(cs,p){
     +'<h3 class="ru-kop">'+(p?esc(p.name):(cs.length>1?'Bordregels':'Bordregel'))+'</h3>'
     +'<div class="ru-regels">'+cs.map(c=>'<div class="ru-regel">'+highlightClueText(c.text)+'</div>').join("")+'</div>'
     +regelUitlegHtml(fams)
-    +'<div class="row"><button class="btn" data-close>Sluiten</button></div>';
+    +'<div class="row"><button class="btn ghost" id="ruNaarBoek" type="button">Alle regels</button>'
+    +'<button class="btn" data-close>Sluiten</button></div>';
+  const naar=box.querySelector("#ruNaarBoek");
+  if(naar) naar.addEventListener("click",()=>{ closeModal($("#modalRegelUitleg")); openRegelboek(fams[0]&&fams[0].id); });
   openModal("#modalRegelUitleg");
 }
 
-const HELP_SETS={regels:[],spelen:[],alle:[]};
+/* ── Het regelboek ──────────────────────────────────────
+   Alle regelsoorten in een venster: links de lijst, rechts het voorbeeld en
+   de uitleg. Door vijftien kaarten heen tikken liet niet zien wat er te
+   vinden was; een lijst wel. */
+let boekSel = "plek";
+function boekFamilies(){ return REGEL_FAMILIES.filter(f => f.inLijst !== false); }
+function tekenRegelboek(){
+  const fams = boekFamilies();
+  const f = fams.find(x => x.id === boekSel) || fams[0];
+  if (!f) return;
+  boekSel = f.id;
+  $("#boekLijst").innerHTML = fams.map(x =>
+    '<button type="button" data-fam="' + x.id + '"' + (x.id === f.id ? ' class="aan"' : '') + '>'
+    + esc(x.kop) + '</button>').join("");
+  $("#boekUitleg").innerHTML = '<h4 class="boek-titel">' + esc(f.kop) + '</h4>'
+    + '<div class="boek-beeld">' + f.beeld() + '</div>'
+    + '<div class="boek-tekst">' + f.tekst.map(t => '<p>' + t + '</p>').join("") + '</div>';
+  /* Open je het boek op een bepaalde soort, dan hoort die in de lijst ook in
+     beeld te staan -- anders lijkt er niets gekozen. */
+  const aan = $("#boekLijst").querySelector(".aan");
+  if (aan) aan.scrollIntoView({ block:"nearest" });
+}
+function openRegelboek(famId){
+  if (famId) boekSel = famId;
+  tekenRegelboek();
+  openModal("#modalRegelboek");
+}
+$("#boekLijst").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-fam]");
+  if(!b) return;
+  boekSel=b.dataset.fam;
+  tekenRegelboek();
+  const u=$("#boekUitleg");
+  if(u){ u.scrollTop=0; if(!isDesktop()) u.scrollIntoView({block:"nearest",behavior:"smooth"}); }
+});
+$("#btnRegelboek").addEventListener("click",()=>openRegelboek());
+
+const HELP_SETS={regels:[],spelen:[]};
 let HELP_STAPPEN=[];
 let helpSet="spelen";
 let helpStap=0;
@@ -9863,9 +9898,7 @@ function helpReeks(){
   return [{titel:"Zo speel je",set:"spelen"}]
     .concat(HELP_SETS.spelen.map(s=>Object.assign({set:"spelen"},s)))
     .concat([{titel:"Basis spelregels",set:"regels"}])
-    .concat(HELP_SETS.regels.map(s=>Object.assign({set:"regels"},s)))
-    .concat([{titel:"Alle regels",set:"alle"}])
-    .concat(HELP_SETS.alle.map(s=>Object.assign({set:"alle"},s)));
+    .concat(HELP_SETS.regels.map(s=>Object.assign({set:"regels"},s)));
 }
 function zetHelpSet(k){
   if(!HELP_SETS[k]) return;
@@ -9906,7 +9939,6 @@ function vulHelp(){
      op dezelfde manier. Losse gedachten blijven losse alinea's. */
   const R = (beeld, kop, ...regels) => HELP_SETS.regels.push({ beeld, kop, tekst: regels.map(t=>"<p>"+t+"</p>").join("") });
   const S = (beeld, kop, ...regels) => HELP_SETS.spelen.push({ beeld, kop, tekst: regels.map(t=>"<p>"+t+"</p>").join("") });
-  const A = (beeld, kop, ...regels) => HELP_SETS.alle.push({ beeld, kop, tekst: regels.map(t=>"<p>"+t+"</p>").join("") });
   /* Vier vakjes linksboven als één gebied. */
   const GEB = [[0,0,"g-nw"],[1,0,"g-no"],[0,1,"g-zw"],[1,1,"g-zo"]];
 
@@ -10001,10 +10033,6 @@ function vulHelp(){
     "Controleer je oplossing",
     "Staat iedereen op zijn plek? Druk bovenin op <b>Controleer</b>.",
     "Klopt alles, dan wijs je daarna de dader aan en is de zaak gesloten.");
-
-  /* Alle regelsoorten, één per stap; de algemene terugvalfamilie hoort er
-     niet bij. */
-  REGEL_FAMILIES.filter(f => f.inLijst !== false).forEach(f => A(f.beeld(), f.kop, ...f.tekst));
 
   zetHelpSet("spelen");
 }
