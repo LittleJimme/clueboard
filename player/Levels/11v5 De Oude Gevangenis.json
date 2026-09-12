@@ -1,11 +1,11 @@
 {
   "levelNumber": 11,
-  "levelVersion": 4,
+  "levelVersion": 5,
   "levelId": "lvl-mtqb7483p9zcl",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",
-  "exportedAt": "2026-09-11T17:32:02.366Z",
+  "exportedAt": "2026-09-12T08:39:54.480Z",
   "complete": true,
   "notes": {
     "coordinates": "1-based. column telt van links naar rechts, row van boven naar beneden.",
@@ -15,7 +15,7 @@
     "names": "name bevat de naam uit de builder, of null als die nog niet is ingevuld. content bevat dezelfde namen plus notities.",
     "intro": "content.intro is een korte sfeer-/introtekst voor de speler, geen puzzellogica. Leeg als die nog niet is ingevuld.",
     "gender": "gender bij een persoon is \"male\" of \"female\", of null als dat nog niet is gekozen. Puur voor de speler (bv. voornaamwoorden), geen puzzellogica.",
-    "appearance": "content.people[id].hairStyle, hairColor en skinTone zijn ids uit de assetbank (hairStyles, hairColors, skinTones); hairAuto false betekent zelf gekozen. attributes is een gereserveerd object voor latere kenmerken. Ontbreken de velden, dan kiezen speler en bouwer dezelfde vaste terugval uit naam en geslacht. Puur uiterlijk, geen puzzellogica."
+    "appearance": "content.people[id].hairStyle, hairColor en skinTone zijn ids uit de assetbank (hairStyles, hairColors, skinTones); beard is een id uit beards (none of ontbrekend = geen baard; kleurt mee met hairColor); clothing is een id uit clothing (ontbrekend = vaste keuze uit de naam); hairAuto false betekent zelf gekozen. attributes is een gereserveerd object voor latere kenmerken. Ontbreken de velden, dan kiezen speler en bouwer dezelfde vaste terugval uit naam en geslacht. Puur uiterlijk, geen puzzellogica."
   },
   "rules": {
     "onePersonPerRow": true,
@@ -861,8 +861,8 @@
           "objectId": null,
           "role": "suspect",
           "roleLabel": "verdachte",
-          "standing": null,
-          "standingLabel": null,
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
           "gender": "male",
           "genderLabel": "Man",
           "roomAccess": {
@@ -881,8 +881,8 @@
           "objectId": "obj-8",
           "role": "suspect",
           "roleLabel": "verdachte",
-          "standing": null,
-          "standingLabel": null,
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
           "gender": "male",
           "genderLabel": "Man",
           "roomAccess": {
@@ -901,8 +901,8 @@
           "objectId": "obj-2",
           "role": "suspect",
           "roleLabel": "verdachte",
-          "standing": null,
-          "standingLabel": null,
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
           "gender": "male",
           "genderLabel": "Man",
           "roomAccess": {
@@ -921,8 +921,8 @@
           "objectId": null,
           "role": "culprit",
           "roleLabel": "dader",
-          "standing": null,
-          "standingLabel": null,
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
           "gender": "male",
           "genderLabel": "Man",
           "roomAccess": {
@@ -941,8 +941,8 @@
           "objectId": null,
           "role": "victim",
           "roleLabel": "slachtoffer",
-          "standing": null,
-          "standingLabel": null,
+          "standing": "villager",
+          "standingLabel": "Dorpeling",
           "gender": "male",
           "genderLabel": "Man",
           "roomAccess": {
@@ -957,77 +957,77 @@
   },
   "content": {
     "title": "De Oude Gevangenis",
-    "intro": "Van de sloten is niets meer over en de cellen staan al jaren open. Toch is er vannacht iemand voorgoed binnengebleven.",
+    "intro": "de oude gevangenis",
     "people": {
       "p1": {
         "name": "Adelbert",
-        "role": "",
+        "role": "villager",
         "gender": "male",
         "description": "",
-        "hairStyle": "bald",
-        "hairColor": "warm-brown",
-        "skinTone": "tan",
+        "hairStyle": "buzz-cut",
+        "hairColor": "iron-grey",
+        "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "A",
         "genderAuto": true,
-        "clothing": "artisan-apron-tunic",
-        "beard": "none"
+        "clothing": "hooded-mantle",
+        "beard": "rounded-full-beard"
       },
       "p2": {
         "name": "Boudewijn",
-        "role": "",
+        "role": "villager",
         "gender": "male",
         "description": "",
-        "hairStyle": "crew-cut",
-        "hairColor": "soft-black",
-        "skinTone": "tan",
+        "hairStyle": "centre-curtains",
+        "hairColor": "deep-brown",
+        "skinTone": "medium",
         "hairAuto": false,
         "nameLetter": "B",
         "genderAuto": true,
-        "clothing": "fur-collar-mantle",
+        "clothing": "split-neck-tunic",
         "beard": "chin-goatee"
       },
       "p3": {
         "name": "Casimir",
-        "role": "",
+        "role": "villager",
         "gender": "male",
         "description": "",
-        "hairStyle": "short-crop",
-        "hairColor": "soft-black",
-        "skinTone": "tan",
+        "hairStyle": "brushed-back-neck-length",
+        "hairColor": "light-brown",
+        "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "C",
         "genderAuto": true,
-        "clothing": "split-neck-tunic",
+        "clothing": "quilted-gambeson",
         "beard": "none"
       },
       "p4": {
         "name": "Doriaan",
-        "role": "",
+        "role": "villager",
         "gender": "male",
         "description": "",
-        "hairStyle": "wavy-crop",
-        "hairColor": "soft-black",
-        "skinTone": "tan",
+        "hairStyle": "masculine-hair-bun",
+        "hairColor": "silver",
+        "skinTone": "light",
         "hairAuto": false,
         "nameLetter": "D",
         "genderAuto": true,
-        "clothing": "hooded-mantle",
+        "clothing": "high-collar-doublet",
         "beard": "none"
       },
       "p5": {
         "name": "Valentijn",
-        "role": "",
+        "role": "villager",
         "gender": "male",
         "description": "",
-        "hairStyle": "side-part",
-        "hairColor": "warm-brown",
-        "skinTone": "light",
+        "hairStyle": "mature-shoulder-waves",
+        "hairColor": "silver",
+        "skinTone": "tan",
         "hairAuto": false,
         "nameLetter": "V",
         "genderAuto": true,
-        "clothing": "round-neck-tunic",
-        "beard": "none"
+        "clothing": "lace-up-tunic",
+        "beard": "chin-curtain"
       }
     },
     "rooms": {
@@ -1307,7 +1307,25 @@
         ]
       },
       {
-        "id": "clue-12",
+        "id": "clue-13",
+        "scope": "person",
+        "personId": "p2",
+        "terms": [
+          {
+            "not": false,
+            "any": [
+              {
+                "atom": "on-object-kind",
+                "args": {
+                  "objectKind": "Chair"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "clue-14",
         "scope": "person",
         "personId": "p1",
         "terms": [
@@ -1460,7 +1478,30 @@
       "holds": true
     },
     {
-      "id": "clue-12",
+      "id": "clue-13",
+      "scope": "person",
+      "personId": "p2",
+      "locked": false,
+      "terms": [
+        {
+          "not": false,
+          "any": [
+            {
+              "atom": "on-object-kind",
+              "args": {
+                "objectKind": "Chair"
+              }
+            }
+          ]
+        }
+      ],
+      "text": "Boudewijn zat op een stoel.",
+      "generatedText": "Boudewijn zat op een stoel.",
+      "storyText": null,
+      "holds": true
+    },
+    {
+      "id": "clue-14",
       "scope": "person",
       "personId": "p1",
       "locked": false,
@@ -1516,7 +1557,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 6,
+    "ms": 4,
     "override": null
   }
 }
