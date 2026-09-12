@@ -1855,6 +1855,12 @@ div.deelnemers.breed .dl-in{margin-top:-10px}
 div.deelnemer{gap:2px}
 div.deelnemer .portret-podium{--s:calc(var(--dl,88px) / 370)}
 .dl-merken{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:2px}
+/* Het deelnemersvak stond op desktop vast op 400 px, terwijl zijn kolom er 586
+   heeft: vier portretten van 144 px kregen cellen van 100 en lagen dus over
+   elkaar. Het vak mag de kolom nu gebruiken (zie de regel bij .deelnemers
+   hieronder), en de kolom zelf krijgt er een tikje bij ten koste van de
+   titelkolom. */
+body.desktop.in-game #modalIntro div.intro-scroll{grid-template-columns:minmax(340px,.88fr) minmax(0,1.12fr);column-gap:56px}
 /* Personages op het bord (keuze in de instellingen): het personage staat groot
    op de tegel, met zijn letter als klein merkje ernaast. */
 body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;border:0;box-shadow:none}
@@ -2797,7 +2803,7 @@ body.desktop.in-game #modalIntro .bordregel.algemeen{font-size:14px;padding:9px 
 /* Niet de volle kolombreedte: op zes kolommen wordt elk portret een derde
    van de bak, en dan drijven ze uit elkaar. Met een bovengrens staan ze als
    groep bij elkaar, met de kolom eromheen als lucht. */
-body.desktop.in-game #modalIntro .deelnemers{grid-column:2;grid-row:1/6;align-self:center;justify-self:center;max-width:min(100%,400px);width:100%;padding:0;margin:0;gap:18px 0}
+body.desktop.in-game #modalIntro .deelnemers{grid-column:2;grid-row:1/6;align-self:center;justify-self:center;max-width:min(100%,620px);width:100%;padding:0;margin:0;gap:18px 0}
 body.desktop.in-game #modalIntro .deelnemer{grid-template-rows:calc(var(--dl,78px)*1.22) auto;gap:4px}
 body.desktop.in-game #modalIntro .dl-tekst .naam{font-size:22px}
 body.desktop.in-game #modalIntro .deelnemer.lang .dl-tekst .naam{font-size:19px}
@@ -8822,7 +8828,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.164";
+const PLAYER_APP_VERSION="0.9.165";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9313,13 +9319,29 @@ function showLevelDetail(levelIndex){
   /* En het hoort niet te hoeven scrollen. Past het niet, dan krimpen de
      portretten tot het wél past: de titel, de tekst en de bordregels staan
      vast, dus de deelnemers geven mee. */
-  if(sc && breed){
-    let m=maat;
-    for(let i=0;i<10 && sc.scrollHeight>sc.clientHeight+2 && m>72; i++){
+  /* Het vel past zichzelf: eerst zijwaarts, dan in hoogte. Dat kan pas als de
+     modal echt staat -- vandaar een beeldbeurt later, en nog eens voor de
+     zekerheid. */
+  const passend=()=>{
+    if(!sc) return;
+    /* Zijwaarts: het vak van een portret is 1,37 keer de doorsnee van de schijf,
+       en een ridderschild vult dat vak helemaal. De smalste cel bepaalt: een
+       rij van vier heeft kleinere cellen dan de enkeling bovenaan. */
+    const cellen=[...host.querySelectorAll(".deelnemer")].map(d=>d.getBoundingClientRect().width).filter(w=>w>1);
+    if(!cellen.length) return;
+    const cel=Math.min(...cellen), lucht=breed?16:8;
+    let m=parseFloat(getComputedStyle(host).getPropertyValue("--dl"))||maat;
+    if(1.37*m > cel-lucht) m=Math.max(48,Math.floor((cel-lucht)/1.37));
+    host.style.setProperty("--dl",m+"px");
+    /* In hoogte: op een groot scherm hoort het vel niet te scrollen. */
+    if(breed) for(let i=0;i<10 && sc.scrollHeight>sc.clientHeight+2 && m>72; i++){
       m=Math.round(m*0.92);
       host.style.setProperty("--dl",m+"px");
     }
-  }
+  };
+  passend();
+  requestAnimationFrame(passend);
+  setTimeout(passend,180);
   introWenkStart();
 }
 /* ── Het level klaarzetten ──
