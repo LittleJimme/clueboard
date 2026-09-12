@@ -1860,6 +1860,7 @@ div.deelnemer .portret-podium{--s:calc(var(--dl,88px) / 370)}
 body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;border:0;box-shadow:none}
 .pawn.personage{width:100%;height:100%;overflow:visible}
 .pawn.personage .portret-podium{--s:calc(var(--cell) / 360);position:absolute;left:50%;bottom:2%;transform:translateX(-50%)}
+.pawn.personage .portret-podium[data-vorm="noble"],.pawn.personage .portret-podium[data-vorm="knight"]{bottom:-12%}
 .pawn.personage .init{position:absolute;right:-2%;bottom:0;z-index:3;
   width:calc(var(--cell)*.36);height:calc(var(--cell)*.36);border-radius:999px;
   display:flex;align-items:center;justify-content:center;
@@ -4649,7 +4650,11 @@ function chLaadBron(laag){
     const haal=()=>{
       const img=new Image();
       img.decoding="async";
-      img.onload=()=>ok(img);
+      /* Pas doorgeven als de tekening ook echt gedecodeerd is. Op iOS vuurt
+         onload soms eerder, en dan tekent drawImage een lége laag: keurig
+         ingekleurd, netjes bewaard en nooit meer opnieuw geprobeerd -- zo stond
+         iemand de rest van het spel zonder haar of zonder lijf op het vel. */
+      img.onload=()=>{ (img.decode ? img.decode().catch(()=>{}) : Promise.resolve()).then(()=>ok(img)); };
       img.onerror=()=>{
         poging++;
         if(poging<3) setTimeout(haal, 300*poging);
@@ -4727,7 +4732,11 @@ function chKleur(laag,hex){
     const d=g.getImageData(0,0,W,H), a=d.data;
     /* Basistoon: mediaan-lichtheid van de dekkende pixels. */
     const ls=[]; for(let i=0;i<a.length;i+=16){ if(a[i+3]>200) ls.push(rgb2hsl(a[i],a[i+1],a[i+2])[2]); }
-    ls.sort((x,y)=>x-y); const lBasis=ls.length?ls[ls.length>>1]:.5;
+    /* Geen dekkende pixel te vinden? Dan is er niets getekend en is dit geen
+       uitkomst om te bewaren: weg ermee, dan wordt hij straks opnieuw
+       geprobeerd (chVul herkanst vanzelf). */
+    if(!ls.length) throw new Error("lege laag: "+laag);
+    ls.sort((x,y)=>x-y); const lBasis=ls[ls.length>>1];
     const [tr,tg,tb]=hexRgb(hex); const [th,ts,tl]=rgb2hsl(tr,tg,tb);
     /* Donkere doelkleuren krijgen minder spreiding, anders klapt de schaduw
        dicht; lichte iets meer, anders wordt het plat. */
@@ -4821,7 +4830,11 @@ document.addEventListener("error",e=>{
 /* ── De markup ─────────────────────────────────────────── */
 function chLaag(laag,tint){
   const bron=chPad(laag)+chBust();
-  return '<img class="ch-l" alt="" draggable="false" decoding="async" src="'+bron+'" data-bron="'+chEsc(bron)+'"'
+  /* Synchroon decoderen: de lagen zijn klein (256 px ingekleurd), en met
+     "async" bleven ze in een gemaskeerd vak soms lang ongetekend staan --
+     geladen, compleet, en toch leeg in beeld, tot iets het vak opnieuw liet
+     tekenen. Precies het "niet alles geladen" van een telefoon. */
+  return '<img class="ch-l" alt="" draggable="false" decoding="sync" src="'+bron+'" data-bron="'+chEsc(bron)+'"'
     +(tint?' data-laag="'+laag+'" data-tint="'+chEsc(tint)+'"':'')+'>';
 }
 /* Waar het personage op het doek begint: de kruin van dít kapsel, of de
@@ -5172,9 +5185,15 @@ let visibility=Object.assign({},VIS_DEFAULTS);
 function loadVisibility(){
   try{
     const raw=localStorage.getItem(VIS_KEY);
-    if(!raw) return;
-    const v=JSON.parse(raw);
-    Object.keys(VIS_DEFAULTS).forEach(k=>{ if(typeof v[k]==="boolean") visibility[k]=v[k]; });
+    if(raw){
+      const v=JSON.parse(raw);
+      Object.keys(VIS_DEFAULTS).forEach(k=>{ if(typeof v[k]==="boolean") visibility[k]=v[k]; });
+    }
+    /* Personages op het bord: op een groot scherm standaard aan, op een
+       telefoon uit -- daar is een vakje te klein voor een tekening. Alleen wie
+       de keuze zelf heeft omgezet, houdt hem. */
+    if(!localStorage.getItem("clueboard:personagesGekozen"))
+      visibility.personages=!!(typeof DESKTOP_MQ!=="undefined" && DESKTOP_MQ.matches);
   }catch(e){}
 }
 function saveVisibility(){
@@ -5185,6 +5204,7 @@ function applyVisibility(){
   const b=document.body;
   b.classList.toggle("hide-notes",!visibility.notes);
   b.classList.toggle("hide-room-labels",!visibility.roomLabels);
+  const kp=$("#rowPersonages"); if(kp) kp.setAttribute("aria-pressed",visibility.personages?"true":"false");
   const boxes={notes:$("#visNotes"), crosses:$("#visCrosses"), roomLabels:$("#visRoomLabels")};
   /* Open oog = zichtbaar, doorgestreept oog = verborgen. De hele rij is de
      knop, zodat je niet op een klein vierkantje hoeft te mikken. */
@@ -8782,7 +8802,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.162";
+const PLAYER_APP_VERSION="0.9.163";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -10188,13 +10208,13 @@ maatSchuif("golfHoog","golfHoogGetal","clueboard:golfHoog",
    pion: die leest in één oogopslag en houdt het bord rustig. Wie de tekeningen
    wil zien, zet ze hier aan; het bord wordt daarna opnieuw getekend. */
 { const knop=$("#rowPersonages");
-  const zet=aan=>{
-    visibility.personages=!!aan; saveVisibility();
-    if(knop) knop.setAttribute("aria-pressed",aan?"true":"false");
+  if(knop) knop.addEventListener("click",()=>{
+    visibility.personages=!visibility.personages;
+    saveVisibility();
+    try{ localStorage.setItem("clueboard:personagesGekozen","1"); }catch(e){}
+    applyVisibility();
     if(M) paintBoard();
-  };
-  zet(!!visibility.personages);
-  if(knop) knop.addEventListener("click",()=>zet(!visibility.personages));
+  });
 }
 
 /* De plaatjes in het instellingenvel: elk laat zien wat de keuze ernaast
