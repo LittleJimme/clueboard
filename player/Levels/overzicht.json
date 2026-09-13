@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-13T12:49:56",
+  "gemaakt": "2026-09-13T13:06:04",
   "campagnes": [
     {
       "description": "Nagebouwd uit het Murdoku-boek.",
@@ -306,7 +306,7 @@
       }
     },
     {
-      "file": "Terug in de tijd 7v6 De Viersprong.json",
+      "file": "Terug in de tijd 7v7 De Viersprong.json",
       "content": {
         "title": "De Viersprong"
       },
@@ -320,11 +320,11 @@
       },
       "levelId": "lvl-mtzmwy2t31r2c",
       "levelNumber": 7,
-      "levelVersion": 6,
+      "levelVersion": 7,
       "campaign": "terug-in-de-tijd",
       "difficulty": {
-        "graad": 5,
-        "uitleg": "Zwaar doorredeneren: lange kettingen van aannames."
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {

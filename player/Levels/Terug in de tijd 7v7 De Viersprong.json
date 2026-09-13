@@ -1,6 +1,6 @@
 {
   "levelNumber": 7,
-  "levelVersion": 6,
+  "levelVersion": 7,
   "levelId": "lvl-mtzmwy2t31r2c",
   "campaign": "terug-in-de-tijd",
   "format": "clueboard-level",
@@ -2520,9 +2520,9 @@
     }
   ],
   "difficulty": {
-    "graad": 5,
-    "label": "Niveau 5 van 5",
-    "uitleg": "Zwaar doorredeneren: lange kettingen van aannames.",
+    "graad": 3,
+    "label": "Niveau 3 van 5",
+    "uitleg": "Geregeld proberen en verwerpen voordat het klapt.",
     "sport": 7
   },
   "solution": {
@@ -2570,7 +2570,7 @@
   "solutionCheck": {
     "status": "uniek",
     "solutions": 1,
-    "ms": 44479,
+    "ms": 4420,
     "override": null
   }
 }

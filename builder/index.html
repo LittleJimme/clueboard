@@ -2154,7 +2154,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v55</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v56</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -3920,6 +3920,10 @@ const ICON = {
    een oude uitkomst niets meer. Hij staat hier en niet bij de controle zelf,
    omdat snapshot() er als eerste bij moet kunnen. */
 let LAATSTE_CHECK = '';
+/* De volledige uitkomst van diezelfde controle (aantal, tijd, oplossingen),
+   zodat Exporteren hem kan hergebruiken in plaats van opnieuw -- en met minder
+   tijd -- te gaan zoeken. Zelfde levensduur als LAATSTE_CHECK. */
+let LAATSTE_UITKOMST = null;
 /* De laatst bepaalde moeilijkheidsgraad, met dezelfde levensduur. */
 let LAATSTE_GRAAD = null;
 
@@ -3927,6 +3931,7 @@ function snapshot(){
   /* Het bord verandert, dus de vorige uitkomst van de oplossingscontrole
      slaat nergens meer op. */
   if (LAATSTE_CHECK) LAATSTE_CHECK = '';
+  LAATSTE_UITKOMST = null;
   if (LAATSTE_GRAAD) LAATSTE_GRAAD = null;
   _aanwijsbaarCache = null;
   undoStack.push(JSON.stringify({ S, objCounter }));
@@ -4739,6 +4744,7 @@ function doeOplossingCheck(){
       try { r = zoekOplossingen({ ms: ZOEK_BUDGET_MS, tonen: VERKLEIN_BEWAAR }); }
       catch (err){ toast('Het zoeken liep vast: ' + err.message, 'bad'); }
       LAATSTE_CHECK = r ? r.status : '';
+      LAATSTE_UITKOMST = r;
       const oplossingen = (r && r.oplossingen) || [];
       body.innerHTML = oplossingen.length
         ? '<div class="opl-split"><div class="opl-links">'+
@@ -5225,6 +5231,93 @@ function zoekBezigHtml(){
        + '<div class="opl-balk" style="--budget:' + ZOEK_BUDGET_MS + 'ms"><i></i></div>';
 }
 
+/* ── Kan deze regel nog waar worden? ─────────────────────
+   Regels over iedereen ("had een vrouw één rij boven zich", "er waren geen
+   lege gebieden") kan de zoeker pas op een vol bord echt beoordelen. Tot die
+   tijd probeerde hij elke tak af, ook als op het halve bord al vaststond dat
+   zo'n regel nooit meer kon kloppen -- De Viersprong kostte daardoor 44
+   seconden en vier miljoen knopen.
+
+   Per regelvorm staat hier wanneer hij op een half bord al onherroepelijk
+   onwaar is. Het antwoord mag alleen "onmogelijk" zijn als dat bewezen is;
+   bij twijfel false, dan wacht de regel gewoon op het volle bord. De zoeker
+   zet één persoon per rij en per kolom; daar leunen de rij-regels op.
+   p = het onderwerp (staat al), a = de invulling, open = hoeveel personen er
+   nog geplaatst moeten worden. */
+const KAN_NIET_MEER = {
+  /* De ander staat in één bepaalde rij, en in een rij past maar één persoon.
+     Buiten het bord, of staat er al iemand die niet past: nooit meer waar. */
+  'gender-row-offset': (p, a) => {
+    const t = pos(p); if (!t) return false;
+    const rij = t.y - (a.updown2 === 'above' ? 1 : -1);
+    if (rij < 0 || rij >= S.rows) return true;
+    for (const q in S.people){
+      if (q === p) continue;
+      const u = pos(q);
+      /* Rechtstreeks uit de inhoud: personGenderOf() roept initContent() aan,
+         en dat bij elke knoop maakte het zoeken trager in plaats van sneller. */
+      if (u && u.y === rij) return (((S.content.people || {})[q] || {}).gender || '') !== a.gender;
+    }
+    return false;
+  },
+  /* Precies één ander in het gebied, en die heeft de rol: zijn het er al
+     twee, dan wordt het niets meer. */
+  'alone-with-role': (p, a) => {
+    const t = pos(p); if (!t) return false;
+    let anderen = 0;
+    for (const q in S.people){
+      if (q === p) continue;
+      const u = pos(q);
+      if (u && u.room === t.room && ++anderen > 1) return true;
+    }
+    return false;
+  },
+  /* In een gebied met precies n personen: er staan er al meer. */
+  'room-person-count': (p, a) => {
+    const t = pos(p); if (!t) return false;
+    let n = 0;
+    for (const q in S.people){ const u = pos(q); if (u && u.room === t.room) n++; }
+    return n > +a.count;
+  },
+  /* Precies n op een soort object: er staan er al meer op. */
+  'count-on-kind': (_, a) =>
+    Object.keys(S.people).filter(q => personOnKind(q, a.objectKind)).length > +a.persons,
+  /* Nu nog E lege gebieden en nog `open` personen te gaan: aan het eind zijn
+     het er tussen E - open en E. */
+  'empty-room-count': (_, a, open) => {
+    const e = legeKamersNu();
+    return +a.count > e || +a.count < e - open;
+  },
+  'no-empty-room': (_, a, open) => legeKamersNu() > open
+};
+/* Hoeveel gebieden er nu leeg zijn -- hetzelfde als emptyRooms().length, maar
+   zonder bij elke knoop alle tegels langs te lopen. Welke gebieden tegels
+   hebben verandert tijdens één zoekopdracht niet; de zoeker telt dat daarom
+   aan het begin één keer (ZOEK_KAMERS) en ruimt het na afloop op, want
+   tijdens het bouwen verandert het wel. */
+let ZOEK_KAMERS = null;   /* null = niet aan het zoeken, true = nog niet geteld */
+function legeKamersNu(){
+  const telKamers = () => new Set(S.rooms.map((_, i) => i).filter(i => roomTiles(i).length));
+  if (ZOEK_KAMERS === true) ZOEK_KAMERS = telKamers();
+  const kamers = ZOEK_KAMERS || telKamers();
+  const bezet = new Set();
+  for (const q in S.people){ const u = pos(q); if (u && kamers.has(u.room)) bezet.add(u.room); }
+  return kamers.size - bezet.size;
+}
+/* Een regel is onherroepelijk onwaar als één van zijn voorwaarden (een term
+   zonder "niet") in al zijn varianten onmogelijk is geworden. Voor een regel
+   waar dat niet voor te zeggen valt geeft dit null. */
+function kanNietMeerVoor(clue){
+  if (!clue || clue.locked || clue.kind === 'room-access') return null;
+  const termen = (clue.terms || []).filter(t => !t.not && (t.any || []).length &&
+    t.any.every(a => KAN_NIET_MEER[a.atom]));
+  if (!termen.length) return null;
+  return open => {
+    if (clue.scope === 'person' && (!clue.personId || !S.people[clue.personId])) return false;
+    return termen.some(t => t.any.every(a => KAN_NIET_MEER[a.atom](clue.personId, a.args || {}, open)));
+  };
+}
+
 /* ── Het zoeken zelf ─────────────────────────────────── */
 function zoekOplossingen(opt){
   opt = opt || {};
@@ -5318,6 +5411,9 @@ function zoekOplossingen(opt){
   /* Per diepte alle universele regels die vanaf daar meelopen. */
   const vroegTot = []; let lopend = [];
   vroegVanaf.forEach((lijst, i) => { lopend = lopend.concat(lijst); vroegTot[i] = lopend; });
+  /* Regels die pas op het volle bord tellen, maar waarvan onderweg al te
+     zien is dat ze niet meer kunnen kloppen (zie KAN_NIET_MEER). */
+  const afkappen = opt.geenSnoei ? [] : eindRegels.map(r => kanNietMeerVoor(r.clue)).filter(Boolean);
   /* De slachtofferregel op een half bord, zoals de speler hem leest: staat
      er al een tweede ander bij het slachtoffer in het gebied, dan is het mis.
      Wie de dader is telt hier niet mee -- de speler weet dat niet. */
@@ -5337,6 +5433,10 @@ function zoekOplossingen(opt){
     const vr = vroegTot[i];
     for (let x = 0; x < vr.length; x++) if (!clueTrue(vr[x].clue)) return false;
     if (!slachtofferOk()) return false;
+    if (i < laatste){
+      const open = laatste - i;
+      for (let x = 0; x < afkappen.length; x++) if (afkappen[x](open)) return false;
+    }
     if (i === laatste){
       for (let x = 0; x < eindRegels.length; x++) if (!clueTrue(eindRegels[x].clue)) return false;
       /* De vaste regel van het slachtoffer staat als tekst vast maar wordt
@@ -5369,9 +5469,11 @@ function zoekOplossingen(opt){
 
   try {
     S.people = {};
+    ZOEK_KAMERS = true;      /* pas tellen als een regel erom vraagt */
     stap(0);
   } finally {
     S.people = bewaar;
+    ZOEK_KAMERS = null;
   }
 
   /* Wie staat er in elke gevonden oplossing op hetzelfde vakje, en wie niet?
@@ -7604,10 +7706,28 @@ async function doExport(){
   }
   /* Eerst narekenen, dan pas de checklijst opmaken: een level dat op alle
      punten groen staat kan nog steeds twee oplossingen hebben, en dat merk je
-     anders pas als iemand het speelt en moet gokken. Een paar honderd
-     milliseconden is goedkoper dan een level terugtrekken. */
-  const uniek = zoekOplossingen();
+     anders pas als iemand het speelt en moet gokken.
+     Is er sinds de laatste controle (knop Oplossingen) niets aan het bord of
+     de regels veranderd, dan geldt die uitkomst gewoon. Anders wordt er
+     opnieuw gezocht, met dezelfde ruime tijd als achter die knop: met de
+     korte standaardtijd van twee seconden kwam een zwaar bord als "onbepaald"
+     terug en werd een kloppend level als CONCEPT geëxporteerd. */
+  let uniek = (LAATSTE_UITKOMST && LAATSTE_CHECK && LAATSTE_UITKOMST.status === LAATSTE_CHECK
+               && LAATSTE_CHECK !== 'onbepaald') ? LAATSTE_UITKOMST : null;
+  if (!uniek){
+    toast('Nakijken of er precies één oplossing is…');
+    await new Promise(r => setTimeout(r, 40));     /* eerst de melding tekenen */
+    uniek = zoekOplossingen({ ms: ZOEK_BUDGET_MS });
+    LAATSTE_UITKOMST = uniek;
+  }
   LAATSTE_CHECK = uniek.status;
+  /* De moeilijkheid hoort in het bestand; is die er nog niet, dan nu, met de
+     uitkomst van hierboven (dan hoeft er niet nog eens gezocht te worden). */
+  if (!(LAATSTE_GRAAD && LAATSTE_GRAAD.graad) && uniek.status === 'uniek' && regelsGereed()){
+    toast('Moeilijkheid bepalen…');
+    await new Promise(r => setTimeout(r, 40));
+    try { const g = bepaalGraad(uniek); if (g && g.graad) LAATSTE_GRAAD = g; } catch (err){}
+  }
   const rows = checkRows();
   if (!rows.every(r => r.ok)){
     const missing = rows.filter(r => !r.ok).map(r => r.text + ' (' + r.val + ')');
@@ -9326,8 +9446,15 @@ buildExport=function(voorbeeld){saveCurrentInspector();initContent();let d=oldEx
   d.content.clues = JSON.parse(JSON.stringify(S.content.clues || []));
   /* De moeilijkheid reist mee: nog niet bepaald maar wel bepaalbaar, dan nu
      stil alsnog — de speler toont hem bij de levelkeuze. */
-  if (!(LAATSTE_GRAAD && LAATSTE_GRAAD.graad) && regelsGereed()){
-    try { const g = bepaalGraad(); if (g && g.graad) LAATSTE_GRAAD = g; } catch (err){}
+  /* Niet voor het voorbeeld: dat wordt bij elke wijziging opnieuw gemaakt
+     voor de spelweergave, en daar hoort geen moeilijkheid bij. Op een zwaar
+     bord kostte dat tientallen seconden per penseelstreek -- de bouwer hing,
+     en Chrome vroeg of hij de pagina moest sluiten. */
+  if (!voorbeeld && !(LAATSTE_GRAAD && LAATSTE_GRAAD.graad) && regelsGereed()){
+    try {
+      const g = bepaalGraad(LAATSTE_UITKOMST && LAATSTE_UITKOMST.status === 'uniek' ? LAATSTE_UITKOMST : undefined);
+      if (g && g.graad) LAATSTE_GRAAD = g;
+    } catch (err){}
   }
   d.difficulty = (LAATSTE_GRAAD && LAATSTE_GRAAD.graad)
     ? { graad:LAATSTE_GRAAD.graad, label:'Niveau '+LAATSTE_GRAAD.graad+' van 5',
