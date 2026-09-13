@@ -3302,6 +3302,18 @@ body.in-game #modalClue .sheet::-webkit-scrollbar{width:0}
   -webkit-user-select:text;user-select:text;outline:none;transition:border-color .15s;
 }
 .pd-notitie:focus{border-color:var(--goud)}
+/* Alle letters van deze persoon op het bord wissen: een rustige knop onder
+   de notities, gedoofd als er niets staat. */
+/* Een vraag om te bevestigen ligt altijd bovenop: hij kan uit een ander
+   venster komen (wissen vanuit het persoonsvenster), en dat staat later in de
+   pagina op dezelfde laag. */
+#modalBevestig{z-index:90}
+.pd-wis{display:flex;align-items:center;gap:8px;width:100%;margin-top:8px;padding:9px 12px;border-radius:12px;
+  border:1px dashed var(--lijn);background:none;color:var(--inkt-2);font:600 13px/1.3 var(--font-ui);text-align:left;cursor:pointer}
+.pd-wis svg{width:15px;height:15px;flex:0 0 auto;color:var(--dof)}
+.pd-wis b{margin-left:4px;padding:1px 7px;border-radius:999px;background:var(--kaart-2);border:1px solid var(--lijn);font:800 11px var(--font-ui);color:var(--inkt)}
+.pd-wis:hover:not(:disabled){border-color:var(--goud);color:var(--inkt)}
+.pd-wis:disabled{opacity:.5;cursor:default}
 .pd-notitie::placeholder{color:var(--dof);opacity:.8}
 .pd-regel .ic svg{width:100%;height:100%}
 .pd-regel.leeg{color:var(--dof);font-style:italic}
@@ -8563,7 +8575,10 @@ function detailHtml(cs,p){
        bord dat alleen ruimte kostte. */
     html+='<div class="pd-label">Wat je weet</div>'+regels
       +'<div class="pd-label">Jouw notities</div>'
-      +'<textarea class="pd-notitie" id="pdNotitie" rows="1" placeholder="Wat denk je over '+esc(p.name)+'? Bijvoorbeeld: kan niet in de tuin, want…"></textarea>';
+      +'<textarea class="pd-notitie" id="pdNotitie" rows="1" placeholder="Wat denk je over '+esc(p.name)+'? Bijvoorbeeld: kan niet in de tuin, want…"></textarea>'
+      /* Alle letters van deze persoon op het bord in één keer weg. Een dier
+         zet je niet neer, dus daar staan geen letters van. */
+      +(p.dier?'':'<button type="button" class="pd-wis" id="pdWisNotities"></button>');
   } else html+=regels;
   html+='<div class="row"><button class="btn" data-close>Sluiten</button></div>';
   return html;
@@ -8579,6 +8594,26 @@ function bindDetail(box,p,cs){
   }));
   if(!p) return;
   const h=box.querySelector(".pd-portret"); if(h) h.appendChild(personPortrait(p,{size:isDesktop()?138:112}));
+  const wis=box.querySelector("#pdWisNotities");
+  if(wis){
+    const teken=()=>{
+      const n=notitiesPerPersoon().per.get(p.id)||0;
+      wis.disabled=!n;
+      wis.title=n ? 'Alle letters van '+p.name+' op het bord wissen' : '';
+      wis.innerHTML=AssetBank.ui("pencil")+'<span>'+(n
+        ? 'Notities op het bord wissen <b>'+n+'</b>'
+        : 'Geen notities op het bord')+'</span>';
+    };
+    teken();
+    wis.addEventListener("click",e=>{
+      e.stopPropagation();
+      const n=notitiesPerPersoon().per.get(p.id)||0;
+      if(!n) return;
+      bevestig("Notities van "+p.name+" wissen?",
+        (n===1?"De letter van ":"Alle "+n+" letters van ")+p.name+" op het bord gaan weg. Je eigen tekst hierboven blijft staan.",
+        ()=>{ wisNotities(p.id); teken(); });
+    });
+  }
   const ta=box.querySelector("#pdNotitie");
   if(!ta) return;
   ta.value=persoonNotitie(p.id);
@@ -9105,7 +9140,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.184";
+const PLAYER_APP_VERSION="0.9.185";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
