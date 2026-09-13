@@ -567,8 +567,6 @@ body.op-campagne .campagne-balk{display:flex}
 #modalUitleg .vel.titelkaart #stapKop{flex:1;display:flex;flex-direction:column;gap:22px;align-items:center;justify-content:center;text-align:center;margin:0;padding:0;font-size:44px;line-height:1.1}
 .uitleg-merk{display:none;height:34px;width:auto;max-width:60%}
 #modalUitleg .vel.titelkaart .uitleg-merk-donker{display:block}
-#modalUitleg .voorbeeld-knop{font-size:13.5px;line-height:1;padding:11px 18px;gap:9px;letter-spacing:0;font-style:normal}
-#modalUitleg .voorbeeld-knop svg{width:17px;height:17px;color:var(--accent)}
 html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-donker{display:none}
 html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display:block}
 #modalUitleg .vel.titelkaart .stap-teller,#modalUitleg .vel.titelkaart .stap-beeld,#modalUitleg .vel.titelkaart .stap-tekst{display:none}
@@ -614,6 +612,24 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
 .keuze-boek:hover{border-color:var(--accent-lijn)}
 .keuze-boek svg{width:15px;height:15px;display:block}
 @media (max-width:430px){ .keuze-boek .lbl{display:none} .keuze-boek{padding:0 10px} }
+/* De voorbeeldzaak: een eigen knop, los van het doorklikken. Op een breed
+   scherm naast Alle regels; op een telefoon past dat niet in die rij en staat
+   hij onder de stappen. */
+a.keuze-boek{text-decoration:none}
+.keuze-boek.voorbeeld svg,.voorbeeld-los svg{color:var(--accent)}
+.voorbeeld-los{display:none;align-self:center;align-items:center;gap:7px;margin-top:12px;padding:8px 14px;
+  border:1px solid var(--lijn);border-radius:999px;background:var(--kaart-2);color:var(--inkt);
+  font:700 12px var(--font-ui);text-decoration:none}
+.voorbeeld-los svg{width:15px;height:15px}
+.voorbeeld-los:hover,.keuze-boek.voorbeeld:hover{border-color:var(--accent-lijn)}
+@media (max-width:720px){ .keuze-boek.voorbeeld{display:none} .voorbeeld-los{display:flex} }
+/* Op een breed scherm staan er drie dingen naast de tabbladen; het venster
+   wordt daarvoor breder, en de tabbladen worden nooit smaller dan hun naam. */
+@media (min-width:721px){
+  #modalUitleg .vel{max-width:590px}
+  .uitleg-keuze{min-width:max-content}
+  .uitleg-keuze button{padding:0 12px}
+}
 .boek-knop svg{width:18px;height:18px}
 .help-rollen{display:flex;gap:26px;justify-content:center;align-items:center}
 .help-rollen .hr{display:flex;flex-direction:column;align-items:center;gap:8px}
@@ -880,6 +896,7 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
         <button type="button" data-set="regels">Basis spelregels</button>
       </div>
       <button class="keuze-boek" id="btnRegelboek" type="button" title="Alle regelsoorten op een rij"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 6.6h10.4M9.2 12h10.4M9.2 17.4h10.4"/><circle cx="4.9" cy="6.6" r="1.35" fill="currentColor" stroke="none"/><circle cx="4.9" cy="12" r="1.35" fill="currentColor" stroke="none"/><circle cx="4.9" cy="17.4" r="1.35" fill="currentColor" stroke="none"/></svg><span class="lbl">Alle regels</span></button>
+      <a class="keuze-boek voorbeeld" id="btnVoorbeeld" href="#" title="Speel de voorbeeldzaak"></a>
     </div>
     <div class="stap-teller" id="stapTeller"></div>
     <div class="vel-kop" id="stapKop"></div>
@@ -890,6 +907,7 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
       <div class="stap-bolletjes" id="stapBolletjes"></div>
       <button class="knop vol" id="stapVerder">Volgende →</button>
     </div>
+    <a class="voorbeeld-los" id="btnVoorbeeldLos" href="#"></a>
   </div>
 </div>
 
@@ -1304,6 +1322,8 @@ function voorbeeldHref(){
   return levelHref(d?d.source:VOORBEELD_BESTAND);
 }
 const SPEEL_ICOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.6c-2.3-1.6-5-1.9-8.2-.9v12.6c3.2-1 5.9-.7 8.2.9 2.3-1.6 5-1.9 8.2-.9V5.7c-3.2-1-5.9-.7-8.2.9z"/><path d="M12 6.6v12.6"/></svg>';
+$("#btnVoorbeeld").innerHTML=SPEEL_ICOON+'<span class="lbl">Voorbeeldzaak</span>';
+$("#btnVoorbeeldLos").innerHTML=SPEEL_ICOON+'Speel de voorbeeldzaak';
 /* Eén doorlopende reeks: een titelkaart, de spelregels, een titelkaart, en
    hoe je speelt. De keuze bovenin springt naar de titelkaart van dat deel;
    de knop onderaan loopt er gewoon doorheen en sluit aan het eind. */
@@ -1325,9 +1345,7 @@ function tekenUitleg(){
   $("#stapTeller").textContent=s.titel?"":"Stap "+(i+1)+" van "+deel.length;
   if(s.titel){
     $("#stapKop").innerHTML='<img class="uitleg-merk uitleg-merk-donker" src="../assets/brand/logo-dark.png" alt="ClueBoard">'
-      +'<img class="uitleg-merk uitleg-merk-licht" src="../assets/brand/logo.png" alt="ClueBoard"><span></span>'
-      /* Op de eerste kaart: wie liever meteen probeert, speelt de voorbeeldzaak. */
-      +(s.set==="spelen"?'<a class="knop voorbeeld-knop" href="'+voorbeeldHref()+'">'+SPEEL_ICOON+'Speel de voorbeeldzaak</a>':'');
+      +'<img class="uitleg-merk uitleg-merk-licht" src="../assets/brand/logo.png" alt="ClueBoard"><span></span>';
     $("#stapKop span").textContent=s.titel;
   } else $("#stapKop").textContent=s.kop;
   $("#stapBeeld").innerHTML=s.titel?"":s.beeld;      /* eigen vaste inhoud, geen levelinvoer */
@@ -1335,8 +1353,9 @@ function tekenUitleg(){
   $("#stapBolletjes").innerHTML=s.titel?"":deel.map((_,j)=>'<i class="'+(j===i?"aan":"")+'"></i>').join("");
   $("#stapTerug").disabled=uitlegStap===0;
   const volgende=UITLEG_STAPPEN[uitlegStap+1];
-  /* Aan het eind van de uitleg: meteen oefenen in de voorbeeldzaak. */
-  $("#stapVerder").textContent=!volgende ? "Speel de voorbeeldzaak →" : volgende.titel ? volgende.titel+" →" : "Volgende →";
+  $("#stapVerder").textContent=!volgende ? "Sluiten" : volgende.titel ? volgende.titel+" →" : "Volgende →";
+  $("#btnVoorbeeld").href=voorbeeldHref();
+  $("#btnVoorbeeldLos").href=voorbeeldHref();
   $("#stapVerder").disabled=false;
 }
 /* ── Het regelboek ──────────────────────────────────────
@@ -1407,7 +1426,7 @@ $("#btnUitleg").addEventListener("click",()=>{ zetUitlegSet("spelen"); openModal
 $("#stapTerug").addEventListener("click",()=>{ if(uitlegStap>0){ uitlegStap--; tekenUitleg(); } });
 $("#stapVerder").addEventListener("click",()=>{
   if(uitlegStap<UITLEG_STAPPEN.length-1){ uitlegStap++; tekenUitleg(); }
-  else location.href=voorbeeldHref();
+  else sluitModal($("#modalUitleg"));
 });
 $("#stapBolletjes").addEventListener("click",e=>{
   const alle=[...$("#stapBolletjes").children];
