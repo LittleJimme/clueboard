@@ -463,7 +463,7 @@ body.op-campagne .titelblok{display:none}
 /* Op de campagnepagina is het beeld het scherm: geen balk erboven, het
    beeld loopt van rand tot rand en tot de bovenkant, en de knoppen die je
    hier niet nodig hebt (eigen level, regels, uitleg) zijn weg. Alleen de
-   terugknop en de dag/nachtknop staan óp het beeld. */
+   dag/nachtknop en de terugknop staan óp het beeld, linksboven. */
 body.op-campagne .balk{display:none}
 .campagne-balk{flex:0 0 auto;display:none;padding:0 0 16px}
 body.op-campagne .campagne-balk{display:block}
@@ -479,8 +479,10 @@ body.op-campagne .campagne-balk{display:block}
 .cb-hero::after{content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(42,33,24,.10) 0%,rgba(42,33,24,0) 30%,rgba(42,33,24,.20) 55%,rgba(42,33,24,.78) 100%)}
 .cb-hero > *{position:absolute;z-index:2}
-.cb-hero .vraag-knop{left:var(--rand);top:calc(14px + env(safe-area-inset-top))}
-.cb-hero .cb-thema{right:var(--rand);top:calc(14px + env(safe-area-inset-top))}
+/* De dag/nachtknop staat linksboven, precies waar hij op het hoofdmenu ook
+   staat; de terugknop ernaast. */
+.cb-hero .cb-thema{left:var(--rand);top:calc(14px + env(safe-area-inset-top))}
+.cb-hero .vraag-knop{left:calc(var(--rand) + 48px);top:calc(14px + env(safe-area-inset-top))}
 .cb-hero .cb-tag{display:inline-flex;margin-bottom:10px}
 .cb-hero .cb-tag .stijl-tag{box-shadow:0 1px 4px rgba(42,33,24,.25)}
 .cb-hero .cb-tekst{left:var(--rand);right:calc(var(--rand) + 200px);bottom:22px;display:flex;flex-direction:column;align-items:flex-start}
