@@ -967,7 +967,7 @@ body.spelweergave .pawn.personage .obj-merk{position:absolute;left:2%;bottom:1%;
   border:max(1.5px, calc(var(--pion-cel,44px) * .03)) solid var(--stroke);box-shadow:0 1px 3px rgba(21,26,51,.35)}
 body.spelweergave .pawn.personage .obj-merk svg{width:76%;height:76%;display:block;stroke-width:2.3}
 .obj-merk img{position:absolute;left:8%;top:8%;width:84%;height:84%;object-fit:contain;display:block}
-.obj-merk.met-beeld svg{display:none}
+body.spelweergave .pawn.personage .obj-merk.met-beeld svg,.obj-merk.met-beeld svg{display:none}
 body.spelweergave .pawn.personage .init{position:absolute;right:2%;bottom:1%;z-index:3;
   width:calc(var(--pion-cel,44px) * .38);height:calc(var(--pion-cel,44px) * .38);border-radius:999px;
   display:flex;align-items:center;justify-content:center;
@@ -2198,7 +2198,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v62</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v63</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -3760,6 +3760,13 @@ function mix(hex, other, t){
 
 const N4 = [[0,-1],[0,1],[-1,0],[1,0]];
 function neighbours(x,y){ return N4.map(([dx,dy]) => z(x+dx,y+dy)).filter(k => S.tiles[k] && !S.tiles[k].off); }
+/* Grenst dit vak aan een muur: de rand van het bord of een ander gebied?
+   Neemt een tegel (zoals pos() die geeft) of een sleutel. */
+function naastMuur(k){
+  const t = (k && typeof k === 'object') ? k : S.tiles[k];
+  if (!t) return false;
+  return N4.some(([dx,dy]) => { const n = S.tiles[z(t.x+dx, t.y+dy)]; return !n || n.off || n.room !== t.room; });
+}
 
 function components(keys){
   const pool = new Set(keys), out = [];
@@ -4737,7 +4744,13 @@ async function resize(cols, rows){
       'Een ander formaat maakt een leeg bord van ' + cols + '×' + rows + '. Ruimtes, objecten en pionnen gaan verloren.',
       'Wissen'))) return;
   snapshot();
+  /* Het bord gaat leeg, het level niet: naam, verhaal, campagne, nummer en
+     levelId horen bij het level en gaan mee naar het nieuwe formaat. */
+  const oud = S;
   S = blankBoard(cols, rows); objCounter = 1; objNum = 1; wallNum = 1; activeRoom = 0;
+  ['campaign', 'theme', 'levelId', 'levelNumber', 'levelVersion'].forEach(k => { if (oud[k] !== undefined) S[k] = oud[k]; });
+  initContent();
+  if (oud.content){ S.content.title = oud.content.title || ''; S.content.intro = oud.content.intro || ''; }
   selectedEntity = null;
   renderAll(true);
 }
@@ -5318,7 +5331,7 @@ function plekkenPerPersoon(r){
    aannemen dat het antwoord al vastligt zodra het onderwerp staat. Alles wat
    hier niet in staat telt als "kijkt naar iedereen", ook als dat te streng is:
    te streng kost rekentijd, te ruim snoeit goede oplossingen weg. */
-const ALLEEN_ONDERWERP = ['pos','personMayEnter','personRoleOf','personGenderOf',
+const ALLEEN_ONDERWERP = ['pos','personMayEnter','personRoleOf','personGenderOf','naastMuur',
                           'roomAllowed','personName','personLetter','personColor','tileId',
    /* De motor hoeft niet doorzocht te worden: wat een atoom eraan vraagt staat
       letterlijk in het atoom zelf, en daar kijkt de regexp hierboven al naar.
@@ -7942,13 +7955,19 @@ async function doExport(){
      terug en werd een kloppend level als CONCEPT geëxporteerd. */
   let uniek = (LAATSTE_UITKOMST && LAATSTE_CHECK && LAATSTE_UITKOMST.status === LAATSTE_CHECK
                && LAATSTE_CHECK !== 'onbepaald') ? LAATSTE_UITKOMST : null;
-  if (!uniek){
+  /* Staat er los van de oplossingen nog iets open, dan wordt dit toch een
+     concept; dan hoeft er ook niet gezocht te worden. Dat scheelt op een
+     zwaar bord een minuut wachten op iets wat nog niet aan de orde is. */
+  const conceptToch = checkRows().some(r => !r.ok && r.text !== 'Precies één oplossing');
+  if (!uniek && conceptToch){
+    uniek = { status: LAATSTE_CHECK || 'niet nagerekend', aantal: undefined, ms: undefined, overgeslagen: true };
+  } else if (!uniek){
     toast('Nakijken of er precies één oplossing is…');
     await new Promise(r => setTimeout(r, 40));     /* eerst de melding tekenen */
     uniek = zoekOplossingen({ ms: ZOEK_BUDGET_MS });
     LAATSTE_UITKOMST = uniek;
   }
-  LAATSTE_CHECK = uniek.status;
+  if (!uniek.overgeslagen) LAATSTE_CHECK = uniek.status;
   /* De moeilijkheid hoort in het bestand; is die er nog niet, dan nu, met de
      uitkomst van hierboven (dan hoeft er niet nog eens gezocht te worden). */
   if (!(LAATSTE_GRAAD && LAATSTE_GRAAD.graad) && uniek.status === 'uniek' && regelsGereed()){
@@ -7962,6 +7981,8 @@ async function doExport(){
     if (uniek.status === 'meer')
       missing.push('→ ' + (uniek.meerDan ? 'meer dan ' : '') + uniek.aantal +
                    ' plaatsingen voldoen aan alle aanwijzingen; open Oplossingen bovenin om te zien wie er niet vastligt');
+    if (uniek.overgeslagen)
+      missing.push('→ de oplossingen zijn niet nagerekend: dat komt pas aan de orde als de rest klopt');
     const go = await dialog('Nog niet compleet', 'Deze controlepunten staan nog open:\n· ' + missing.join('\n· ') +
       '\n\nJe kunt het bord exporteren; CONCEPT komt dan in de bestandsnaam.', 'Toch exporteren');
     if (!go) return;
@@ -8678,6 +8699,7 @@ SLOTS.objectKindPl = { options: () => kindsOnBoard().map(k => ({ v:k, l:objectPl
    invulplek, want de gewone gender-plek kent "iemand" niet -- en die daar
    bijzetten zou gender-row-offset een keuze geven die de motor niet snapt. */
 SLOTS.wie = { options: () => [['female','een vrouw'],['male','een man'],['any','iemand']].map(([v,l])=>({v,l})) };
+SLOTS.muurkant = { options: () => [['ja','naast een muur'],['nee','niet naast een muur']].map(([v,l])=>({v,l})) };
 /* Alleen soorten waar je op of in kunt staan: "een vrouw in een boom" is op
    geen enkel bord waar te maken, dus hoort een boom niet in die keuzelijst. */
 SLOTS.objectKindBezet = { options: () => kindsOnBoard().filter(isObjectOccupiable).map(k => ({ v:k, l:'een ' + objectLabel(k).toLowerCase() })) };
@@ -9050,6 +9072,12 @@ const ATOMS = {
                         return wallsOnTile(k).some(w=>S.walls[w].kind===a.wallKind); } },
   'at-wall':        { scope:'person', cat:'Objecten', text:'stond bij {wall}',
                       slots:{wall:'wall'}, test:(p,a)=>wallsOnTile(S.people[p]).indexOf(a.wall)!==-1 },
+  /* Een muur is de grens van een gebied: de rand van het bord, of de lijn
+     naar een vak van een ander gebied. "Naast een muur" is dus: minstens één
+     van de vier zijden van het vak is zo'n grens. De keuze wel/niet zit in
+     de zin zelf, zodat "bevond zich niet naast een muur" één regel is. */
+  'next-to-wall':   { scope:'person', cat:'Ruimtes', text:'bevond zich {muurkant}',
+                      slots:{muurkant:'muurkant'}, test:(p,a)=>naastMuur(pos(p)) === (a.muurkant !== 'nee') },
   'has-role':       { scope:'person', cat:'Rollen', text:'was {role}',
                       slots:{role:'role'}, test:(p,a)=>personRoleOf(p)===a.role },
 
@@ -9319,6 +9347,7 @@ const ATOM_SHORT = {
   'direction-of':'{compass} {person}', 'diagonal-of':'schuin naast {person}',
   'exact-offset':'precies {step} {axis} {updown} {person}', 'has-role':'{role}',
   'at-wall-kind':'bij {wallKind}', 'before-wall-kind':'voor {wallKind}', 'at-wall':'bij {wall}',
+  'next-to-wall':'{muurkant}',
   'in-restricted-room':'in een ruimte die alleen voor {rolePl} was',
   'may-enter-room':'welkom in {room}',
   /* Na "was niet": "was niet in staat Beatrix te zien", "was niet zonder
