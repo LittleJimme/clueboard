@@ -478,9 +478,13 @@ body.op-campagne .campagne-balk{display:flex}
 .ck-stand b{color:var(--inkt);font-size:13px}
 .ck-balk{display:block;width:84px;height:4px;border-radius:9px;background:var(--lijn);margin:6px 0 0 auto;overflow:hidden}
 .ck-balk i{display:block;height:100%;background:var(--accent-vlak);border-radius:9px}
-/* De campagne als kaart: naam, omschrijving, de reeks nummers, voortgang. */
+/* De campagne als kaart. Elke kaart heeft dezelfde opbouw en dezelfde maten,
+   hoe lang de naam of de omschrijving ook is: het label, een naamvak van twee
+   regels (de naam staat onderin, dus direct boven de omschrijving), een
+   omschrijving van twee regels, de reeks zaaknummers op één rij en de voet.
+   Zo staan de nummers en de voortgang in elke kaart op precies dezelfde plek. */
 .campagne-kaart{
-  position:relative;flex:0 0 auto;display:flex;flex-direction:column;gap:10px;
+  position:relative;flex:0 0 auto;display:flex;flex-direction:column;
   text-decoration:none;color:inherit;
   background:var(--kaart);border:1px solid var(--lijn);border-radius:18px;
   padding:20px 20px 16px;box-shadow:var(--sch1);
@@ -488,19 +492,25 @@ body.op-campagne .campagne-balk{display:flex}
 }
 .campagne-kaart:hover{border-color:var(--accent-lijn);box-shadow:var(--sch2);transform:translateY(-1px)}
 .campagne-kaart:active{transform:none;box-shadow:var(--sch1)}
-.campagne-kaart h3{margin:2px 0 0;padding-right:28px;font:600 24px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em}
-.campagne-kaart p{margin:0;font:500 13.5px/1.45 var(--font-ui);color:var(--dof)}
-.campagne-kaart .pijl{position:absolute;top:22px;right:18px;color:var(--dof);display:flex}
+.campagne-kaart .ck-label{padding-right:28px}
+.ck-naam{--rh:1.15em;display:flex;align-items:flex-end;height:calc(2 * var(--rh));margin:8px 0 0;padding-right:28px;
+  font:600 24px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em}
+.ck-naam span,.ck-omschrijving span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.ck-omschrijving{height:calc(2 * 1.45em);margin:6px 0 0;font:500 13.5px/1.45 var(--font-ui);color:var(--dof)}
+.campagne-kaart .pijl{position:absolute;top:20px;right:18px;color:var(--dof);display:flex}
 .campagne-kaart .pijl svg{width:16px;height:16px}
 .campagne-kaart:hover .pijl{color:var(--accent)}
-.ck-nummers{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 8px}
-.ck-nummers i{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+/* De reeks: altijd één rij van dezelfde hoogte. Past het niet, dan krimpen de
+   vakjes; bij veel zaken vervallen de cijfers en blijft een streepjesbalk. */
+.ck-nummers{display:flex;flex-wrap:nowrap;gap:5px;height:26px;margin:16px 0 14px;overflow:hidden}
+.ck-nummers i{flex:0 1 26px;min-width:10px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
   font:600 11.5px var(--font-display);font-style:normal;font-variant-numeric:tabular-nums;
-  color:var(--accent);background:var(--accent-zacht);border:1px solid var(--accent-lijn)}
+  color:var(--accent);background:var(--accent-zacht);border:1px solid var(--accent-lijn);box-sizing:border-box}
+.ck-nummers.dicht i{flex:1 1 0;font-size:0;height:8px;margin-top:9px;border-radius:9px}
 .ck-nummers i.af{background:var(--accent);border-color:var(--accent);color:#fff}
 .ck-nummers i.bezig{background:var(--accent-vlak);border-color:var(--accent-vlak);color:#fff}
-.ck-voet{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:12px;border-top:1px solid var(--lijn)}
-.ck-aantal{font:700 12px var(--font-ui);color:var(--inkt-2)}
+.ck-voet{display:flex;align-items:center;gap:12px;height:34px;padding-top:12px;border-top:1px solid var(--lijn)}
+.ck-aantal{font:700 12px var(--font-ui);color:var(--inkt-2);white-space:nowrap}
 .ck-aantal .ck-bezig{color:var(--accent);margin-left:6px}
 .ck-voet .ck-stand{margin-left:auto}
 @keyframes paginaIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
@@ -514,7 +524,7 @@ body.op-campagne .campagne-balk{display:flex}
   .campagne-balk .ck-stand{order:3;flex:1 0 100%;text-align:left;margin:0 0 0 52px;display:flex;align-items:center;gap:10px}
   .campagne-balk .ck-balk{margin:0;flex:0 0 96px}
   .campagne-kaart{padding:18px 16px 14px}
-  .campagne-kaart h3{font-size:21px}
+  .ck-naam{font-size:21px}
   .ck-balk{width:64px}
 }
 .leeg-melding{color:var(--dof);font-size:13.5px;text-align:center;padding:26px 10px;
@@ -1762,11 +1772,15 @@ function maakCampagneKaart(g){
   const a=document.createElement("a"); a.className="campagne-kaart";
   a.href="#c="+encodeURIComponent(c.id||"_");
   const label=document.createElement("span"); label.className="ck-label"; label.textContent=campagneLabel(c);
-  const h=document.createElement("h3"); h.textContent=c.name||c.id;
-  a.appendChild(label); a.appendChild(h);
-  if(c.description){ const p=document.createElement("p"); p.textContent=c.description; a.appendChild(p); }
+  /* Naam en omschrijving in een vak van vaste hoogte, ook als er geen
+     omschrijving is: dan staat alles eronder nog op dezelfde plek. */
+  const h=document.createElement("h3"); h.className="ck-naam";
+  const hs=document.createElement("span"); hs.textContent=c.name||c.id; h.appendChild(hs);
+  const p=document.createElement("p"); p.className="ck-omschrijving";
+  const ps=document.createElement("span"); ps.textContent=c.description||""; p.appendChild(ps);
+  a.appendChild(label); a.appendChild(h); a.appendChild(p);
   /* De reeks zelf: één vakje per zaak, gevuld als hij af is. */
-  const rij=document.createElement("div"); rij.className="ck-nummers";
+  const rij=document.createElement("div"); rij.className="ck-nummers"+(zaken.length>10?" dicht":"");
   zaken.forEach(e=>{
     const i=document.createElement("i");
     const klaar=!!voltooidVan(e.raw), mee=!klaar && !!bezigVan(e.raw);
