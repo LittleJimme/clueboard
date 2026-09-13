@@ -517,6 +517,14 @@ body.kijkstand #boardViewport::before{display:none}
    maakte het bord in de builder onnodig klein. */
 body.kijkstand #boardStage{transition:none;display:inline-block;padding:0}
 body.kijkstand #pawns,body.kijkstand #noteLaag{display:none}
+/* De bouwer kan lagen uitzetten (menu Zichtbaarheid); hij stuurt mee welke. */
+body.kijkstand.verberg-namen #labels{display:none}
+body.kijkstand.verberg-objecten .tile .objart,body.kijkstand.verberg-objecten .tile .objsurf,
+body.kijkstand.verberg-objecten .tile .objicon,body.kijkstand.verberg-objecten .tile .objmat,
+body.kijkstand.verberg-objecten .tile .blockmask,body.kijkstand.verberg-objecten .objschaduw,
+body.kijkstand.verberg-objecten #hoogArt .objart{display:none!important}
+body.kijkstand.verberg-deuren .deurart,body.kijkstand.verberg-deuren .deurschaduw,
+body.kijkstand.verberg-deuren .deurknop{display:none!important}
 body.kijkstand{pointer-events:none;overflow:hidden}
 #gridWrap{position:relative}
 /* Een rechthoekig bord houdt zijn zachte slagschaduw. Bij een onregelmatig
@@ -9037,7 +9045,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.174";
+const PLAYER_APP_VERSION="0.9.175";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9204,6 +9212,10 @@ function startKijkstand(){
       if(!Array.isArray(lvl.puzzle.people.placements)) lvl.puzzle.people.placements=[];
       lvl.clues=lvl.clues||[];
       if(d.thema) zetThema(d.thema==="licht"?"licht":"donker");
+      /* Vóór het tekenen: de lucht rondom wordt gemeten, en een verborgen
+         naam of boom hoort daar niet in mee te tellen. */
+      const verberg=Array.isArray(d.verberg)?d.verberg:[];
+      ["namen","objecten","deuren"].forEach(n=>document.body.classList.toggle("verberg-"+n,verberg.indexOf(n)>=0));
       KIJK_CEL=Math.max(8,+d.cell||60);
       M=buildModel(d.level);
       currentRaw=d.level;
