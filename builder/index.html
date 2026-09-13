@@ -1484,8 +1484,8 @@ textarea.inp{min-height:58px;resize:vertical}
    bij een edele of ridder ligt de vorm hoger dan de kruin en telt die. De
    onderkant is per vorm de onderkant van de vorm zelf. */
 .portret-podium[data-vorm="villager"]{--Y0:var(--K);--Y1:512}
-.portret-podium[data-vorm="noble"]{--Y0:min(57.1, var(--K));--Y1:552}
-.portret-podium[data-vorm="knight"]{--Y0:min(75.3, var(--K));--Y1:580}
+.portret-podium[data-vorm="noble"]{--Y0:min(35.5, var(--K));--Y1:530.4}
+.portret-podium[data-vorm="knight"]{--Y0:min(60.3, var(--K));--Y1:565}
 .portret-podium > .uiterlijk-portret{position:absolute}
 /* Het medaillon: een schijf met het personage erop. Onder de evenaar knipt
    de schijf hem af; erboven loopt hij gewoon door, zodat het hoofd door de
@@ -1524,8 +1524,11 @@ textarea.inp{min-height:58px;resize:vertical}
    precies even groot blijft als op het medaillon en de vorm zich eromheen
    schikt. Ter herinnering, uit het masker gemeten: banier binnenvlak y
    10,5%-89,5% van het vierkant, schild 15,0%-86,1%. */
-.uiterlijk-portret[data-standing="noble"]{--w:112.5;--x:-6;--y:14.1;--knip:61.5}
-.uiterlijk-portret[data-standing="knight"]{--w:109.9;--x:-4.2;--y:13.2;--knip:62}
+/* Plaat iets hoger dan eerst (edele 14.1 -> 17.5, ridder 13.2 -> 15.5, en
+   --Y0/--Y1 schuiven evenveel mee), gelijk aan de speler. --y verschuift
+   alleen de plaat; het personage blijft staan waar het staat. */
+.uiterlijk-portret[data-standing="noble"]{--w:112.5;--x:-6;--y:17.5;--knip:61.5}
+.uiterlijk-portret[data-standing="knight"]{--w:109.9;--x:-4.2;--y:15.5;--knip:62}
 .portret-podium > [data-standing]{--C:calc(550 * var(--s) * 100 / var(--w));
   width:var(--C);height:var(--C);
   left:calc(-1 * var(--X0) * var(--s) - var(--x) / 100 * var(--C));
@@ -1534,7 +1537,7 @@ textarea.inp{min-height:58px;resize:vertical}
    binnenvlak (ui/*-vlak) ligt in de lichte tint van de persoon, geknipt met
    hetzelfde masker als het gezicht. Bron: assets/tools/import_backplates.py. */
 .uiterlijk-portret .rc{position:absolute;inset:0;width:100%;height:100%;display:block}
-.uiterlijk-portret .vulling{position:absolute;inset:0;background-color:var(--ch-tint,#F3E9DA);
+.uiterlijk-portret .vulling{position:absolute;inset:0;background-color:var(--ch-tint-plaat,var(--ch-tint,#F3E9DA));
   background-size:100% 100%;background-repeat:no-repeat;background-blend-mode:multiply;
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%}
 /* Het binnenvlak van de plaat (character style v3) met zijn vouw, vermenigvuldigd
@@ -2161,7 +2164,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v58</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v59</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -2847,6 +2850,7 @@ function portretHtml(p){
   const stand = personRoleOf(p);
   const vorm = (stand === 'noble' || stand === 'knight') ? stand : 'villager';
   const stijl = '--pc:'+e(personColor(p))+';--ch-tint:'+e(mix(personColor(p),'#FFFFFF',.86))
+              + ';--ch-tint-plaat:'+e(mix(personColor(p),'#FFFFFF',.72))
               + ';--kruin:'+kruinVan(kap);
   /* Het podium is voor elke stand hetzelfde vak, met het personage er even
      groot en op dezelfde plek in; de vorm komt erachter. */

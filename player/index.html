@@ -1795,8 +1795,8 @@ body.desktop #radial .rbtn:hover:not([disabled]){transform:translate(-50%,-50%) 
 /* Een dierenportret: de tekening staat bij de import op een vaste plek op het
    doek, dus de kruin is voor elk dier dezelfde. */
 .portret-podium.dier{--kruin:85}
-.portret-podium[data-vorm="noble"]{--Y0:min(57.1, var(--K));--Y1:552}
-.portret-podium[data-vorm="knight"]{--Y0:min(75.3, var(--K));--Y1:580}
+.portret-podium[data-vorm="noble"]{--Y0:min(35.5, var(--K));--Y1:530.4}
+.portret-podium[data-vorm="knight"]{--Y0:min(60.3, var(--K));--Y1:565}
 .portret-podium > .uiterlijk-portret{position:absolute}
 .uiterlijk-portret{position:relative;overflow:visible}
 /* Het medaillon: een schijf met het personage erop. Onder de evenaar knipt de
@@ -1825,15 +1825,22 @@ body.desktop #radial .rbtn:hover:not([disabled]){transform:translate(-50%,-50%) 
    rand is goud of zilver (ui/banier-rand, ui/schild-rand); daaronder ligt een
    vlak in de lichte kleur van de persoon. --w/--x/--y/--knip zijn de maten die
    in de bouwer met schuifjes zijn gekozen. */
-.uiterlijk-portret[data-standing="noble"]{--w:112.5;--x:-6;--y:14.1;--knip:61.5}
-.uiterlijk-portret[data-standing="knight"]{--w:109.9;--x:-4.2;--y:13.2;--knip:62}
+/* Plaat iets hoger dan eerst (edele 14.1 -> 17.5, ridder 13.2 -> 15.5, en
+   --Y0/--Y1 schuiven evenveel mee): anders liep de onderkant van sommige
+   kledingstukken boven de onderrand van de banier of de punt van het schild
+   op, en zag je daaronder het lege vlak. --y verschuift alleen de plaat; het
+   personage blijft staan waar het staat. */
+.uiterlijk-portret[data-standing="noble"]{--w:112.5;--x:-6;--y:17.5;--knip:61.5}
+.uiterlijk-portret[data-standing="knight"]{--w:109.9;--x:-4.2;--y:15.5;--knip:62}
 .portret-podium > [data-standing]{--C:calc(550 * var(--s) * 100 / var(--w));
   width:var(--C);height:var(--C);
   left:calc(-1 * var(--X0) * var(--s) - var(--x) / 100 * var(--C));
   top:calc(-1 * var(--Y0) * var(--s) + (0.3 - 1.3 * var(--y) / 100) * var(--C))}
 .uiterlijk-portret .rc{position:absolute;inset:0;width:100%;height:100%;display:block;
   filter:drop-shadow(0 3px 7px rgba(21,26,51,.32))}
-.uiterlijk-portret .vulling{position:absolute;inset:0;background-color:var(--ch-tint,#F3E9DA);
+/* Het vlak op banier en schild kleurt voller mee dan de schijf van een
+   dorpeling (--ch-tint-plaat: 72% wit in plaats van 86%). */
+.uiterlijk-portret .vulling{position:absolute;inset:0;background-color:var(--ch-tint-plaat,var(--ch-tint,#F3E9DA));
   background-size:100% 100%;background-repeat:no-repeat;background-blend-mode:multiply;
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%}
 /* Het binnenvlak van de plaat (character style v3) met zijn vouw, vermenigvuldigd
@@ -6186,14 +6193,16 @@ const DEUR_BREEDTE = 0.70;
    juist wél worden opgerekt en bijgesteld -- zie .objart.vullend en
    OBJECT_PAS. */
 const MEERVAKS_PRODUCTIE = ["bed-1x2","boat-1x2","catapult-1x2","table-1x2","watermill-1x2",
-                            "bed-2x1","boat-2x1","catapult-2x1","table-2x1","watermill-2x1"];
+                            "bed-2x1","boat-2x1","catapult-2x1","table-2x1","watermill-2x1",
+                            "well-2x2"];
 /* Wie van die lichting ook een schaduwplaat heeft. De tafel ontbreekt: die
    kwam als een tweede, verschoven render binnen en levert geen schaduw op die
    onder de tekening past -- zie assets/tools/import_outbox_meervaks.py. Zonder
    deze lijst zou de speler elke beurt twee keer een bestand opvragen dat er
    niet is. */
 const MEERVAKS_SCHADUW = ["bed-1x2","boat-1x2","catapult-1x2","watermill-1x2",
-                          "bed-2x1","boat-2x1","catapult-2x1","table-2x1","watermill-2x1"];
+                          "bed-2x1","boat-2x1","catapult-2x1","table-2x1","watermill-2x1",
+                          "well-2x2"];
 function isProductie(slug,w,h){
   return w===1 && h===1 && PRODUCTIE_OBJECTEN.indexOf(slug)>=0;
 }
@@ -8033,6 +8042,7 @@ function personPortrait(p,opt){
      spelerskleuren verdwijnen als dunne ring tegen een witte kaart. */
   wrap.style.setProperty("--pc",leesbaar(p.color));
   wrap.style.setProperty("--ch-tint",mixHex(p.color,"#FFFFFF",.86));
+  wrap.style.setProperty("--ch-tint-plaat",mixHex(p.color,"#FFFFFF",.72));
   wrap.style.setProperty("--kruin",String(kruinVan(persoonKapsel(p))));
   /* Het lijf valt in de vorm, het haar valt er vrij overheen: twee tekeningen
      op dezelfde plek, zie characterHtml(lagen). */
@@ -9095,7 +9105,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.183";
+const PLAYER_APP_VERSION="0.9.184";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
