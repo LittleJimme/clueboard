@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-13T13:06:04",
+  "gemaakt": "2026-09-13T13:42:58",
   "campagnes": [
     {
       "description": "Nagebouwd uit het Murdoku-boek.",
@@ -325,6 +325,28 @@
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "Terug in de tijd 8v3 De koningklijke jachtpartij.json",
+      "content": {
+        "title": "De koningklijke jachtpartij"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtzqh79ff9drs",
+      "levelNumber": 8,
+      "levelVersion": 3,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {
