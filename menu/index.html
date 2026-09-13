@@ -357,6 +357,7 @@ html[data-thema="licht"] .titelblok h1 em::after{
    vier smallere tegels loopt de volgorde weer gewoon door. */
 @media (min-width:1100px) and (min-height:600px){
   main{max-width:1120px}
+  body.op-campagne .cb-hero{--rand:max(20px,calc(50vw - 540px));height:clamp(240px,36vh,380px)}
   /* Op een groot scherm mag de tekst van de zaken wat groter. */
   .level-rij h3{font-size:21px}
   .level-rij .onder{font-size:13.5px}
@@ -459,21 +460,31 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
    een kop met een terugknop. */
 body:not(.op-campagne) .filter-plak{display:none}
 body.op-campagne .titelblok{display:none}
-.campagne-balk{flex:0 0 auto;display:none;padding:6px 0 18px}
+/* Op de campagnepagina is het beeld het scherm: geen balk erboven, het
+   beeld loopt van rand tot rand en tot de bovenkant, en de knoppen die je
+   hier niet nodig hebt (eigen level, regels, uitleg) zijn weg. Alleen de
+   terugknop en de dag/nachtknop staan óp het beeld. */
+body.op-campagne .balk{display:none}
+.campagne-balk{flex:0 0 auto;display:none;padding:0 0 16px}
 body.op-campagne .campagne-balk{display:block}
+/* De inhoud van het beeld lijnt uit met de lijst eronder: --rand is de
+   afstand van de schermrand tot de kolom (640 breed, op desktop 1120). */
+.cb-hero{--rand:max(20px,calc(50vw - 300px))}
 /* De kop van een campagne: het beeld over de volle breedte, met de terugknop
    en het stijletiket in de bovenhoeken en de naam en de stand onderin, over
    een donkere waas zodat de letters op elk beeld leesbaar blijven. */
-.cb-hero{position:relative;height:clamp(170px,24vw,260px);border-radius:16px;overflow:hidden;
+.cb-hero{position:relative;height:clamp(220px,30vh,340px);border-radius:0;overflow:hidden;
+  width:100vw;margin:0 calc(50% - 50vw);box-sizing:border-box;
   background:linear-gradient(160deg,#3A2A1E,#8A5F16) center/cover no-repeat}
 .cb-hero::after{content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(42,33,24,.10) 0%,rgba(42,33,24,0) 30%,rgba(42,33,24,.20) 55%,rgba(42,33,24,.78) 100%)}
 .cb-hero > *{position:absolute;z-index:2}
-.cb-hero .vraag-knop{left:14px;top:14px}
-.cb-hero .cb-tag{right:14px;top:14px}
+.cb-hero .vraag-knop{left:var(--rand);top:calc(14px + env(safe-area-inset-top))}
+.cb-hero .cb-thema{right:var(--rand);top:calc(14px + env(safe-area-inset-top))}
+.cb-hero .cb-tag{display:inline-flex;margin-bottom:10px}
 .cb-hero .cb-tag .stijl-tag{box-shadow:0 1px 4px rgba(42,33,24,.25)}
-.cb-hero .cb-tekst{left:22px;right:230px;bottom:20px}
-.cb-hero .ck-stand{right:22px;bottom:24px;color:#F3E7D3;text-align:right}
+.cb-hero .cb-tekst{left:var(--rand);right:calc(var(--rand) + 200px);bottom:22px;display:flex;flex-direction:column;align-items:flex-start}
+.cb-hero .ck-stand{right:var(--rand);bottom:26px;color:#F3E7D3;text-align:right}
 .cb-hero .ck-stand b{color:#fff}
 .cb-hero .ck-balk{background:rgba(255,255,255,.28)}
 .cb-hero .ck-balk i{background:#F0DFB4}
@@ -539,10 +550,10 @@ body.op-campagne .campagne-balk{display:block}
 .level-list.pagina-in{animation:paginaIn .22s ease both}
 .level-list.pagina-terug{animation:paginaTerug .22s ease both}
 @media (max-width:640px){
-  .cb-hero{height:clamp(190px,52vw,240px)}
-  .campagne-balk h2{font-size:clamp(24px,7vw,32px)}
-  .cb-hero .cb-tekst{right:16px;bottom:58px}
-  .cb-hero .ck-stand{left:22px;right:auto;bottom:18px;text-align:left}
+  .cb-hero{height:clamp(230px,62vw,320px)}
+  .campagne-balk h2{font-size:clamp(26px,7.5vw,34px)}
+  .cb-hero .cb-tekst{right:16px;bottom:62px}
+  .cb-hero .ck-stand{left:var(--rand);right:auto;bottom:20px;text-align:left}
   .cb-hero .ck-balk{margin-left:0}
   .campagne-kaart{padding:18px 16px 14px}
   .ck-naam{font-size:21px}
@@ -902,8 +913,8 @@ a.keuze-boek{text-decoration:none}
       <button class="vraag-knop" id="btnCampagnes" type="button" title="Terug naar de campagnes" aria-label="Terug naar de campagnes">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.6 5.6L8.2 12l6.4 6.4"/></svg>
       </button>
-      <span class="cb-tag" id="cbStijl"></span>
-      <div class="cb-tekst"><h2 id="cbNaam"></h2></div>
+      <button class="thema-knop cb-thema" id="btnThemaHero" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
+      <div class="cb-tekst"><span class="cb-tag" id="cbStijl"></span><h2 id="cbNaam"></h2></div>
       <div class="ck-stand" id="cbStand"></div>
     </div>
   </div>
@@ -1052,6 +1063,8 @@ function zetThema(naam){
 $("#btnThema").addEventListener("click",()=>{
   zetThema(document.documentElement.dataset.thema === "licht" ? "donker" : "licht");
 });
+/* Dezelfde knop, maar dan op het campagnebeeld. */
+$("#btnThemaHero").addEventListener("click",()=>$("#btnThema").click());
 
 /* ---------- modals ---------- */
 function openModal(id){ $(id).classList.add("open"); }
