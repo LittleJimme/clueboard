@@ -8257,7 +8257,7 @@ function buildHighlightTerms(){
   const extra=[];
   M.rooms.forEach(r=>{ if(r&&r.name) extra.push(r.name); });
   ((AssetBank.manifest&&AssetBank.manifest.roles)||[]).forEach(r=>{ extra.push(r.label,r.labelPlural); });
-  extra.push("niet","geen","alleen","niemand","naast","links","rechts","boven","onder","tegenover");
+  extra.push("vrouw","man","vrouwen","mannen","niet","geen","alleen","niemand","naast","links","rechts","boven","onder","tegenover");
   extra.forEach(w=>{
     if(!w) return;
     const key=String(w).toLowerCase();
@@ -9184,7 +9184,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.188";
+const PLAYER_APP_VERSION="0.9.189";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -10041,7 +10041,7 @@ const REGEL_FAMILIES = [
     tekst:["Een <b>hoek</b> is een vak waar twee randen van het gebied samenkomen.",
            "Een grillig gebied heeft er dus meer dan vier: hier zijn alle drie de lichte vakken een hoek."] },
   { id:"samen", groep:"Gebieden", kop:"Alleen of samen",
-    atomen:["alone-in-room","room-person-count","with-person","with-role","alone-with-role"],
+    atomen:["alone-in-room","room-person-count","with-person","with-role","with-gender","alone-with-role"],
     beeld:()=>helpBord(["A...",".B..","...C","...."],{gebied:REGEL_GEB}),
     tekst:["<b>Alleen</b>: niemand anders in het gebied, ook het slachtoffer niet. C staat alleen.",
            "<b>In hetzelfde gebied als</b>: anderen mogen erbij staan. <b>Alleen met</b>: precies die twee, zoals A en B hier."] },

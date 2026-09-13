@@ -1820,6 +1820,13 @@ textarea.inp{min-height:58px;resize:vertical}
 }
 .clue-story-text:focus{border-color:var(--accent);border-style:solid;background:#fff}
 .clue-sentence.logica{font-size:12px;opacity:.72}
+/* Onder de eigen tekst: wat de speler oplicht en wat er in de zin mist. */
+.clue-story-check{display:flex;align-items:flex-start;gap:5px;margin:-2px 0 6px;font:600 11px/1.45 var(--read);color:var(--muted)}
+.clue-story-check svg{width:12px;height:12px;flex:0 0 auto;margin-top:2px}
+.clue-story-check b{font-weight:800;color:var(--ink)}
+.clue-story-check b.person{color:var(--accent)}
+.clue-story-check.mis{color:#8A6A12}
+.clue-story-check.mis b{color:#8A6A12}
 .clue-card.eigen{border-left:3px solid var(--accent)}
 .clue-tag.eigen{display:inline-flex;align-items:center;gap:3px;color:var(--accent)}
 .clue-tag.eigen svg{width:11px;height:11px}
@@ -2198,7 +2205,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v63</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v64</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -4633,6 +4640,53 @@ function objectMerkVolgende(img){
   else { MERK_BEELD.set(img.dataset.slug, ''); img.remove(); }
 }
 
+/* ── Eigen tekst: klopt de verwijzing nog? ───────────────
+   De speler licht in een regel de woorden op waar het om draait: namen van
+   personen (in hun kleur), ruimtes, objecten, rollen, man/vrouw en woorden
+   als "niet" en "naast". Dat gaat op het woord, niet op de regel eronder --
+   dus een eigen tekst doet daar gewoon aan mee, zolang de naam er letterlijk
+   in staat. Hier staat wat de speler zal oplichten, en welke ingevulde
+   woorden uit de regel in de eigen tekst ontbreken: dan weet de speler niet
+   waar de regel over gaat. Zelfde lijst als buildHighlightTerms() in de
+   speler; houd ze gelijk. */
+function verwijsWoorden(){
+  const uit = new Map();
+  const voeg = (w, soort) => { if (!w) return; const k = String(w).toLowerCase(); if (!uit.has(k)) uit.set(k, { w:String(w), soort }); };
+  Object.keys(S.people).forEach(p => voeg(personName(p), 'person'));
+  S.rooms.forEach((r, i) => voeg(roomName(i), 'room'));
+  Object.values(S.objects).forEach(o => { voeg(objName(o), 'object'); voeg(objectLabel(o.kind), 'object'); voeg(objectPlural(o.kind), 'object'); });
+  personRoles().forEach(r => { voeg(r.nl, 'spec'); voeg(r.pl, 'spec'); });
+  ['vrouw','man','vrouwen','mannen','niet','geen','alleen','niemand','naast','links','rechts','boven','onder','tegenover'].forEach(w => voeg(w, 'spec'));
+  return [...uit.values()].sort((a, b) => b.w.length - a.w.length);
+}
+function eigenTekstCheckHtml(clue){
+  const tekst = String(clue.storyText || '');
+  if (!tekst.trim()) return '';
+  const woorden = verwijsWoorden();
+  const re = new RegExp('\\b(?:' + woorden.map(x => x.w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\b', 'gi');
+  const gezien = new Map();
+  (tekst.match(re) || []).forEach(m => { const k = m.toLowerCase(); if (!gezien.has(k)) gezien.set(k, woorden.find(x => x.w.toLowerCase() === k)); });
+  /* De ingevulde woorden van de regel (namen, ruimtes, objecten): elk hoort
+     in de eigen tekst terug te komen, anders verwijst de zin nergens naar. */
+  const ingevuld = [];
+  clueSentence(clue, v => { ingevuld.push(String(v)); return v; });
+  const laag = tekst.toLowerCase();
+  /* Zonder lidwoord vergelijken: "de Keuken" in de regel, "Keuken" in de tekst. */
+  const kern = v => String(v).replace(/^(een|de|het)\s+/i, '');
+  const mist = [...new Set(ingevuld.map(kern))].filter(v => v && !new RegExp('\\b' + v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i').test(laag));
+  let h = '';
+  if (mist.length)
+    h += '<div class="clue-story-check mis">' + uiIcon('warning') + ' Niet in je tekst: ' +
+         mist.map(v => '<b>' + e(v) + '</b>').join(', ') + ' — de speler ziet dan niet waar de regel over gaat.</div>';
+  const licht = [...gezien.values()].filter(Boolean);
+  if (licht.length)
+    h += '<div class="clue-story-check">' + uiIcon('eye') + ' Licht op bij de speler: ' +
+         licht.map(x => '<b class="' + x.soort + '">' + e(x.w) + '</b>').join(', ') + '</div>';
+  else
+    h += '<div class="clue-story-check">' + uiIcon('eye-off') + ' Geen naam, ruimte of object herkend: de speler ziet niets oplichten.</div>';
+  return h;
+}
+
 /* Schuift een label horizontaal bij zodat een naam die breder is dan de tegel
    niet buiten het bord valt en afgekapt wordt. */
 function clampLabelToGrid(tag){
@@ -6938,7 +6992,7 @@ function clueHtml(clue){
      en aan die zin zie je of je eigen tekst nog klopt met wat je bedoelde. */
   if (eigen){
     html += '<div class="clue-story-text" contenteditable="true" spellcheck="false" '+
-            'data-story-edit="'+clue.id+'">'+e(clue.storyText)+'</div>';
+            'data-story-edit="'+clue.id+'">'+e(clue.storyText)+'</div>' + eigenTekstCheckHtml(clue);
   }
 
   html += '<div class="clue-sentence'+(eigen?' logica':'')+'">';
@@ -9042,6 +9096,12 @@ const ATOMS = {
                       slots:{person:'person'}, test:(p,a)=>!!S.people[a.person] && pos(p).room===pos(a.person).room },
   'with-role':      { scope:'person', cat:'Rollen', text:'was in hetzelfde gebied als {role}',
                       slots:{role:'role'}, test:(p,a)=>peopleWithRole(a.role).some(q=>q!==p && pos(q).room===pos(p).room) },
+  /* "Was in hetzelfde gebied als een vrouw": zoals with-role, maar op
+     geslacht. Samen met "was in de Berging" dekt dat "was in de berging met
+     een vrouw"; de eigen tekst maakt er dan één zin van. */
+  'with-gender':    { scope:'person', cat:'Personen', text:'was in hetzelfde gebied als {gender}',
+                      slots:{gender:'gender'}, test:(p,a)=>evalCanon({atom:'person-relation',
+                        args:{quant:'exists', who:{gender:a.gender}, where:{kind:'same-room'}}}, p) },
   'direction-of':   { scope:'person', cat:'Personen', text:'bevond zich {compass} {person}',
                       slots:{compass:'compass', person:'person'}, test:(p,a)=>{
                         if(!S.people[a.person]) return false;
@@ -9344,6 +9404,7 @@ const ATOM_SHORT = {
   'only-one-on-kind':'de enige {vz} {objectKind}', 'closest-to-kind':'het dichtst bij {objectKind}',
   'most-neighbours-of-kind':'naast de meeste {objectKindPl}',
   'with-person':'in hetzelfde gebied als {person}', 'with-role':'in hetzelfde gebied als {role}',
+  'with-gender':'in hetzelfde gebied als {gender}',
   'direction-of':'{compass} {person}', 'diagonal-of':'schuin naast {person}',
   'exact-offset':'precies {step} {axis} {updown} {person}', 'has-role':'{role}',
   'at-wall-kind':'bij {wallKind}', 'before-wall-kind':'voor {wallKind}', 'at-wall':'bij {wall}',
