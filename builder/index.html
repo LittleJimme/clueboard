@@ -942,19 +942,37 @@ body.spelweergave .pawn.personage .portret-podium{--s:calc(var(--pion-cel,44px) 
 body.spelweergave .cell .pawn.personage.victim{transform:none;animation:none}
 /* Het letterfiche naast het portret -- de maten van .pawn.personage .init in
    player/index.html, met het portret mee verkleind. */
-/* Het object onder het personage: linksonder, dezelfde maat als het fiche
-   (zie .pawn.personage .obj-merk in player/index.html). */
-body.spelweergave .pawn.personage .obj-merk{position:absolute;left:6%;bottom:0;z-index:3;
-  width:calc(var(--pion-cel,44px) * .28);height:calc(var(--pion-cel,44px) * .28);border-radius:999px;
-  display:flex;align-items:center;justify-content:center;background:#FBF7EE;color:#2A2118;
+/* Het object onder het personage: linksonder, even groot als het fiche
+   rechtsonder. Erin staat de echte tekening van het object, klein; het
+   lijnicoon blijft er alleen als die tekening er niet is. */
+body.spelweergave .pawn.personage .obj-merk{position:absolute;left:2%;bottom:1%;z-index:3;
+  width:calc(var(--pion-cel,44px) * .38);height:calc(var(--pion-cel,44px) * .38);border-radius:999px;
+  display:flex;align-items:center;justify-content:center;background:#FBF7EE;color:#2A2118;overflow:hidden;
   border:max(1.5px, calc(var(--pion-cel,44px) * .03)) solid var(--stroke);box-shadow:0 1px 3px rgba(21,26,51,.35)}
 body.spelweergave .pawn.personage .obj-merk svg{width:76%;height:76%;display:block;stroke-width:2.3}
-body.spelweergave .pawn.personage .init{position:absolute;right:6%;bottom:0;z-index:3;
-  width:calc(var(--pion-cel,44px) * .28);height:calc(var(--pion-cel,44px) * .28);border-radius:999px;
+.obj-merk img{position:absolute;left:8%;top:8%;width:84%;height:84%;object-fit:contain;display:block}
+.obj-merk.met-beeld svg{display:none}
+body.spelweergave .pawn.personage .init{position:absolute;right:2%;bottom:1%;z-index:3;
+  width:calc(var(--pion-cel,44px) * .38);height:calc(var(--pion-cel,44px) * .38);border-radius:999px;
   display:flex;align-items:center;justify-content:center;
   background:var(--pion-kleur,#8A93A6);color:var(--pion-inkt,#fff);
   border:max(1.5px, calc(var(--pion-cel,44px) * .035)) solid var(--stroke);
-  font:800 calc(var(--pion-cel,44px) * .15)/1 var(--ui);box-shadow:0 2px 5px rgba(21,26,51,.34)}
+  font:800 calc(var(--pion-cel,44px) * .2)/1 var(--ui);box-shadow:0 2px 5px rgba(21,26,51,.34)}
+/* Kan iemand hier niet staan, of klopt een van zijn regels niet, dan zie je
+   dat in de spelweergave net zo meteen als bij de pionnen: het vakje krijgt
+   een rode rand en een rood waas, het personage een rode gloed en rechtsboven
+   een rood uitroepteken. */
+body.spelweergave .cell .pawn.personage.forbidden::before,
+body.spelweergave .cell .pawn.personage.regel-fout::before{content:"";position:absolute;inset:3%;z-index:0;
+  border:max(2px, calc(var(--pion-cel,44px) * .055)) solid var(--crimson);border-radius:max(5px, calc(var(--pion-cel,44px) * .14));
+  background:rgba(220,66,58,.2);box-shadow:0 0 calc(var(--pion-cel,44px) * .16) rgba(220,66,58,.75);pointer-events:none}
+body.spelweergave .cell .pawn.personage.forbidden .portret-podium,
+body.spelweergave .cell .pawn.personage.regel-fout .portret-podium{filter:drop-shadow(0 0 3px rgba(220,66,58,.95))}
+.pawn .fout-merk{position:absolute;right:-12%;top:-10%;z-index:4;width:48%;height:48%;min-width:14px;min-height:14px;
+  border-radius:999px;display:flex;align-items:center;justify-content:center;background:var(--crimson);color:#fff;
+  border:2px solid #fff;font:900 11px/1 var(--ui);box-shadow:0 1px 4px rgba(21,26,51,.45);pointer-events:none}
+body.spelweergave .pawn.personage .fout-merk{right:2%;top:2%;width:calc(var(--pion-cel,44px) * .3);height:calc(var(--pion-cel,44px) * .3);
+  border-width:max(1.5px, calc(var(--pion-cel,44px) * .035));font-size:calc(var(--pion-cel,44px) * .19)}
 .bord-knop{
   width:34px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;
   border:1.5px solid var(--edge);border-radius:9px;background:var(--panel);color:var(--muted);
@@ -1442,8 +1460,8 @@ textarea.inp{min-height:58px;resize:vertical}
 .standing-summary b{color:var(--ink);font-weight:800;margin-right:4px}
 .standing-summary .none{color:var(--faint);font-style:italic}
 .lock-badge{flex:0 0 auto;font-size:11px}
-.pawn.forbidden{filter:drop-shadow(0 0 6px rgba(220,66,58,.95))}
-.pawn.forbidden .body{stroke:var(--crimson);stroke-width:7}
+.pawn.forbidden,.pawn.regel-fout{filter:drop-shadow(0 0 6px rgba(220,66,58,.95))}
+.pawn.forbidden .body,.pawn.regel-fout .body{stroke:var(--crimson);stroke-width:7}
 /* Bovenaan het detailvak van een persoon: de naam in het sierlettertype, dan
    het portret, dan Willekeurig en Bewerken, en een lijn met lucht eronder --
    daaronder begint het instellen. */
@@ -2162,7 +2180,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v60</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v61</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -4494,12 +4512,16 @@ function renderCell(k){
   const nm = (S.content && S.content.people && S.content.people[p]) ? S.content.people[p].name : '';
   const stand = personRoleOf(p);
   const fout = !personMayEnter(p, t.room) || rijKolomConflict(p);
+  /* Een regel over deze persoon die op dit bord niet klopt: ook dat hoort op
+     het bord te zien zijn, niet alleen in de lijst met regels. */
+  const regelFout = ((S.content && S.content.clues) || [])
+    .some(c => c.scope === 'person' && c.personId === p && !clueTrue(c));
   /* In de spelweergave staat er geen pion maar het personage zelf, zoals de
      speler hem ziet. De kenmerken van het uiterlijk horen dan in de sleutel:
      verandert er een kapsel, dan moet het portret opnieuw. */
   const alsPersonage = document.body.classList.contains('spelweergave');
   const uit = alsPersonage ? JSON.stringify(persoonKapsel(S.content.people[p] || {})) : '';
-  const sig = p + '|' + role + '|' + nm + '|' + step + '|' + (fout ? 'x' : '') + '|' + stand
+  const sig = p + '|' + role + '|' + nm + '|' + step + '|' + (fout ? 'x' : '') + (regelFout ? 'r' : '') + '|' + stand
             + '|' + (alsPersonage ? 'prt' + uit : 'pion')
             + '|' + (((t.obj && S.objects[t.obj]) || (t.mat && S.objects[t.mat]) || {}).kind || '');
   const oldStand = el.querySelector('.slabel');
@@ -4514,8 +4536,12 @@ function renderCell(k){
     el.append(chalk);
   }
   const node = document.createElement('div');
-  node.className = 'pawn ' + role + (fout ? ' forbidden' : '') + (alsPersonage ? ' personage' : '');
+  node.className = 'pawn ' + role + (fout ? ' forbidden' : '') + (regelFout ? ' regel-fout' : '') + (alsPersonage ? ' personage' : '');
   node.dataset.sig = sig;
+  if (fout || regelFout)
+    node.title = (nm || personLetter(p)) + ': ' + [fout ? 'kan hier niet staan' : '', regelFout ? 'een regel klopt niet' : '']
+      .filter(Boolean).join(' en ');
+  const foutMerk = (fout || regelFout) ? '<span class="fout-merk">!</span>' : '';
   if (alsPersonage){
     /* Het portret draagt geen letter; die komt er als klein fiche bij, op
        dezelfde plek als in de speler. */
@@ -4525,11 +4551,10 @@ function renderCell(k){
     /* Staat hij op of in een object, dan valt dat onder het portret weg: een
        bolletje linksonder met het pictogram, zoals in de speler. */
     const onder = (t.obj && S.objects[t.obj]) || (t.mat && S.objects[t.mat]) || null;
-    const merk = (onder && onder.kind && AssetBank.icon(onder.kind))
-      ? '<span class="obj-merk" title="' + e(objectLabel(onder.kind)) + '">' + AssetBank.icon(onder.kind) + '</span>' : '';
-    node.innerHTML = portretHtml(p) + merk + '<span class="init">' + e(personLetter(p)) + '</span>';
+    const merk = (onder && onder.kind) ? objectMerkHtml(onder.kind) : '';
+    node.innerHTML = portretHtml(p) + merk + '<span class="init">' + e(personLetter(p)) + '</span>' + foutMerk;
   } else {
-    node.innerHTML = pawnSVG(p, role, t.x + '_' + t.y);
+    node.innerHTML = pawnSVG(p, role, t.x + '_' + t.y) + foutMerk;
   }
   el.append(node);
   if (stand){
@@ -4543,6 +4568,44 @@ function renderCell(k){
   /* Geen naamlabel onder de pion: het fiche draagt zijn letter, net als in de
      speler, en de namen staan in de kolom links. Drie namen naast elkaar op een
      klein bord lopen toch over elkaar heen. */
+}
+
+/* Het merkje onder een personage: de echte tekening van het object, klein in
+   een schijfje. Welke tekening dat is weet de bouwer niet zeker (een bed is er
+   alleen als 1x2, een stoel gewoon los), dus de kandidaten gaan op volgorde:
+   eerst het thema, los en in de maatvarianten, dan de gedeelde tekening. Wat
+   werkt wordt per soort onthouden, zodat het bord niet bij elke tekenbeurt
+   opnieuw langs de ontbrekende bestanden gaat. Het lijnicoon staat eronder
+   voor als er niets is. */
+const MERK_BEELD = new Map();
+function objectMerkKandidaten(kind){
+  const m = AssetBank.meta(kind);
+  const slug = (m && m.slug) || String(kind || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const bekend = MERK_BEELD.get(slug);
+  if (bekend !== undefined) return { slug, rij: bekend ? [bekend] : [] };
+  const bust = assetBust(AssetBank.manifest.version), th = currentTheme(), rij = [];
+  [slug, slug + '-1x2', slug + '-2x1', slug + '-2x2'].forEach(n => { if (th) rij.push(ART_DIR + th + '/' + n + '.webp' + bust); });
+  rij.push(ART_DIR + slug + '.webp' + bust, ART_DIR + slug + '.svg' + bust);
+  return { slug, rij };
+}
+function objectMerkHtml(kind){
+  const { slug, rij } = objectMerkKandidaten(kind);
+  const lijn = AssetBank.icon(kind) || '';
+  const beeld = rij.length
+    ? '<img alt="" decoding="async" src="' + e(rij[0]) + '" data-slug="' + e(slug) + '" data-rij="' + e(JSON.stringify(rij)) + '"'
+      + ' onload="objectMerkGeladen(this)" onerror="objectMerkVolgende(this)">' : '';
+  if (!lijn && !beeld) return '';
+  return '<span class="obj-merk' + (MERK_BEELD.get(slug) ? ' met-beeld' : '') + '" title="' + e(objectLabel(kind)) + '">' + lijn + beeld + '</span>';
+}
+function objectMerkGeladen(img){
+  MERK_BEELD.set(img.dataset.slug, img.getAttribute('src'));
+  if (img.parentNode) img.parentNode.classList.add('met-beeld');
+}
+function objectMerkVolgende(img){
+  const rij = JSON.parse(img.dataset.rij || '[]');
+  const i = rij.indexOf(img.getAttribute('src')) + 1;
+  if (i > 0 && i < rij.length) img.setAttribute('src', rij[i]);
+  else { MERK_BEELD.set(img.dataset.slug, ''); img.remove(); }
 }
 
 /* Schuift een label horizontaal bij zodat een naam die breder is dan de tegel
@@ -5332,6 +5395,18 @@ const KAN_NIET_MEER = {
     }
     return false;
   },
+  /* Hetzelfde voor een rol: in die ene rij past maar één persoon. */
+  'role-row-offset': (p, a) => {
+    const t = pos(p); if (!t) return false;
+    const rij = t.y - (a.updown2 === 'above' ? 1 : -1);
+    if (rij < 0 || rij >= S.rows) return true;
+    for (const q in S.people){
+      if (q === p) continue;
+      const u = pos(q);
+      if (u && u.y === rij) return (((S.content.people || {})[q] || {}).role || '') !== a.role;
+    }
+    return false;
+  },
   /* Precies één ander in het gebied, en die heeft de rol: zijn het er al
      twee, dan wordt het niets meer. */
   'alone-with-role': (p, a) => {
@@ -5386,7 +5461,7 @@ function kanNietMeerVoor(clue){
   if (!termen.length) return null;
   return open => {
     if (clue.scope === 'person' && (!clue.personId || !S.people[clue.personId])) return false;
-    return termen.some(t => t.any.every(a => KAN_NIET_MEER[a.atom](clue.personId, a.args || {}, open)));
+    return termen.some(t => t.any.every(a => KAN_NIET_MEER[a.atom](a.over || clue.personId, a.args || {}, open)));
   };
 }
 
@@ -9072,6 +9147,17 @@ const ATOMS = {
                                  "boven" over het onderwerp zelf gaat. */
                               where:{kind:'row-offset', offset:a.updown2==='above'?1:-1}}}, p) },
 
+  /* "Bart had een edele precies één rij onder zich". Zoals gender-row-offset,
+     maar met een rol: elke rol die op het bord staat (edele, ridder,
+     dorpeling) is te kiezen. Zelfde richting van de rij: staat de ander
+     boven, dan staat het onderwerp een rij lager en is dy +1. */
+  'role-row-offset':{ scope:'person', cat:'Rollen',
+                      text:'had {role} precies één rij {updown2} zich',
+                      slots:{role:'role', updown2:'updown2'},
+                      test:(p,a)=>evalCanon({atom:'person-relation',
+                        args:{quant:'exists', who:{standing:a.role},
+                              where:{kind:'row-offset', offset:a.updown2==='above'?1:-1}}}, p) },
+
   /* "Alwin had een vrouw in een huisje precies één rij boven zich". Zoals
      gender-row-offset, maar de ander staat ook ergens op of in; het voorzetsel
      volgt het object (in een huisje, op een stoel). Zelfde richting van de
@@ -11544,7 +11630,9 @@ renderAll(true);
    Wat de builder zelf blijft tekenen ligt eroverheen: de pionnen, de
    selectie, de foutmarkering. De rest wordt in de CSS uitgezet.
    ══════════════════════════════════════════════════════ */
-const SPELWEERGAVE_SLEUTEL = 'clueboard:builderSpelbord';
+/* Een nieuwe sleutel sinds Builder v61: de spelweergave is voortaan de
+   standaard, ook voor wie hem eerder uit had staan. */
+const SPELWEERGAVE_SLEUTEL = 'clueboard:builderSpelbord2';
 /* Ophogen zodra de kijkstand van de speler verandert; anders houdt de browser
    de oude pagina in zijn buffer. */
 const SPELBORD_VERSIE = '18';
@@ -11792,9 +11880,9 @@ function tekenZichtPaneel(){
   };
   const bord = document.getElementById('bordBtn');
   if (bord) bord.onclick = () => zetSpelweergave(!spelbordAan);
-  /* Bouwen begint schematisch; wie de spelweergave aanzet houdt hem. */
-  let bordStart = false;
-  try { bordStart = localStorage.getItem(SPELWEERGAVE_SLEUTEL) === '1'; } catch (e) {}
+  /* Bouwen begint in de spelweergave; wie hem uitzet houdt dat. */
+  let bordStart = true;
+  try { bordStart = localStorage.getItem(SPELWEERGAVE_SLEUTEL) !== '0'; } catch (e) {}
   zetSpelweergave(bordStart, false);
   const hulp = document.getElementById('hulpBtn');
   if (hulp) hulp.onclick = () => hulpVenster();

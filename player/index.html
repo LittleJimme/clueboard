@@ -1478,6 +1478,11 @@ html:not([data-thema="licht"]) .note-cross img{opacity:.74}
   box-shadow:0 1px 3px rgba(21,26,51,.35);pointer-events:none;
 }
 .pawn .obj-merk svg{width:76%;height:76%;display:block;stroke-width:2.3}
+/* De echte tekening van het object, klein in het schijfje; het lijnicoon
+   eronder blijft alleen staan als er geen tekening is. */
+.pawn .obj-merk{overflow:hidden}
+.pawn .obj-merk img{position:absolute;left:8%;top:8%;width:84%;height:84%;object-fit:contain;display:block}
+.pawn .obj-merk.met-beeld svg{display:none}
 .pawn .role-badge{
   position:absolute;right:-15%;bottom:-13%;
   width:max(14px,calc(var(--cell)*.44));height:max(14px,calc(var(--cell)*.44));
@@ -1918,12 +1923,12 @@ body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;
    voet van het personage (y 512) staat daarmee 53/376 vak boven de onderkant
    van het vak -- vandaar -12.1%, voor elke stand gelijk. */
 .pawn.personage .portret-podium{--s:calc(var(--cell) / 376);position:absolute;left:50%;bottom:-12.1%;transform:translateX(-50%)}
-.pawn.personage .obj-merk{left:-2%;bottom:0;width:calc(var(--cell)*.36);height:calc(var(--cell)*.36)}
-.pawn.personage .init{position:absolute;right:-2%;bottom:0;z-index:3;
-  width:calc(var(--cell)*.36);height:calc(var(--cell)*.36);border-radius:999px;
+.pawn.personage .obj-merk{left:-4%;bottom:-3%;width:calc(var(--cell)*.43);height:calc(var(--cell)*.43)}
+.pawn.personage .init{position:absolute;right:-4%;bottom:-3%;z-index:3;
+  width:calc(var(--cell)*.43);height:calc(var(--cell)*.43);border-radius:999px;
   display:flex;align-items:center;justify-content:center;
   background:var(--pc);border:max(1.5px,calc(var(--cell)*.035)) solid var(--board-ink);
-  font:800 calc(var(--cell)*.19)/1 var(--font-ui);box-shadow:0 2px 5px rgba(21,26,51,.34)}
+  font:800 calc(var(--cell)*.23)/1 var(--font-ui);box-shadow:0 2px 5px rgba(21,26,51,.34)}
 /* Het laadschermpje bij het openen van een level. */
 /* Het laadscherm neemt de achtergrond van de pagina zelf (--grond), dus in
    donkere modus is het donker. Tekst in het sierlettertype, en wat groter:
@@ -5230,6 +5235,40 @@ function objectOnderPersoon(tileId){
   M.objects.forEach(o=>{ if(o.id===oid) hit=o; });
   return hit;
 }
+/* Het merkje onder een persoon: de echte tekening van het object, klein. Een
+   bed of een boot bestaat alleen als meervakstekening, een stoel gewoon los,
+   dus de kandidaten gaan op volgorde (thema los, thema in de maten, gedeeld).
+   Wat werkt wordt per soort onthouden, zodat het bord niet bij elke
+   tekenbeurt langs de ontbrekende bestanden gaat. Is er niets, dan blijft het
+   lijnicoon staan. */
+const MERK_BEELD=new Map();
+function vulObjectMerk(merk,kind){
+  merk.innerHTML=objectIcon(kind);
+  const slug=assetSlug(kind);
+  if(!slug) return;
+  const bekend=MERK_BEELD.get(slug);
+  if(bekend==="") return;
+  let rij;
+  if(bekend) rij=[bekend];
+  else {
+    const th=assetThemeDir();
+    rij=[];
+    if(th) [slug,slug+"-1x2",slug+"-2x1",slug+"-2x2"].forEach(n=>rij.push(assetUrl("objects",th+n,"webp")));
+    rij.push(assetUrl("objects",slug,"webp"),assetUrl("objects",slug));
+  }
+  if(bekend) merk.classList.add("met-beeld");
+  const img=document.createElement("img");
+  img.alt=""; img.decoding="async";
+  let i=0;
+  img.addEventListener("error",()=>{
+    i++;
+    if(i<rij.length) img.src=rij[i];
+    else { MERK_BEELD.set(slug,""); merk.classList.remove("met-beeld"); img.remove(); }
+  });
+  img.addEventListener("load",()=>{ MERK_BEELD.set(slug,rij[i]); merk.classList.add("met-beeld"); });
+  img.src=rij[0];
+  merk.appendChild(img);
+}
 function objectIcon(kind){
   const known=AssetBank.icon(kind);
   if(known) return known;
@@ -7285,7 +7324,7 @@ function paintBoard(){
         const om=document.createElement("span");
         om.className="obj-merk";
         om.title=p.name+" — "+objectAanduiding(opObject);
-        om.innerHTML=objectIcon(opObject.kind);
+        vulObjectMerk(om,opObject.kind);
         pawn.appendChild(om);
       }
 
@@ -9145,7 +9184,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.186";
+const PLAYER_APP_VERSION="0.9.187";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9981,7 +10020,7 @@ const REGEL_FAMILIES = [
     tekst:["<b>Rijen</b> tellen van boven, <b>kolommen</b> van links: A staat op rij 2, in kolom 1.",
            "De <b>rand</b> is de buitenkant van het bord, een <b>hoek</b> waar twee randen samenkomen (C). De <b>bovenste helft</b> zijn de bovenste rijen."] },
   { id:"richting", groep:"Op het bord", kop:"Boven, onder, links, rechts",
-    atomen:["direction-of","exact-offset","gender-row-offset","person-on-kind-dir","person-on-kind-row-offset","above-all-role","below-all-role"],
+    atomen:["direction-of","exact-offset","gender-row-offset","role-row-offset","person-on-kind-dir","person-on-kind-row-offset","above-all-role","below-all-role"],
     beeld:()=>helpBord(["..B.","....","A...","...."]),
     tekst:["Deze gelden over het hele bord, niet alleen het vak ernaast: A stond <b>onder</b> B, in een andere kolom.",
            "<b>Precies twee rijen boven</b>: alleen het verschil in rijen telt. Zo ook <b>een vrouw in een huisje één rij boven zich</b>."] },
