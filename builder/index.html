@@ -937,9 +937,7 @@ body.spelweergave .cell .slabel{display:none}
 /* Kleiner dan in de speler (daar /376): in de bouwer moet je ook
    zien wat eronder staat. */
 body.spelweergave .pawn.personage .portret-podium{--s:calc(var(--pion-cel,44px) / 530);
-  position:absolute;left:50%;bottom:2%;transform:translateX(-50%)}
-body.spelweergave .pawn.personage .portret-podium[data-vorm="noble"],
-body.spelweergave .pawn.personage .portret-podium[data-vorm="knight"]{bottom:-12%}
+  position:absolute;left:50%;bottom:-8%;transform:translateX(-50%)}
 /* Het slachtoffer valt niet om: zijn portret draagt de kruisogen al. */
 body.spelweergave .cell .pawn.personage.victim{transform:none;animation:none}
 /* Het letterfiche naast het portret -- de maten van .pawn.personage .init in
@@ -1483,9 +1481,9 @@ textarea.inp{min-height:58px;resize:vertical}
    bank), zodat er geen lege lucht tussen de naam en het hoofd blijft staan;
    bij een edele of ridder ligt de vorm hoger dan de kruin en telt die. De
    onderkant is per vorm de onderkant van de vorm zelf. */
-.portret-podium[data-vorm="villager"]{--Y0:var(--K);--Y1:512}
-.portret-podium[data-vorm="noble"]{--Y0:min(35.5, var(--K));--Y1:530.4}
-.portret-podium[data-vorm="knight"]{--Y0:min(60.3, var(--K));--Y1:565}
+/* Eén vak voor iedereen (gelijk aan de speler): van de bovenkant van de
+   banier tot de punt van het schild, zodat hoofden altijd even hoog staan. */
+.portret-podium{--Y0:35.5;--Y1:565}
 .portret-podium > .uiterlijk-portret{position:absolute}
 /* Het medaillon: een schijf met het personage erop. Onder de evenaar knipt
    de schijf hem af; erboven loopt hij gewoon door, zodat het hoofd door de
@@ -2164,7 +2162,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v59</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v60</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
