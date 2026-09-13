@@ -377,20 +377,6 @@ html[data-thema="licht"] .titelblok h1 em::after{
   padding:15px 16px;box-shadow:var(--sch1);
   transition:transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .18s,border-color .18s;
 }
-/* het thema als klein wapenschild in de hoek, op een zacht vlakje —
-   geen vouwlijn, die liep als een streep over de hele kaart */
-.thema-hoek{
-  position:absolute;top:0;right:0;width:44px;height:44px;pointer-events:none;
-}
-.thema-hoek::before{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(225deg,var(--accent-zacht) 0 30px,transparent 30px);
-  border-bottom-left-radius:12px;
-}
-.thema-hoek svg{
-  position:absolute;top:7px;right:8px;width:16px;height:16px;color:var(--accent);
-  opacity:.92;
-}
 .level-rij:hover{border-color:var(--accent-lijn);box-shadow:var(--sch2);transform:translateY(-1px)}
 .level-rij:active{transform:none;box-shadow:var(--sch1)}
 /* de voorbeeldzaak: lichter vlak, zodat hij er meteen uitspringt */
@@ -430,7 +416,6 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .level-rij.bezig h3,.level-rij.bezig .zaak-nr{color:#fff}
 .level-rij.bezig .zaak-nr{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.14)}
 .level-rij.bezig .grid-tag,.level-rij.bezig .demo-tag{background:rgba(255,255,255,.16);color:#fff;border-color:transparent}
-.level-rij.bezig .hoek svg{color:#fff;opacity:.85}
 .mee-bezig{display:inline-flex;align-items:center;gap:7px;color:#fff}
 .mee-bezig svg{width:13px;height:13px;flex:0 0 auto}
 .mee-bezig b{font:800 10px var(--font-ui);letter-spacing:.14em;text-transform:uppercase}
@@ -491,15 +476,21 @@ body.op-campagne .campagne-balk{display:flex}
 }
 .campagne-kaart:hover{border-color:var(--accent-lijn);box-shadow:var(--sch2);transform:translateY(-1px)}
 .campagne-kaart:active{transform:none;box-shadow:var(--sch1)}
-.campagne-kaart .ck-label{padding-right:28px}
+.campagne-kaart .ck-label{padding-right:120px;line-height:24px}
 .ck-naam{--rh:1.15em;display:flex;align-items:flex-start;height:calc(2 * var(--rh));margin:8px 0 0;padding-right:28px;
   font:600 24px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em}
 /* Altijd twee regels, elk op één regel: zie campagneRegels(). */
 .ck-naam span,.campagne-balk h2 span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ck-naam{flex-direction:column;align-items:stretch;justify-content:flex-start}
-.campagne-kaart .pijl{position:absolute;top:20px;right:18px;color:var(--dof);display:flex}
-.campagne-kaart .pijl svg{width:16px;height:16px}
-.campagne-kaart:hover .pijl{color:var(--accent)}
+/* De stijl van een campagne: een klein etiket in de hoek, in dezelfde vorm
+   als het bordformaat op een zaak (vlakje, haarlijn, ronde hoek). */
+.stijl-tag{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;
+  font:700 11px var(--font-ui);letter-spacing:.02em;color:var(--inkt-2);white-space:nowrap;
+  background:var(--kaart-2);border:1px solid var(--lijn);border-radius:8px;padding:4px 8px 4px 7px}
+.stijl-tag svg{width:12px;height:12px;color:var(--accent);flex:0 0 auto}
+.campagne-kaart .stijl-tag{position:absolute;top:18px;right:16px}
+.campagne-kaart:hover .stijl-tag{border-color:var(--accent-lijn)}
+.cb-label-rij{display:flex;align-items:center;gap:8px}
 /* De reeks: altijd één rij van dezelfde hoogte. Past het niet, dan krimpen de
    vakjes; bij veel zaken vervallen de cijfers en blijft een streepjesbalk. */
 .ck-nummers{display:flex;flex-wrap:nowrap;gap:5px;height:26px;margin:16px 0 14px;overflow:hidden}
@@ -860,7 +851,7 @@ a.keuze-boek{text-decoration:none}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.6 5.6L8.2 12l6.4 6.4"/></svg>
     </button>
     <div class="cb-tekst">
-      <span class="ck-label" id="cbLabel"></span>
+      <div class="cb-label-rij"><span class="ck-label" id="cbLabel"></span><span id="cbStijl"></span></div>
       <h2 id="cbNaam"></h2>
     </div>
     <div class="ck-stand" id="cbStand"></div>
@@ -1640,14 +1631,8 @@ function maakLevelRij(entry){
      zodat de lijst één ritme houdt. Het verhaal begint in de player. */
   a.appendChild(midden);
 
-  /* het thema als gevouwen hoekje met een teken, niet als tekst */
-  const th=raw.puzzle && raw.puzzle.theme;
-  if(THEMA_LABELS[th]){
-    const hoek=document.createElement("span"); hoek.className="thema-hoek";
-    hoek.title=raw.puzzle.themeLabel||THEMA_LABELS[th];
-    hoek.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round"><path d="M12 3.2l7 2.6v5.4c0 4.5-2.9 7.3-7 9-4.1-1.7-7-4.5-7-9V5.8z"/></svg>';
-    a.appendChild(hoek);
-  }
+  /* De stijl staat niet op elke zaak: die hoort bij de campagne en staat
+     daar, op de kaart en in de kop van de campagnepagina. */
 
   const tags=document.createElement("span"); tags.className="rij-tags";
 
@@ -1779,7 +1764,15 @@ function zetCampagneNaam(el,c){
     const sp=document.createElement("span"); sp.textContent=r||" "; el.appendChild(sp);
   });
 }
-function campagneLabel(c){ return "Campagne"+(THEMA_LABELS[c.style]?" · "+THEMA_LABELS[c.style]:""); }
+function campagneLabel(c){ return "Campagne"; }
+const SCHILD_ICOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2l7 2.6v5.4c0 4.5-2.9 7.3-7 9-4.1-1.7-7-4.5-7-9V5.8z"/></svg>';
+/* Het etiket met de stijl; leeg als de campagne geen bekende stijl heeft. */
+function stijlTag(c){
+  const naam=THEMA_LABELS[c.style]; if(!naam) return null;
+  const t=document.createElement("span"); t.className="stijl-tag"; t.title="Stijl: "+naam;
+  t.innerHTML=SCHILD_ICOON; t.appendChild(document.createTextNode(naam));
+  return t;
+}
 function standHtml(af,tot){
   return '<b>'+af+'/'+tot+'</b> afgerond<i class="ck-balk"><i style="width:'
     +(tot?Math.round(af/tot*100):0)+'%"></i></i>';
@@ -1815,9 +1808,7 @@ function maakCampagneKaart(g){
   const stand=document.createElement("span"); stand.className="ck-stand"; stand.innerHTML=standHtml(af,zaken.length);
   voet.appendChild(stand);
   a.appendChild(voet);
-  const pijl=document.createElement("span"); pijl.className="pijl";
-  pijl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.6l6.4 6.4L9 18.4"/></svg>';
-  a.appendChild(pijl);
+  const tag=stijlTag(c); if(tag) a.appendChild(tag);
   return a;
 }
 function tekenCampagnes(){
@@ -1831,6 +1822,7 @@ function tekenCampagneBalk(){
   const g=campagneInfo(huidigeCampagne); if(!g) return;
   const c=g.campagne;
   $("#cbLabel").textContent=campagneLabel(c);
+  { const plek=$("#cbStijl"); plek.innerHTML=""; const tag=stijlTag(c); if(tag) plek.appendChild(tag); }
   zetCampagneNaam($("#cbNaam"),c);
   $("#cbStand").innerHTML=standHtml(g.zaken.filter(e=>voltooidVan(e.raw)).length, g.zaken.length);
   document.title=(c.short||c.name||"Zaken")+" · ClueBoard";
