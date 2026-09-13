@@ -494,7 +494,9 @@ body.op-campagne .campagne-balk{display:flex}
 .campagne-kaart .ck-label{padding-right:28px}
 .ck-naam{--rh:1.15em;display:flex;align-items:flex-start;height:calc(2 * var(--rh));margin:8px 0 0;padding-right:28px;
   font:600 24px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em}
-.ck-naam span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+/* Altijd twee regels, elk op één regel: zie campagneRegels(). */
+.ck-naam span,.campagne-balk h2 span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ck-naam{flex-direction:column;align-items:stretch;justify-content:flex-start}
 .campagne-kaart .pijl{position:absolute;top:20px;right:18px;color:var(--dof);display:flex}
 .campagne-kaart .pijl svg{width:16px;height:16px}
 .campagne-kaart:hover .pijl{color:var(--accent)}
@@ -1757,6 +1759,26 @@ function zakenInBeeld(){
   if(huidigeCampagne===null) return alleLevels;
   return alleLevels.filter(e=>e.raw.demo!==true && (e.raw.campaign||"")===huidigeCampagne);
 }
+/* Een campagnenaam staat altijd op twee regels. Met een dubbele punt breekt
+   hij daar ("Murdoku:" / "Terug in de tijd"); anders op de spatie die de
+   twee helften het gelijkst maakt ("ClueBoard" / "Originals"). Eén woord
+   blijft één regel, met een lege tweede regel eronder. */
+function campagneRegels(naam){
+  naam=String(naam||"").trim();
+  const dp=naam.indexOf(":");
+  if(dp>0 && dp<naam.length-1) return [naam.slice(0,dp+1).trim(), naam.slice(dp+1).trim()];
+  const spaties=[]; for(let i=0;i<naam.length;i++) if(naam[i]===" ") spaties.push(i);
+  if(!spaties.length) return [naam,""];
+  const i=spaties.reduce((best,x)=>Math.abs(x-naam.length/2)<Math.abs(best-naam.length/2)?x:best);
+  return [naam.slice(0,i), naam.slice(i+1)];
+}
+function zetCampagneNaam(el,c){
+  el.textContent="";
+  el.title=c.name||c.id;
+  campagneRegels(c.name||c.id).forEach(r=>{
+    const sp=document.createElement("span"); sp.textContent=r||" "; el.appendChild(sp);
+  });
+}
 function campagneLabel(c){ return "Campagne"+(THEMA_LABELS[c.style]?" · "+THEMA_LABELS[c.style]:""); }
 function standHtml(af,tot){
   return '<b>'+af+'/'+tot+'</b> afgerond<i class="ck-balk"><i style="width:'
@@ -1772,7 +1794,7 @@ function maakCampagneKaart(g){
   /* De naam in een vak van vaste hoogte: een korte naam laat alles eronder
      op dezelfde plek staan. */
   const h=document.createElement("h3"); h.className="ck-naam";
-  const hs=document.createElement("span"); hs.textContent=c.name||c.id; h.appendChild(hs);
+  zetCampagneNaam(h,c);
   a.appendChild(label); a.appendChild(h);
   /* De reeks zelf: één vakje per zaak, gevuld als hij af is. */
   const rij=document.createElement("div"); rij.className="ck-nummers"+(zaken.length>10?" dicht":"");
@@ -1809,7 +1831,7 @@ function tekenCampagneBalk(){
   const g=campagneInfo(huidigeCampagne); if(!g) return;
   const c=g.campagne;
   $("#cbLabel").textContent=campagneLabel(c);
-  $("#cbNaam").textContent=c.name||c.id;
+  zetCampagneNaam($("#cbNaam"),c);
   $("#cbStand").innerHTML=standHtml(g.zaken.filter(e=>voltooidVan(e.raw)).length, g.zaken.length);
   document.title=(c.short||c.name||"Zaken")+" · ClueBoard";
 }
