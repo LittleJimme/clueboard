@@ -209,17 +209,57 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
    een animatie die op opacity 0 begint komt dan niet meer aan zijn einde --
    dan blijft alleen het waas over het bord over en lijkt het venster weg. */
 .dialog.opl-venster{animation:none;
-  width:min(1320px,96vw);max-height:92vh;padding:22px 26px;
+  width:min(1360px,96vw);height:min(900px,92vh);max-height:92vh;padding:22px 26px;
   display:flex;flex-direction:column;box-sizing:border-box;
 }
-.opl-split{display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:26px;min-height:0}
-.opl-links{min-width:0;overflow-y:auto}
-/* Rechts wordt niet gescrold: het bord krimpt mee met de hoogte van het
-   venster (oplCel) en de voorstellen zijn er nooit meer dan zes. Past het
-   dan nog niet, dan scrolt het hele lichaam, niet de kolom apart. */
-.opl-rechts{min-width:0;display:flex;flex-direction:column}
-.opl-rechts > .opl-sep:first-child{margin-top:0}
+/* Drie kolommen, elk met een eigen vraag: links wie nog niet vastligt (en
+   hoeveel vakjes hij nog heeft), in het midden het bord zo groot als het
+   venster toelaat, rechts de regels die het aantal verkleinen. Elke kolom
+   scrolt voor zich; het bord hoeft dat nooit. */
+.opl-venster .opl-body{display:flex;flex-direction:column}
+.opl-split{flex:1;display:grid;grid-template-columns:250px minmax(0,1fr) 400px;gap:24px;min-height:0}
+.opl-links{min-width:0;overflow-y:auto;display:flex;flex-direction:column;padding-right:4px}
+.opl-onder{margin-top:auto;padding-top:14px}
+/* In de smalle kolom staat de noodrem onder elkaar: tekst, dan de knop. */
+.opl-links .opl-override{flex-direction:column;align-items:stretch;gap:8px}
+.opl-links .opl-override .btn{width:100%}
+.opl-links .opl-meta{margin-top:0;margin-bottom:4px}
+.opl-midden{min-width:0;display:flex;flex-direction:column;align-items:center;overflow-y:auto}
+.opl-midden .mini-bord{margin:0 auto}
+.opl-midden .mini-legenda{justify-content:center}
+.opl-rechts{min-width:0;overflow-y:auto;padding-right:4px}
+.opl-split > * > .opl-sep:first-child{margin-top:0}
 .opl-rechts .opl-sep{margin:12px 0 5px}
+/* Links: per persoon één regel met de naam en het aantal vakjes. Wie niet
+   vastligt is aan te klikken: dan lichten zijn vakjes op het bord op. */
+.opl-personen{display:flex;flex-direction:column;gap:4px}
+.opl-pers{
+  display:flex;align-items:center;gap:8px;padding:6px 6px 6px 9px;border-radius:10px;
+  border:1.5px solid var(--edge);background:var(--panel);font:700 12.5px var(--ui);color:var(--ink);
+}
+.opl-pers.los{cursor:pointer;background:#FDF8EC;border-color:#E3C878}
+.opl-pers.los:hover{border-color:var(--accent)}
+.opl-pers.aan{border-color:var(--accent);background:var(--accent-dim)}
+.opl-pers.vast{color:var(--muted)}
+.opl-pers .dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;box-shadow:0 0 0 1.5px var(--stroke)}
+.opl-pers .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.opl-pers .opl-aantal{
+  flex:0 0 auto;display:flex;align-items:center;gap:3px;font:800 11px var(--mono);
+  color:#8A6A12;background:#FCF3DC;padding:2px 7px;border-radius:8px;white-space:nowrap;
+}
+.opl-pers.vast .opl-aantal{color:var(--ok);background:var(--ok-dim)}
+.opl-pers .opl-aantal svg{width:12px;height:12px}
+.opl-ga{
+  flex:0 0 auto;width:22px;height:22px;border:none;background:none;border-radius:6px;cursor:pointer;
+  color:var(--faint);display:flex;align-items:center;justify-content:center;padding:0;
+}
+.opl-ga:hover{background:var(--tint-2);color:var(--ink)}
+.opl-ga svg{width:12px;height:12px}
+/* Op het bord: de mogelijke vakjes van de aangeklikte persoon, en de persoon
+   waar een voorstel over gaat zolang je erop staat. */
+.mini-cel.mogelijk{box-shadow:0 0 0 2.5px var(--accent)}
+.mini-cel.mogelijk::after{content:"";position:absolute;inset:0;border-radius:4px;background:var(--accent);opacity:.2;pointer-events:none}
+.mini-cel.let{box-shadow:0 0 0 3px var(--gold)}
 .opl-blader{
   display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;
 }
@@ -269,11 +309,11 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .regel-links > #regelEditor{flex:0 0 auto}
 .mini-cel{position:relative}
 .mini-rol{
-  position:absolute;right:-4px;top:-4px;width:14px;height:14px;border-radius:50%;
+  position:absolute;right:-4px;top:-4px;width:max(14px,calc(var(--mc,28px) * .48));height:max(14px,calc(var(--mc,28px) * .48));border-radius:50%;
   display:flex;align-items:center;justify-content:center;background:#fff;
   box-shadow:0 0 0 1.2px var(--stroke),0 1px 3px rgba(30,28,18,.3);
 }
-.mini-rol svg{width:9px;height:9px}
+.mini-rol svg{width:62%;height:62%}
 .mini-rol.slachtoffer{color:var(--crimson,#C9403A)}
 .mini-rol.dader{color:#8A5A00}
 .mini-legenda{
@@ -337,7 +377,7 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .mini-uit{aspect-ratio:1}
 .mini-cel i{
   width:80%;height:80%;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font:800 11px var(--mono);font-style:normal;box-shadow:0 0 0 1.2px var(--stroke);
+  font:800 max(11px,calc(var(--mc,28px) * .42)) var(--mono);font-style:normal;box-shadow:0 0 0 1.2px var(--stroke);
 }
 /* Het objectje op het minibord: net genoeg om het te herkennen, licht genoeg
    om de ruimtekleur en de pionnen voorop te laten staan. */
@@ -400,32 +440,8 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .opl-override.aan{border-style:solid;border-color:#E3C878;background:#FCF3DC}
 .opl-override.aan b{color:#8A6A12}
 .opl-override.aan span{color:var(--muted)}
-.opl-tabel{margin-top:14px;border:1.5px solid var(--edge);border-radius:12px;overflow:hidden}
-.opl-rij{
-  display:grid;grid-template-columns:1fr 1.5fr 46px;gap:10px;align-items:center;
-  padding:7px 11px;border-top:1px solid var(--edge-soft);font:600 12px var(--read);
-}
-.opl-rij:first-child{border-top:none}
-.opl-rij.kop{
-  background:var(--tint);border-top:none;
-  font:700 9.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);
-}
-.opl-rij.los{background:#FDF8EC}
-.opl-naam{
-  display:flex;align-items:center;gap:6px;background:none;border:none;padding:0;cursor:pointer;
-  font:700 12.5px var(--ui);color:var(--ink);text-align:left;min-width:0;
-}
-.opl-naam:hover{color:var(--accent)}
-.opl-naam .dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;
-  box-shadow:0 0 0 1.5px var(--stroke)}
-.opl-plekken{font:600 11px var(--mono);color:var(--muted);overflow-wrap:anywhere}
-.opl-vast{display:flex;justify-content:flex-end;font:700 11px var(--mono);color:var(--muted)}
-.opl-vast svg{width:14px;height:14px;color:var(--ok)}
-.opl-geen{color:var(--faint)}
 .opl-sep{margin:16px 0 6px;font:700 9.5px var(--mono);letter-spacing:.1em;
   text-transform:uppercase;color:var(--faint)}
-.opl-alt{font:500 11px/1.7 var(--mono);color:var(--muted)}
-.opl-alt u{text-decoration:none;font-weight:800;color:var(--ink);margin-right:4px}
 .opl-meta{margin-top:14px;font:600 10.5px var(--mono);color:var(--faint)}
 /* De graad: vijf bollen, de gebruikte techniek en de ladder eronder. */
 .graad-blok{display:flex;align-items:center;gap:14px;padding:12px 14px;
@@ -2071,7 +2087,9 @@ body[data-skin="donker"] .opl-verdict.no{background:rgba(224,112,90,.14);border-
 body[data-skin="donker"] .opl-verdict.warn{color:#E4C176;background:rgba(201,147,47,.13);border-color:rgba(201,147,47,.5)}
 body[data-skin="donker"] .opl-override.aan{border-color:rgba(201,147,47,.5);background:rgba(201,147,47,.11)}
 body[data-skin="donker"] .opl-override.aan b{color:#E4C176}
-body[data-skin="donker"] .opl-rij.los{background:rgba(201,147,47,.09)}
+body[data-skin="donker"] .opl-pers.los{background:rgba(201,147,47,.09);border-color:rgba(201,147,47,.5)}
+body[data-skin="donker"] .opl-pers .opl-aantal{background:rgba(201,147,47,.13);color:#E4C176}
+body[data-skin="donker"] .opl-pers.vast .opl-aantal{background:var(--ok-dim);color:var(--ok)}
 body[data-skin="donker"] .kindbadge.no{background:rgba(224,112,90,.16);color:#E58472}
 body[data-skin="donker"] .clue-card.false{border-color:rgba(224,112,90,.42);background:rgba(224,112,90,.09)}
 body[data-skin="donker"] .rbtn.danger:hover{background:rgba(224,112,90,.18)}
@@ -2180,7 +2198,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v61</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v62</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -4850,7 +4868,12 @@ function doeOplossingCheck(){
     '<div class="opl-body"><p class="opl-bezig">Bezig met zoeken\u2026</p></div>'+
     '<div class="row"><button class="btn ghost" data-sluit>Sluiten</button>'+
     '<button class="btn primary" data-opnieuw>Opnieuw berekenen</button></div></div>';
-  const sluit = () => { scrim.remove(); document.removeEventListener('keydown', esc); };
+  /* Het bord meet zich naar het venster; verandert dat, dan tekent het
+     bord opnieuw (herteken wordt gezet zodra er een bord staat). */
+  let herteken = null;
+  const opMaat = () => { if (herteken) herteken(); };
+  window.addEventListener('resize', opMaat);
+  const sluit = () => { scrim.remove(); document.removeEventListener('keydown', esc); window.removeEventListener('resize', opMaat); };
   const esc = ev => { if (ev.key === 'Escape') sluit(); };
   scrim.querySelectorAll('[data-sluit]').forEach(b => b.onclick = sluit);
   scrim.onclick = ev => { if (ev.target === scrim) sluit(); };
@@ -4881,19 +4904,27 @@ function doeOplossingCheck(){
       LAATSTE_CHECK = r ? r.status : '';
       LAATSTE_UITKOMST = r;
       const oplossingen = (r && r.oplossingen) || [];
+      /* Drie kolommen: links de uitkomst en wie nog niet vastligt, in het
+         midden het bord, rechts wat je eraan kunt doen -- of, als het level
+         sluitend is, hoe zwaar het dan is. */
+      herteken = null;
       body.innerHTML = oplossingen.length
-        ? '<div class="opl-split"><div class="opl-links">'+
-          (r && r.status === 'uniek' ? '<div id="graadKort"></div>' : '')+
-          oplossingHtml(r)+'</div>'+
-          '<div class="opl-rechts"><div class="opl-sep">Zo kan het bord eruitzien</div>'+
+        ? '<div class="opl-split"><div class="opl-links">'+oplossingHtml(r)+'</div>'+
+          '<div class="opl-midden"><div class="opl-sep">Het bord</div>'+
           '<div id="oplBord"></div>'+
-          '<div class="opl-blader">'+
+          '<div class="opl-blader" id="oplBlader">'+
             '<button id="oplVorige" title="Vorige oplossing">◂</button>'+
             '<span class="opl-tel" id="oplTel"></span>'+
             '<button id="oplVolgende" title="Volgende oplossing">▸</button>'+
           '</div>'+
           '<button class="btn ghost opl-zet" id="oplZet">'+uiIcon('pawn')+' Zet deze op het bord</button>'+
-          (r.status === 'meer' ? '<div class="opl-sep">Regels die het aantal verkleinen</div><div class="opl-tips" id="oplTips"></div>' : '')+
+          '</div>'+
+          '<div class="opl-rechts">'+
+          (r.status === 'meer'
+            ? '<div class="opl-sep">Regels die het aantal verkleinen</div><div class="opl-tips" id="oplTips"></div>'
+            : '<div class="opl-sep">Moeilijkheid</div><div id="graadKort"></div>'+
+              '<p class="opl-uitleg">Dit level is sluitend: er is precies één plaatsing die aan alle aanwijzingen voldoet. '+
+              'Iedereen ligt vast; er valt hier niets meer te verkleinen.</p>')+
           '</div></div>'
         : oplossingHtml(r);
       /* Sluitend level: dan hoort de moeilijkheid er meteen bij — compact,
@@ -4916,9 +4947,23 @@ function doeOplossingCheck(){
         const sleutel = m => Object.keys(m).sort().map(p => p + ':' + m[p]).join(';');
         const rest = oplossingen.filter(o => sleutel(o) !== sleutel(huidig));
         const lijst = [huidig].concat(rest);
+        const per = plekkenPerPersoon(r);
         let idx = 0;
+        /* De persoon uit de linkerkolom van wie de mogelijke vakjes op het
+           bord oplichten. */
+        let uitgelicht = null;
         const teken = () => {
-          body.querySelector('#oplBord').innerHTML = miniBordMet(lijst[idx], oplCel());
+          const bord = body.querySelector('#oplBord');
+          bord.innerHTML = miniBordMet(lijst[idx], oplCel(), true);
+          if (uitgelicht) (per[uitgelicht] || []).forEach(k => {
+            const c = bord.querySelector('[data-k="'+k+'"]'); if (c) c.classList.add('mogelijk');
+          });
+          body.querySelectorAll('.opl-pers').forEach(b => b.classList.toggle('aan', b.dataset.pers === uitgelicht));
+          /* Sluitend, of alleen de huidige plaatsing: dan valt er niet te
+             bladeren en is er niets om op het bord te zetten. */
+          const bladeren = rest.length > 0;
+          body.querySelector('#oplBlader').style.display = bladeren ? '' : 'none';
+          body.querySelector('#oplZet').style.display = bladeren ? '' : 'none';
           body.querySelector('#oplTel').textContent = idx === 0
             ? 'huidige plaatsing'
             : 'alternatief ' + idx + ' van ' + rest.length +
@@ -4945,6 +4990,21 @@ function doeOplossingCheck(){
           sluit();
         };
         teken();
+        herteken = teken;
+        body.querySelectorAll('.opl-pers.los').forEach(b => b.onclick = () => {
+          uitgelicht = uitgelicht === b.dataset.pers ? null : b.dataset.pers;
+          teken();
+        });
+        /* Sta je op een voorstel, dan licht op het bord de persoon op over
+           wie het gaat. */
+        const licht = p => {
+          body.querySelectorAll('.mini-cel.let').forEach(c => c.classList.remove('let'));
+          const k = p && lijst[idx][p];
+          const c = k && body.querySelector('#oplBord [data-k="'+k+'"]');
+          if (c) c.classList.add('let');
+        };
+        body.addEventListener('mouseover', ev => { const t = ev.target.closest('.regel-tip'); if (t) licht(t.dataset.pers || null); });
+        body.addEventListener('mouseout', ev => { const t = ev.target.closest('.regel-tip'); if (t && !t.contains(ev.relatedTarget)) licht(null); });
         /* De voorstellen pas na het tekenen: het aflezen kost een tel, en het
            venster moet eerst staan. Een voorstel aanklikken voegt de regel toe
            en rekent meteen opnieuw, zodat je het aantal ziet zakken. */
@@ -4954,7 +5014,8 @@ function doeOplossingCheck(){
           setTimeout(() => tekenVerkleiners(r, tips, reken), 20);
         }
       }
-      body.querySelectorAll('[data-solve-person]').forEach(b => b.onclick = () => {
+      body.querySelectorAll('[data-solve-person]').forEach(b => b.onclick = ev => {
+        ev.stopPropagation();
         selectEntity({ type:'person', id:b.dataset.solvePerson });
         sluit();
       });
@@ -5050,7 +5111,7 @@ function tekenVerkleiners(r, bak, opnieuw){
   const zin = v => v.personId ? personName(v.personId) + ' ' + atomText(v.id, v.args, { personId:v.personId })
                               : atomText(v.id, v.args, {});
   const tip = (v, i) =>
-    '<button class="regel-tip" data-tip="'+i+'" title="'+e(ZWAARTE_WOORD[v.zw]+(v.reden ? ': '+v.reden : ''))+'">'+
+    '<button class="regel-tip" data-tip="'+i+'" data-pers="'+(v.personId || '')+'" title="'+e(ZWAARTE_WOORD[v.zw]+(v.reden ? ': '+v.reden : ''))+'">'+
       '<span class="opl-effect'+(v.na === 1 ? ' dicht' : '')+'">'+(schatting ? '\u2248 ' : '')+opl.length+' \u2192 '+v.na+'</span>'+
       '<span class="opl-zin">'+e(zin(v))+'</span>'+zwaarteHtml(v.zw, v.reden)+
       (v.na === 1 ? '<button class="opl-niveau" data-niveau="'+i+'" title="Welk niveau krijgt het level met deze regel?">niveau?</button>' : '')+
@@ -5186,13 +5247,9 @@ function oplossingHtml(r){
   /* Per persoon: op hoeveel verschillende vakjes komt hij voor in de gevonden
      oplossingen? Eén betekent vast, meer betekent dat daar een aanwijzing
      ontbreekt -- dat is de vraag die de bouwer hier stelt. */
-  const personen = Object.keys(S.people).sort((a,b)=>+a.slice(1)-+b.slice(1));
-  const opl = r.oplossingen || [];
-  const perPersoon = personen.map(p => {
-    const plekken = [...new Set(opl.map(o => o[p]).filter(Boolean))];
-    return { p, plekken };
-  });
-  const los = perPersoon.filter(x => x.plekken.length > 1);
+  const per = plekkenPerPersoon(r);
+  const personen = Object.keys(per);
+  const los = personen.filter(p => per[p].length > 1);
 
   let h = '<div class="opl-verdict '+(r.status==='uniek'?'ok':'warn')+'">'+
           uiIcon(r.status==='uniek'?'check':'warning')+' '+
@@ -5203,34 +5260,36 @@ function oplossingHtml(r){
         ? 'één van de '+personen.length+' personen ligt niet vast.'
         : los.length+' van de '+personen.length+' personen liggen niet vast.'))+'</p>';
 
-  h += '<div class="opl-tabel"><div class="opl-rij kop"><span>Persoon</span>'+
-       '<span>Mogelijke vakjes</span><span>Vast</span></div>';
-  perPersoon.forEach(x => {
-    const vast = x.plekken.length <= 1;
-    h += '<div class="opl-rij'+(vast?'':' los')+'">'+
-      '<button class="opl-naam" data-solve-person="'+x.p+'">'+
-        '<span class="dot" style="background:'+personColor(x.p)+'"></span>'+e(personName(x.p))+'</button>'+
-      '<span class="opl-plekken">'+(x.plekken.length
-          ? x.plekken.map(tegelNaam).join(' · ')
-          : '<span class="opl-geen">—</span>')+'</span>'+
-      '<span class="opl-vast">'+(vast ? uiIcon('check') : x.plekken.length+'\u00d7')+'</span>'+
+  /* Wie waar kan staan, als lijst: de naam en het aantal vakjes. Welke
+     vakjes dat zijn zie je op het bord ernaast zodra je de naam aanklikt. */
+  h += '<div class="opl-sep">Wie ligt vast</div><div class="opl-personen">';
+  personen.forEach(p => {
+    const n = per[p].length, vast = n <= 1;
+    h += '<div class="opl-pers'+(vast?' vast':' los')+'" data-pers="'+p+'" title="'+
+        (vast ? 'Ligt vast' : 'Klik: toon de '+n+' mogelijke vakjes op het bord')+'">'+
+      '<span class="dot" style="background:'+personColor(p)+'"></span>'+
+      '<span class="nm">'+e(personName(p))+'</span>'+
+      '<span class="opl-aantal">'+(vast ? uiIcon('check')+' vast' : n+' vakjes')+'</span>'+
+      '<button type="button" class="opl-ga" data-solve-person="'+p+'" title="Open '+e(personName(p))+' in de bouwer">'+uiIcon('pencil')+'</button>'+
     '</div>';
   });
   h += '</div>';
-
-  if (opl.length > 1){
-    h += '<div class="opl-sep">Twee oplossingen naast elkaar</div><div class="opl-alt">';
-    opl.slice(0,2).forEach((o,i) => {
-      h += '<div><u>'+(i+1)+'</u> '+personen.map(p =>
-        e(personName(p))+' '+tegelNaam(o[p])).join(' · ')+'</div>';
-    });
-    h += '</div>';
-  }
-  h += '<div class="opl-meta">'+r.knopen.toLocaleString('nl-NL')+' plaatsingen doorzocht in '+r.ms+' ms'+
-       (r.oplossingen.length < r.aantal ? ' · de eerste '+r.oplossingen.length+' bewaard' : '')+'</div>';
-  /* De noodrem onderaan: pas nadat je de uitkomst en de tabel hebt gezien. */
-  h += overrideHtml(r);
+  /* Onderaan: hoe er gezocht is, en de noodrem -- pas nadat je de uitkomst
+     en de lijst hebt gezien. */
+  h += '<div class="opl-onder"><div class="opl-meta">'+r.knopen.toLocaleString('nl-NL')+' plaatsingen doorzocht in '+r.ms+' ms'+
+       (r.oplossingen.length < r.aantal ? ' · de eerste '+r.oplossingen.length+' bewaard' : '')+'</div>'+
+       overrideHtml(r)+'</div>';
   return h;
+}
+/* Per persoon de vakjes waar hij in de gevonden oplossingen staat, in de
+   volgorde van de personen. */
+function plekkenPerPersoon(r){
+  const opl = (r && r.oplossingen) || [];
+  const uit = {};
+  Object.keys(S.people).sort((a,b)=>+a.slice(1)-+b.slice(1)).forEach(p => {
+    uit[p] = [...new Set(opl.map(o => o[p]).filter(Boolean))];
+  });
+  return uit;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -7030,29 +7089,33 @@ function letterOpKleur(hex){
    Genoeg om posities af te lezen: ruimtekleuren, objecten als vlekje, en de
    personen met hun eigen kleur en letter. Degene over wie de regel gaat licht
    op, want daar draait het om. */
-function miniBordMet(plaatsing, maxCel){
+function miniBordMet(plaatsing, maxCel, vrij){
   const bewaar = S.people;
   S.people = plaatsing;
-  try { return miniBord(null, maxCel); }
+  try { return miniBord(null, maxCel, vrij); }
   finally { S.people = bewaar; }
 }
-/* Het vakje voor het bord in het Oplossingen-venster: onder het bord moeten
-   de bladerknoppen en zes voorstellen nog passen zonder te scrollen, dus bij
-   een laag venster wordt het bord kleiner. */
+/* Het vakje voor het bord in het Oplossingen-venster: de middelste kolom is
+   van het bord alleen, dus zo groot als de hoogte van het venster (kop,
+   bladerknoppen, legenda en knoppenrij eraf) en de breedte van de kolom
+   toelaten. */
 function oplCel(){
-  return Math.max(18, Math.min(30, Math.floor((window.innerHeight * 0.92 - 560) / Math.max(1, S.rows))));
+  const hoog = Math.min(900, window.innerHeight * 0.92) - 300;
+  const breed = Math.min(1360, window.innerWidth * 0.96) - 250 - 400 - 48 - 52;
+  return Math.max(20, Math.min(64, Math.floor(hoog / Math.max(1, S.rows)), Math.floor(breed / Math.max(1, S.cols))));
 }
-/* Hoeveel voorstellen er onder het bord passen: op een laag venster minder,
-   zodat de kolom niet hoeft te scrollen. */
+/* Hoeveel voorstellen er rechts staan: de kolom scrolt, dus ruim genoeg om te
+   kiezen, maar niet elke regel die iets afhaalt. */
 function oplTipsAantal(){
-  const h = window.innerHeight;
-  return h >= 920 ? { verkleiners:4, sluiters:2 } : h >= 760 ? { verkleiners:3, sluiters:1 } : { verkleiners:2, sluiters:1 };
+  return { verkleiners:6, sluiters:3 };
 }
-function miniBord(personId, maxCel){
-  /* Zo groot als het venster toelaat: het bord is hier het leesvoorbeeld. */
-  const cel = Math.max(18, Math.min(maxCel || 40,
+function miniBord(personId, maxCel, vrij){
+  /* Zo groot als het venster toelaat: het bord is hier het leesvoorbeeld.
+     Met vrij staat alleen maxCel de maat, anders ook de vaste bovengrens
+     voor het regelvenster. */
+  const cel = vrij ? Math.max(18, maxCel || 40) : Math.max(18, Math.min(maxCel || 40,
     Math.floor(480 / Math.max(S.cols, S.rows)), Math.floor(360 / S.cols)));
-  let h = '<div class="mini-bord" style="grid-template-columns:repeat('+S.cols+','+cel+'px);grid-auto-rows:'+cel+'px">';
+  let h = '<div class="mini-bord" style="--mc:'+cel+'px;grid-template-columns:repeat('+S.cols+','+cel+'px);grid-auto-rows:'+cel+'px">';
   for (let y = 0; y < S.rows; y++){
     for (let x = 0; x < S.cols; x++){
       const t = S.tiles[z(x,y)];
@@ -7077,7 +7140,7 @@ function miniBord(personId, maxCel){
         const ico = (o && o.tiles && o.tiles[0] === z(x,y)) ? AssetBank.icon(o.kind, 'mini-obj') : '';
         inner = ico || '<u class="'+(t.status === 'can' ? 'kan' : 'blok')+'"></u>';
       }
-      h += '<span class="mini-cel'+(wie && wie === personId ? ' hier' : '')+'" '+
+      h += '<span class="mini-cel'+(wie && wie === personId ? ' hier' : '')+'" data-k="'+z(x,y)+'" '+
            'style="background:'+kleur+'" title="'+e(titel)+'">'+inner+'</span>';
     }
   }
