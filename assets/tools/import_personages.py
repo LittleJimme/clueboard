@@ -189,16 +189,8 @@ def main():
         regels.append("kleding/" + naam + ("  (uitgestanst)" if naam in vast else "")
                       + ("  (%d px lager)" % SCHUIF[naam] if naam in SCHUIF else ""))
 
-    # De rand van de banier en het schild los: de plaat zonder het
-    # binnenvlak. De bouwer legt daaronder een vlak in de lichte tint van de
-    # persoon, zodat alleen de rand goud of zilver is.
-    for vorm in ("banier", "schild"):
-        plaat = Image.open(os.path.join(DOEL, "ui", vorm + ".png")).convert("RGBA")
-        masker = Image.open(os.path.join(DOEL, "ui", "masker-" + vorm + ".png")).convert("RGBA").getchannel("A")
-        rand = plaat.copy()
-        rand.putalpha(ImageChops.multiply(plaat.getchannel("A"), ImageChops.invert(masker)))
-        schrijf(rand, os.path.join(DOEL, "ui", vorm + "-rand.png"))
-        regels.append("ui/" + vorm + "-rand")
+    # De banier en het schild (rand, binnenvlak, masker) komen sinds
+    # character style v3 los aangeleverd: zie import_backplates.py.
 
     for oud in ("shirt.png", "shirt.webp"):
         p = os.path.join(DOEL, oud)
