@@ -717,9 +717,13 @@
       "label": "Huisje",
       "labelPlural": "huisjes",
       "maxTiles": 1,
+      "pose": {
+        "vz": "in",
+        "ww": "stond"
+      },
       "slug": "house",
       "themes": null,
-      "type": "blocked"
+      "type": "occupiable"
     },
     {
       "art": [
