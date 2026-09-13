@@ -333,7 +333,7 @@ h1,h2,h3,.display{font-family:var(--font-display);letter-spacing:-.01em}
 html[data-thema="licht"] .brand .merk-licht{display:block}
 html[data-thema="licht"] .brand .merk-donker{display:none}
 .brand .tag{
-  color:var(--dof);font-size:14px;font-weight:600;letter-spacing:0;text-transform:none;font-family:var(--font-display);font-style:italic;
+  color:var(--dof);font-size:13px;font-weight:700;letter-spacing:.02em;text-transform:none;font-family:var(--font-ui);
 }
 .brand .app-versie{
   margin-top:2px;color:var(--faint);font-size:10.5px;font-weight:700;
@@ -368,7 +368,7 @@ html[data-thema="licht"] .brand .merk-donker{display:none}
 .level-card{overflow:hidden}
 .level-card .genre-chip{
   position:absolute;top:12px;right:12px;
-  font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;font-family:var(--font-display);font-style:italic;
+  font-size:11px;font-weight:700;letter-spacing:.02em;text-transform:none;font-family:var(--font-ui);
   padding:3px 9px;border-radius:999px;
   background:linear-gradient(180deg,var(--accent-soft),rgba(91,75,232,.07));
   border:1px solid var(--accent-line);color:var(--accent);
@@ -379,8 +379,8 @@ html[data-thema="licht"] .brand .merk-donker{display:none}
   padding-right:136px;overflow-wrap:anywhere}
 .level-card .genre-chip{max-width:124px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .level-card .niveau-rij{display:flex;align-items:center;gap:4px;margin-top:8px}
-.level-card .niveau-rij .nv-lbl{font-size:13px;font-weight:600;color:var(--accent);
-  letter-spacing:0;text-transform:none;font-family:var(--font-display);font-style:italic;margin-right:3px}
+.level-card .niveau-rij .nv-lbl{font-size:12px;font-weight:700;color:var(--accent);
+  letter-spacing:.02em;text-transform:none;font-family:var(--font-ui);margin-right:3px}
 .level-card .niveau-rij i{width:9px;height:9px;border-radius:50%;background:var(--line)}
 .level-card .niveau-rij i.aan{background:var(--accent)}
 .level-card p{margin:0;color:var(--faint);font-size:14px;font-weight:500}
@@ -460,8 +460,8 @@ html[data-thema="licht"] .brand .merk-donker{display:none}
 }
 .mode-switch button{
   position:relative;z-index:1;flex:1;border:none;background:transparent;
-  color:var(--faint);padding:12px 8px;font-size:15px;font-weight:600;letter-spacing:0;
-  font-family:var(--font-display);text-transform:none;font-style:italic;border-radius:999px;transition:color .24s;
+  color:var(--faint);padding:12px 8px;font-size:14px;font-weight:700;letter-spacing:.02em;
+  font-family:var(--font-ui);text-transform:none;border-radius:999px;transition:color .24s;
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
 }
 .mode-switch button svg{width:17px;height:17px}
@@ -1654,7 +1654,7 @@ body.radiaal-open .room-label{opacity:0}
   background:linear-gradient(180deg,rgba(91,75,232,0) 62%,var(--accent-soft) 62%)}
 .clue-card .txt b.pn,.clue-row .txt b.pn,.sheet p b.pn,.txt b.pn{
   background:linear-gradient(180deg,rgba(0,0,0,0) 62%,var(--pn) 62%)}
-.badge{font-size:11px;font-weight:600;letter-spacing:0;text-transform:none;font-family:var(--font-display);font-style:italic;
+.badge{font-size:10px;font-weight:700;letter-spacing:.02em;text-transform:none;font-family:var(--font-ui);
   border-radius:999px;padding:2px 7px;border:1px solid var(--line);background:var(--sky);color:var(--faint)}
 .badge.noble{background:#EFE7FB;border-color:#D7C6F2;color:#6A45A8}
 .badge.knight{background:#EDF1F7;border-color:#CBD5E5;color:#4C5A73}
@@ -1662,7 +1662,7 @@ body.radiaal-open .room-label{opacity:0}
 .badge.pos{background:var(--good-soft);border-color:var(--good-line);color:#12795A}
 .badge.villager{background:#E2EEF7;border-color:#C3DCEC;color:#2E6086}
 .list-sep{grid-column:1 / -1;display:flex;align-items:center;gap:9px;margin:10px 2px 4px;color:var(--faint);
-  font-size:12.5px;font-weight:600;letter-spacing:0;text-transform:none;font-family:var(--font-display);font-style:italic}
+  font-size:11.5px;font-weight:700;letter-spacing:.02em;text-transform:none;font-family:var(--font-ui)}
 .list-sep::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
 
 /* ---------- Footer: info/instellingen links, wisselknop altijd rechtsonder op vaste plek ---------- */
@@ -2001,8 +2001,8 @@ body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;
 /* ---------- Hoe speel je: uitleg met bordjes ---------- */
 .help-intro{margin:0 0 14px;font-size:14px;color:var(--ink-2)}
 .help-kop{
-  margin:16px 0 9px;font:800 10.5px var(--mono,inherit);letter-spacing:0;
-  text-transform:none;font-style:italic;color:var(--faint);
+  margin:16px 0 9px;font:800 10.5px var(--mono,inherit);letter-spacing:.02em;
+  text-transform:none;color:var(--faint);
 }
 .help-kop:first-child{margin-top:0}
 .help-item{display:flex;gap:13px;align-items:flex-start;margin-bottom:13px}
@@ -2168,7 +2168,7 @@ body.in-game .hb-c.licht{box-shadow:0 0 0 2px var(--goud)}
 .vis-row.uit .eye-closed{display:inline}
 .icon-btn.some-hidden .eye-open{display:none}
 .icon-btn.some-hidden .eye-closed{display:inline}
-.legend-sep{font-size:13.5px;font-weight:600;letter-spacing:0;text-transform:none;font-family:var(--font-display);font-style:italic;
+.legend-sep{font-size:12.5px;font-weight:700;letter-spacing:.02em;text-transform:none;font-family:var(--font-ui);
   color:var(--faint);margin:16px 0 9px}
 .legend-sep:first-child{margin-top:0}
 .legend-row{display:flex;align-items:center;gap:11px;padding:7px 0;font-size:14px}
@@ -2463,7 +2463,7 @@ body.in-game .mode-switch .ms-thumb{
 body.in-game .mode-switch.place .ms-thumb{transform:translateX(100%);background:var(--inkt)}
 body.in-game .mode-switch button{
   flex:1;height:38px;padding:0 10px;border:0;border-radius:999px;background:none;
-  font:italic 600 14px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--dof);
+  font:700 13px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--dof);
   text-shadow:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;
 }
 body.in-game .mode-switch button svg{width:16px;height:16px}
@@ -2478,7 +2478,7 @@ body.in-game .view-switch{
      draait wel netjes om: overdag donker, 's nachts licht. */
   background:var(--inkt);color:var(--grond);
   border:1px solid var(--inkt);box-shadow:var(--sch1);
-  font:italic 600 14px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;text-shadow:none;
+  font:700 13px var(--font-ui);letter-spacing:.02em;text-transform:none;text-shadow:none;
 }
 body.in-game .view-switch:active{transform:translateY(1px);box-shadow:none}
 body.in-game .vs-ic{width:18px;height:18px;display:flex}
@@ -2544,7 +2544,7 @@ body.desktop.in-game .kop-titel{display:flex;align-items:baseline;gap:12px;min-w
    zaaknummer en de graad staan ook op het introvel, de naam nergens anders in
    beeld. Vandaar dat de ondertitel vijftig keer zo hard krimpt. */
 body.desktop.in-game .kop-titel b{flex:0 1 auto;font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--inkt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-body.desktop.in-game .kop-titel span{flex:0 50 auto;min-width:0;overflow:hidden;font:italic 600 13px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--goud);white-space:nowrap}
+body.desktop.in-game .kop-titel span{flex:0 50 auto;min-width:0;overflow:hidden;font:700 12px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--goud);white-space:nowrap}
 body.desktop.in-game .kop-midden{justify-content:center}
 body.desktop.in-game .game-head .kop-check{max-width:none}
 body.desktop.in-game .pane{display:flex;animation:none}
@@ -2587,7 +2587,7 @@ body.desktop.in-game .list-sep{display:none}
 /* Bordregels: één snipper over de volle breedte, onderaan het dossier. */
 body.desktop.in-game .clue-card.board{grid-column:1/-1;order:0;flex-direction:column;align-items:flex-start;text-align:left;gap:5px;padding:10px 12px;min-height:auto}
 body.desktop.in-game .clue-card.board .kop{display:none}
-body.desktop.in-game .clue-card.board .name{font-size:12.5px;letter-spacing:0;text-transform:none;font-family:var(--font-display);font-style:italic;background:none;border:0;padding:0;color:var(--goud);gap:6px}
+body.desktop.in-game .clue-card.board .name{font-size:11.5px;letter-spacing:.02em;text-transform:none;font-family:var(--font-ui);background:none;border:0;padding:0;color:var(--goud);gap:6px}
 body.desktop.in-game .clue-card.board .txt{text-align:left;font-size:12.5px}
 /* Het slachtoffer als kaartje in het raster. */
 body.desktop.in-game .clue-row.victim{grid-column:auto;order:98;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:8px 7px;margin:0;min-height:auto}
@@ -2685,7 +2685,7 @@ body.desktop.in-game .legenda-pop{display:block;position:absolute;right:16px;bot
   animation:legendaPop .18s cubic-bezier(.2,.9,.3,1) both}
 body.desktop.in-game .legenda-pop[hidden]{display:none}
 @keyframes legendaPop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-body.desktop.in-game .legenda-pop-kop{font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--dof);margin:0 0 4px;text-align:left}
+body.desktop.in-game .legenda-pop-kop{font:700 11px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--dof);margin:0 0 4px;text-align:left}
 body.desktop.in-game .legenda-pop .legend-sep{font-size:9.5px;margin:10px 0 4px;text-align:left}
 body.desktop.in-game .legenda-pop .legend-row{gap:10px;padding:6px 0;font-size:13.5px;border-bottom:1px solid var(--lijn-zacht)}
 body.desktop.in-game .legenda-pop .legend-row .name{font-size:13.5px;text-align:left}
@@ -2705,7 +2705,7 @@ body.desktop.in-game #detailBody .pd-sluit,body.desktop.in-game #detailBody .row
 body.desktop.in-game #detailBody .pd-kop{padding-right:0;gap:12px}
 body.desktop.in-game #detailBody .pd-naam{font-size:28px}
 body.desktop.in-game #detailBody .pd-portret{padding:4px 0}
-body.desktop.in-game #detailBody .detail-kop{font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--dof);margin:0 0 8px}
+body.desktop.in-game #detailBody .detail-kop{font:700 11px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--dof);margin:0 0 8px}
 body.desktop.in-game #detailBody .detail-leeg{margin:0 0 18px;padding:12px 14px;border-radius:12px;background:var(--kaart-2);border:1px dashed var(--lijn);color:var(--inkt-2);font-size:13.5px;line-height:1.5}
 body.desktop.in-game #detailBody .pd-regels+.detail-kop{margin-top:18px}
 body.desktop.in-game #detailBody .legend-row{padding:6px 0}
@@ -2720,7 +2720,7 @@ body.desktop.in-game .detail-terug{display:inline-flex;align-items:center;gap:6p
 body.desktop.in-game .detail-terug svg{width:12px;height:12px;transform:rotate(90deg)}
 body.desktop.in-game .detail-terug:hover{border-color:var(--goud);color:var(--inkt)}
 /* Zwaarte in de kop, naast de titel. */
-body.desktop.in-game .kop-graad{display:inline-flex;align-items:center;gap:8px;font:italic 600 13px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--goud);white-space:nowrap}
+body.desktop.in-game .kop-graad{display:inline-flex;align-items:center;gap:8px;font:700 12px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--goud);white-space:nowrap}
 body.desktop.in-game .kop-graad .stippen{display:inline-flex;gap:3px}
 body.desktop.in-game .kop-graad .stippen b{width:6px;height:6px;border-radius:50%;background:var(--lijn);display:block}
 body.desktop.in-game .kop-graad .stippen b.aan{background:var(--goud)}
@@ -2952,7 +2952,7 @@ body.desktop.in-game #modalIntro .scroll-wenk{display:none}
 body.in-game .sheet,body.in-end .sheet{background:var(--kaart);border:1px solid var(--lijn);color:var(--inkt);box-shadow:var(--sch2)}
 body.in-game .sheet h3,body.in-end .sheet h3{font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--inkt);letter-spacing:0}
 body.in-game .sheet p,body.in-game .sheet ol,body.in-game .set-uitleg{color:var(--inkt-2)}
-body.in-game .set-kop{margin:14px 2px 7px;font:italic 600 12.5px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--dof)}
+body.in-game .set-kop{margin:14px 2px 7px;font:700 11.5px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--dof)}
 body.in-game .set-kop:first-of-type{margin-top:2px}
 body.in-game .set-row,body.in-game .vis-row{
   background:var(--kaart-2);border:1px solid var(--lijn);color:var(--inkt);box-shadow:none;font-size:13.5px;
@@ -2988,8 +2988,8 @@ body.desktop .debug-paneel{bottom:64px;left:16px}
   width:min(300px,calc(100vw - 24px));max-height:56vh;overflow:auto;
   padding:10px;border-radius:14px;background:var(--kaart);border:1px solid var(--lijn);
   color:var(--inkt);box-shadow:var(--sch2)}
-.debug-kop{margin:2px 2px 8px;font:italic 600 12px var(--font-display);letter-spacing:0;
-  text-transform:none;font-style:italic;color:var(--dof)}
+.debug-kop{margin:2px 2px 8px;font:700 11px var(--font-ui);letter-spacing:.02em;
+  text-transform:none;color:var(--dof)}
 .debug-rij{display:flex;align-items:center;gap:9px;width:100%;min-height:40px;
   margin-bottom:5px;padding:5px 10px;border-radius:10px;text-align:left;
   border:1px solid var(--lijn);background:var(--kaart-2);color:inherit;
@@ -3174,13 +3174,13 @@ body.in-game .radial-wat[hidden]{display:none}
 body.in-game .radial-wat .ic{width:15px;height:15px;display:flex;color:var(--goud)}
 body.in-game .radial-wat.noteer .ic{color:var(--inkt-2)}
 body.in-game .radial-wat .ic svg{width:100%;height:100%}
-body.in-game .radial-wat b{font:italic 600 12.5px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic}
+body.in-game .radial-wat b{font:700 11.5px var(--font-ui);letter-spacing:.02em;text-transform:none}
 body.in-game .radial-obj .ic{width:26px;height:26px;color:var(--inkt-2)}
 body.in-game .radial-obj .ic svg{width:100%;height:100%}
 body.in-game .radial-obj .wat{display:flex;flex-direction:column;line-height:1.12;min-width:0}
 body.in-game .radial-obj .wat b{font-family:var(--font-display);font-weight:600;font-size:19px;letter-spacing:0;color:var(--inkt)}
-body.in-game .radial-obj .wat i{font-style:normal;margin-top:2px;font:italic 600 11.5px var(--font-display);
-  letter-spacing:0;text-transform:none;font-style:italic;color:var(--dof)}
+body.in-game .radial-obj .wat i{font-style:normal;margin-top:2px;font:700 10.5px var(--font-ui);
+  letter-spacing:.02em;text-transform:none;color:var(--dof)}
 #grid .tile{touch-action:none}
 /* Waar niemand kan staan ligt een lichte donkere waas; net iets rustiger
    dan in het Lab, zodat het object zelf de aandacht houdt. */
@@ -3293,7 +3293,7 @@ body.in-game .clue-card.board .txt{color:var(--inkt)}
 body.in-game #modalClue .sheet{max-width:460px;max-height:88vh;padding:18px 18px 16px;text-align:left;overflow:auto}
 body.in-game #modalClue .sheet::-webkit-scrollbar{width:0}
 .pd-sluit{position:absolute;top:12px;right:12px;z-index:2}
-.pd-label{margin:16px 0 6px;text-align:left;font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--dof)}
+.pd-label{margin:16px 0 6px;text-align:left;font:700 11px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--dof)}
 .pd-schild{flex:0 0 auto;width:56px;height:56px;display:flex;align-items:center;justify-content:center}
 .pd-schild .ic{width:40px;height:40px;color:var(--goud)}
 .pd-schild .ic svg{width:100%;height:100%}
@@ -3363,8 +3363,16 @@ button.pd-regel:hover{border-color:var(--goud)}
 .boek-lijst button{display:block;width:100%;text-align:left;border:0;background:none;cursor:pointer;
   padding:9px 11px;border-radius:10px;color:var(--inkt-2);font:700 13.5px var(--font-ui)}
 .boek-lijst button:hover{background:var(--kaart-2)}
-.boek-groep{font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--dof);padding:12px 10px 4px}
-.boek-groep:first-child{padding-top:2px}
+/* De lijst in groepen die open en dicht kunnen: de kop is een knop met een
+   pijltje; de groep van de gekozen soort staat open. */
+.boek-groepvak{display:flex;flex-direction:column;gap:2px}
+.boek-lijst button.boek-groep{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:10px 10px 6px;font:700 12px var(--font-ui);letter-spacing:.02em;color:var(--dof);background:none;border-radius:0}
+.boek-lijst button.boek-groep:hover{color:var(--inkt);background:none}
+.boek-groep svg{width:14px;height:14px;flex:0 0 auto;transition:transform .18s}
+.boek-groepvak.dicht .boek-groep svg{transform:rotate(-90deg)}
+.boek-groepvak.dicht .boek-groep-items{display:none}
+.boek-groep-items{display:flex;flex-direction:column;gap:2px}
 .boek-lijst button.aan{background:var(--goud);color:var(--goud-op)}
 .boek-uitleg{overflow:auto;padding-right:4px}
 .boek-titel{margin:0 0 10px;font-family:var(--font-display);font-weight:600;font-size:24px;line-height:1.15;color:var(--inkt)}
@@ -3441,7 +3449,7 @@ body.in-game .clue-card.board .lijf{padding-top:0;gap:0;width:100%}
 body.in-game .clue-card.board::before{background:var(--goud)}
 body.in-game .clue-card.board .kop{display:none}
 body.in-game .clue-card.board .name{
-  color:var(--goud);font:italic 600 13px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic}
+  color:var(--goud);font:700 12px var(--font-ui);letter-spacing:.02em;text-transform:none}
 body.in-game .clue-card.board .txt{margin-top:6px;font-size:15.5px;color:var(--inkt);width:100%}
 body.in-game .clue-card.board .txt .regel{display:block;padding:4px 0 4px 15px;position:relative}
 body.in-game .clue-card.board .txt .regel.algemeen{color:var(--dof);font-size:13px;font-weight:600}
@@ -3454,7 +3462,7 @@ body.in-game .clue-card.board .txt.meer .regel + .regel{border-top:1px solid var
 #modalHelp .sheet{height:min(640px,90vh);display:flex;flex-direction:column;position:relative}
 .stap-vel .sluit{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:999px;border:1px solid var(--lijn);
   background:var(--kaart-2);color:var(--dof);font-size:14px;display:flex;align-items:center;justify-content:center;padding:0}
-.stap-teller{flex:0 0 auto;font-size:12.5px;font-weight:600;letter-spacing:0;text-transform:none;font-family:var(--font-display);font-style:italic;color:var(--dof);margin-bottom:6px}
+.stap-teller{flex:0 0 auto;font-size:11.5px;font-weight:700;letter-spacing:.02em;text-transform:none;font-family:var(--font-ui);color:var(--dof);margin-bottom:6px}
 #helpKop{flex:0 0 auto;margin:0 36px 10px 0;font-size:26px}
 /* Titelkaart: alleen de kop, groot in het midden. */
 .stap-vel.titelkaart #helpKop{flex:1;min-height:240px;display:flex;flex-direction:column;gap:22px;align-items:center;justify-content:center;text-align:center;margin:0;font-size:44px;line-height:1.1}
@@ -3618,13 +3626,13 @@ html[data-thema="licht"] .wm-c.blok{background:rgba(38,36,29,.09);box-shadow:non
 html[data-thema="licht"] .wm-c.leeg{background:none;box-shadow:none;visibility:hidden}
 /* Geen woordmerk meer boven de zaak: je komt hier altijd via het menu, waar
    het merk al boven de lijst staat. Zonder leest de titelpagina strakker. */
-.intro-zaak{font:italic 600 14px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--goud);margin-bottom:14px;min-height:14px}
+.intro-zaak{font:700 13px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--goud);margin-bottom:14px;min-height:14px}
 .intro-titel{margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(34px,10vw,54px);line-height:1.04;letter-spacing:-.015em;color:var(--inkt);text-wrap:balance}
 .intro-graad{display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:18px}
 .intro-graad .stippen{display:inline-flex;gap:5px}
 .intro-graad .stippen i{width:7px;height:7px;border-radius:50%;background:var(--lijn);font-style:normal}
 .intro-graad .stippen i.aan{background:var(--goud)}
-.intro-graad .woord{font:italic 600 13px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--goud)}
+.intro-graad .woord{font:700 12px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--goud)}
 /* Taps toelopend in plaats van een blokje: leest als een pennenstreek. */
 .intro-scheiding{width:64px;height:2px;margin:26px auto 22px;border-radius:2px;
   background:linear-gradient(90deg,transparent,var(--goud) 28%,var(--goud) 72%,transparent)}
@@ -3672,7 +3680,7 @@ body.in-game #modalIntro .intro-bordregels:empty + .deelnemers{padding-top:12px}
    een kader eromheen. Boven de groep hetzelfde gouden kapitaaltje als
    "ZAAK 4" en "LICHT" erboven, zodat je weet wat je leest. */
 .intro-bordregels{display:flex;flex-direction:column;gap:0;text-align:left}
-.bordregel-kop{font:italic 600 13px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;
+.bordregel-kop{font:700 12px var(--font-ui);letter-spacing:.02em;text-transform:none;
   color:var(--goud);margin:0 0 10px}
 /* Dezelfde kaartvorm als de regels verderop in het spel: een zacht gouden vlak
    met een rand eromheen. Ze stonden hier als losse zinnen op de bladzijde en
@@ -3714,7 +3722,7 @@ body.in-game #modalIntro .intro-bordregels:empty + .deelnemers{padding-top:12px}
 /* Een lange naam wordt een maat kleiner in plaats van midden in het woord af te breken. */
 .deelnemer.lang .dl-tekst .naam{font-size:21px}
 .deelnemer.zeerlang .dl-tekst .naam{font-size:17px}
-.dl-tekst .rol{font:italic 600 14.5px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--dof)}
+.dl-tekst .rol{font:700 13.5px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--dof)}
 /* Rolnaam in de kleur van de rol, zoals op de V3-sheet. */
 .dl-tekst .rol.noble,body.in-game .badge.tag.noble{color:#D9B75E}
 .dl-tekst .rol.knight,body.in-game .badge.tag.knight{color:#A8B1BF}
@@ -3740,8 +3748,8 @@ body.in-end .uitslag-voet .btn{
   background:var(--goud);color:var(--goud-op);
   border:1px solid var(--goud-diep);
   height:52px;border-radius:16px;
-  font-family:var(--font-display);font-weight:600;font-size:15px;
-  letter-spacing:0;text-transform:none;font-style:italic;
+  font-family:var(--font-ui);font-weight:700;font-size:14px;
+  letter-spacing:.02em;text-transform:none;
   box-shadow:0 10px 26px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.14);
   gap:12px;
 }
@@ -3832,7 +3840,7 @@ body.in-end #endTitle{margin:0;font-family:var(--font-display);font-weight:600;f
 .uitslag-cijfers{display:flex;justify-content:center;gap:34px;margin:20px 0 18px}
 .uitslag-cijfers .cijfer b{display:block;font-family:var(--font-display);font-weight:600;font-size:30px;line-height:1;
   color:var(--inkt);font-variant-numeric:tabular-nums}
-.uitslag-cijfers .cijfer span{display:block;margin-top:6px;font:italic 600 12.5px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--dof)}
+.uitslag-cijfers .cijfer span{display:block;margin-top:6px;font:700 11.5px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--dof)}
 /* Dezelfde taal als de titelpagina: geen kaartjes met randen, maar portret,
    naam en plek als tekst onder elkaar. De vakjes maakten van elke persoon een
    knop terwijl er niets te klikken valt. */
@@ -3848,7 +3856,7 @@ body.in-end #endTitle{margin:0;font-family:var(--font-display);font-weight:600;f
 .uitslag-rij .wie small{font-size:13px;color:var(--dof);font-weight:600;margin-top:2px}
 /* Het oordeel als kapitaaltje in de kleur ervan, zoals "EDELE" en
    "SLACHTOFFER" op de titelpagina, in plaats van een pil met een rand. */
-.uitslag-rij .oordeel{font:italic 600 12.5px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;padding:0;border:0;background:none}
+.uitslag-rij .oordeel{font:700 11.5px var(--font-ui);letter-spacing:.02em;text-transform:none;padding:0;border:0;background:none}
 .uitslag-rij.goed .oordeel{color:var(--goud)}
 .uitslag-rij.fout .oordeel{color:#E58472}
 .uitslag-rij.open{opacity:.7}
@@ -3864,6 +3872,17 @@ body.in-game .clue-card.done .tick{
   background:var(--goud);border-color:var(--goud);color:var(--goud-op);box-shadow:none;transform:none;width:20px;height:20px}
 body.in-game .clue-card.done .tick svg{display:block}
 body.in-game .clue-card.done::before{background:var(--goud)}
+/* Schuifbalken in de stijl van het spel: een smalle inktstreep, geen grijze
+   systeembalk. Op een aanraakscherm of een klein scherm geen balk. */
+*{scrollbar-width:thin;scrollbar-color:var(--inkt-rand) transparent}
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:var(--inkt-rand);border-radius:999px;border:3px solid transparent;background-clip:padding-box}
+*::-webkit-scrollbar-thumb:hover{background-color:var(--inkt)}
+@media (pointer:coarse),(max-width:760px){
+  *{scrollbar-width:none}
+  *::-webkit-scrollbar{display:none;width:0;height:0}
+}
 </style>
 </head>
 <body class="hide-objsurf laden vloer-v3">
@@ -9189,7 +9208,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.190";
+const PLAYER_APP_VERSION="0.9.191";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -10081,7 +10100,7 @@ const REGEL_FAMILIES = [
     tekst:["<b>Op dezelfde rij</b> of <b>in dezelfde kolom</b> als een object: hoe ver weg maakt niet uit.",
            "A deelt zijn rij met het object rechtsboven, niet met het andere."] },
   { id:"rollen", groep:"Mensen en getuigen", kop:"Rollen",
-    atomen:["has-role","in-restricted-room","role-all-different-rooms","role-all-same-room","role-left-of-empty-column"],
+    atomen:["has-role","in-restricted-room","role-all-different-rooms","role-all-same-room","role-left-of-empty-column","role-above-of-row"],
     beeld:()=>helpBord(["A...","....","..B.","...."],{gebied:REGEL_GEB_GOUD}),
     tekst:["Een <b>rol</b> — edele, ridder of dorpeling — zie je aan de vorm achter het portret.",
            "Een gebied met een <b>gouden rand</b> is voor edelen: edelen staan daar altijd, dorpelingen nooit, ridders overal."] },
@@ -10153,19 +10172,34 @@ function toonRegelUitleg(cs,p){
    de uitleg. Door vijftien kaarten heen tikken liet niet zien wat er te
    vinden was; een lijst wel. */
 let boekSel = "plek";
+const BOEK_OPEN = new Set();
 function boekFamilies(){ return REGEL_FAMILIES.filter(f => f.inLijst !== false); }
 function tekenRegelboek(){
   const fams = boekFamilies();
   const f = fams.find(x => x.id === boekSel) || fams[0];
   if (!f) return;
   boekSel = f.id;
-  /* De lijst in groepen: een kopje zodra de groep wisselt. */
-  let groep = "";
-  $("#boekLijst").innerHTML = fams.map(x => {
-    const kopje = (x.groep && x.groep !== groep) ? '<div class="boek-groep">' + esc(x.groep) + '</div>' : '';
-    groep = x.groep || groep;
-    return kopje + '<button type="button" data-fam="' + x.id + '"' + (x.id === f.id ? ' class="aan"' : '') + '>'
-      + esc(x.kop) + '</button>';
+  /* De lijst in groepen die open en dicht kunnen. De groep van de gekozen
+     soort gaat open als er nog niets openstaat; verder blijft de keuze van
+     de speler staan. Soorten zonder groep staan los onderaan. */
+  const groepen = [];
+  fams.forEach(x => {
+    const g = x.groep || "";
+    let last = groepen[groepen.length - 1];
+    if (!last || last.naam !== g){ last = { naam:g, items:[] }; groepen.push(last); }
+    last.items.push(x);
+  });
+  const eigen = groepen.find(g => g.items.some(x => x.id === f.id));
+  if (eigen && eigen.naam && !BOEK_OPEN.size) BOEK_OPEN.add(eigen.naam);
+  $("#boekLijst").innerHTML = groepen.map(g => {
+    const knoppen = g.items.map(x => '<button type="button" data-fam="' + x.id + '"' + (x.id === f.id ? ' class="aan"' : '') + '>'
+      + esc(x.kop) + '</button>').join("");
+    if (!g.naam) return knoppen;
+    const open = BOEK_OPEN.has(g.naam);
+    return '<div class="boek-groepvak' + (open ? '' : ' dicht') + '">'
+      + '<button type="button" class="boek-groep" data-groep="' + esc(g.naam) + '" aria-expanded="' + open + '">'
+      + esc(g.naam) + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>'
+      + '<div class="boek-groep-items">' + knoppen + '</div></div>';
   }).join("");
   $("#boekUitleg").innerHTML = '<h4 class="boek-titel">' + esc(f.kop) + '</h4>'
     + '<div class="boek-beeld">' + f.beeld() + '</div>'
@@ -10176,11 +10210,13 @@ function tekenRegelboek(){
   if (aan) aan.scrollIntoView({ block:"nearest" });
 }
 function openRegelboek(famId){
-  if (famId) boekSel = famId;
+  if (famId){ boekSel = famId; const f = REGEL_FAMILIES.find(x => x.id === famId); if (f && f.groep) BOEK_OPEN.add(f.groep); }
   tekenRegelboek();
   openModal("#modalRegelboek");
 }
 $("#boekLijst").addEventListener("click",e=>{
+  const k=e.target.closest("button[data-groep]");
+  if(k){ const g=k.dataset.groep; if(BOEK_OPEN.has(g)) BOEK_OPEN.delete(g); else BOEK_OPEN.add(g); tekenRegelboek(); return; }
   const b=e.target.closest("button[data-fam]");
   if(!b) return;
   boekSel=b.dataset.fam;

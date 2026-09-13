@@ -116,7 +116,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 }
 /* De campagne staat vóór de naam: het nummer telt binnen de campagne, dus
    zonder campagne zegt "3v2" niets. */
-.level-campagne{font:italic 600 12px var(--serif);letter-spacing:0;text-transform:none;font-style:italic;
+.level-campagne{font:700 11px var(--ui);letter-spacing:.02em;text-transform:none;
   color:var(--accent);white-space:nowrap;margin-right:8px}
 .level-campagne.leeg{color:var(--crimson)}
 .level-versie:not(:empty)::before{content:"· "}
@@ -152,7 +152,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .panel-body{padding:18px;overflow-y:auto;flex:1}
 .panel-body::-webkit-scrollbar{width:9px}
 .panel-body::-webkit-scrollbar-thumb{background:var(--tint-2);border-radius:9px;border:2px solid var(--panel)}
-.eyebrow{font:italic 600 12.5px/1 var(--serif);letter-spacing:0;text-transform:none;font-style:italic;color:var(--faint);margin:0 0 12px}
+.eyebrow{font:700 11.5px/1 var(--ui);letter-spacing:.02em;text-transform:none;color:var(--faint);margin:0 0 12px}
 h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .hint{font-family:var(--read);font-weight:500;color:var(--muted);font-size:14.5px;line-height:1.6;margin:0 0 16px}
 
@@ -442,8 +442,8 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .opl-override.aan{border-style:solid;border-color:#E3C878;background:#FCF3DC}
 .opl-override.aan b{color:#8A6A12}
 .opl-override.aan span{color:var(--muted)}
-.opl-sep{margin:16px 0 6px;font:italic 600 11.5px var(--serif);letter-spacing:0;
-  text-transform:none;font-style:italic;color:var(--faint)}
+.opl-sep{margin:16px 0 6px;font:700 10.5px var(--ui);letter-spacing:.02em;
+  text-transform:none;color:var(--faint)}
 .opl-meta{margin-top:14px;font:600 10.5px var(--mono);color:var(--faint)}
 /* De graad: vijf bollen, de gebruikte techniek en de ladder eronder. */
 .graad-blok{display:flex;align-items:center;gap:14px;padding:12px 14px;
@@ -619,7 +619,7 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .dropdown-item.on{background:var(--accent-dim);color:var(--accent)}
 .dropdown-item .arrow{margin-left:auto;opacity:.6;font-size:11px}
 .dropdown-head{
-  padding:9px 14px;font:italic 600 12.5px var(--serif);letter-spacing:0;text-transform:none;font-style:italic;
+  padding:9px 14px;font:700 11.5px var(--ui);letter-spacing:.02em;text-transform:none;
   color:var(--faint);background:var(--tint);border-bottom:1.5px solid var(--edge);
   display:flex;align-items:center;gap:8px;cursor:pointer;
 }
@@ -689,7 +689,7 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.025em;margin:0 0 6px}
 .qual-row{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:8px}
 .qual-group{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
 .qual-label{
-  font:italic 600 11.5px var(--serif);letter-spacing:0;text-transform:none;font-style:italic;
+  font:700 10.5px var(--ui);letter-spacing:.02em;text-transform:none;
   color:var(--faint);width:100%;
 }
 .qual-chip{
@@ -1031,8 +1031,8 @@ body.spelweergave .pawn.personage .fout-merk{right:2%;top:2%;width:calc(var(--pi
 .rlabel{
   position:absolute;bottom:5%;left:50%;transform:translateX(-50%);z-index:4;pointer-events:none;
   background:#fff;color:var(--stroke);border:2px solid var(--stroke);border-radius:999px;
-  padding:1px 8px;font:italic 600 11.5px/1.5 var(--serif);letter-spacing:0;white-space:nowrap;animation:fadeIn .25s ease both;
-  text-transform:none;font-style:italic;
+  padding:1px 8px;font:700 10.5px/1.5 var(--ui);letter-spacing:.02em;white-space:nowrap;animation:fadeIn .25s ease both;
+  text-transform:none;
 }
 .rlabel.restricted{background:var(--accent-vlak);color:var(--accent-op);border-color:var(--accent-diep)}
 /* Subtiel label op een benoemd, geselecteerd object. */
@@ -1048,7 +1048,7 @@ body.spelweergave .pawn.personage .fout-merk{right:2%;top:2%;width:calc(var(--pi
 .slabel{
   position:absolute;top:-6px;left:50%;transform:translateX(-50%);z-index:5;pointer-events:none;
   background:var(--accent-vlak);color:var(--accent-op);border-radius:999px;
-  padding:0 5px;font:italic 600 9.5px/1.45 var(--serif);letter-spacing:0;text-transform:none;font-style:italic;
+  padding:0 5px;font:700 8.5px/1.45 var(--ui);letter-spacing:.02em;text-transform:none;
   white-space:nowrap;animation:fadeIn .2s ease both;
 }
 /* Klein label boven de ruimtenaam: wie deze ruimte mag betreden. */
@@ -1336,7 +1336,7 @@ body.verberg-nummers .rail{visibility:hidden}
 .person-row .badge.bad{background:var(--crimson);color:#fff}
 /* Klein label voor de soort persoon (bv. Edele), naast de naam in de lijst. */
 .person-row .pr-tag{
-  flex:0 0 auto;font:italic 600 11px var(--serif);letter-spacing:0;text-transform:none;font-style:italic;
+  flex:0 0 auto;font:700 10px var(--ui);letter-spacing:.02em;text-transform:none;
   color:var(--accent);background:var(--accent-dim);padding:2px 7px;border-radius:999px;white-space:nowrap;
 }
 
@@ -1426,8 +1426,8 @@ span.obj-icon>svg{width:100%;height:100%}
 .blok + .blok{margin-top:12px}
 .blok-overzicht{background:var(--tint);border-color:var(--edge-soft)}
 .blok-kop{
-  margin:0 0 10px;font:italic 600 12.5px/1 var(--serif);letter-spacing:0;
-  text-transform:none;font-style:italic;color:var(--faint);
+  margin:0 0 10px;font:700 11.5px/1 var(--ui);letter-spacing:.02em;
+  text-transform:none;color:var(--faint);
 }
 .panel-split{height:1px;background:var(--edge);margin:18px 0}
 #inspector h3{margin:0 0 4px;font-size:16px;font-weight:700;color:var(--ink)}
@@ -1453,7 +1453,7 @@ select.inp, .modal-box select{
 }
 select.inp:hover, .modal-box select:hover{background-color:var(--tint)}
 select.inp optgroup, .modal-box select optgroup{
-  font:italic 600 12.5px var(--serif);letter-spacing:0;text-transform:none;font-style:italic;color:var(--faint);
+  font:700 11.5px var(--ui);letter-spacing:.02em;text-transform:none;color:var(--faint);
 }
 select.inp option, .modal-box select option{
   font:600 13px var(--ui);color:var(--ink);padding:6px 8px;
@@ -1678,7 +1678,7 @@ textarea.inp{min-height:58px;resize:vertical}
 .insp-ico svg{width:26px;height:30px;overflow:visible}
 .insp-txt{min-width:0;flex:1}
 .insp-sub{
-  display:block;font:italic 600 12px var(--serif);letter-spacing:0;text-transform:none;font-style:italic;color:var(--muted);
+  display:block;font:700 11px var(--ui);letter-spacing:.02em;text-transform:none;color:var(--muted);
   line-height:1.55;white-space:normal;overflow-wrap:anywhere;
 }
 
@@ -1688,7 +1688,7 @@ textarea.inp{min-height:58px;resize:vertical}
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 #inspectorTitle.none{
-  font:italic 600 12.5px/1 var(--serif);letter-spacing:0;text-transform:none;font-style:italic;color:var(--faint);margin-bottom:12px;
+  font:700 11.5px/1 var(--ui);letter-spacing:.02em;text-transform:none;color:var(--faint);margin-bottom:12px;
 }
 
 /* Overzicht per ruimte. */
@@ -1721,7 +1721,7 @@ textarea.inp{min-height:58px;resize:vertical}
 }
 .truth.ok{background:var(--ok);color:#fff}
 .truth.no{background:var(--crimson);color:#fff}
-.clue-tag{font:italic 600 11.5px var(--serif);letter-spacing:0;text-transform:none;font-style:italic;color:var(--faint)}
+.clue-tag{font:700 10.5px var(--ui);letter-spacing:.02em;text-transform:none;color:var(--faint)}
 .clue-del{
   margin-left:auto;background:none;border:none;color:var(--faint);font-size:13px;cursor:pointer;
   padding:1px 5px;border-radius:5px;transition:all .14s;
@@ -1802,8 +1802,8 @@ textarea.inp{min-height:58px;resize:vertical}
    een eigen span, dus ::first-letter pakt hem. */
 .sm-zin::first-letter{text-transform:uppercase}
 .sm-group{
-  padding:8px 12px 4px;font:italic 600 11.5px var(--serif);letter-spacing:0;
-  text-transform:none;font-style:italic;color:var(--faint);
+  padding:8px 12px 4px;font:700 10.5px var(--ui);letter-spacing:.02em;
+  text-transform:none;color:var(--faint);
 }
 .sm-item{
   display:flex;align-items:flex-start;gap:7px;padding:7px 12px;cursor:pointer;
@@ -1895,7 +1895,7 @@ textarea.inp{min-height:58px;resize:vertical}
 .modal-buttons{display:flex;gap:8px;justify-content:flex-end}
 .modal-box.wide{width:min(460px,92vw)}
 .set-group{margin-bottom:18px}
-.set-title{font:italic 600 12.5px var(--serif);letter-spacing:0;text-transform:none;font-style:italic;color:var(--faint);margin-bottom:7px}
+.set-title{font:700 11.5px var(--ui);letter-spacing:.02em;text-transform:none;color:var(--faint);margin-bottom:7px}
 .set-note{font:600 11.5px/1.5 var(--read);color:var(--muted);margin:0 0 8px}
 .set-toggle{
   display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;padding:10px 12px;
@@ -1935,7 +1935,7 @@ textarea.inp{min-height:58px;resize:vertical}
 .legenda-toggle:hover{background:var(--tint-2);color:var(--ink)}
 .legenda-content{padding:12px;overflow-y:auto;max-height:350px;font-size:12px;color:var(--muted);line-height:1.6}
 .legenda-section{margin-bottom:12px}
-.legenda-section-title{font:italic 600 13px var(--serif);color:var(--faint);text-transform:none;font-style:italic;margin-bottom:6px}
+.legenda-section-title{font:700 12px var(--ui);color:var(--faint);text-transform:none;margin-bottom:6px}
 .legenda-item{display:flex;align-items:center;gap:6px;margin-bottom:4px}
 
 /* ── Meldingen ──────────────────────────────────────── */
@@ -1959,12 +1959,23 @@ textarea.inp{min-height:58px;resize:vertical}
 .hidden{display:none!important}
 
 @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* Schuifbalken in de stijl van het spel: een smalle inktstreep, geen grijze
+   systeembalk. Op een aanraakscherm of een klein scherm geen balk. */
+*{scrollbar-width:thin;scrollbar-color:var(--edge) transparent}
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:var(--edge);border-radius:999px;border:3px solid transparent;background-clip:padding-box}
+*::-webkit-scrollbar-thumb:hover{background-color:var(--muted)}
+@media (pointer:coarse),(max-width:760px){
+  *{scrollbar-width:none}
+  *::-webkit-scrollbar{display:none;width:0;height:0}
+}
 </style>
 <style>
 /* Sectiekopjes in de inspector: rustige indeling in blokken. */
 .insp-sec{
   margin:16px 0 4px;padding-top:11px;border-top:1px solid var(--edge-soft,#EBE8DE);
-  font:italic 600 12.5px var(--serif);letter-spacing:0;text-transform:none;font-style:italic;
+  font:700 11.5px var(--ui);letter-spacing:.02em;text-transform:none;
   color:var(--muted,#71695A);
 }
 .insp-sec:first-child{margin-top:2px;padding-top:0;border-top:0}
@@ -2207,7 +2218,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v65</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v66</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -7268,7 +7279,7 @@ function regelPartner(args, personId){
    een stoel) rekent zwaarder dan wie iets moet nakijken (geen lege ruimte). */
 const BORD_TELT = new Set(['empty-room-count','empty-column-count','empty-row-count',
                            'room-person-total','count-on-kind','kind-neighbour-count',
-                           'role-left-of-empty-column']);
+                           'role-left-of-empty-column','role-above-of-row']);
 /* Onthouden zolang het bord niet verandert: de kiezer opent dezelfde lijst
    telkens opnieuw, en elke meting loopt alle vakjes langs. */
 const SNOEI_CACHE = new Map();
@@ -9249,6 +9260,24 @@ const ATOMS = {
                           const buur = pos(q).x + 1 + stap;
                           if (buur < 1 || buur > S.cols) return false;
                           if (!tilesInColumn(buur).length) return false;
+                          return leeg.includes(buur) === wilLeeg;
+                        });
+                      } },
+  /* Hetzelfde voor rijen: "Elke edele stond meteen boven een gevulde rij".
+     Boven = de rij eronder is de buur (y+1), onder = de rij erboven. */
+  'role-above-of-row':{scope:'board', cat:'Rollen',
+                      text:'Elke {roleP} stond meteen {updown2} een {kolomvul} rij.',
+                      slots:{roleP:'roleP', updown2:'updown2', kolomvul:'kolomvul'},
+                      test:(_,a)=>{
+                        const ps = peopleWithRole(a.roleP);
+                        if (!ps.length) return false;
+                        const leeg = emptyRows();                    /* 1-gebaseerd */
+                        const stap = (a.updown2 === 'below') ? -1 : +1;   /* boven = de rij erna */
+                        const wilLeeg = (a.kolomvul || 'empty') === 'empty';
+                        return ps.every(q => {
+                          const buur = pos(q).y + 1 + stap;
+                          if (buur < 1 || buur > S.rows) return false;
+                          if (!tilesInRow(buur).length) return false;
                           return leeg.includes(buur) === wilLeeg;
                         });
                       } },

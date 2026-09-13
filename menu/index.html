@@ -244,7 +244,7 @@ html[data-thema="licht"] img.woordmerk.woordmerk-donker{display:none}
 .merk{position:relative;-webkit-tap-highlight-color:transparent;user-select:none}
 .proef-merk{display:none;position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);
   padding:2px 9px;border-radius:999px;background:var(--accent);color:#fff;
-  font:italic 600 11.5px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;
+  font:700 10.5px var(--font-ui);letter-spacing:.02em;text-transform:none;
   box-shadow:0 2px 6px rgba(0,0,0,.28)}
 body.proefstand .proef-merk{display:block}
 /* haarlijntje dat het merkblok van de zaakregel scheidt */
@@ -283,8 +283,8 @@ html[data-thema="licht"] .titelblok h1 em::after{
   position:relative;z-index:2;
   flex:0 0 auto;padding:2px 0 0;display:flex;align-items:center;gap:9px;
 }
-.lijst-teller{flex:1;min-width:0;color:var(--dof);font:italic 600 13px var(--font-display);
-  letter-spacing:0;text-transform:none;font-style:italic}
+.lijst-teller{flex:1;min-width:0;color:var(--dof);font:700 12px var(--font-ui);
+  letter-spacing:.02em;text-transform:none}
 /* Op een telefoon het aantal (alleen als je filtert) op een eigen regel en
    de filterknoppen eronder over de volle breedte. */
 @media (max-width:640px){
@@ -399,7 +399,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .zaak-nr.demo-teken svg{width:21px;height:21px;display:block}
 .level-rij.demo .grid-tag{background:transparent}
 .demo-tag{
-  font:italic 600 11.5px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;
+  font:700 10.5px var(--font-ui);letter-spacing:.02em;text-transform:none;
   color:var(--accent);
 }
 /* Het formaat staat rechts naast de pijl. */
@@ -410,7 +410,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
    hoeft er rechts niets meer bij. */
 .afgerond{display:inline-flex;align-items:center;gap:7px;color:var(--accent)}
 .afgerond svg{width:13px;height:13px;flex:0 0 auto}
-.afgerond b{font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic}
+.afgerond b{font:700 11px var(--font-ui);letter-spacing:.02em;text-transform:none}
 .afgerond span{font:700 12px var(--font-ui);font-variant-numeric:tabular-nums;color:var(--inkt-2)}
 .level-rij.voltooid{background:color-mix(in srgb,var(--kaart) 50%,var(--grond) 50%);box-shadow:none}
 .level-rij.voltooid h3{color:var(--inkt-2)}
@@ -427,7 +427,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .level-rij.bezig .grid-tag,.level-rij.bezig .demo-tag{background:rgba(255,255,255,.16);color:#fff;border-color:transparent}
 .mee-bezig{display:inline-flex;align-items:center;gap:7px;color:#fff}
 .mee-bezig svg{width:13px;height:13px;flex:0 0 auto}
-.mee-bezig b{font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic}
+.mee-bezig b{font:700 11px var(--font-ui);letter-spacing:.02em;text-transform:none}
 .mee-bezig span{font:700 12px var(--font-ui);font-variant-numeric:tabular-nums;color:rgba(255,255,255,.82)}
 .zaak-nr{border-color:var(--accent);color:var(--accent)}
 /* Op een smal scherm is het vinkje met de tijd genoeg; het woord zou de
@@ -459,19 +459,31 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
    een kop met een terugknop. */
 body:not(.op-campagne) .filter-plak{display:none}
 body.op-campagne .titelblok{display:none}
-.campagne-balk{flex:0 0 auto;display:none;align-items:flex-start;gap:14px;padding:6px 0 18px;flex-wrap:wrap}
-body.op-campagne .campagne-balk{display:flex}
-/* Het campagnebeeld boven de kop: een band over de volle breedte in een
-   inktkader, de tekst eronder. */
-.cb-beeld{flex:1 0 100%;height:clamp(120px,22vw,220px);margin:0 0 6px;border-radius:14px;
-  border:1.5px solid var(--inkt-rand);background:var(--kaart-2) center/cover no-repeat}
-.cb-beeld:not([style]){display:none}
+.campagne-balk{flex:0 0 auto;display:none;padding:6px 0 18px}
+body.op-campagne .campagne-balk{display:block}
+/* De kop van een campagne: het beeld over de volle breedte, met de terugknop
+   en het stijletiket in de bovenhoeken en de naam en de stand onderin, over
+   een donkere waas zodat de letters op elk beeld leesbaar blijven. */
+.cb-hero{position:relative;height:clamp(170px,24vw,260px);border-radius:16px;overflow:hidden;
+  background:linear-gradient(160deg,#3A2A1E,#8A5F16) center/cover no-repeat}
+.cb-hero::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(42,33,24,.10) 0%,rgba(42,33,24,0) 30%,rgba(42,33,24,.20) 55%,rgba(42,33,24,.78) 100%)}
+.cb-hero > *{position:absolute;z-index:2}
+.cb-hero .vraag-knop{left:14px;top:14px}
+.cb-hero .cb-tag{right:14px;top:14px}
+.cb-hero .cb-tag .stijl-tag{box-shadow:0 1px 4px rgba(42,33,24,.25)}
+.cb-hero .cb-tekst{left:22px;right:230px;bottom:20px}
+.cb-hero .ck-stand{right:22px;bottom:24px;color:#F3E7D3;text-align:right}
+.cb-hero .ck-stand b{color:#fff}
+.cb-hero .ck-balk{background:rgba(255,255,255,.28)}
+.cb-hero .ck-balk i{background:#F0DFB4}
 .campagne-balk .vraag-knop{flex:0 0 auto;margin-top:2px}
 .campagne-balk .vraag-knop svg{width:18px;height:18px}
 .cb-tekst{flex:1;min-width:0}
-.campagne-balk h2{margin:3px 0 0;font:600 clamp(28px,4.2vw,46px)/1.08 var(--font-display);color:var(--inkt);letter-spacing:-.015em}
+.campagne-balk h2{margin:0;font:600 clamp(28px,4.2vw,46px)/1.08 var(--font-display);color:#FBF4EA;letter-spacing:-.015em;
+  text-shadow:0 1px 2px rgba(42,33,24,.5),0 6px 24px rgba(42,33,24,.45)}
 .campagne-balk .ck-stand{margin-top:6px}
-.ck-label{display:block;font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--accent)}
+.ck-label{display:block;font:700 11px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--accent)}
 .ck-stand{flex:0 0 auto;text-align:right;font:700 11px var(--font-ui);color:var(--dof);white-space:nowrap}
 .ck-stand b{color:var(--inkt);font-size:13px}
 .ck-balk{display:block;width:84px;height:4px;border-radius:9px;background:var(--lijn);margin:6px 0 0 auto;overflow:hidden}
@@ -492,12 +504,10 @@ body.op-campagne .campagne-balk{display:flex}
 .campagne-kaart:active{transform:none;box-shadow:var(--sch1)}
 /* Het campagnebeeld bovenin de kaart, met een inktlijn eronder; daaronder
    begint de tekst op dezelfde plek als voorheen. */
-.ck-beeld{display:block;height:112px;margin:0 -20px 16px;background:var(--kaart-2) center/cover no-repeat;
-  border-bottom:1.5px solid var(--inkt-rand)}
-.ck-beeld:empty::after{content:""}
-.campagne-kaart .ck-label{padding-right:120px;line-height:24px}
-.campagne-kaart .stijl-tag{top:calc(112px + 16px)}
-.ck-naam{--rh:1.15em;display:flex;align-items:flex-start;height:calc(2 * var(--rh));margin:8px 0 0;padding-right:28px;
+.ck-beeld{display:block;height:128px;margin:0 -20px 16px;background:var(--kaart-2) center/cover no-repeat}
+.campagne-kaart .ck-label{display:none}
+.campagne-kaart .stijl-tag{top:12px;box-shadow:0 1px 4px rgba(42,33,24,.25)}
+.ck-naam{--rh:1.15em;display:flex;align-items:flex-start;height:calc(2 * var(--rh));margin:0;padding-right:8px;
   font:600 24px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em}
 /* Altijd twee regels, elk op één regel: zie campagneRegels(). */
 .ck-naam span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -508,7 +518,7 @@ body.op-campagne .campagne-balk{display:flex}
   font:700 11px var(--font-ui);letter-spacing:.02em;color:var(--inkt-2);white-space:nowrap;
   background:var(--kaart-2);border:1px solid var(--lijn);border-radius:8px;padding:4px 8px 4px 7px}
 .stijl-tag svg{width:12px;height:12px;color:var(--accent);flex:0 0 auto}
-.campagne-kaart .stijl-tag{position:absolute;right:16px}
+.campagne-kaart .stijl-tag{position:absolute;right:12px}
 .campagne-kaart:hover .stijl-tag{border-color:var(--accent-lijn)}
 .cb-label-rij{display:flex;align-items:center;gap:8px}
 /* De reeks: altijd één rij van dezelfde hoogte. Past het niet, dan krimpen de
@@ -529,11 +539,11 @@ body.op-campagne .campagne-balk{display:flex}
 .level-list.pagina-in{animation:paginaIn .22s ease both}
 .level-list.pagina-terug{animation:paginaTerug .22s ease both}
 @media (max-width:640px){
-  .campagne-balk{flex-wrap:wrap}
-  .campagne-balk h2{font-size:22px}
-  /* Op een telefoon onder de tekst, zodat de naam de hele breedte houdt. */
-  .campagne-balk .ck-stand{order:3;flex:1 0 100%;text-align:left;margin:0 0 0 52px;display:flex;align-items:center;gap:10px}
-  .campagne-balk .ck-balk{margin:0;flex:0 0 96px}
+  .cb-hero{height:clamp(190px,52vw,240px)}
+  .campagne-balk h2{font-size:clamp(24px,7vw,32px)}
+  .cb-hero .cb-tekst{right:16px;bottom:58px}
+  .cb-hero .ck-stand{left:22px;right:auto;bottom:18px;text-align:left}
+  .cb-hero .ck-balk{margin-left:0}
   .campagne-kaart{padding:18px 16px 14px}
   .ck-naam{font-size:21px}
   .ck-balk{width:64px}
@@ -580,8 +590,8 @@ body.op-campagne .campagne-balk{display:flex}
   font:700 11.5px var(--font-ui);letter-spacing:0;white-space:nowrap;cursor:pointer}
 .uitleg-keuze button.aan{background:var(--inkt);color:var(--grond)}
 .stap-teller{
-  flex:0 0 auto;font-size:12.5px;font-weight:600;letter-spacing:0;
-  text-transform:none;font-family:var(--font-display);font-style:italic;color:var(--dof);margin-bottom:8px;
+  flex:0 0 auto;font-size:11.5px;font-weight:700;letter-spacing:.02em;
+  text-transform:none;font-family:var(--font-ui);color:var(--dof);margin-bottom:8px;
 }
 #stapKop{flex:0 0 auto}
 /* Titelkaart: alleen de kop, groot in het midden. */
@@ -611,8 +621,16 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
 .boek-lijst button{display:block;width:100%;text-align:left;border:0;background:none;cursor:pointer;
   padding:9px 11px;border-radius:10px;color:var(--inkt);font:700 13.5px var(--font-ui)}
 .boek-lijst button:hover{background:var(--kaart-2)}
-.boek-groep{font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--dof);padding:12px 10px 4px}
-.boek-groep:first-child{padding-top:2px}
+/* De lijst in groepen die open en dicht kunnen: de kop is een knop met een
+   pijltje; de groep van de gekozen soort staat open. */
+.boek-groepvak{display:flex;flex-direction:column;gap:2px}
+.boek-lijst button.boek-groep{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:10px 10px 6px;font:700 12px var(--font-ui);letter-spacing:.02em;color:var(--dof);background:none;border-radius:0}
+.boek-lijst button.boek-groep:hover{color:var(--inkt);background:none}
+.boek-groep svg{width:14px;height:14px;flex:0 0 auto;transition:transform .18s}
+.boek-groepvak.dicht .boek-groep svg{transform:rotate(-90deg)}
+.boek-groepvak.dicht .boek-groep-items{display:none}
+.boek-groep-items{display:flex;flex-direction:column;gap:2px}
 .boek-lijst button.aan{background:var(--inkt);color:var(--grond)}
 .boek-uitleg{overflow:auto;padding-right:4px}
 .boek-titel{margin:0 0 10px;font-family:var(--font-display);font-weight:600;font-size:24px;line-height:1.15;color:var(--inkt)}
@@ -796,7 +814,7 @@ a.keuze-boek{text-decoration:none}
 .upload-fout{margin-top:12px;color:var(--fout);font-size:12.5px;font-weight:700;text-align:center}
 .of-lijn{
   display:flex;align-items:center;gap:12px;margin:16px 0;
-  color:var(--dof);font:italic 600 13px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;
+  color:var(--dof);font:700 12px var(--font-ui);letter-spacing:.02em;text-transform:none;
 }
 .of-lijn::before,.of-lijn::after{content:"";flex:1;height:1px;background:var(--lijn-zacht)}
 .bouw-rij{
@@ -829,6 +847,17 @@ a.keuze-boek{text-decoration:none}
   .level-rij h3{font-size:16.5px;line-height:1.25}
   .level-rij .onder{margin-top:5px}
   .level-rij .pijl{display:none}
+}
+/* Schuifbalken in de stijl van het spel: een smalle inktstreep, geen grijze
+   systeembalk. Op een aanraakscherm of een klein scherm geen balk. */
+*{scrollbar-width:thin;scrollbar-color:var(--inkt-rand) transparent}
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:var(--inkt-rand);border-radius:999px;border:3px solid transparent;background-clip:padding-box}
+*::-webkit-scrollbar-thumb:hover{background-color:var(--inkt)}
+@media (pointer:coarse),(max-width:760px){
+  *{scrollbar-width:none}
+  *::-webkit-scrollbar{display:none;width:0;height:0}
 }
 </style>
 </head>
@@ -869,15 +898,14 @@ a.keuze-boek{text-decoration:none}
   </header>
 
   <div class="campagne-balk" id="campagneBalk">
-    <div class="cb-beeld" id="cbBeeld"></div>
-    <button class="vraag-knop" id="btnCampagnes" type="button" title="Terug naar de campagnes" aria-label="Terug naar de campagnes">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.6 5.6L8.2 12l6.4 6.4"/></svg>
-    </button>
-    <div class="cb-tekst">
-      <div class="cb-label-rij"><span class="ck-label" id="cbLabel"></span><span id="cbStijl"></span></div>
-      <h2 id="cbNaam"></h2>
+    <div class="cb-hero" id="cbBeeld">
+      <button class="vraag-knop" id="btnCampagnes" type="button" title="Terug naar de campagnes" aria-label="Terug naar de campagnes">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.6 5.6L8.2 12l6.4 6.4"/></svg>
+      </button>
+      <span class="cb-tag" id="cbStijl"></span>
+      <div class="cb-tekst"><h2 id="cbNaam"></h2></div>
+      <div class="ck-stand" id="cbStand"></div>
     </div>
-    <div class="ck-stand" id="cbStand"></div>
   </div>
 
   <div class="filter-plak">
@@ -1226,7 +1254,7 @@ const REGEL_FAMILIES = [
     tekst:["<b>Op dezelfde rij</b> of <b>in dezelfde kolom</b> als een object: hoe ver weg maakt niet uit.",
            "A deelt zijn rij met het object rechtsboven, niet met het andere."] },
   { id:"rollen", groep:"Mensen en getuigen", kop:"Rollen",
-    atomen:["has-role","in-restricted-room","role-all-different-rooms","role-all-same-room","role-left-of-empty-column"],
+    atomen:["has-role","in-restricted-room","role-all-different-rooms","role-all-same-room","role-left-of-empty-column","role-above-of-row"],
     beeld:()=>helpBord(["A...","....","..B.","...."],{gebied:REGEL_GEB_GOUD}),
     tekst:["Een <b>rol</b> — edele, ridder of dorpeling — zie je aan de vorm achter het portret.",
            "Een gebied met een <b>gouden rand</b> is voor edelen: edelen staan daar altijd, dorpelingen nooit, ridders overal."] },
@@ -1386,18 +1414,34 @@ function tekenUitleg(){
    Alle regelsoorten in een venster: links de lijst, rechts het voorbeeld en
    de uitleg. Dezelfde tabel als in de player. */
 let boekSel="plek";
+const BOEK_OPEN=new Set();
 function boekFamilies(){ return REGEL_FAMILIES.filter(f=>f.inLijst!==false); }
 function tekenRegelboek(){
   const fams=boekFamilies();
   const f=fams.find(x=>x.id===boekSel)||fams[0];
   if(!f) return;
   boekSel=f.id;
-  /* De lijst in groepen: een kopje zodra de groep wisselt. */
-  let groep="";
-  $("#boekLijst").innerHTML=fams.map(x=>{
-    const kopje=(x.groep && x.groep!==groep)?'<div class="boek-groep">'+String(x.groep)+'</div>':'';
-    groep=x.groep||groep;
-    return kopje+'<button type="button" data-fam="'+x.id+'"'+(x.id===f.id?' class="aan"':'')+'>'+String(x.kop)+'</button>';
+  /* De lijst in groepen die open en dicht kunnen. De groep van de gekozen
+     soort gaat open als er nog niets openstaat; verder blijft de keuze van
+     de speler staan. Soorten zonder groep staan los onderaan. */
+  const groepen = [];
+  fams.forEach(x => {
+    const g = x.groep || "";
+    let last = groepen[groepen.length - 1];
+    if (!last || last.naam !== g){ last = { naam:g, items:[] }; groepen.push(last); }
+    last.items.push(x);
+  });
+  const eigen = groepen.find(g => g.items.some(x => x.id === f.id));
+  if (eigen && eigen.naam && !BOEK_OPEN.size) BOEK_OPEN.add(eigen.naam);
+  $("#boekLijst").innerHTML = groepen.map(g => {
+    const knoppen = g.items.map(x => '<button type="button" data-fam="' + x.id + '"' + (x.id === f.id ? ' class="aan"' : '') + '>'
+      + String(x.kop) + '</button>').join("");
+    if (!g.naam) return knoppen;
+    const open = BOEK_OPEN.has(g.naam);
+    return '<div class="boek-groepvak' + (open ? '' : ' dicht') + '">'
+      + '<button type="button" class="boek-groep" data-groep="' + String(g.naam) + '" aria-expanded="' + open + '">'
+      + String(g.naam) + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>'
+      + '<div class="boek-groep-items">' + knoppen + '</div></div>';
   }).join("");
   $("#boekUitleg").innerHTML='<h4 class="boek-titel">'+String(f.kop)+'</h4>'
     +'<div class="boek-beeld">'+f.beeld()+'</div>'
@@ -1406,11 +1450,13 @@ function tekenRegelboek(){
   if(aan) aan.scrollIntoView({block:"nearest"});
 }
 function openRegelboek(famId){
-  if(famId) boekSel=famId;
+  if(famId){ boekSel=famId; const f=REGEL_FAMILIES.find(x=>x.id===famId); if(f && f.groep) BOEK_OPEN.add(f.groep); }
   tekenRegelboek();
   openModal("#modalRegelboek");
 }
 $("#boekLijst").addEventListener("click",e=>{
+  const k=e.target.closest("button[data-groep]");
+  if(k){ const g=k.dataset.groep; if(BOEK_OPEN.has(g)) BOEK_OPEN.delete(g); else BOEK_OPEN.add(g); tekenRegelboek(); return; }
   const b=e.target.closest("button[data-fam]");
   if(!b) return;
   boekSel=b.dataset.fam;
@@ -1820,12 +1866,11 @@ function maakCampagneKaart(g){
   const beeld=document.createElement("span"); beeld.className="ck-beeld";
   const u=campagneBeeld(c); if(u) beeld.style.backgroundImage="url('"+u+"')";
   a.appendChild(beeld);
-  const label=document.createElement("span"); label.className="ck-label"; label.textContent=campagneLabel(c);
   /* De naam in een vak van vaste hoogte: een korte naam laat alles eronder
      op dezelfde plek staan. */
   const h=document.createElement("h3"); h.className="ck-naam";
   zetCampagneNaam(h,c);
-  a.appendChild(label); a.appendChild(h);
+  a.appendChild(h);
   /* De reeks zelf: één vakje per zaak, gevuld als hij af is. */
   const rij=document.createElement("div"); rij.className="ck-nummers"+(zaken.length>10?" dicht":"");
   zaken.forEach(e=>{
@@ -1858,11 +1903,10 @@ function tekenCampagnes(){
 function tekenCampagneBalk(){
   const g=campagneInfo(huidigeCampagne); if(!g) return;
   const c=g.campagne;
-  $("#cbLabel").textContent=campagneLabel(c);
   { const plek=$("#cbStijl"); plek.innerHTML=""; const tag=stijlTag(c); if(tag) plek.appendChild(tag); }
   zetCampagneNaam($("#cbNaam"),c,true);
   { const b=$("#cbBeeld"); const u=campagneBeeld(c);
-    if(u){ b.style.backgroundImage="url('"+u+"')"; } else b.removeAttribute("style"); }
+    if(u){ b.style.backgroundImage="url('"+u+"')"; } else b.style.backgroundImage=""; }
   $("#cbStand").innerHTML=standHtml(g.zaken.filter(e=>voltooidVan(e.raw)).length, g.zaken.length);
   document.title=(c.short||c.name||"Zaken")+" · ClueBoard";
 }
