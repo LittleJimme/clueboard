@@ -99,6 +99,8 @@ try{
 
   --font-ui:"Manrope","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
   --font-display:"Fraunces",Georgia,"Times New Roman",serif;
+  /* De inktrand van knoppen en kaders: inkt, iets verdund. */
+  --inkt-rand:color-mix(in srgb,var(--inkt) 62%,var(--kaart));
 
   --korrel:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23g)' opacity='0.5'/></svg>");
 }
@@ -185,24 +187,27 @@ main,.balk{position:relative;z-index:1}
 .balk-rechts{margin-left:auto;display:flex;gap:8px}
 .balk-links{display:flex;gap:8px;align-items:center}
 .plus-knop svg{width:17px;height:17px}
+/* Knoppen als inkten pillen: papiervulling, een dikke inktrand en de
+   sierletter -- geen glans, geen verloop, geen slagschaduw. De volle knop is
+   in inkt gezet met papieren letters. */
 .knop{
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  border:1px solid var(--lijn);border-radius:999px;background:var(--kaart);
-  padding:9px 15px;font:700 13px var(--font-ui);color:var(--inkt);
-  box-shadow:var(--sch1);text-decoration:none;white-space:nowrap;
-  transition:border-color .15s,background .15s,transform .12s;
+  border:2px solid var(--inkt-rand);border-radius:999px;background:var(--kaart);
+  padding:8px 16px;font:600 14px var(--font-display);color:var(--inkt);letter-spacing:.005em;
+  box-shadow:none;text-decoration:none;white-space:nowrap;
+  transition:border-color .15s,background .15s,transform .12s,color .15s;
 }
-.knop:hover{border-color:var(--accent-lijn)}
+.knop:hover{border-color:var(--inkt);background:var(--kaart-2)}
 .knop:active{transform:translateY(1px)}
 .knop svg{width:15px;height:15px}
 .knop.vol{background:var(--inkt);border-color:var(--inkt);color:var(--grond)}
-.knop.vol:hover{filter:brightness(1.15)}
+.knop.vol:hover{background:var(--inkt-2);border-color:var(--inkt-2)}
 @media (max-width:430px){ .knop .lbl-weg{display:none} .knop{padding:9px 12px} }
 /* De uitleg zit achter één vraagteken, gezet als het woord "vermoord":
    schuine schreefletter in dezelfde rode inkt. */
 .vraag-knop{
   width:38px;height:38px;padding:0;border-radius:999px;
-  border:1px solid var(--lijn);background:var(--kaart);box-shadow:var(--sch1);
+  border:2px solid var(--inkt-rand);background:var(--kaart);box-shadow:none;
   font-family:var(--font-display);font-style:italic;font-weight:600;font-size:21px;
   line-height:1;color:var(--inkt);
   display:inline-flex;align-items:center;justify-content:center;
@@ -239,7 +244,7 @@ html[data-thema="licht"] img.woordmerk.woordmerk-donker{display:none}
 .merk{position:relative;-webkit-tap-highlight-color:transparent;user-select:none}
 .proef-merk{display:none;position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);
   padding:2px 9px;border-radius:999px;background:var(--accent);color:#fff;
-  font:800 9.5px var(--font-ui);letter-spacing:.16em;text-transform:uppercase;
+  font:italic 600 11.5px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;
   box-shadow:0 2px 6px rgba(0,0,0,.28)}
 body.proefstand .proef-merk{display:block}
 /* haarlijntje dat het merkblok van de zaakregel scheidt */
@@ -278,8 +283,8 @@ html[data-thema="licht"] .titelblok h1 em::after{
   position:relative;z-index:2;
   flex:0 0 auto;padding:2px 0 0;display:flex;align-items:center;gap:9px;
 }
-.lijst-teller{flex:1;min-width:0;color:var(--dof);font:800 11px var(--font-ui);
-  letter-spacing:.14em;text-transform:uppercase}
+.lijst-teller{flex:1;min-width:0;color:var(--dof);font:italic 600 13px var(--font-display);
+  letter-spacing:0;text-transform:none;font-style:italic}
 /* Op een telefoon het aantal (alleen als je filtert) op een eigen regel en
    de filterknoppen eronder over de volle breedte. */
 @media (max-width:640px){
@@ -299,9 +304,9 @@ html[data-thema="licht"] .titelblok h1 em::after{
 /* niveaufilter: één sterknopje met een kleine uitklaplijst eronder */
 .drop{position:relative;flex:0 0 auto}
 .mini-knop{
-  display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 11px;
-  border:1px solid var(--lijn);border-radius:999px;background:var(--kaart);
-  color:var(--dof);font:700 11.5px var(--font-ui);box-shadow:var(--sch1);
+  display:inline-flex;align-items:center;gap:5px;height:32px;padding:0 12px;
+  border:1.5px solid var(--inkt-rand);border-radius:999px;background:var(--kaart);
+  color:var(--inkt-2);font:600 13px var(--font-display);box-shadow:none;
   transition:all .15s;
 }
 .mini-knop svg{width:13px;height:13px}
@@ -352,6 +357,10 @@ html[data-thema="licht"] .titelblok h1 em::after{
    vier smallere tegels loopt de volgorde weer gewoon door. */
 @media (min-width:1100px) and (min-height:600px){
   main{max-width:1120px}
+  /* Op een groot scherm mag de tekst van de zaken wat groter. */
+  .level-rij h3{font-size:21px}
+  .level-rij .onder{font-size:13.5px}
+  .zaak-nr{width:44px;height:44px;font-size:17px}
   /* De balk hoort dezelfde breedte te houden als de lijst eronder, anders
      staan het vraagteken en de knoppen links ergens midden in het scherm in
      plaats van in lijn met de uiterste zaken. */
@@ -373,11 +382,11 @@ html[data-thema="licht"] .titelblok h1 em::after{
      scherm, in plaats van te scrollen. */
   flex:0 0 auto;
   display:flex;align-items:center;gap:13px;text-decoration:none;
-  background:var(--kaart);border:1px solid var(--lijn);border-radius:15px;
-  padding:15px 16px;box-shadow:var(--sch1);
+  background:var(--kaart);border:1.5px solid var(--inkt-rand);border-radius:14px;
+  padding:15px 16px;box-shadow:none;
   transition:transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .18s,border-color .18s;
 }
-.level-rij:hover{border-color:var(--accent-lijn);box-shadow:var(--sch2);transform:translateY(-1px)}
+.level-rij:hover{border-color:var(--inkt);box-shadow:var(--sch2);transform:translateY(-1px)}
 .level-rij:active{transform:none;box-shadow:var(--sch1)}
 /* de voorbeeldzaak: lichter vlak, zodat hij er meteen uitspringt */
 .level-rij.demo{
@@ -390,7 +399,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .zaak-nr.demo-teken svg{width:21px;height:21px;display:block}
 .level-rij.demo .grid-tag{background:transparent}
 .demo-tag{
-  font:800 9.5px var(--font-ui);letter-spacing:.13em;text-transform:uppercase;
+  font:italic 600 11.5px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;
   color:var(--accent);
 }
 /* Het formaat staat rechts naast de pijl. */
@@ -401,7 +410,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
    hoeft er rechts niets meer bij. */
 .afgerond{display:inline-flex;align-items:center;gap:7px;color:var(--accent)}
 .afgerond svg{width:13px;height:13px;flex:0 0 auto}
-.afgerond b{font:800 10px var(--font-ui);letter-spacing:.14em;text-transform:uppercase}
+.afgerond b{font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic}
 .afgerond span{font:700 12px var(--font-ui);font-variant-numeric:tabular-nums;color:var(--inkt-2)}
 .level-rij.voltooid{background:color-mix(in srgb,var(--kaart) 50%,var(--grond) 50%);box-shadow:none}
 .level-rij.voltooid h3{color:var(--inkt-2)}
@@ -418,16 +427,16 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .level-rij.bezig .grid-tag,.level-rij.bezig .demo-tag{background:rgba(255,255,255,.16);color:#fff;border-color:transparent}
 .mee-bezig{display:inline-flex;align-items:center;gap:7px;color:#fff}
 .mee-bezig svg{width:13px;height:13px;flex:0 0 auto}
-.mee-bezig b{font:800 10px var(--font-ui);letter-spacing:.14em;text-transform:uppercase}
+.mee-bezig b{font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic}
 .mee-bezig span{font:700 12px var(--font-ui);font-variant-numeric:tabular-nums;color:rgba(255,255,255,.82)}
 .zaak-nr{border-color:var(--accent);color:var(--accent)}
 /* Op een smal scherm is het vinkje met de tijd genoeg; het woord zou de
    titel te veel ruimte kosten. */
 .zaak-nr{
-  flex:0 0 auto;width:40px;height:40px;border-radius:11px;
+  flex:0 0 auto;width:40px;height:40px;border-radius:999px;
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-display);font-weight:600;font-size:15px;color:var(--accent);
-  background:var(--accent-zacht);border:1px solid var(--accent-lijn);
+  font-family:var(--font-display);font-weight:600;font-size:16px;color:var(--inkt);
+  background:var(--kaart);border:1.5px solid var(--inkt-rand);
   font-variant-numeric:tabular-nums;
 }
 .level-rij .midden{flex:1;min-width:0}
@@ -450,14 +459,19 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
    een kop met een terugknop. */
 body:not(.op-campagne) .filter-plak{display:none}
 body.op-campagne .titelblok{display:none}
-.campagne-balk{flex:0 0 auto;display:none;align-items:flex-start;gap:14px;padding:6px 0 18px}
+.campagne-balk{flex:0 0 auto;display:none;align-items:flex-start;gap:14px;padding:6px 0 18px;flex-wrap:wrap}
 body.op-campagne .campagne-balk{display:flex}
+/* Het campagnebeeld boven de kop: een band over de volle breedte in een
+   inktkader, de tekst eronder. */
+.cb-beeld{flex:1 0 100%;height:clamp(120px,22vw,220px);margin:0 0 6px;border-radius:14px;
+  border:1.5px solid var(--inkt-rand);background:var(--kaart-2) center/cover no-repeat}
+.cb-beeld:not([style]){display:none}
 .campagne-balk .vraag-knop{flex:0 0 auto;margin-top:2px}
 .campagne-balk .vraag-knop svg{width:18px;height:18px}
 .cb-tekst{flex:1;min-width:0}
-.campagne-balk h2{margin:3px 0 0;font:600 27px/1.12 var(--font-display);color:var(--inkt);letter-spacing:-.01em}
+.campagne-balk h2{margin:3px 0 0;font:600 clamp(28px,4.2vw,46px)/1.08 var(--font-display);color:var(--inkt);letter-spacing:-.015em}
 .campagne-balk .ck-stand{margin-top:6px}
-.ck-label{display:block;font:800 10px var(--font-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.ck-label{display:block;font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--accent)}
 .ck-stand{flex:0 0 auto;text-align:right;font:700 11px var(--font-ui);color:var(--dof);white-space:nowrap}
 .ck-stand b{color:var(--inkt);font-size:13px}
 .ck-balk{display:block;width:84px;height:4px;border-radius:9px;background:var(--lijn);margin:6px 0 0 auto;overflow:hidden}
@@ -468,19 +482,25 @@ body.op-campagne .campagne-balk{display:flex}
    de voet. Geen omschrijving: de naam zegt genoeg.
    Zo staan de nummers en de voortgang in elke kaart op precies dezelfde plek. */
 .campagne-kaart{
-  position:relative;flex:0 0 auto;display:flex;flex-direction:column;
+  position:relative;flex:0 0 auto;display:flex;flex-direction:column;overflow:hidden;
   text-decoration:none;color:inherit;
-  background:var(--kaart);border:1px solid var(--lijn);border-radius:18px;
-  padding:20px 20px 16px;box-shadow:var(--sch1);
+  background:var(--kaart);border:1.5px solid var(--inkt-rand);border-radius:16px;
+  padding:0 20px 16px;box-shadow:var(--sch1);
   transition:transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .18s,border-color .18s;
 }
-.campagne-kaart:hover{border-color:var(--accent-lijn);box-shadow:var(--sch2);transform:translateY(-1px)}
+.campagne-kaart:hover{border-color:var(--inkt);box-shadow:var(--sch2);transform:translateY(-1px)}
 .campagne-kaart:active{transform:none;box-shadow:var(--sch1)}
+/* Het campagnebeeld bovenin de kaart, met een inktlijn eronder; daaronder
+   begint de tekst op dezelfde plek als voorheen. */
+.ck-beeld{display:block;height:112px;margin:0 -20px 16px;background:var(--kaart-2) center/cover no-repeat;
+  border-bottom:1.5px solid var(--inkt-rand)}
+.ck-beeld:empty::after{content:""}
 .campagne-kaart .ck-label{padding-right:120px;line-height:24px}
+.campagne-kaart .stijl-tag{top:calc(112px + 16px)}
 .ck-naam{--rh:1.15em;display:flex;align-items:flex-start;height:calc(2 * var(--rh));margin:8px 0 0;padding-right:28px;
   font:600 24px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em}
 /* Altijd twee regels, elk op één regel: zie campagneRegels(). */
-.ck-naam span,.campagne-balk h2 span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ck-naam span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ck-naam{flex-direction:column;align-items:stretch;justify-content:flex-start}
 /* De stijl van een campagne: een klein etiket in de hoek, in dezelfde vorm
    als het bordformaat op een zaak (vlakje, haarlijn, ronde hoek). */
@@ -488,7 +508,7 @@ body.op-campagne .campagne-balk{display:flex}
   font:700 11px var(--font-ui);letter-spacing:.02em;color:var(--inkt-2);white-space:nowrap;
   background:var(--kaart-2);border:1px solid var(--lijn);border-radius:8px;padding:4px 8px 4px 7px}
 .stijl-tag svg{width:12px;height:12px;color:var(--accent);flex:0 0 auto}
-.campagne-kaart .stijl-tag{position:absolute;top:18px;right:16px}
+.campagne-kaart .stijl-tag{position:absolute;right:16px}
 .campagne-kaart:hover .stijl-tag{border-color:var(--accent-lijn)}
 .cb-label-rij{display:flex;align-items:center;gap:8px}
 /* De reeks: altijd één rij van dezelfde hoogte. Past het niet, dan krimpen de
@@ -560,8 +580,8 @@ body.op-campagne .campagne-balk{display:flex}
   font:700 11.5px var(--font-ui);letter-spacing:0;white-space:nowrap;cursor:pointer}
 .uitleg-keuze button.aan{background:var(--inkt);color:var(--grond)}
 .stap-teller{
-  flex:0 0 auto;font-size:10.5px;font-weight:800;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--dof);margin-bottom:8px;
+  flex:0 0 auto;font-size:12.5px;font-weight:600;letter-spacing:0;
+  text-transform:none;font-family:var(--font-display);font-style:italic;color:var(--dof);margin-bottom:8px;
 }
 #stapKop{flex:0 0 auto}
 /* Titelkaart: alleen de kop, groot in het midden. */
@@ -591,7 +611,7 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
 .boek-lijst button{display:block;width:100%;text-align:left;border:0;background:none;cursor:pointer;
   padding:9px 11px;border-radius:10px;color:var(--inkt);font:700 13.5px var(--font-ui)}
 .boek-lijst button:hover{background:var(--kaart-2)}
-.boek-groep{font:800 10px var(--font-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--dof);padding:12px 10px 4px}
+.boek-groep{font:italic 600 12px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;color:var(--dof);padding:12px 10px 4px}
 .boek-groep:first-child{padding-top:2px}
 .boek-lijst button.aan{background:var(--inkt);color:var(--grond)}
 .boek-uitleg{overflow:auto;padding-right:4px}
@@ -776,7 +796,7 @@ a.keuze-boek{text-decoration:none}
 .upload-fout{margin-top:12px;color:var(--fout);font-size:12.5px;font-weight:700;text-align:center}
 .of-lijn{
   display:flex;align-items:center;gap:12px;margin:16px 0;
-  color:var(--dof);font:800 11px var(--font-ui);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dof);font:italic 600 13px var(--font-display);letter-spacing:0;text-transform:none;font-style:italic;
 }
 .of-lijn::before,.of-lijn::after{content:"";flex:1;height:1px;background:var(--lijn-zacht)}
 .bouw-rij{
@@ -849,6 +869,7 @@ a.keuze-boek{text-decoration:none}
   </header>
 
   <div class="campagne-balk" id="campagneBalk">
+    <div class="cb-beeld" id="cbBeeld"></div>
     <button class="vraag-knop" id="btnCampagnes" type="button" title="Terug naar de campagnes" aria-label="Terug naar de campagnes">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.6 5.6L8.2 12l6.4 6.4"/></svg>
     </button>
@@ -1752,10 +1773,11 @@ function zakenInBeeld(){
   if(huidigeCampagne===null) return alleLevels;
   return alleLevels.filter(e=>e.raw.demo!==true && (e.raw.campaign||"")===huidigeCampagne);
 }
-/* Een campagnenaam staat altijd op twee regels. Met een dubbele punt breekt
-   hij daar ("Murdoku:" / "Terug in de tijd"); anders op de spatie die de
-   twee helften het gelijkst maakt ("ClueBoard" / "Originals"). Eén woord
-   blijft één regel, met een lege tweede regel eronder. */
+/* Op een kaart staat een campagnenaam altijd op twee regels. Met een dubbele
+   punt breekt hij daar; anders op de spatie die de twee helften het gelijkst
+   maakt ("ClueBoard" / "Originals", "De" / "Kronieken"). Eén woord blijft
+   één regel, met een lege tweede regel eronder. Op de campagnepagina zelf
+   staat de naam gewoon als één kop (zetCampagneNaam met heel=true). */
 function campagneRegels(naam){
   naam=String(naam||"").trim();
   const dp=naam.indexOf(":");
@@ -1765,9 +1787,11 @@ function campagneRegels(naam){
   const i=spaties.reduce((best,x)=>Math.abs(x-naam.length/2)<Math.abs(best-naam.length/2)?x:best);
   return [naam.slice(0,i), naam.slice(i+1)];
 }
-function zetCampagneNaam(el,c){
+function campagneBeeld(c){ return c && c.hero ? "../assets/"+c.hero : ""; }
+function zetCampagneNaam(el,c,heel){
   el.textContent="";
   el.title=c.name||c.id;
+  if(heel){ el.textContent=c.name||c.id; return; }
   campagneRegels(c.name||c.id).forEach(r=>{
     const sp=document.createElement("span"); sp.textContent=r||" "; el.appendChild(sp);
   });
@@ -1791,6 +1815,11 @@ function maakCampagneKaart(g){
   const bezig=zaken.filter(e=>!voltooidVan(e.raw) && bezigVan(e.raw)).length;
   const a=document.createElement("a"); a.className="campagne-kaart";
   a.href="#c="+encodeURIComponent(c.id||"_");
+  /* Het beeld van de campagne bovenin; zonder beeld een leeg vlak van
+     dezelfde maat, zodat alle kaarten gelijk blijven. */
+  const beeld=document.createElement("span"); beeld.className="ck-beeld";
+  const u=campagneBeeld(c); if(u) beeld.style.backgroundImage="url('"+u+"')";
+  a.appendChild(beeld);
   const label=document.createElement("span"); label.className="ck-label"; label.textContent=campagneLabel(c);
   /* De naam in een vak van vaste hoogte: een korte naam laat alles eronder
      op dezelfde plek staan. */
@@ -1831,7 +1860,9 @@ function tekenCampagneBalk(){
   const c=g.campagne;
   $("#cbLabel").textContent=campagneLabel(c);
   { const plek=$("#cbStijl"); plek.innerHTML=""; const tag=stijlTag(c); if(tag) plek.appendChild(tag); }
-  zetCampagneNaam($("#cbNaam"),c);
+  zetCampagneNaam($("#cbNaam"),c,true);
+  { const b=$("#cbBeeld"); const u=campagneBeeld(c);
+    if(u){ b.style.backgroundImage="url('"+u+"')"; } else b.removeAttribute("style"); }
   $("#cbStand").innerHTML=standHtml(g.zaken.filter(e=>voltooidVan(e.raw)).length, g.zaken.length);
   document.title=(c.short||c.name||"Zaken")+" · ClueBoard";
 }

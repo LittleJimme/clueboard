@@ -1,13 +1,14 @@
 {
-  "gemaakt": "2026-09-13T15:32:02",
+  "gemaakt": "2026-09-13T15:59:12",
   "campagnes": [
     {
-      "description": "Nagebouwd uit het Murdoku-boek.",
+      "description": "Zaken opgetekend in oude kronieken: herbergen, molens, kerkers en een fort.",
       "id": "terug-in-de-tijd",
-      "name": "Murdoku: Terug in de tijd",
+      "name": "De Kronieken",
       "order": 1,
-      "short": "Terug in de tijd",
-      "style": "medieval"
+      "short": "Kronieken",
+      "style": "medieval",
+      "hero": "campaigns/de-kronieken.svg"
     },
     {
       "description": "Eigen zaken, zelf bedacht.",
@@ -15,10 +16,231 @@
       "name": "ClueBoard Originals",
       "order": 2,
       "short": "Originals",
-      "style": "medieval"
+      "style": "medieval",
+      "hero": "campaigns/clueboard-originals.svg"
     }
   ],
   "levels": [
+    {
+      "file": "Kronieken 10v5 De taverne.json",
+      "content": {
+        "title": "De taverne"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtzsxucxi3rn2",
+      "levelNumber": 10,
+      "levelVersion": 5,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "Kronieken 1v6 Herberg de Doortocht.json",
+      "content": {
+        "title": "Herberg de Doortocht"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 6,
+          "rows": 6
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-1a05ef2624294473",
+      "levelNumber": 1,
+      "levelVersion": 6,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Kronieken 2v5 Een hinderlaag vol struikrovers.json",
+      "content": {
+        "title": "Een hinderlaag vol struikrovers"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 7,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-1a05ef262400984c",
+      "levelNumber": 2,
+      "levelVersion": 5,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Kronieken 3v6 De Watermolen.json",
+      "content": {
+        "title": "De Watermolen"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 8,
+          "rows": 8
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtj6rhpxaokxv",
+      "levelNumber": 3,
+      "levelVersion": 6,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Kronieken 4v6 De Kathedraal.json",
+      "content": {
+        "title": "De Kathedraal"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtk2htyogtdow",
+      "levelNumber": 4,
+      "levelVersion": 6,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Kronieken 5v12 De Kerkers.json",
+      "content": {
+        "title": "De Kerkers"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 8,
+          "rows": 8
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtk57guwn6i9e",
+      "levelNumber": 5,
+      "levelVersion": 12,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "Kronieken 6v8 Het Fort.json",
+      "content": {
+        "title": "Het Fort"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtkjs6belwg3k",
+      "levelNumber": 6,
+      "levelVersion": 8,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "Kronieken 7v7 De Viersprong.json",
+      "content": {
+        "title": "De Viersprong"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtzmwy2t31r2c",
+      "levelNumber": 7,
+      "levelVersion": 7,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "Kronieken 8v3 De koningklijke jachtpartij.json",
+      "content": {
+        "title": "De koningklijke jachtpartij"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtzqh79ff9drs",
+      "levelNumber": 8,
+      "levelVersion": 3,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Kronieken 9v2 De Ambachtsstraat.json",
+      "content": {
+        "title": "De Ambachtsstraat"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtzr6jvmxqap6",
+      "levelNumber": 9,
+      "levelVersion": 2,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
     {
       "file": "Originals 1v3 De Troonzaal.json",
       "content": {
@@ -168,226 +390,6 @@
       "levelNumber": 7,
       "levelVersion": 4,
       "campaign": "clueboard-originals",
-      "difficulty": {
-        "graad": 3,
-        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
-      }
-    },
-    {
-      "file": "Terug in de tijd 10v5 De taverne.json",
-      "content": {
-        "title": "De taverne"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 9,
-          "rows": 9
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtzsxucxi3rn2",
-      "levelNumber": 10,
-      "levelVersion": 5,
-      "campaign": "terug-in-de-tijd",
-      "difficulty": {
-        "graad": 3,
-        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
-      }
-    },
-    {
-      "file": "Terug in de tijd 1v6 Herberg de Doortocht.json",
-      "content": {
-        "title": "Herberg de Doortocht"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 6,
-          "rows": 6
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-1a05ef2624294473",
-      "levelNumber": 1,
-      "levelVersion": 6,
-      "campaign": "terug-in-de-tijd",
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Terug in de tijd 2v5 Een hinderlaag vol struikrovers.json",
-      "content": {
-        "title": "Een hinderlaag vol struikrovers"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 7,
-          "rows": 9
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-1a05ef262400984c",
-      "levelNumber": 2,
-      "levelVersion": 5,
-      "campaign": "terug-in-de-tijd",
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Terug in de tijd 3v6 De Watermolen.json",
-      "content": {
-        "title": "De Watermolen"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 8,
-          "rows": 8
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtj6rhpxaokxv",
-      "levelNumber": 3,
-      "levelVersion": 6,
-      "campaign": "terug-in-de-tijd",
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Terug in de tijd 4v6 De Kathedraal.json",
-      "content": {
-        "title": "De Kathedraal"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 9,
-          "rows": 9
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtk2htyogtdow",
-      "levelNumber": 4,
-      "levelVersion": 6,
-      "campaign": "terug-in-de-tijd",
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Terug in de tijd 5v12 De Kerkers.json",
-      "content": {
-        "title": "De Kerkers"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 8,
-          "rows": 8
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtk57guwn6i9e",
-      "levelNumber": 5,
-      "levelVersion": 12,
-      "campaign": "terug-in-de-tijd",
-      "difficulty": {
-        "graad": 3,
-        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
-      }
-    },
-    {
-      "file": "Terug in de tijd 6v8 Het Fort.json",
-      "content": {
-        "title": "Het Fort"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 9,
-          "rows": 9
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtkjs6belwg3k",
-      "levelNumber": 6,
-      "levelVersion": 8,
-      "campaign": "terug-in-de-tijd",
-      "difficulty": {
-        "graad": 3,
-        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
-      }
-    },
-    {
-      "file": "Terug in de tijd 7v7 De Viersprong.json",
-      "content": {
-        "title": "De Viersprong"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 9,
-          "rows": 9
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtzmwy2t31r2c",
-      "levelNumber": 7,
-      "levelVersion": 7,
-      "campaign": "terug-in-de-tijd",
-      "difficulty": {
-        "graad": 3,
-        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
-      }
-    },
-    {
-      "file": "Terug in de tijd 8v3 De koningklijke jachtpartij.json",
-      "content": {
-        "title": "De koningklijke jachtpartij"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 9,
-          "rows": 9
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtzqh79ff9drs",
-      "levelNumber": 8,
-      "levelVersion": 3,
-      "campaign": "terug-in-de-tijd",
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Terug in de tijd 9v2 De Ambachtsstraat.json",
-      "content": {
-        "title": "De Ambachtsstraat"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 9,
-          "rows": 9
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtzr6jvmxqap6",
-      "levelNumber": 9,
-      "levelVersion": 2,
-      "campaign": "terug-in-de-tijd",
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
