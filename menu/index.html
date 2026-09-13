@@ -471,7 +471,6 @@ body.op-campagne .campagne-balk{display:flex}
 .campagne-balk .vraag-knop svg{width:18px;height:18px}
 .cb-tekst{flex:1;min-width:0}
 .campagne-balk h2{margin:3px 0 0;font:600 27px/1.12 var(--font-display);color:var(--inkt);letter-spacing:-.01em}
-.campagne-balk p{margin:5px 0 0;font:500 13.5px/1.4 var(--font-ui);color:var(--dof)}
 .campagne-balk .ck-stand{margin-top:6px}
 .ck-label{display:block;font:800 10px var(--font-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
 .ck-stand{flex:0 0 auto;text-align:right;font:700 11px var(--font-ui);color:var(--dof);white-space:nowrap}
@@ -479,9 +478,9 @@ body.op-campagne .campagne-balk{display:flex}
 .ck-balk{display:block;width:84px;height:4px;border-radius:9px;background:var(--lijn);margin:6px 0 0 auto;overflow:hidden}
 .ck-balk i{display:block;height:100%;background:var(--accent-vlak);border-radius:9px}
 /* De campagne als kaart. Elke kaart heeft dezelfde opbouw en dezelfde maten,
-   hoe lang de naam of de omschrijving ook is: het label, een naamvak van twee
-   regels (de naam staat onderin, dus direct boven de omschrijving), een
-   omschrijving van twee regels, de reeks zaaknummers op één rij en de voet.
+   hoe lang de naam ook is: het label, een naamvak van twee regels (de naam
+   staat bovenin, direct onder het label), de reeks zaaknummers op één rij en
+   de voet. Geen omschrijving: de naam zegt genoeg.
    Zo staan de nummers en de voortgang in elke kaart op precies dezelfde plek. */
 .campagne-kaart{
   position:relative;flex:0 0 auto;display:flex;flex-direction:column;
@@ -493,10 +492,9 @@ body.op-campagne .campagne-balk{display:flex}
 .campagne-kaart:hover{border-color:var(--accent-lijn);box-shadow:var(--sch2);transform:translateY(-1px)}
 .campagne-kaart:active{transform:none;box-shadow:var(--sch1)}
 .campagne-kaart .ck-label{padding-right:28px}
-.ck-naam{--rh:1.15em;display:flex;align-items:flex-end;height:calc(2 * var(--rh));margin:8px 0 0;padding-right:28px;
+.ck-naam{--rh:1.15em;display:flex;align-items:flex-start;height:calc(2 * var(--rh));margin:8px 0 0;padding-right:28px;
   font:600 24px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em}
-.ck-naam span,.ck-omschrijving span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
-.ck-omschrijving{height:calc(2 * 1.45em);margin:6px 0 0;font:500 13.5px/1.45 var(--font-ui);color:var(--dof)}
+.ck-naam span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
 .campagne-kaart .pijl{position:absolute;top:20px;right:18px;color:var(--dof);display:flex}
 .campagne-kaart .pijl svg{width:16px;height:16px}
 .campagne-kaart:hover .pijl{color:var(--accent)}
@@ -862,7 +860,6 @@ a.keuze-boek{text-decoration:none}
     <div class="cb-tekst">
       <span class="ck-label" id="cbLabel"></span>
       <h2 id="cbNaam"></h2>
-      <p id="cbOmschrijving"></p>
     </div>
     <div class="ck-stand" id="cbStand"></div>
   </div>
@@ -1772,13 +1769,11 @@ function maakCampagneKaart(g){
   const a=document.createElement("a"); a.className="campagne-kaart";
   a.href="#c="+encodeURIComponent(c.id||"_");
   const label=document.createElement("span"); label.className="ck-label"; label.textContent=campagneLabel(c);
-  /* Naam en omschrijving in een vak van vaste hoogte, ook als er geen
-     omschrijving is: dan staat alles eronder nog op dezelfde plek. */
+  /* De naam in een vak van vaste hoogte: een korte naam laat alles eronder
+     op dezelfde plek staan. */
   const h=document.createElement("h3"); h.className="ck-naam";
   const hs=document.createElement("span"); hs.textContent=c.name||c.id; h.appendChild(hs);
-  const p=document.createElement("p"); p.className="ck-omschrijving";
-  const ps=document.createElement("span"); ps.textContent=c.description||""; p.appendChild(ps);
-  a.appendChild(label); a.appendChild(h); a.appendChild(p);
+  a.appendChild(label); a.appendChild(h);
   /* De reeks zelf: één vakje per zaak, gevuld als hij af is. */
   const rij=document.createElement("div"); rij.className="ck-nummers"+(zaken.length>10?" dicht":"");
   zaken.forEach(e=>{
@@ -1815,7 +1810,6 @@ function tekenCampagneBalk(){
   const c=g.campagne;
   $("#cbLabel").textContent=campagneLabel(c);
   $("#cbNaam").textContent=c.name||c.id;
-  const p=$("#cbOmschrijving"); p.textContent=c.description||""; p.hidden=!c.description;
   $("#cbStand").innerHTML=standHtml(g.zaken.filter(e=>voltooidVan(e.raw)).length, g.zaken.length);
   document.title=(c.short||c.name||"Zaken")+" · ClueBoard";
 }
