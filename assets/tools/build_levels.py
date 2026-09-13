@@ -10,7 +10,9 @@ wordt pas geladen als je erop klikt.
 
 Twee bestanden komen eruit:
   index.json      welke bestanden er zijn (de speler gebruikt deze ook)
-  overzicht.json  per zaak het handjevol velden dat het menu toont
+  overzicht.json  per zaak het handjevol velden dat het menu toont, plus de
+                  campagnes uit de assetbank (manifest.json -> campaigns),
+                  zodat het menu de zaken per campagne kan groeperen
 
 Draai dit na het toevoegen of wijzigen van een level:
     python assets/tools/build_levels.py
@@ -19,6 +21,7 @@ import io, json, os, sys, time
 
 WORTEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LEVELS = os.path.join(WORTEL, "player", "Levels")
+MANIFEST = os.path.join(WORTEL, "assets", "manifest.json")
 
 def schrijf(pad, tekst):
     tmp = pad + ".tmp"
@@ -55,10 +58,9 @@ def samenvatting(raw, bestand):
         "content": {"title": c.get("title") or "Naamloos niveau"},
         "puzzle": {"grid": {"columns": g.get("columns"), "rows": g.get("rows")}},
     }
-    for veld in ("levelId", "levelNumber", "levelVersion"):
+    for veld in ("levelId", "levelNumber", "levelVersion", "campaign"):
         if raw.get(veld) is not None: uit[veld] = raw[veld]
     if raw.get("demo") is True: uit["demo"] = True
-    if raw.get("test") is True: uit["test"] = True
     if d.get("graad"):
         uit["difficulty"] = {"graad": d["graad"]}
         if d.get("uitleg"): uit["difficulty"]["uitleg"] = d["uitleg"]
@@ -72,6 +74,9 @@ def main():
     bestanden = sorted(n for n in os.listdir(LEVELS)
                        if n.lower().endswith(".json") and n.lower() not in ("index.json", "overzicht.json"))
     lijst, kaarten, overgeslagen = [], [], []
+    bank = json.load(io.open(MANIFEST, encoding="utf-8"))
+    campagnes = sorted(bank.get("campaigns") or [], key=lambda c: c.get("order", 99))
+    bekend = set(c["id"] for c in campagnes)
     for naam in bestanden:
         pad = os.path.join(LEVELS, naam)
         try:
@@ -83,10 +88,13 @@ def main():
             overgeslagen.append((naam, fout)); continue
         lijst.append(naam)
         kaarten.append(samenvatting(raw, naam))
+        if raw.get("demo") is not True and raw.get("campaign") not in bekend:
+            overgeslagen.append((naam, "let op: campagne %r staat niet in de bank" % raw.get("campaign")))
     schrijf(os.path.join(LEVELS, "index.json"),
             json.dumps(lijst, ensure_ascii=False, indent=2) + "\n")
     schrijf(os.path.join(LEVELS, "overzicht.json"),
-            json.dumps({"gemaakt": time.strftime("%Y-%m-%dT%H:%M:%S"), "levels": kaarten},
+            json.dumps({"gemaakt": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                        "campagnes": campagnes, "levels": kaarten},
                        ensure_ascii=False, indent=2) + "\n")
     groot = sum(os.path.getsize(os.path.join(LEVELS, n)) for n in lijst)
     klein = os.path.getsize(os.path.join(LEVELS, "overzicht.json"))

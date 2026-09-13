@@ -1,30 +1,92 @@
 {
-  "gemaakt": "2026-09-12T14:35:05",
+  "gemaakt": "2026-09-13T11:55:40",
+  "campagnes": [
+    {
+      "description": "Nagebouwd uit het Murdoku-boek.",
+      "id": "terug-in-de-tijd",
+      "name": "Murdoku: Terug in de tijd",
+      "order": 1,
+      "short": "Terug in de tijd",
+      "style": "medieval"
+    },
+    {
+      "description": "Eigen zaken, zelf bedacht.",
+      "id": "clueboard-originals",
+      "name": "ClueBoard Originals",
+      "order": 2,
+      "short": "Originals",
+      "style": "medieval"
+    }
+  ],
   "levels": [
     {
-      "file": "100v5 Test Level.json",
+      "file": "Originals 1v3 De Troonzaal.json",
       "content": {
-        "title": "Test Level"
+        "title": "De Troonzaal"
       },
       "puzzle": {
         "grid": {
-          "columns": 8,
-          "rows": 8
+          "columns": 5,
+          "rows": 7
         },
         "theme": "medieval",
         "themeLabel": "Middeleeuwen"
       },
-      "levelId": "lvl-mtppube2ms7g0",
-      "levelNumber": 100,
-      "levelVersion": 5,
-      "test": true,
+      "levelId": "lvl-mtmqoqlw2ucfc",
+      "levelNumber": 1,
+      "levelVersion": 3,
+      "campaign": "clueboard-originals",
       "difficulty": {
-        "graad": 1,
-        "uitleg": "Elke stap volgt rechtstreeks uit één aanwijzing."
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
-      "file": "10v7 Het Jachthuis.json",
+      "file": "Originals 2v3 Het Huis van Vastrad.json",
+      "content": {
+        "title": "Het Huis van Vastrad"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 6,
+          "rows": 6
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtoerjfvn40r6",
+      "levelNumber": 2,
+      "levelVersion": 3,
+      "campaign": "clueboard-originals",
+      "difficulty": {
+        "graad": 2,
+        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Originals 3v15 Achter de Gracht.json",
+      "content": {
+        "title": "Achter de Gracht"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 7,
+          "rows": 10
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtpsczg45i82s",
+      "levelNumber": 3,
+      "levelVersion": 15,
+      "campaign": "clueboard-originals",
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
+      }
+    },
+    {
+      "file": "Originals 4v8 Het Jachthuis.json",
       "content": {
         "title": "Het Jachthuis"
       },
@@ -37,15 +99,16 @@
         "themeLabel": "Middeleeuwen"
       },
       "levelId": "lvl-mtpz6a4i6yb8m",
-      "levelNumber": 10,
-      "levelVersion": 7,
+      "levelNumber": 4,
+      "levelVersion": 8,
+      "campaign": "clueboard-originals",
       "difficulty": {
         "graad": 4,
         "uitleg": "Veel aannemen en verwerpen, en de volgorde luistert."
       }
     },
     {
-      "file": "11v5 De Oude Gevangenis.json",
+      "file": "Originals 5v6 De Oude Gevangenis.json",
       "content": {
         "title": "De Oude Gevangenis"
       },
@@ -58,15 +121,16 @@
         "themeLabel": "Middeleeuwen"
       },
       "levelId": "lvl-mtqb7483p9zcl",
-      "levelNumber": 11,
-      "levelVersion": 5,
+      "levelNumber": 5,
+      "levelVersion": 6,
+      "campaign": "clueboard-originals",
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
-      "file": "12v3 Het Hofbal.json",
+      "file": "Originals 6v4 Het Hofbal.json",
       "content": {
         "title": "Het Hofbal"
       },
@@ -79,15 +143,16 @@
         "themeLabel": "Middeleeuwen"
       },
       "levelId": "lvl-mtx558868zpbr",
-      "levelNumber": 12,
-      "levelVersion": 3,
+      "levelNumber": 6,
+      "levelVersion": 4,
+      "campaign": "clueboard-originals",
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
-      "file": "13v2 Het Stille Huis.json",
+      "file": "Originals 7v3 Het Stille Huis.json",
       "content": {
         "title": "Het Stille Huis"
       },
@@ -100,15 +165,16 @@
         "themeLabel": "Middeleeuwen"
       },
       "levelId": "lvl-mty5rdqzj9tjl",
-      "levelNumber": 13,
-      "levelVersion": 2,
+      "levelNumber": 7,
+      "levelVersion": 3,
+      "campaign": "clueboard-originals",
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
-      "file": "1v5 Herberg de Doortocht.json",
+      "file": "Terug in de tijd 1v6 Herberg de Doortocht.json",
       "content": {
         "title": "Herberg de Doortocht"
       },
@@ -122,14 +188,15 @@
       },
       "levelId": "lvl-1a05ef2624294473",
       "levelNumber": 1,
-      "levelVersion": 5,
+      "levelVersion": 6,
+      "campaign": "terug-in-de-tijd",
       "difficulty": {
         "graad": 2,
         "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {
-      "file": "2v4 Een hinderlaag vol struikrovers.json",
+      "file": "Terug in de tijd 2v5 Een hinderlaag vol struikrovers.json",
       "content": {
         "title": "Een hinderlaag vol struikrovers"
       },
@@ -143,14 +210,15 @@
       },
       "levelId": "lvl-1a05ef262400984c",
       "levelNumber": 2,
-      "levelVersion": 4,
+      "levelVersion": 5,
+      "campaign": "terug-in-de-tijd",
       "difficulty": {
         "graad": 2,
         "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {
-      "file": "3v5 De Watermolen.json",
+      "file": "Terug in de tijd 3v6 De Watermolen.json",
       "content": {
         "title": "De Watermolen"
       },
@@ -164,14 +232,15 @@
       },
       "levelId": "lvl-mtj6rhpxaokxv",
       "levelNumber": 3,
-      "levelVersion": 5,
+      "levelVersion": 6,
+      "campaign": "terug-in-de-tijd",
       "difficulty": {
         "graad": 2,
         "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {
-      "file": "4v5 De Kathedraal.json",
+      "file": "Terug in de tijd 4v6 De Kathedraal.json",
       "content": {
         "title": "De Kathedraal"
       },
@@ -185,14 +254,15 @@
       },
       "levelId": "lvl-mtk2htyogtdow",
       "levelNumber": 4,
-      "levelVersion": 5,
+      "levelVersion": 6,
+      "campaign": "terug-in-de-tijd",
       "difficulty": {
         "graad": 2,
         "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {
-      "file": "5v11 De Kerkers.json",
+      "file": "Terug in de tijd 5v12 De Kerkers.json",
       "content": {
         "title": "De Kerkers"
       },
@@ -206,14 +276,15 @@
       },
       "levelId": "lvl-mtk57guwn6i9e",
       "levelNumber": 5,
-      "levelVersion": 11,
+      "levelVersion": 12,
+      "campaign": "terug-in-de-tijd",
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
-      "file": "6v7 Het Fort.json",
+      "file": "Terug in de tijd 6v8 Het Fort.json",
       "content": {
         "title": "Het Fort"
       },
@@ -227,367 +298,11 @@
       },
       "levelId": "lvl-mtkjs6belwg3k",
       "levelNumber": 6,
-      "levelVersion": 7,
+      "levelVersion": 8,
+      "campaign": "terug-in-de-tijd",
       "difficulty": {
         "graad": 3,
         "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
-      }
-    },
-    {
-      "file": "7v2 De Troonzaal.json",
-      "content": {
-        "title": "De Troonzaal"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 5,
-          "rows": 7
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtmqoqlw2ucfc",
-      "levelNumber": 7,
-      "levelVersion": 2,
-      "difficulty": {
-        "graad": 3,
-        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
-      }
-    },
-    {
-      "file": "8v2 Het Huis van Vastrad.json",
-      "content": {
-        "title": "Het Huis van Vastrad"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 6,
-          "rows": 6
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtoerjfvn40r6",
-      "levelNumber": 8,
-      "levelVersion": 2,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "9v14 Achter de Gracht.json",
-      "content": {
-        "title": "Achter de Gracht"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 7,
-          "rows": 10
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtpsczg45i82s",
-      "levelNumber": 9,
-      "levelVersion": 14,
-      "difficulty": {
-        "graad": 3,
-        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
-      }
-    },
-    {
-      "file": "Proef 10x10.json",
-      "content": {
-        "title": "Proefbord 10×10"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 10,
-          "rows": 10
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-10x10",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Proef 10x15.json",
-      "content": {
-        "title": "Proefbord 10×15"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 10,
-          "rows": 15
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-10x15",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Proef 12x12.json",
-      "content": {
-        "title": "Proefbord 12×12"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 12,
-          "rows": 12
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-12x12",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Proef 20x20.json",
-      "content": {
-        "title": "Proefbord 20×20"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 20,
-          "rows": 20
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-20x20",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Proef 3x3.json",
-      "content": {
-        "title": "Proefbord 3×3"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 3,
-          "rows": 3
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-3x3",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 1,
-        "uitleg": "Elke stap volgt rechtstreeks uit één aanwijzing."
-      }
-    },
-    {
-      "file": "Proef 3x5.json",
-      "content": {
-        "title": "Proefbord 3×5"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 3,
-          "rows": 5
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-3x5",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Proef 5x5.json",
-      "content": {
-        "title": "Proefbord 5×5"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 5,
-          "rows": 5
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-5x5",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Proef 5x8.json",
-      "content": {
-        "title": "Proefbord 5×8"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 5,
-          "rows": 8
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-5x8",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Proef 6x9.json",
-      "content": {
-        "title": "Proefbord 6×9"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 6,
-          "rows": 9
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-6x9",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Proef 7x7.json",
-      "content": {
-        "title": "Proefbord 7×7"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 7,
-          "rows": 7
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-7x7",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Proef 8x8.json",
-      "content": {
-        "title": "Proefbord 8×8"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 8,
-          "rows": 8
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-8x8",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Proef 9x13.json",
-      "content": {
-        "title": "Proefbord 9×13"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 9,
-          "rows": 13
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-9x13",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Proef 9x9.json",
-      "content": {
-        "title": "Proefbord 9×9"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 9,
-          "rows": 9
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-proef-9x9",
-      "levelVersion": 1,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
-      }
-    },
-    {
-      "file": "Test - Objecten.json",
-      "content": {
-        "title": "Objecten Test"
-      },
-      "puzzle": {
-        "grid": {
-          "columns": 6,
-          "rows": 10
-        },
-        "theme": "medieval",
-        "themeLabel": "Middeleeuwen"
-      },
-      "levelId": "lvl-mtm44se3p7bh8",
-      "levelVersion": 5,
-      "test": true,
-      "difficulty": {
-        "graad": 2,
-        "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
       }
     },
     {

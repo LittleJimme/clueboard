@@ -1,7 +1,8 @@
 {
   "levelNumber": 2,
-  "levelVersion": 4,
+  "levelVersion": 5,
   "levelId": "lvl-1a05ef262400984c",
+  "campaign": "terug-in-de-tijd",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",

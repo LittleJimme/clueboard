@@ -373,8 +373,14 @@ html[data-thema="licht"] .titelblok h1 em::after{
      plaats van in lijn met de uiterste zaken. */
   .balk-in{max-width:1120px}
   .titelblok{padding-bottom:16px}
-  .level-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px;align-content:start}
+  .level-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px;align-content:start;
+    /* Rijen op hun inhoud: met campagnekoppen past de lijst niet meer in het
+       venster, en dan drukte het raster de kaarten (overflow:hidden, dus geen
+       minimumhoogte) in elkaar in plaats van te scrollen. */
+    grid-auto-rows:max-content}
   .level-rij{margin:0}
+  /* Een campagnekop over de hele breedte; de zaken eronder lopen weer in tegels. */
+  .campagne-kop{grid-column:1/-1}
 }
 .level-rij{
   position:relative;overflow:hidden;
@@ -469,6 +475,23 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .level-rij .pijl{flex:0 0 auto;color:var(--dof);display:flex}
 .level-rij .pijl svg{width:15px;height:15px}
 .level-rij:hover .pijl{color:var(--accent)}
+/* ---------- campagnes: een kop boven elke reeks zaken ---------- */
+.campagne-kop{flex:0 0 auto;display:flex;align-items:flex-end;gap:14px;
+  padding:22px 4px 8px;border-bottom:1px solid var(--lijn);margin-bottom:2px}
+.level-list > .campagne-kop:first-child{padding-top:0}
+.ck-tekst{flex:1;min-width:0}
+.ck-label{display:block;font:800 10px var(--font-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.campagne-kop h2{margin:4px 0 0;font:600 22px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em}
+.campagne-kop p{margin:3px 0 0;font:500 13px/1.4 var(--font-ui);color:var(--dof)}
+.ck-stand{flex:0 0 auto;text-align:right;font:700 11px var(--font-ui);color:var(--dof);white-space:nowrap}
+.ck-stand b{color:var(--inkt);font-size:13px}
+.ck-balk{display:block;width:84px;height:4px;border-radius:9px;background:var(--lijn);margin:6px 0 0 auto;overflow:hidden}
+.ck-balk i{display:block;height:100%;background:var(--accent-vlak);border-radius:9px}
+@media (max-width:640px){
+  .campagne-kop h2{font-size:19px}
+  .campagne-kop p{font-size:12px}
+  .ck-balk{width:64px}
+}
 .leeg-melding{color:var(--dof);font-size:13.5px;text-align:center;padding:26px 10px;
   background:var(--kaart-2);border:1px dashed var(--lijn);border-radius:15px;margin-top:14px}
 
@@ -1417,6 +1440,9 @@ function nieuwsteVersies(items){
 }
 
 let alleLevels=[];       /* gesorteerd; index+1 = vast zaaknummer */
+/* De campagnes uit de assetbank, via overzicht.json. Een campagne is een reeks
+   zaken in één stijl, met een eigen nummering. */
+let CAMPAGNES=[];
 let actieveFilter=0;
 let alleenOpen=false;   /* alleen zaken die je nog niet hebt afgerond */
 let alleenBezig=false;  /* alleen zaken waar je middenin zit */
@@ -1637,15 +1663,44 @@ document.addEventListener("click",e=>{
     $("#filterKnop").setAttribute("aria-expanded","false");
   }
 });
-function proefAan(){ return document.body.classList.contains("proefstand"); }
+/* De zaken per campagne, in de volgorde van de bank. Een campagne die de bank
+   niet kent komt erachter onder zijn eigen sleutel, zaken zonder campagne als
+   laatste -- zo valt er nooit een zaak uit de lijst. */
+function campagneGroepen(zaken){
+  const groepen=new Map();
+  CAMPAGNES.forEach(c=>groepen.set(c.id,{campagne:c,zaken:[]}));
+  zaken.forEach(e=>{
+    const id=(e.raw && typeof e.raw.campaign==="string" && e.raw.campaign) || "";
+    if(!groepen.has(id)) groepen.set(id,{campagne:id?{id,name:id}:{id:"",name:"Zonder campagne"},zaken:[]});
+    groepen.get(id).zaken.push(e);
+  });
+  return Array.from(groepen.values()).filter(g=>g.zaken.length)
+    .sort((a,b)=>(a.campagne.id===""?1:0)-(b.campagne.id===""?1:0));
+}
+function maakCampagneKop(c){
+  const alle=alleLevels.filter(e=>e.raw.demo!==true && ((e.raw.campaign||"")===c.id));
+  const af=alle.filter(e=>voltooidVan(e.raw)).length;
+  const kop=document.createElement("div"); kop.className="campagne-kop";
+  const tekst=document.createElement("div"); tekst.className="ck-tekst";
+  const label=document.createElement("span"); label.className="ck-label";
+  label.textContent="Campagne"+(THEMA_LABELS[c.style]?" · "+THEMA_LABELS[c.style]:"");
+  const h=document.createElement("h2"); h.textContent=c.name||c.id;
+  tekst.appendChild(label); tekst.appendChild(h);
+  if(c.description){ const p=document.createElement("p"); p.textContent=c.description; tekst.appendChild(p); }
+  kop.appendChild(tekst);
+  const stand=document.createElement("div"); stand.className="ck-stand";
+  stand.title=af+" van "+alle.length+" zaken afgerond";
+  stand.innerHTML='<b>'+af+'/'+alle.length+'</b> afgerond<i class="ck-balk"><i style="width:'
+    +(alle.length?Math.round(af/alle.length*100):0)+'%"></i></i>';
+  kop.appendChild(stand);
+  return kop;
+}
 function tekenLijst(){
   const lijst=$("#levelList");
   /* Waar je middenin zit hoort altijd binnen handbereik: die zaak overleeft
      elk filter en staat bovenaan, ook als je op niveau of op titel kijkt. */
   const bezigNu=e=>!voltooidVan(e.raw) && !!bezigVan(e.raw);
-  /* Testzaken zijn er om mee te proberen, niet om te spelen: buiten de
-     proefstand bestaan ze voor de speler niet. */
-  const inLijst=alleLevels.filter(e=>!(e.raw && e.raw.test===true) || proefAan());
+  const inLijst=alleLevels;
   const zichtbaar=inLijst.filter(e=>{
     if(bezigNu(e)) return true;
     if(alleenOpen && voltooidVan(e.raw)) return false;
@@ -1674,7 +1729,13 @@ function tekenLijst(){
     p.textContent="Geen zaken bij dit niveau.";
     lijst.appendChild(p);
   } else {
-    zichtbaar.forEach(e=>lijst.appendChild(maakLevelRij(e)));
+    /* De voorbeeldzaak hoort bij geen campagne en staat bovenaan; daarna
+       elke campagne met zijn kop en zijn zaken. */
+    zichtbaar.filter(e=>e.raw.demo===true).forEach(e=>lijst.appendChild(maakLevelRij(e)));
+    campagneGroepen(zichtbaar.filter(e=>e.raw.demo!==true)).forEach(g=>{
+      lijst.appendChild(maakCampagneKop(g.campagne));
+      g.zaken.forEach(e=>lijst.appendChild(maakLevelRij(e)));
+    });
   }
   const n=zichtbaar.length, tot=inLijst.length;
   /* Zonder filter draagt deze regel de belofte van het spel; zodra je
@@ -1693,6 +1754,7 @@ async function laadOverzicht(){
     if(!r.ok) return null;
     const j=await r.json();
     const rij=Array.isArray(j)?j:((j&&j.levels)||[]);
+    if(j && Array.isArray(j.campagnes)) CAMPAGNES=j.campagnes.filter(c=>c && c.id);
     const uit=new Map();
     rij.forEach(e=>{
       const naam=e&&e.file;
@@ -1734,23 +1796,21 @@ async function laadLevels(){
   alleLevels=nieuwsteVersies(geladen).sort((a,b)=>{
     const da=a.raw.demo===true, db=b.raw.demo===true;
     if(da!==db) return da?-1:1;
-    /* Een testzaak ziet eruit als elke andere zaak, maar heeft geen eigen
-       dossiernummer; hij sluit daarom achteraan aan in plaats van vóór zaak 1. */
-    const sa=a.raw.test===true, sb=b.raw.test===true;
-    if(sa!==sb) return sa?1:-1;
     const ga=(levelGraad(a.raw)||{}).graad||99, gb=(levelGraad(b.raw)||{}).graad||99;
     if(ga!==gb) return ga-gb;
     const ta=(((a.raw.content||{}).title)||"").toLowerCase();
     const tb=(((b.raw.content||{}).title)||"").toLowerCase();
     return ta.localeCompare(tb,"nl");
   });
-  /* De voorbeeldzaak telt niet mee in de nummering. */
-  let teller=0;
+  /* De voorbeeldzaak telt niet mee in de nummering. Een nummer telt binnen
+     zijn campagne: elke campagne begint bij 1. */
+  const teller={};
   alleLevels.forEach((e)=>{
     const n = e.raw && e.raw.levelNumber;
     if(e.raw && e.raw.demo===true){ e.nummer=0; return; }
-    teller++;
-    e.nummer = (typeof n === "number" && n > 0) ? Math.floor(n) : teller;
+    const c=e.raw.campaign||"";
+    teller[c]=(teller[c]||0)+1;
+    e.nummer = (typeof n === "number" && n > 0) ? Math.floor(n) : teller[c];
   });
   if(!alleLevels.length){
     lijst.innerHTML="";

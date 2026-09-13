@@ -1,7 +1,8 @@
 {
-  "levelNumber": 12,
-  "levelVersion": 3,
+  "levelNumber": 6,
+  "levelVersion": 4,
   "levelId": "lvl-mtx558868zpbr",
+  "campaign": "clueboard-originals",
   "format": "clueboard-level",
   "version": 11,
   "generator": "Clueboard Builder 11.0",

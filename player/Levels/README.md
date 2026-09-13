@@ -20,6 +20,19 @@ Klopt een bestand niet (geen geldige JSON, of geen geldig niveau), dan wordt het
 stilletjes overgeslagen en meldt de player onder de lijst hoeveel bestanden er
 zijn overgeslagen. De rest blijft gewoon werken.
 
+## Campagnes
+
+Elke zaak hoort bij een campagne: een reeks zaken in één stijl, met een eigen
+nummering die bij 1 begint. De campagnes staan in de assetbank
+(`assets/manifest.json` -> `campaigns`: id, naam, korte naam, omschrijving,
+stijl, volgorde). Een nieuwe campagne voeg je daar toe en daarna draai je
+`python assets/tools/build_assets.py` en `python assets/tools/build_levels.py`.
+
+In de bouwer kies je de campagne bij de naam van het level; de bouwer vult het
+volgende vrije nummer binnen die campagne in en zet de stijl van de campagne.
+De bestandsnaam begint met de korte naam: `Terug in de tijd 3v6 De Watermolen.json`.
+Het menu toont de zaken per campagne; de voorbeeldzaak hoort bij geen campagne.
+
 ## overzicht.json
 
 Het menu heeft van een zaak maar een paar dingen nodig: titel, zwaarte,
