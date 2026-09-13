@@ -1,6 +1,6 @@
 {
   "levelNumber": 7,
-  "levelVersion": 3,
+  "levelVersion": 4,
   "levelId": "lvl-mty5rdqzj9tjl",
   "campaign": "clueboard-originals",
   "format": "clueboard-level",
@@ -389,9 +389,9 @@
       },
       {
         "id": "obj-20",
-        "name": "Wolf",
-        "kind": "Wolf",
-        "kindLabel": "Wolf",
+        "name": "Hond",
+        "kind": "Dog",
+        "kindLabel": "Hond",
         "shape": "single",
         "shapeLabel": "losse tegel",
         "type": "blocked",
@@ -872,11 +872,11 @@
     "witnesses": [
       {
         "id": "obj-20",
-        "kind": "Wolf",
-        "kindLabel": "Wolf",
+        "kind": "Dog",
+        "kindLabel": "Hond",
         "article": "de",
-        "name": "de wolf",
-        "portret": "dieren/wolf.png",
+        "name": "de hond",
+        "portret": "dieren/dog.png",
         "dead": false,
         "tileId": "c6r6",
         "column": 6,
@@ -1251,8 +1251,8 @@
       },
       "obj-20": {
         "label": "",
-        "name": "Wolf",
-        "kind": "Wolf",
+        "name": "Hond",
+        "kind": "Dog",
         "note": "",
         "quals": [],
         "ownerId": "",
@@ -1597,8 +1597,8 @@
           ]
         }
       ],
-      "text": "De wolf kon de moordenaar zien.",
-      "generatedText": "De wolf kon de moordenaar zien.",
+      "text": "De hond kon de moordenaar zien.",
+      "generatedText": "De hond kon de moordenaar zien.",
       "subjectAnimal": "obj-20",
       "storyText": null,
       "holds": true

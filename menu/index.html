@@ -280,37 +280,21 @@ html[data-thema="licht"] .titelblok h1 em::after{
 }
 .lijst-teller{flex:1;min-width:0;color:var(--dof);font:800 11px var(--font-ui);
   letter-spacing:.14em;text-transform:uppercase}
-.plak-breuk{display:none}
-/* Op een telefoon passen het aantal, drie filterknoppen en de sortering niet
-   op één regel: de knoppen werden dan smalle stukjes en het aantal viel weg.
-   Daarom twee regels -- aantal en sortering boven, de filters eronder over de
-   volle breedte -- in plaats van alles kleiner maken. De DOM-volgorde blijft
-   zoals hij is; de volgorde op het scherm komt uit order. */
+/* Op een telefoon het aantal (alleen als je filtert) op een eigen regel en
+   de filterknoppen eronder over de volle breedte. */
 @media (max-width:640px){
   .filter-plak{flex-wrap:wrap;gap:7px;row-gap:9px}
-  .lijst-teller{order:1;flex:1 1 auto;font-size:10.5px;letter-spacing:.1em}
-  .sorteer{order:2}
-  .plak-breuk{order:3;display:block;flex:1 0 100%;height:0}
-  .drop{order:4}
-  #openKnop{order:5}
-  #bezigKnop{order:6}
+  .lijst-teller{order:1;flex:1 0 100%;font-size:10.5px;letter-spacing:.1em}
+  .lijst-teller:empty{display:none}
+  .drop{order:2}
+  #openKnop{order:3}
+  #bezigKnop{order:4}
   .drop,.mini-knop{flex:1 1 0;min-width:0}
   .mini-knop{justify-content:center;height:34px;padding:0 8px;width:100%}
   .mini-knop span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   /* Uitklappen onder de sterknop zelf, niet tegen de rechterrand van de rij. */
   .drop-menu{right:auto;left:0;min-width:min(72vw,200px)}
 }
-
-/* klein sorteerknopje: op zaaknummer of op titel */
-.sorteer{
-  flex:0 0 auto;display:flex;background:var(--kaart);border:1px solid var(--lijn);
-  border-radius:999px;padding:3px;box-shadow:var(--sch1);
-}
-.sorteer button{
-  border:none;background:none;border-radius:999px;padding:5px 11px;
-  font:700 11.5px var(--font-ui);color:var(--dof);transition:all .15s;white-space:nowrap;
-}
-.sorteer button.aan{background:var(--inkt);color:var(--grond)}
 
 /* niveaufilter: één sterknopje met een kleine uitklaplijst eronder */
 .drop{position:relative;flex:0 0 auto}
@@ -381,8 +365,6 @@ html[data-thema="licht"] .titelblok h1 em::after{
   .level-rij{margin:0}
   /* De campagnes als grotere kaarten, twee of drie naast elkaar. */
   .level-list.campagnes{grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
-  /* De voorbeeldzaak rekt niet mee tot de hoogte van een campagnekaart. */
-  .level-list.campagnes > .level-rij{align-self:start}
 }
 .level-rij{
   position:relative;overflow:hidden;
@@ -585,6 +567,8 @@ body.op-campagne .campagne-balk{display:flex}
 #modalUitleg .vel.titelkaart #stapKop{flex:1;display:flex;flex-direction:column;gap:22px;align-items:center;justify-content:center;text-align:center;margin:0;padding:0;font-size:44px;line-height:1.1}
 .uitleg-merk{display:none;height:34px;width:auto;max-width:60%}
 #modalUitleg .vel.titelkaart .uitleg-merk-donker{display:block}
+#modalUitleg .voorbeeld-knop{font-size:13.5px;line-height:1;padding:11px 18px;gap:9px;letter-spacing:0;font-style:normal}
+#modalUitleg .voorbeeld-knop svg{width:17px;height:17px;color:var(--accent)}
 html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-donker{display:none}
 html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display:block}
 #modalUitleg .vel.titelkaart .stap-teller,#modalUitleg .vel.titelkaart .stap-beeld,#modalUitleg .vel.titelkaart .stap-tekst{display:none}
@@ -876,13 +860,6 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10M7 21h10M8 3v3.2a4 4 0 0 0 1.4 3L12 12l-2.6 2.8A4 4 0 0 0 8 17.8V21M16 3v3.2a4 4 0 0 1-1.4 3L12 12l2.6 2.8a4 4 0 0 1 1.4 3V21"/></svg>
       <span>Mee bezig</span>
     </button>
-    <div class="sorteer" id="sorteerRij" title="Sorteer de lijst">
-      <button type="button" class="aan" data-s="nr">Nr</button>
-      <button type="button" data-s="titel">A–Z</button>
-    </div>
-    <!-- Op een telefoon breekt de rij hier: het aantal en de sortering boven,
-         de drie filterknoppen eronder. Op een breed scherm doet dit niets. -->
-    <span class="plak-breuk" aria-hidden="true"></span>
   </div>
 
   <div class="level-list" id="levelList"><p class="leeg-melding">Zaken laden…</p></div>
@@ -1318,6 +1295,15 @@ const UITLEG_SETS = {
   ]
 };
 let uitlegSet="spelen";
+/* De voorbeeldzaak staat niet in de lijst met zaken, maar in de uitleg: dat
+   is de zaak waarin je het spel leert. Het bestand heet altijd zo; staat hij
+   in de gevonden levels, dan telt zijn eigen naam. */
+const VOORBEELD_BESTAND="Voorbeeld - Moord op het kasteel.json";
+function voorbeeldHref(){
+  const d=(typeof alleLevels!=="undefined"?alleLevels:[]).find(e=>e.raw && e.raw.demo===true);
+  return levelHref(d?d.source:VOORBEELD_BESTAND);
+}
+const SPEEL_ICOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.6c-2.3-1.6-5-1.9-8.2-.9v12.6c3.2-1 5.9-.7 8.2.9 2.3-1.6 5-1.9 8.2-.9V5.7c-3.2-1-5.9-.7-8.2.9z"/><path d="M12 6.6v12.6"/></svg>';
 /* Eén doorlopende reeks: een titelkaart, de spelregels, een titelkaart, en
    hoe je speelt. De keuze bovenin springt naar de titelkaart van dat deel;
    de knop onderaan loopt er gewoon doorheen en sluit aan het eind. */
@@ -1339,7 +1325,9 @@ function tekenUitleg(){
   $("#stapTeller").textContent=s.titel?"":"Stap "+(i+1)+" van "+deel.length;
   if(s.titel){
     $("#stapKop").innerHTML='<img class="uitleg-merk uitleg-merk-donker" src="../assets/brand/logo-dark.png" alt="ClueBoard">'
-      +'<img class="uitleg-merk uitleg-merk-licht" src="../assets/brand/logo.png" alt="ClueBoard"><span></span>';
+      +'<img class="uitleg-merk uitleg-merk-licht" src="../assets/brand/logo.png" alt="ClueBoard"><span></span>'
+      /* Op de eerste kaart: wie liever meteen probeert, speelt de voorbeeldzaak. */
+      +(s.set==="spelen"?'<a class="knop voorbeeld-knop" href="'+voorbeeldHref()+'">'+SPEEL_ICOON+'Speel de voorbeeldzaak</a>':'');
     $("#stapKop span").textContent=s.titel;
   } else $("#stapKop").textContent=s.kop;
   $("#stapBeeld").innerHTML=s.titel?"":s.beeld;      /* eigen vaste inhoud, geen levelinvoer */
@@ -1347,7 +1335,8 @@ function tekenUitleg(){
   $("#stapBolletjes").innerHTML=s.titel?"":deel.map((_,j)=>'<i class="'+(j===i?"aan":"")+'"></i>').join("");
   $("#stapTerug").disabled=uitlegStap===0;
   const volgende=UITLEG_STAPPEN[uitlegStap+1];
-  $("#stapVerder").textContent=!volgende ? "Sluiten" : volgende.titel ? volgende.titel+" →" : "Volgende →";
+  /* Aan het eind van de uitleg: meteen oefenen in de voorbeeldzaak. */
+  $("#stapVerder").textContent=!volgende ? "Speel de voorbeeldzaak →" : volgende.titel ? volgende.titel+" →" : "Volgende →";
   $("#stapVerder").disabled=false;
 }
 /* ── Het regelboek ──────────────────────────────────────
@@ -1418,7 +1407,7 @@ $("#btnUitleg").addEventListener("click",()=>{ zetUitlegSet("spelen"); openModal
 $("#stapTerug").addEventListener("click",()=>{ if(uitlegStap>0){ uitlegStap--; tekenUitleg(); } });
 $("#stapVerder").addEventListener("click",()=>{
   if(uitlegStap<UITLEG_STAPPEN.length-1){ uitlegStap++; tekenUitleg(); }
-  else sluitModal($("#modalUitleg"));
+  else location.href=voorbeeldHref();
 });
 $("#stapBolletjes").addEventListener("click",e=>{
   const alle=[...$("#stapBolletjes").children];
@@ -1501,7 +1490,6 @@ let CAMPAGNES=[];
 let actieveFilter=0;
 let alleenOpen=false;   /* alleen zaken die je nog niet hebt afgerond */
 let alleenBezig=false;  /* alleen zaken waar je middenin zit */
-let sorteer="nr";        /* "nr" (zaaknummer) of "titel" (A–Z) */
 
 /* Hoe je de lijst had staan blijft op dit apparaat bewaard. Wie op niveau 3
    filtert, een zaak speelt en terugkomt, wil niet weer door alles heen: het
@@ -1510,7 +1498,7 @@ let sorteer="nr";        /* "nr" (zaaknummer) of "titel" (A–Z) */
 const FILTER_SLEUTEL="clueboard:menuFilters";
 function bewaarFilters(){
   try{ localStorage.setItem(FILTER_SLEUTEL, JSON.stringify(
-    { niveau:actieveFilter, open:alleenOpen, bezig:alleenBezig, sorteer:sorteer })); }
+    { niveau:actieveFilter, open:alleenOpen, bezig:alleenBezig })); }
   catch(e){}
 }
 function leesFilters(){
@@ -1523,12 +1511,6 @@ function leesFilters(){
   actieveFilter = (n>=1 && n<=5) ? n : 0;
   alleenOpen = !!d.open;
   alleenBezig = !!d.bezig;
-  sorteer = d.sorteer==="titel" ? "titel" : "nr";
-}
-/* De sorteerknoppen dragen hun stand in de opmaak; die moet mee terug. */
-function tekenSorteer(){
-  const rij=$("#sorteerRij"); if(!rij) return;
-  [...rij.children].forEach(b=>b.classList.toggle("aan", b.dataset.s===sorteer));
 }
 
 /* Wat je van een zaak hebt afgerond staat in de browser van deze telefoon,
@@ -1792,8 +1774,6 @@ function tekenCampagnes(){
   const lijst=$("#levelList");
   lijst.classList.add("campagnes");
   lijst.innerHTML="";
-  /* De voorbeeldzaak hoort bij geen campagne: hij staat los vooraan. */
-  alleLevels.filter(e=>e.raw.demo===true).forEach(e=>lijst.appendChild(maakLevelRij(e)));
   campagneGroepen(alleLevels.filter(e=>e.raw.demo!==true)).forEach(g=>lijst.appendChild(maakCampagneKaart(g)));
   $("#levelTeller").textContent="";
 }
@@ -1858,15 +1838,10 @@ function tekenLijst(){
     const g=levelGraad(e.raw);
     return g && g.graad===actieveFilter;
   });
-  /* Sorteren: op vast zaaknummer, of op titel. */
+  /* Op zaaknummer; waar je middenin zit eerst. */
   zichtbaar.sort((a,b)=>{
     const ba=bezigNu(a), bb=bezigNu(b);
     if(ba!==bb) return ba?-1:1;
-    if(sorteer==="titel"){
-      const ta=(((a.raw.content||{}).title)||"").toLowerCase();
-      const tb=(((b.raw.content||{}).title)||"").toLowerCase();
-      return ta.localeCompare(tb,"nl");
-    }
     return a.nummer-b.nummer;
   });
   lijst.innerHTML="";
@@ -1959,10 +1934,8 @@ async function laadLevels(){
     lijst.appendChild(p);
     $("#levelTeller").textContent="";
     $("#filterDrop").style.display="none";
-    $("#sorteerRij").style.display="none";
     return;
   }
-  tekenSorteer();
   /* Geen campagne in het adres, maar wel een in deze sessie (terug uit de
      speler)? Dan daar verder. */
   if(!/^#c=/.test(location.hash||"")){
@@ -1974,15 +1947,6 @@ async function laadLevels(){
   leesAdres(true);
 }
 
-/* sorteren: Nr of A–Z */
-$("#sorteerRij").addEventListener("click",e=>{
-  const b=e.target.closest("button[data-s]");
-  if(!b) return;
-  sorteer=b.dataset.s;
-  bewaarFilters();
-  tekenSorteer();
-  tekenLijst();
-});
 
 /* ============================================================
    Zelf maken: upload + builder achter de knop in de balk.

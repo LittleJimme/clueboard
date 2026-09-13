@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-13T12:05:51",
+  "gemaakt": "2026-09-13T12:13:18",
   "campagnes": [
     {
       "description": "Nagebouwd uit het Murdoku-boek.",
@@ -152,7 +152,7 @@
       }
     },
     {
-      "file": "Originals 7v3 Het Stille Huis.json",
+      "file": "Originals 7v4 Het Stille Huis.json",
       "content": {
         "title": "Het Stille Huis"
       },
@@ -166,7 +166,7 @@
       },
       "levelId": "lvl-mty5rdqzj9tjl",
       "levelNumber": 7,
-      "levelVersion": 3,
+      "levelVersion": 4,
       "campaign": "clueboard-originals",
       "difficulty": {
         "graad": 3,

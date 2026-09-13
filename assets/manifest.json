@@ -1067,6 +1067,23 @@
     },
     {
       "art": [
+        "dog.png"
+      ],
+      "article": "de",
+      "category": "animal",
+      "group": "Dieren",
+      "icon": "icons/objects/dog.svg",
+      "kind": "Dog",
+      "label": "Hond",
+      "labelPlural": "honden",
+      "maxTiles": 1,
+      "portret": "dieren/dog.png",
+      "slug": "dog",
+      "themes": null,
+      "type": "blocked"
+    },
+    {
+      "art": [
         "wolf.svg"
       ],
       "article": "de",
@@ -3444,5 +3461,5 @@
       "name": "warning"
     }
   ],
-  "version": 42
+  "version": 43
 }
