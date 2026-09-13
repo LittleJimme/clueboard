@@ -1467,6 +1467,17 @@ html:not([data-thema="licht"]) .note-cross img{opacity:.74}
 /* Rolteken bij de pion: dezelfde vorm die achter het portret staat, gevuld en
    in het klein. Geen schijfje eronder meer -- de vorm heeft zijn eigen contour
    en die leest ook over een donkere pion. */
+/* Het object waar iemand op staat: linksonder, het spiegelbeeld van het
+   rolteken. Een licht schijfje met het lijnpictogram, dat leest op elke
+   pionkleur en op elke vloer. */
+.pawn .obj-merk{
+  position:absolute;left:-15%;bottom:-13%;z-index:4;
+  width:max(15px,calc(var(--cell)*.42));height:max(15px,calc(var(--cell)*.42));border-radius:999px;
+  display:flex;align-items:center;justify-content:center;
+  background:#FBF7EE;color:#2A2118;border:max(1.2px,calc(var(--cell)*.03)) solid var(--board-ink);
+  box-shadow:0 1px 3px rgba(21,26,51,.35);pointer-events:none;
+}
+.pawn .obj-merk svg{width:76%;height:76%;display:block;stroke-width:2.3}
 .pawn .role-badge{
   position:absolute;right:-15%;bottom:-13%;
   width:max(14px,calc(var(--cell)*.44));height:max(14px,calc(var(--cell)*.44));
@@ -1895,6 +1906,7 @@ body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;
    personage blijft en de vloer eronder te zien is. */
 .pawn.personage .portret-podium{--s:calc(var(--cell) / 376);position:absolute;left:50%;bottom:2%;transform:translateX(-50%)}
 .pawn.personage .portret-podium[data-vorm="noble"],.pawn.personage .portret-podium[data-vorm="knight"]{bottom:-12%}
+.pawn.personage .obj-merk{left:-2%;bottom:0;width:calc(var(--cell)*.36);height:calc(var(--cell)*.36)}
 .pawn.personage .init{position:absolute;right:-2%;bottom:0;z-index:3;
   width:calc(var(--cell)*.36);height:calc(var(--cell)*.36);border-radius:999px;
   display:flex;align-items:center;justify-content:center;
@@ -5182,6 +5194,16 @@ function objectAanduiding(o){
   const n=zelfde.findIndex(x=>x.id===o.id);
   return soort+" "+(n<0?1:n+1);
 }
+/* Het object waar iemand op deze tegel op of in staat: het object zelf, of
+   anders het kleed eronder. Leeg als de tegel vrije vloer is. */
+function objectOnderPersoon(tileId){
+  const t=M.tiles.get(tileId);
+  const oid=t && (t.objectId||t.matId);
+  if(!oid) return null;
+  let hit=null;
+  M.objects.forEach(o=>{ if(o.id===oid) hit=o; });
+  return hit;
+}
 function objectIcon(kind){
   const known=AssetBank.icon(kind);
   if(known) return known;
@@ -7227,6 +7249,18 @@ function paintBoard(){
       init.style.color=inkOnColor(p.color);
       pawn.appendChild(init);
 
+      /* Staat hij op of in een object -- een stoel, een bed, een boot -- dan
+         valt dat onder de pion of het personage weg. Een bolletje linksonder
+         met het pictogram van dat object zegt het, zodat er geen twijfel is. */
+      const opObject=objectOnderPersoon(id);
+      if(opObject){
+        const om=document.createElement("span");
+        om.className="obj-merk";
+        om.title=p.name+" — "+objectAanduiding(opObject);
+        om.innerHTML=objectIcon(opObject.kind);
+        pawn.appendChild(om);
+      }
+
       /* Alleen een rolteken als die rol in dit level ergens toe doet. Staat er
          nergens een regel of een deur die dorpelingen noemt, dan is een teken
          naast elke pion alleen maar drukte. Het is dezelfde vorm als achter het
@@ -9059,7 +9093,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.180";
+const PLAYER_APP_VERSION="0.9.181";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en

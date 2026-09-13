@@ -944,6 +944,13 @@ body.spelweergave .pawn.personage .portret-podium[data-vorm="knight"]{bottom:-12
 body.spelweergave .cell .pawn.personage.victim{transform:none;animation:none}
 /* Het letterfiche naast het portret -- de maten van .pawn.personage .init in
    player/index.html, met het portret mee verkleind. */
+/* Het object onder het personage: linksonder, dezelfde maat als het fiche
+   (zie .pawn.personage .obj-merk in player/index.html). */
+body.spelweergave .pawn.personage .obj-merk{position:absolute;left:6%;bottom:0;z-index:3;
+  width:calc(var(--pion-cel,44px) * .28);height:calc(var(--pion-cel,44px) * .28);border-radius:999px;
+  display:flex;align-items:center;justify-content:center;background:#FBF7EE;color:#2A2118;
+  border:max(1.5px, calc(var(--pion-cel,44px) * .03)) solid var(--stroke);box-shadow:0 1px 3px rgba(21,26,51,.35)}
+body.spelweergave .pawn.personage .obj-merk svg{width:76%;height:76%;display:block;stroke-width:2.3}
 body.spelweergave .pawn.personage .init{position:absolute;right:6%;bottom:0;z-index:3;
   width:calc(var(--pion-cel,44px) * .28);height:calc(var(--pion-cel,44px) * .28);border-radius:999px;
   display:flex;align-items:center;justify-content:center;
@@ -2154,7 +2161,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v56</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v57</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -4434,7 +4441,8 @@ function renderCell(k){
   const alsPersonage = document.body.classList.contains('spelweergave');
   const uit = alsPersonage ? JSON.stringify(persoonKapsel(S.content.people[p] || {})) : '';
   const sig = p + '|' + role + '|' + nm + '|' + step + '|' + (fout ? 'x' : '') + '|' + stand
-            + '|' + (alsPersonage ? 'prt' + uit : 'pion');
+            + '|' + (alsPersonage ? 'prt' + uit : 'pion')
+            + '|' + (((t.obj && S.objects[t.obj]) || (t.mat && S.objects[t.mat]) || {}).kind || '');
   const oldStand = el.querySelector('.slabel');
   if (oldPawn && oldPawn.dataset.sig === sig) return;
   if (oldPawn) oldPawn.remove();
@@ -4455,7 +4463,12 @@ function renderCell(k){
     const kleur = personColor(p);
     node.style.setProperty('--pion-kleur', kleur);
     node.style.setProperty('--pion-inkt', letterOpKleur(kleur));
-    node.innerHTML = portretHtml(p) + '<span class="init">' + e(personLetter(p)) + '</span>';
+    /* Staat hij op of in een object, dan valt dat onder het portret weg: een
+       bolletje linksonder met het pictogram, zoals in de speler. */
+    const onder = (t.obj && S.objects[t.obj]) || (t.mat && S.objects[t.mat]) || null;
+    const merk = (onder && onder.kind && AssetBank.icon(onder.kind))
+      ? '<span class="obj-merk" title="' + e(objectLabel(onder.kind)) + '">' + AssetBank.icon(onder.kind) + '</span>' : '';
+    node.innerHTML = portretHtml(p) + merk + '<span class="init">' + e(personLetter(p)) + '</span>';
   } else {
     node.innerHTML = pawnSVG(p, role, t.x + '_' + t.y);
   }
