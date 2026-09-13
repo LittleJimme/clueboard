@@ -1,5 +1,5 @@
 {
-  "gemaakt": "2026-09-13T13:42:58",
+  "gemaakt": "2026-09-13T13:54:16",
   "campagnes": [
     {
       "description": "Nagebouwd uit het Murdoku-boek.",
@@ -347,6 +347,28 @@
       "difficulty": {
         "graad": 2,
         "uitleg": "Aanwijzingen combineren, en soms een vakje proberen."
+      }
+    },
+    {
+      "file": "Terug in de tijd 9v2 De Ambachtsstraat.json",
+      "content": {
+        "title": "De Ambachtsstraat"
+      },
+      "puzzle": {
+        "grid": {
+          "columns": 9,
+          "rows": 9
+        },
+        "theme": "medieval",
+        "themeLabel": "Middeleeuwen"
+      },
+      "levelId": "lvl-mtzr6jvmxqap6",
+      "levelNumber": 9,
+      "levelVersion": 2,
+      "campaign": "terug-in-de-tijd",
+      "difficulty": {
+        "graad": 3,
+        "uitleg": "Geregeld proberen en verwerpen voordat het klapt."
       }
     },
     {
