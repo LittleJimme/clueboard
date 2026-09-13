@@ -62,6 +62,12 @@
       "night": "#444935"
     },
     {
+      "id": "wheat",
+      "label": "WHEAT / TARWEVELD",
+      "day": "#E2C765",
+      "night": "#5F5226"
+    },
+    {
       "id": "carpet",
       "label": "CARPET / LINNEN",
       "day": "#D4C1B2",
