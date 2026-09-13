@@ -35,17 +35,21 @@ BRON = os.path.join(WORTEL, "Design Department", "50 Handoff to Claude", "PNG As
 OBJ = os.path.join(WORTEL, "assets", "art", "objects")
 
 
-BREED, HOOG_MAX, MIDDEN_X, VOET_Y = 225, 218, 256, 438
+BREED, HOOG_MAX, MIDDEN_X = 225, 218, 256
+# Voeten op y 438 zoals de andere dieren; per dier een eigen hoogte als het er
+# beter uitziet. De hond staat op verzoek een stukje hoger in zijn vak.
+VOET_Y = {"dog": 420}
+VOET_STANDAARD = 438
 
 
-def op_maat(im, bbox):
+def op_maat(im, bbox, voet=VOET_STANDAARD):
     """Dezelfde schaal en verschuiving als de dagtekening, op het doek van 512."""
     l, t, r, b = bbox
     schaal = min(BREED / float(r - l), HOOG_MAX / float(b - t))
     maat = int(round(512 * schaal))
     klein = im.resize((maat, maat), Image.LANCZOS)
     dx = MIDDEN_X - (l + r) / 2.0 * schaal
-    dy = VOET_Y - b * schaal
+    dy = voet - b * schaal
     uit = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
     uit.alpha_composite(klein, (int(round(dx)), int(round(dy))))
     return uit
@@ -72,16 +76,16 @@ def main():
             print("%s: geen dagversie, overgeslagen" % slug); continue
         dag = ob.klein(Image.open(r["dag"]).convert("RGBA"))
         vak = dag.getchannel("A").getbbox()
-        ob.schrijf(op_maat(dag, vak), os.path.join(OBJ, slug + ".png"))
-        ob.schrijf(op_maat(dag, vak), os.path.join(OBJ, "medieval", slug + ".png"))
+        ob.schrijf(op_maat(dag, vak, VOET_Y.get(slug, VOET_STANDAARD)), os.path.join(OBJ, slug + ".png"))
+        ob.schrijf(op_maat(dag, vak, VOET_Y.get(slug, VOET_STANDAARD)), os.path.join(OBJ, "medieval", slug + ".png"))
         regel = slug + ": dag"
         if "nacht" in r:
             nacht = ob.klein(Image.open(r["nacht"]).convert("RGBA"))
-            ob.schrijf(op_maat(nacht, vak), os.path.join(OBJ, "dark", slug + ".png"))
+            ob.schrijf(op_maat(nacht, vak, VOET_Y.get(slug, VOET_STANDAARD)), os.path.join(OBJ, "dark", slug + ".png"))
             regel += ", nacht"
         if "schaduw" in r and ob.is_schaduwbestand(r["schaduw"]):
             sch = ob.klein(ob.schaduwlaag(r["dag"], r["schaduw"]))
-            ob.schrijf(op_maat(sch, vak), os.path.join(OBJ, "shadows", slug + ".png"))
+            ob.schrijf(op_maat(sch, vak, VOET_Y.get(slug, VOET_STANDAARD)), os.path.join(OBJ, "shadows", slug + ".png"))
             regel += ", schaduw"
         print(regel)
 
