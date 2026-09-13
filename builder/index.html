@@ -2161,7 +2161,7 @@ body[data-skin="donker"] .stage{background:transparent}
   </div>
 </header>
 <!-- Versie van de bouwer; met de hand opgehoogd bij grotere wijzigingen. -->
-<span class="app-versie" title="Versie van de bouwer">Builder v57</span>
+<span class="app-versie" title="Versie van de bouwer">Builder v58</span>
 <input id="fileInput" type="file" accept="application/json,.json" class="hidden">
 
 <div class="app">
@@ -3979,6 +3979,8 @@ function roomPaintBlocked(k, target){
 function resolveSplits(){
   let created = 0;
   for (let r = 0; r < S.rooms.length; r++){
+    /* Bewust samengevoegd (een beek met een pad erdoor): die blijft heel. */
+    if (S.rooms[r] && S.rooms[r].samengevoegd) continue;
     const cells = roomTiles(r);
     if (cells.length < 2) continue;
     const comps = components(cells);
@@ -4004,10 +4006,65 @@ function addRoom(){
 function removeRoom(i){
   if (roomTiles(i).length) return;
   snapshot();
-  S.rooms.splice(i,1);
-  Object.values(S.tiles).forEach(t => { if (t.room > i) t.room--; });
-  if (activeRoom >= S.rooms.length) activeRoom = S.rooms.length - 1;
+  haalRuimteWeg(i, null);
   renderAll();
+}
+/* Ruimte i verdwijnt uit de lijst; alles erachter schuift een plek op. Dat
+   geldt niet alleen voor de tegels, maar ook voor de inhoud (naam, soort,
+   ondergrond staan op "room-N") en voor regels die een ruimte noemen.
+   Verwijzingen naar i zelf gaan naar `naar` (bij samenvoegen), of blijven
+   staan als er geen opvolger is. */
+function haalRuimteWeg(i, naar){
+  const oudNaarNieuw = n => n === i ? (naar === null ? null : (naar > i ? naar - 1 : naar)) : (n > i ? n - 1 : n);
+  S.rooms.splice(i, 1);
+  Object.values(S.tiles).forEach(t => { if (t.room > i) t.room--; });
+  if (S.content && S.content.rooms){
+    const oud = S.content.rooms, nieuw = {};
+    Object.keys(oud).forEach(k => {
+      const m = /^room-(\d+)$/.exec(k);
+      if (!m) { nieuw[k] = oud[k]; return; }
+      const n = +m[1] - 1;
+      if (n === i) return;                       /* de inhoud van de weggehaalde ruimte vervalt */
+      nieuw['room-' + (oudNaarNieuw(n) + 1)] = oud[k];
+    });
+    S.content.rooms = nieuw;
+  }
+  /* Regels die een ruimte noemen ("was in de Keuken"). */
+  const zetOm = v => {
+    if (typeof v === 'string'){
+      const m = /^room-(\d+)$/.exec(v);
+      if (!m) return v;
+      const n = oudNaarNieuw(+m[1] - 1);
+      return n === null ? v : 'room-' + (n + 1);
+    }
+    if (Array.isArray(v)) return v.map(zetOm);
+    if (v && typeof v === 'object'){ Object.keys(v).forEach(k => v[k] = zetOm(v[k])); return v; }
+    return v;
+  };
+  ((S.content && S.content.clues) || []).forEach(c => (c.terms || []).forEach(t => (t.any || []).forEach(a => zetOm(a.args || {}))));
+  if (activeRoom >= S.rooms.length) activeRoom = S.rooms.length - 1;
+}
+/* Hoeveel losse stukken een ruimte heeft. */
+function ruimteDelen(i){ const t = roomTiles(i); return t.length ? components(t).length : 0; }
+/* De tegels van ruimte `bron` gaan naar ruimte `doel`; `doel` houdt zijn naam,
+   soort en instellingen en blijft voortaan heel, ook als hij in stukken ligt. */
+function voegRuimtesSamen(doel, bron){
+  if (doel === bron || !S.rooms[doel] || !S.rooms[bron]) return;
+  snapshot();
+  Object.values(S.tiles).forEach(t => { if (t.room === bron) t.room = doel; });
+  S.rooms[doel].samengevoegd = true;
+  haalRuimteWeg(bron, doel);
+  const nieuwDoel = doel > bron ? doel - 1 : doel;
+  selectedEntity = { type:'room', id:'room-' + (nieuwDoel + 1) };
+  activeRoom = nieuwDoel;
+}
+/* Terug naar losse ruimtes: de vlag eraf, en de bouwer splitst de stukken
+   zoals hij met elke losgeraakte ruimte doet. */
+function maakRuimteLos(i){
+  if (!S.rooms[i]) return;
+  snapshot();
+  S.rooms[i].samengevoegd = false;
+  resolveSplits();
 }
 
 /* ══════════════════════════════════════════════════════
@@ -6579,6 +6636,13 @@ function klasseWetTekst(){
     return z;
   }).join(' ');
 }
+/* "Alle delen van de Beek vormen samen één gebied." Met "alle delen" als
+   onderwerp klopt het werkwoord ook bij een naam in het meervoud (de Stallen). */
+function gebiedSamenTekst(clue){
+  const i = +String(clue.roomId || '').split('-')[1] - 1;
+  if (!(i >= 0) || !S.rooms[i]) return 'Alle delen van dit gebied vormen samen één gebied.';
+  return 'Alle delen van ' + roomNameArt(i) + ' vormen samen één gebied.';
+}
 function syncVictimClue(){
   if (!S.content) return;
   if (!S.content.clues) S.content.clues = [];
@@ -6591,6 +6655,12 @@ function syncVictimClue(){
   if (legeRijen() > 0){
     S.content.clues.unshift({ id:'clue-lege', scope:'board', locked:true, terms:[] });
   }
+  /* Een samengevoegd gebied in stukken: dat hoort de speler te weten. */
+  S.rooms.forEach((r, i) => {
+    if (!r.samengevoegd || ruimteDelen(i) < 2) return;
+    S.content.clues.push({ id:'clue-gebied-room-' + (i + 1), scope:'board', kind:'gebied-samen',
+                           roomId:'room-' + (i + 1), locked:true, terms:[] });
+  });
   if (S.victim && S.people[S.victim]){
     S.content.clues.unshift({
       id: 'clue-victim', scope:'person', personId:S.victim, locked:true, terms:[]
@@ -6682,6 +6752,8 @@ function clueHtml(clue){
         ? uiIcon('lock')+' Volgt uit het bordformaat: meer rijen dan kolommen.'
         : clue.id === 'clue-wet'
           ? uiIcon('lock')+' Volgt uit de gebieden op het bord.'
+        : clue.kind === 'gebied-samen'
+          ? uiIcon('lock')+' Volgt uit het samenvoegen van deze ruimte.'
           : uiIcon('lock')+' De regel van het slachtoffer ligt vast.';
     return '<div class="clue-card locked'+(ok?'':' false')+'" '+ref+'>'+
              '<div class="clue-top"><span class="truth '+(ok?'ok':'no')+'">'+uiIcon(ok?'check':'cross')+'</span>'+
@@ -7578,7 +7650,10 @@ function buildExport(){
                return info ? [info.rol] : null; })(),
              allowedStandingsLabel:roomIsRestricted(i)?standingsText(roomAllowed(i)):null,
              gebiedsklasse:roomIsRestricted(i)?roomKlasse(i):null,
-             color:r.color, tileCount:list.length, tiles:list.map(k => tileId(S.tiles[k])) };
+             color:r.color, tileCount:list.length, tiles:list.map(k => tileId(S.tiles[k])),
+             /* Een gebied dat bewust uit losse stukken bestaat. Alleen als het
+                zo is, zodat andere levels er niets van merken. */
+             ...(r.samengevoegd && ruimteDelen(i) > 1 ? { samengevoegd:true } : {}) };
   });
 
   const objects = Object.values(S.objects).filter(o => o.tiles.length).map(o => {
@@ -7825,7 +7900,8 @@ function applyImport(data){
     /* Alleen tegels die in het bestand staan horen bij het bord. */
     const present = new Set((q.tiles || []).map(t => z(t.column-1, t.row-1)));
     Object.keys(S.tiles).forEach(k => { if (!present.has(k)) S.tiles[k].off = true; });
-    S.rooms = (q.rooms || [{}]).map((r,i) => ({ color:r.color || roomColor(i) }));
+    S.rooms = (q.rooms || [{}]).map((r,i) => Object.assign({ color:r.color || roomColor(i) },
+                                                          r.samengevoegd ? { samengevoegd:true } : {}));
     if (!S.rooms.length) S.rooms = [{ color:PALETTE[0] }];
     const roomIndex = {}; (q.rooms || []).forEach((r,i) => roomIndex[r.id] = i);
     const objGroups = {}, matGroups = {};
@@ -9295,6 +9371,7 @@ function slotsOnlyText(a, ctx){
 }
 function clueSentence(clue, markeer){
   if (clue.kind === 'room-access') return roomAccessText(clue);
+  if (clue.kind === 'gebied-samen') return gebiedSamenTekst(clue);
   if (clue.locked) return clue.id === 'clue-lege' ? legeClueTekst()
                         : clue.id === 'clue-wet' ? klasseWetTekst()
                         : VICTIM_CLUE_TEXT;
@@ -9437,6 +9514,9 @@ buildExport=function(voorbeeld){saveCurrentInspector();initContent();let d=oldEx
     scope: c.scope,
     personId: c.personId || null,
     locked: !!c.locked,
+    /* Vaste regels uit de instellingen dragen hun soort, zodat de speler de
+       uitleg erbij kan vinden. */
+    ...(c.kind ? { kind:c.kind } : {}),
     terms: (c.terms||[]).map(t => ({
       not: !!t.not,
       /* over = het alternatief gaat over iemand anders dan de persoon van de
@@ -10958,6 +11038,22 @@ function renderInspector(){
       html += '<p class="field-note">'+(huidigeKl==='gewoon'
         ? 'Een gewoon gebied. '+e(klasseWetTekst() || '')
         : e(klasseWetTekst())+' De stippelrand krijgt de kleur van de rol. Dit wordt automatisch een regel.')+'</p>';
+      /* Samenvoegen: twee ruimtes als één gebied, bijvoorbeeld een beek
+         met een pad erdoor. */
+      html += '<div class="insp-sec">Samenvoegen</div>';
+      const delen = ruimteDelen(rIdx);
+      if (S.rooms[rIdx] && S.rooms[rIdx].samengevoegd && delen > 1){
+        html += '<p class="field-note">Dit gebied bestaat uit <b>' + delen + ' losse delen</b> en telt als één gebied. '+
+                'Op het bord staat de regel: <i>' + e(gebiedSamenTekst({ roomId:sel.id })) + '</i></p>';
+        html += '<div class="row"><button class="btn ghost" id="roomLos">Weer losse ruimtes maken</button></div>';
+      }
+      const anderen = S.rooms.map((_, j) => j).filter(j => j !== rIdx && roomTiles(j).length);
+      if (anderen.length){
+        html += '<button class="inp inp-pick" id="roomMerge"><span>Samenvoegen met\u2026</span>'+
+                '<span class="caret">'+uiIcon('chevron')+'</span></button>';
+        if (!(S.rooms[rIdx] && S.rooms[rIdx].samengevoegd && delen > 1))
+          html += '<p class="field-note">Ligt een gebied in stukken, zoals een beek met een pad erdoor? Voeg de delen samen, dan telt het als één gebied.</p>';
+      }
       if ((c.note||'').trim() || inspStand.extraVeld){
         html += '<div class="insp-sec">Notitie</div>';
         html += '<textarea class="inp" data-cr="note" placeholder="Interne notitie...">'+e(c.note||'')+'</textarea>';
@@ -11092,6 +11188,43 @@ function renderInspector(){
    regelsoort en het doel. Dezelfde velden vullen zich als je de regel via
    het radiaalmenu op het bord bouwt. */
 function wireInspector(box){
+  const samen = box.querySelector('#roomMerge');
+  if (samen) samen.onclick = ev => {
+    ev.stopPropagation();
+    if (!selectedEntity || selectedEntity.type !== 'room') return;
+    const doel = +String(selectedEntity.id).split('-')[1] - 1;
+    openFixedMenu(samen, (dd, close) => {
+      dd.innerHTML = '';
+      const head = document.createElement('div');
+      head.className = 'dropdown-head';
+      head.textContent = 'Samenvoegen met';
+      dd.appendChild(head);
+      S.rooms.forEach((r, j) => {
+        if (j === doel || !roomTiles(j).length) return;
+        menuItem(dd, '<span class="left-swatch" style="background:' + e(r.color) + '"></span> ' + e(roomName(j)), async () => {
+          close();
+          const naamDoel = roomNameArt(doel), naamBron = roomNameArt(j);
+          const ok = await dialog('Gebieden samenvoegen?',
+            'Je voegt ' + naamBron + ' samen met ' + naamDoel + '. De tegels van ' + naamBron + ' horen voortaan bij ' +
+            naamDoel + ', dat zijn naam, soort en instellingen houdt; de instellingen van ' + naamBron + ' vervallen.\n\n' +
+            'Samen telt het als één gebied, ook als de delen los van elkaar liggen. Op het bord komt dan een vaste regel die dat zegt.',
+            'Samenvoegen');
+          if (!ok) return;
+          voegRuimtesSamen(doel, j);
+          renderAll(true);
+          toast(gebiedSamenTekst({ roomId:'room-' + (+String(selectedEntity.id).split('-')[1]) }), 'good');
+        });
+      });
+    });
+  };
+  const los = box.querySelector('#roomLos');
+  if (los) los.onclick = async () => {
+    if (!selectedEntity || selectedEntity.type !== 'room') return;
+    const i = +String(selectedEntity.id).split('-')[1] - 1;
+    if (!(await dialog('Weer losse ruimtes?', 'De delen van ' + roomNameArt(i) + ' worden weer aparte ruimtes. Het grootste deel houdt de naam en de instellingen.', 'Losmaken'))) return;
+    maakRuimteLos(i);
+    renderAll(true);
+  };
   const vloer = box.querySelector('[data-room-floor]');
   if (vloer) vloer.onchange = () => {
     if (!selectedEntity) return;

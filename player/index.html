@@ -9095,7 +9095,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.182";
+const PLAYER_APP_VERSION="0.9.183";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9944,7 +9944,8 @@ const REGEL_FAMILIES = [
     atomen:["in-room","in-room-kind","in-largest-room","in-smallest-room","may-enter-room","next-to-room-other"],
     beeld:()=>helpBord(["A...","....","...B","...."],{gebied:REGEL_GEB}),
     tekst:["Een <b>gebied</b> is een benoemd deel met een rand eromheen: een kamer, een tuin, een stal. A staat erin, B niet.",
-           "<b>Naast een gebied</b>: ernaast, er zelf niet in. <b>Grootste</b> en <b>kleinste</b> tel je in vakken."] },
+           "<b>Naast een gebied</b>: ernaast, er zelf niet in. <b>Grootste</b> en <b>kleinste</b> tel je in vakken.",
+           "Soms ligt een gebied in stukken, zoals een beek met een pad erdoor. Staat er dat het <b>één gebied vormt</b>, dan tellen alle stukken samen als één gebied."] },
   { id:"hoek", groep:"Gebieden", kop:"Hoek van een gebied",
     atomen:["in-room-corner"],
     beeld:()=>helpBord(["...","...","_._"],{licht:[[0,0],[2,0],[1,2]]}),
@@ -10025,7 +10026,7 @@ function regelFamilies(cs,p){
   (cs||[]).forEach(c=>{
     let n=0;
     (c.terms||[]).forEach(t=>(t.any||[]).forEach(a=>{ const f=REGEL_FAMILIE_VAN[a.atom]; if(f){ zet(f); n++; } }));
-    if(!n) zet(c.kind==="room-access" ? "rollen" : (p && M && p.id===M.victimId) ? "slachtoffer" : "algemeen");
+    if(!n) zet(c.kind==="room-access" ? "rollen" : c.kind==="gebied-samen" ? "gebied" : (p && M && p.id===M.victimId) ? "slachtoffer" : "algemeen");
   });
   return ids.map(id=>REGEL_FAMILIES.find(f=>f.id===id)).filter(Boolean);
 }
