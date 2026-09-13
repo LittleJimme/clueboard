@@ -382,11 +382,11 @@ html[data-thema="licht"] .titelblok h1 em::after{
      scherm, in plaats van te scrollen. */
   flex:0 0 auto;
   display:flex;align-items:center;gap:13px;text-decoration:none;
-  background:var(--kaart);border:1.5px solid var(--inkt-rand);border-radius:14px;
-  padding:15px 16px;box-shadow:none;
+  background:var(--kaart);border:1px solid var(--lijn);border-radius:14px;
+  padding:15px 16px;box-shadow:0 5px 14px -6px rgba(42,33,24,.2),0 1px 2px rgba(42,33,24,.05);
   transition:transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .18s,border-color .18s;
 }
-.level-rij:hover{border-color:var(--inkt);box-shadow:var(--sch2);transform:translateY(-1px)}
+.level-rij:hover{border-color:var(--lijn);box-shadow:0 10px 22px -8px rgba(42,33,24,.28),0 1px 2px rgba(42,33,24,.05);transform:translateY(-2px)}
 .level-rij:active{transform:none;box-shadow:var(--sch1)}
 /* de voorbeeldzaak: lichter vlak, zodat hij er meteen uitspringt */
 .level-rij.demo{
@@ -436,7 +436,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
   flex:0 0 auto;width:40px;height:40px;border-radius:999px;
   display:flex;align-items:center;justify-content:center;
   font-family:var(--font-display);font-weight:600;font-size:16px;color:var(--inkt);
-  background:var(--kaart);border:1.5px solid var(--inkt-rand);
+  background:var(--kaart-2);border:1px solid var(--lijn);
   font-variant-numeric:tabular-nums;
 }
 .level-rij .midden{flex:1;min-width:0}
@@ -496,11 +496,11 @@ body.op-campagne .campagne-balk{display:block}
 .campagne-kaart{
   position:relative;flex:0 0 auto;display:flex;flex-direction:column;overflow:hidden;
   text-decoration:none;color:inherit;
-  background:var(--kaart);border:1.5px solid var(--inkt-rand);border-radius:16px;
-  padding:0 20px 16px;box-shadow:var(--sch1);
+  background:var(--kaart);border:1px solid var(--lijn);border-radius:16px;
+  padding:0 20px 16px;box-shadow:0 6px 16px -6px rgba(42,33,24,.22),0 1px 2px rgba(42,33,24,.06);
   transition:transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .18s,border-color .18s;
 }
-.campagne-kaart:hover{border-color:var(--inkt);box-shadow:var(--sch2);transform:translateY(-1px)}
+.campagne-kaart:hover{border-color:var(--lijn);box-shadow:0 12px 26px -8px rgba(42,33,24,.3),0 1px 2px rgba(42,33,24,.06);transform:translateY(-2px)}
 .campagne-kaart:active{transform:none;box-shadow:var(--sch1)}
 /* Het campagnebeeld bovenin de kaart, met een inktlijn eronder; daaronder
    begint de tekst op dezelfde plek als voorheen. */
