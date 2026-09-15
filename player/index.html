@@ -2920,20 +2920,14 @@ body.desktop.in-game #modalIntro .intro-watermerk{
   display:block;left:50%;top:52%;width:min(62%,760px);opacity:.55}
 body.desktop.in-game #modalIntro .intro-terug{left:22px;top:17px}
 body.desktop.in-game #modalIntro .intro-scroll{
-  display:grid;grid-template-columns:minmax(360px,.95fr) minmax(0,1.05fr);grid-template-rows:auto auto auto auto 1fr;
-  column-gap:64px;row-gap:20px;align-content:start;align-items:start;
+  display:grid;grid-template-columns:minmax(360px,.95fr) minmax(0,1.05fr);grid-template-rows:1fr auto auto auto 1fr;
+  column-gap:64px;row-gap:22px;align-content:center;align-items:start;
   width:100%;max-width:1180px;margin:0 auto;padding:0;text-align:left;
   -webkit-mask-image:none;mask-image:none;scrollbar-width:thin}
-/* Op desktop van schermrand tot schermrand en tot de bovenkant; de tekst
-   erop lijnt uit met de kolom eronder. */
-body.desktop.in-game #modalIntro .intro-hero{grid-column:1/-1;grid-row:1;height:clamp(230px,32vh,340px);
-  width:100vw;margin:-26px 0 14px calc(50% - 50vw);border-radius:0}
-body.desktop.in-game #modalIntro .ih-tekst{left:calc(max(0px,50vw - 590px) + 56px);right:calc(max(0px,50vw - 590px) + 56px);bottom:26px}
-body.desktop.in-game #modalIntro .intro-scroll{overflow-x:hidden}
 body.desktop.in-game #modalIntro .intro-kop{grid-column:1;grid-row:2;min-height:0;padding:0;background:none;text-align:left}
-body.desktop.in-game #modalIntro .intro-titel{font-size:clamp(38px,4vw,56px);text-wrap:balance}
-body.desktop.in-game #modalIntro .intro-graad{align-items:flex-start;margin-top:10px}
-body.desktop.in-game #modalIntro .intro-scheiding{margin:4px 0 16px}
+body.desktop.in-game #modalIntro .intro-titel{font-size:clamp(40px,4vw,58px);text-wrap:balance}
+body.desktop.in-game #modalIntro .intro-graad{align-items:flex-start;margin-top:14px}
+body.desktop.in-game #modalIntro .intro-scheiding{margin:20px 0 16px}
 body.desktop.in-game #modalIntro .sheet p.intro-tekst{margin:0;max-width:30em;font-size:18px}
 body.desktop.in-game #modalIntro .intro-dossier{display:contents}
 body.desktop.in-game #modalIntro .intro-breuk{display:none}
@@ -2944,7 +2938,7 @@ body.desktop.in-game #modalIntro .bordregel.algemeen{font-size:14px;padding:9px 
 /* Niet de volle kolombreedte: op zes kolommen wordt elk portret een derde
    van de bak, en dan drijven ze uit elkaar. Met een bovengrens staan ze als
    groep bij elkaar, met de kolom eromheen als lucht. */
-body.desktop.in-game #modalIntro .deelnemers{grid-column:2;grid-row:2/6;align-self:center;justify-self:center;max-width:min(100%,620px);width:100%;padding:0;margin:0;gap:18px 0}
+body.desktop.in-game #modalIntro .deelnemers{grid-column:2;grid-row:1/6;align-self:center;justify-self:center;max-width:min(100%,620px);width:100%;padding:0;margin:0;gap:18px 0}
 body.desktop.in-game #modalIntro .deelnemer{grid-template-rows:calc(var(--dl,78px)*1.22) auto;gap:4px}
 body.desktop.in-game #modalIntro .dl-tekst .naam{font-size:22px}
 body.desktop.in-game #modalIntro .deelnemer.lang .dl-tekst .naam{font-size:19px}
@@ -3585,23 +3579,6 @@ body.in-game #modalIntro .intro-scroll::-webkit-scrollbar{width:0;height:0;displ
    en de intro. Het blok staat laag, met lucht erboven, zoals een titelpagina.
    Alles wat je nodig hebt om te spelen begint pas ná de haarlijn, dus je
    scrolt bewust door van "welke zaak is dit" naar "wat weet ik". */
-/* Het beeld bovenaan het introvel: van rand tot rand en tot de bovenkant,
-   met de zaak in het wit over een donkere waas onderin. */
-body.in-game #modalIntro .intro-hero{
-  position:relative;z-index:1;height:clamp(210px,34vh,320px);
-  margin:calc(-2px - 10px - env(safe-area-inset-top)) -20px 4px;
-  background:linear-gradient(160deg,#3A2A1E,#8A5F16) center/cover no-repeat;overflow:hidden;
-  animation:introBeeldIn .55s ease both}
-@keyframes introBeeldIn{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:none}}
-body.in-game #modalIntro .intro-hero::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(42,33,24,.10) 0%,rgba(42,33,24,0) 30%,rgba(42,33,24,.22) 55%,rgba(42,33,24,.80) 100%)}
-body.in-game #modalIntro .ih-tekst{position:absolute;left:20px;right:20px;bottom:18px;z-index:2;text-align:left;
-  padding-top:env(safe-area-inset-top)}
-body.in-game #modalIntro .intro-hero .intro-zaak{color:#F0DFB4;margin-bottom:8px;min-height:0}
-body.in-game #modalIntro .intro-hero .intro-titel{color:#FBF4EA;font-size:clamp(30px,7.5vw,46px);
-  text-shadow:0 1px 2px rgba(42,33,24,.5),0 6px 24px rgba(42,33,24,.45);text-wrap:balance}
-body.in-game #modalIntro .intro-hero .intro-graad{align-items:flex-start;margin-top:10px;flex-direction:row;gap:10px}
-body.in-game #modalIntro .intro-hero .intro-graad .woord{color:#F3E7D3}
 body.in-game #modalIntro .intro-kop{
   box-sizing:border-box;position:relative;
   /* Geen omslag van een heel scherm meer. De zaak leest nu als één doorlopende
@@ -3609,7 +3586,7 @@ body.in-game #modalIntro .intro-kop{
      onderaan de knop. Scrollen mag, maar je hoeft niet eerst een leeg scherm
      weg te vegen om te zien dat er meer staat. */
   min-height:0;
-  padding:clamp(6px,2vh,16px) 0 clamp(22px,4vh,34px);
+  padding:clamp(26px,8vh,58px) 0 clamp(22px,4vh,34px);
   /* Een heel zachte warme gloed achter de titel, zodat de rust eromheen als
      titelpagina leest en niet als een gat. */
   background:radial-gradient(ellipse 82% 48% at 50% 44%,rgba(201,147,47,.10),transparent 72%);
@@ -4311,16 +4288,10 @@ body.in-game .clue-card.done::before{background:var(--goud)}
     <div class="intro-scroll" id="introScroll">
       <!-- De cover: zaaknummer, titel, niveau en de intro. Alleen wie de zaak
            is, verder niets, zodat je hem eerst op je in laat werken. -->
-      <!-- Het beeld van de campagne, met de zaak erover: zoals de kop van de
-           campagnepagina in het menu. -->
-      <div class="intro-hero" id="introHero">
-        <div class="ih-tekst">
-          <div class="intro-zaak" id="introZaak"></div>
-          <h2 class="intro-titel" id="introTitel">—</h2>
-          <div class="intro-graad" id="introGraad"></div>
-        </div>
-      </div>
       <div class="intro-kop">
+        <div class="intro-zaak" id="introZaak"></div>
+        <h2 class="intro-titel" id="introTitel">—</h2>
+        <div class="intro-graad" id="introGraad"></div>
         <div class="intro-scheiding"></div>
         <p class="intro-tekst" id="introTekst"></p>
       </div>
@@ -9662,10 +9633,7 @@ function showLevelDetail(levelIndex){
   { const camp=((AssetBank.manifest&&AssetBank.manifest.campaigns)||[]).find(x=>x.id===raw.campaign);
     $("#introZaak").textContent=raw.levelNumber
       ?((camp?camp.short+" · ":"")+"Zaak "+raw.levelNumber)
-      :(raw.demo?"Voorbeeldzaak":"");
-    /* Het beeld van de campagne boven de zaak; zonder campagne een warm vlak. */
-    const hero=$("#introHero");
-    if(hero) hero.style.backgroundImage=(camp&&camp.hero)?"url('../assets/"+camp.hero+"')":""; }
+      :(raw.demo?"Voorbeeldzaak":""); }
   $("#introTitel").textContent=c.title||"Naamloos niveau";
   { const kt=$("#kopTitel"); if(kt) kt.innerHTML='<b>'+esc(c.title||"Naamloos niveau")+'</b>'
       +(raw.levelNumber?'<span>Zaak '+raw.levelNumber+'</span>':(raw.demo?'<span>Voorbeeldzaak</span>':''))
