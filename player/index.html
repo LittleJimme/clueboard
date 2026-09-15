@@ -1991,12 +1991,12 @@ body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;
 .modal.open{display:flex}
 .modal .backdrop{position:absolute;inset:0;background:rgba(21,26,51,.46);
   backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-.sheet{position:relative;background:linear-gradient(180deg,#fff,var(--panel-2));
-  border:1px solid var(--line);border-radius:22px;
-  padding:20px;width:100%;max-width:420px;max-height:82vh;overflow:auto;box-shadow:var(--sh3)}
+.sheet{position:relative;background:var(--kaart);
+  border:1.5px solid var(--inkt-rand);border-radius:14px;
+  padding:20px;width:100%;max-width:420px;max-height:82vh;overflow:auto;box-shadow:0 12px 34px rgba(38,36,25,.16)}
 .modal:not(.sheet-modal).open .sheet{animation:sheetPop .34s cubic-bezier(.2,1.05,.3,1) both}
 @keyframes sheetPop{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
-.sheet h3{margin:0 0 10px;font-size:19px;font-weight:800;letter-spacing:-.01em}
+.sheet h3{margin:0 0 10px;font:600 22px var(--font-display);letter-spacing:-.01em;color:var(--inkt)}
 .sheet p{margin:0 0 10px;font-size:14px;color:var(--ink-2)}
 /* ---------- Hoe speel je: uitleg met bordjes ---------- */
 .help-intro{margin:0 0 14px;font-size:14px;color:var(--ink-2)}
@@ -2231,7 +2231,7 @@ body.in-game .hb-c.licht{box-shadow:0 0 0 2px var(--goud)}
 .sheet-modal .backdrop{opacity:0;transition:opacity .3s ease}
 .sheet-modal.open .backdrop{opacity:1}
 .sheet-modal .sheet{
-  width:100%;max-width:560px;max-height:100%;border-radius:22px 22px 0 0;
+  width:100%;max-width:560px;max-height:100%;border-radius:16px 16px 0 0;
   transform:translateY(100%);transition:transform .34s cubic-bezier(.22,.68,.24,1);
   margin:0;box-shadow:0 -10px 40px rgba(21,26,51,.24);
 }
@@ -2381,7 +2381,7 @@ body.in-game .timer svg{width:15px;height:15px;color:var(--dof)}
 body.in-game #btnCheck{
   position:static;transform:none;width:auto;max-width:none;height:50px;margin:0;
   display:inline-flex;align-items:center;gap:7px;padding:0 20px 0 14px;border-radius:999px;
-  background:var(--kaart);color:var(--inkt);border:1px solid var(--lijn);
+  background:var(--kaart);color:var(--inkt);border:1.5px solid var(--inkt-rand);
   font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:0;
   box-shadow:var(--sch1);text-shadow:none;filter:none;line-height:1;
   transition:background .2s,color .2s,border-color .2s,box-shadow .25s;
@@ -2549,7 +2549,7 @@ body.desktop.in-game .kop-midden{justify-content:center}
 body.desktop.in-game .game-head .kop-check{max-width:none}
 body.desktop.in-game .pane{display:flex;animation:none}
 /* Links: de regels, met een eigen schuifbalk. */
-body.desktop.in-game #pane-clues{grid-column:1;grid-row:2/4;min-height:0;border-right:1px solid var(--lijn-zacht)}
+body.desktop.in-game #pane-clues{grid-column:1;grid-row:2/4;min-height:0;border-right:1px solid var(--lijn-zacht);display:flex;flex-direction:column}
 /* De regels als dossierkaartjes: portret op zijn rolplaat, naamplaatje,
    daaronder de regel. Drie naast elkaar, alles in één oogopslag; alleen bij
    een uitzonderlijk lang dossier verschijnt er een schuifbalk. */
@@ -2628,7 +2628,16 @@ body.desktop.in-game .tabbar .view-switch,body.desktop.in-game .voet-links{displ
    je toch al deed. Op de telefoon blijft hij, want daar is hij de enige weg. */
 /* Op desktop hoort de kop juist compact: daar staat de voet niet vol knoppen. */
 body.desktop.in-game .kop-knop{width:40px;height:40px;min-width:40px}
-body.desktop.in-game #btnCheck{height:38px}
+body.desktop.in-game #checkRij{flex:0 0 auto;padding:12px 14px 14px;border-top:1px solid var(--lijn-zacht)}
+body.desktop.in-game #checkRij #btnCheck{
+  width:100%;height:50px;justify-content:center;border-radius:999px;
+  background:var(--inkt);color:var(--grond);border:1.5px solid var(--inkt);
+  font-size:18px;box-shadow:none}
+body.desktop.in-game #checkRij #btnCheck:hover{background:var(--inkt-2);border-color:var(--inkt-2)}
+body.desktop.in-game #checkRij #btnCheck .ic{color:inherit}
+body.desktop.in-game #checkRij #btnCheck .teller{background:rgba(255,255,255,.18);color:inherit}
+body.desktop.in-game #checkRij #btnCheck.klaar{background:var(--inkt);color:var(--grond);border-color:var(--inkt);box-shadow:none}
+body.desktop.in-game #checkRij #btnCheck.klaar .ic{color:inherit}
 body.desktop.in-game .kop-midden{display:flex;align-items:center;justify-content:center;gap:10px}
 body.desktop.in-game .mode-bar{display:none}
 body.desktop.in-game .mode-switch{flex:0 0 auto;width:auto;padding:3px}
@@ -2911,14 +2920,20 @@ body.desktop.in-game #modalIntro .intro-watermerk{
   display:block;left:50%;top:52%;width:min(62%,760px);opacity:.55}
 body.desktop.in-game #modalIntro .intro-terug{left:22px;top:17px}
 body.desktop.in-game #modalIntro .intro-scroll{
-  display:grid;grid-template-columns:minmax(360px,.95fr) minmax(0,1.05fr);grid-template-rows:1fr auto auto auto 1fr;
-  column-gap:64px;row-gap:22px;align-content:center;align-items:start;
+  display:grid;grid-template-columns:minmax(360px,.95fr) minmax(0,1.05fr);grid-template-rows:auto auto auto auto 1fr;
+  column-gap:64px;row-gap:20px;align-content:start;align-items:start;
   width:100%;max-width:1180px;margin:0 auto;padding:0;text-align:left;
   -webkit-mask-image:none;mask-image:none;scrollbar-width:thin}
+/* Op desktop van schermrand tot schermrand en tot de bovenkant; de tekst
+   erop lijnt uit met de kolom eronder. */
+body.desktop.in-game #modalIntro .intro-hero{grid-column:1/-1;grid-row:1;height:clamp(230px,32vh,340px);
+  width:100vw;margin:-26px 0 14px calc(50% - 50vw);border-radius:0}
+body.desktop.in-game #modalIntro .ih-tekst{left:calc(max(0px,50vw - 590px) + 56px);right:calc(max(0px,50vw - 590px) + 56px);bottom:26px}
+body.desktop.in-game #modalIntro .intro-scroll{overflow-x:hidden}
 body.desktop.in-game #modalIntro .intro-kop{grid-column:1;grid-row:2;min-height:0;padding:0;background:none;text-align:left}
-body.desktop.in-game #modalIntro .intro-titel{font-size:clamp(40px,4vw,58px);text-wrap:balance}
-body.desktop.in-game #modalIntro .intro-graad{align-items:flex-start;margin-top:14px}
-body.desktop.in-game #modalIntro .intro-scheiding{margin:20px 0 16px}
+body.desktop.in-game #modalIntro .intro-titel{font-size:clamp(38px,4vw,56px);text-wrap:balance}
+body.desktop.in-game #modalIntro .intro-graad{align-items:flex-start;margin-top:10px}
+body.desktop.in-game #modalIntro .intro-scheiding{margin:4px 0 16px}
 body.desktop.in-game #modalIntro .sheet p.intro-tekst{margin:0;max-width:30em;font-size:18px}
 body.desktop.in-game #modalIntro .intro-dossier{display:contents}
 body.desktop.in-game #modalIntro .intro-breuk{display:none}
@@ -2929,7 +2944,7 @@ body.desktop.in-game #modalIntro .bordregel.algemeen{font-size:14px;padding:9px 
 /* Niet de volle kolombreedte: op zes kolommen wordt elk portret een derde
    van de bak, en dan drijven ze uit elkaar. Met een bovengrens staan ze als
    groep bij elkaar, met de kolom eromheen als lucht. */
-body.desktop.in-game #modalIntro .deelnemers{grid-column:2;grid-row:1/6;align-self:center;justify-self:center;max-width:min(100%,620px);width:100%;padding:0;margin:0;gap:18px 0}
+body.desktop.in-game #modalIntro .deelnemers{grid-column:2;grid-row:2/6;align-self:center;justify-self:center;max-width:min(100%,620px);width:100%;padding:0;margin:0;gap:18px 0}
 body.desktop.in-game #modalIntro .deelnemer{grid-template-rows:calc(var(--dl,78px)*1.22) auto;gap:4px}
 body.desktop.in-game #modalIntro .dl-tekst .naam{font-size:22px}
 body.desktop.in-game #modalIntro .deelnemer.lang .dl-tekst .naam{font-size:19px}
@@ -3081,6 +3096,21 @@ body.in-game .schuif i{background:var(--kaart)}
    keuze in het instellingenvel staan. */
 .kop-knop.thema-knop{display:none}
 body.in-game .kop-knop.thema-knop{display:inline-flex}
+.kop-meer{position:relative;display:inline-flex}
+.kop-meer-menu{position:absolute;right:0;top:calc(100% + 6px);z-index:80;min-width:210px;
+  background:var(--kaart);border:1.5px solid var(--inkt-rand);border-radius:12px;padding:5px;
+  box-shadow:0 10px 28px rgba(42,33,24,.16);display:none}
+.kop-meer.open .kop-meer-menu{display:block;animation:kopDropIn .16s ease both}
+@keyframes kopDropIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.kop-meer-menu button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+  border:0;background:none;border-radius:9px;padding:9px 10px;
+  font:700 13px var(--font-ui);color:var(--inkt-2);cursor:pointer}
+.kop-meer-menu button:hover{background:var(--kaart-2);color:var(--inkt)}
+.kop-meer-menu .ic{display:flex;width:18px;height:18px}
+.kop-meer-menu .ic svg{width:18px;height:18px}
+.kop-meer-menu .vraag-ic{width:18px;text-align:center;font-family:var(--font-display);font-style:italic;font-weight:600;font-size:17px;line-height:1}
+.kop-meer-menu .thema-bol{width:16px;height:16px;border-radius:50%;display:block;margin:0 1px;
+  background:linear-gradient(135deg,var(--goud) 50%,var(--inkt) 50%);box-shadow:0 0 0 1px rgba(0,0,0,.12) inset}
 body.in-game .kop-knop.thema-knop i{
   width:16px;height:16px;border-radius:50%;display:block;
   background:linear-gradient(135deg,var(--goud) 50%,var(--inkt) 50%);
@@ -3555,6 +3585,23 @@ body.in-game #modalIntro .intro-scroll::-webkit-scrollbar{width:0;height:0;displ
    en de intro. Het blok staat laag, met lucht erboven, zoals een titelpagina.
    Alles wat je nodig hebt om te spelen begint pas ná de haarlijn, dus je
    scrolt bewust door van "welke zaak is dit" naar "wat weet ik". */
+/* Het beeld bovenaan het introvel: van rand tot rand en tot de bovenkant,
+   met de zaak in het wit over een donkere waas onderin. */
+body.in-game #modalIntro .intro-hero{
+  position:relative;z-index:1;height:clamp(210px,34vh,320px);
+  margin:calc(-2px - 10px - env(safe-area-inset-top)) -20px 4px;
+  background:linear-gradient(160deg,#3A2A1E,#8A5F16) center/cover no-repeat;overflow:hidden;
+  animation:introBeeldIn .55s ease both}
+@keyframes introBeeldIn{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:none}}
+body.in-game #modalIntro .intro-hero::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(42,33,24,.10) 0%,rgba(42,33,24,0) 30%,rgba(42,33,24,.22) 55%,rgba(42,33,24,.80) 100%)}
+body.in-game #modalIntro .ih-tekst{position:absolute;left:20px;right:20px;bottom:18px;z-index:2;text-align:left;
+  padding-top:env(safe-area-inset-top)}
+body.in-game #modalIntro .intro-hero .intro-zaak{color:#F0DFB4;margin-bottom:8px;min-height:0}
+body.in-game #modalIntro .intro-hero .intro-titel{color:#FBF4EA;font-size:clamp(30px,7.5vw,46px);
+  text-shadow:0 1px 2px rgba(42,33,24,.5),0 6px 24px rgba(42,33,24,.45);text-wrap:balance}
+body.in-game #modalIntro .intro-hero .intro-graad{align-items:flex-start;margin-top:10px;flex-direction:row;gap:10px}
+body.in-game #modalIntro .intro-hero .intro-graad .woord{color:#F3E7D3}
 body.in-game #modalIntro .intro-kop{
   box-sizing:border-box;position:relative;
   /* Geen omslag van een heel scherm meer. De zaak leest nu als één doorlopende
@@ -3562,7 +3609,7 @@ body.in-game #modalIntro .intro-kop{
      onderaan de knop. Scrollen mag, maar je hoeft niet eerst een leeg scherm
      weg te vegen om te zien dat er meer staat. */
   min-height:0;
-  padding:clamp(26px,8vh,58px) 0 clamp(22px,4vh,34px);
+  padding:clamp(6px,2vh,16px) 0 clamp(22px,4vh,34px);
   /* Een heel zachte warme gloed achter de titel, zodat de rust eromheen als
      titelpagina leest en niet als een gat. */
   background:radial-gradient(ellipse 82% 48% at 50% 44%,rgba(201,147,47,.10),transparent 72%);
@@ -3581,8 +3628,8 @@ body.in-game #modalIntro .intro-terug{
   left:calc(max(0px,(100vw - 560px)/2) + 14px);top:calc(17px + env(safe-area-inset-top));
   width:40px;height:40px;border-radius:999px;padding:0;
   display:flex;align-items:center;justify-content:center;
-  background:var(--kaart-2);color:var(--inkt);border:1px solid var(--lijn);
-  box-shadow:var(--sch1);
+  background:var(--kaart);color:var(--inkt);border:1.5px solid var(--inkt-rand);
+  box-shadow:0 2px 8px rgba(42,33,24,.18);
 }
 body.in-game #modalIntro .intro-terug .ic,
 body.in-game #modalIntro .intro-terug svg{width:19px;height:19px}
@@ -3939,9 +3986,18 @@ body.in-game .clue-card.done::before{background:var(--goud)}
           <button class="kop-knop stap-vooruit leeg" type="button" title="Stap vooruit" aria-label="Stap vooruit"><span class="ic" data-icon="undo"></span></button>
         </div>
         <div class="timer" id="timer"><span class="ic" data-icon="clock"></span><span id="timerVal">0:00</span></div>
-        <button class="kop-knop thema-knop" id="btnThema" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
-        <button class="kop-knop icon-btn" id="btnSettings" data-sheet="modalSettings" title="Instellingen" aria-label="Instellingen"><span class="ic" data-icon="settings"></span></button>
-        <button class="kop-knop icon-btn" id="btnHelpTop" title="Speluitleg" aria-label="Speluitleg"><span class="vraag-ic">?</span></button>
+        <!-- Eén meer-knop voor wat je niet elke beurt nodig hebt: instellingen,
+             de uitleg en dag/nacht. Zo blijft de kop één rustige regel. -->
+        <div class="kop-meer" id="kopMeer">
+          <button class="kop-knop" id="btnKopMeer" type="button" aria-haspopup="true" aria-expanded="false" title="Meer" aria-label="Meer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"><path d="M7 8.5h10M7 12h10M7 15.5h10"/></svg>
+          </button>
+          <div class="kop-meer-menu" id="kopMeerMenu">
+            <button type="button" id="btnSettings" data-sheet="modalSettings"><span class="ic" data-icon="settings"></span>Instellingen</button>
+            <button type="button" id="btnHelpTop"><span class="vraag-ic">?</span>Speluitleg</button>
+            <button type="button" id="btnThema" title="Wissel tussen licht en donker"><i class="thema-bol"></i>Dag of nacht</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -3957,7 +4013,11 @@ body.in-game .clue-card.done::before{background:var(--goud)}
     </div>
 
     <!-- Regels -->
-    <div class="pane" id="pane-clues"><div id="cluesList"></div></div>
+    <div class="pane" id="pane-clues"><div id="cluesList"></div>
+      <!-- Op desktop verhuist Controleer hierheen (zie plaatsCheck): één grote
+           inktknop onder de regels, altijd op dezelfde plek. -->
+      <div class="check-rij" id="checkRij"></div>
+    </div>
 
     <!-- Detail (alleen op desktop): staat altijd open. Zonder keuze de
          bordregels en de legenda; na een klik op een persoon zijn regels,
@@ -4251,10 +4311,16 @@ body.in-game .clue-card.done::before{background:var(--goud)}
     <div class="intro-scroll" id="introScroll">
       <!-- De cover: zaaknummer, titel, niveau en de intro. Alleen wie de zaak
            is, verder niets, zodat je hem eerst op je in laat werken. -->
+      <!-- Het beeld van de campagne, met de zaak erover: zoals de kop van de
+           campagnepagina in het menu. -->
+      <div class="intro-hero" id="introHero">
+        <div class="ih-tekst">
+          <div class="intro-zaak" id="introZaak"></div>
+          <h2 class="intro-titel" id="introTitel">—</h2>
+          <div class="intro-graad" id="introGraad"></div>
+        </div>
+      </div>
       <div class="intro-kop">
-        <div class="intro-zaak" id="introZaak"></div>
-        <h2 class="intro-titel" id="introTitel">—</h2>
-        <div class="intro-graad" id="introGraad"></div>
         <div class="intro-scheiding"></div>
         <p class="intro-tekst" id="introTekst"></p>
       </div>
@@ -6691,7 +6757,7 @@ function renderBoard(){
 
 /* Onder de vier procent wordt een muur een haarlijn: dan leest hij niet meer
    als muur en gaan alle maten die eraan hangen scheef staan. */
-const MUUR_PROCENT = 7.5;
+const MUUR_PROCENT = 5.8;
 /* De ronding van een tegelhoek, ook in procent van een vakje. De muren nemen
    deze straal over, dus beide staan hier bij elkaar en kunnen niet uit elkaar
    lopen; de CSS krijgt hem als variabele. */
@@ -7835,7 +7901,7 @@ function openRadial(center,tileId){
   /* Groter dan vroeger, maar vanaf tien personen weer de oude maat: dan
      zit de ring te vol en zouden de knoppen elkaar raken. */
   const vol=N>=10;
-  const btnSize=Math.max(38,Math.min(vol?68:82,Math.floor(Math.min(chord-8,size*(vol?0.17:0.21)))));
+  const btnSize=Math.max(38,Math.min(vol?76:94,Math.floor(Math.min(chord-6,size*(vol?0.19:0.24)))));
   ring.style.setProperty("--rbtn",btnSize+"px");
   ring.style.setProperty("--rlbl",Math.max(10,Math.min(vol?14:(N>=8?14.5:17),Math.round(btnSize*0.21)))+"px");
   /* Een naam mag niet breder worden dan de afstand tussen twee buren op de
@@ -9208,7 +9274,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.191";
+const PLAYER_APP_VERSION="0.9.192";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9596,7 +9662,10 @@ function showLevelDetail(levelIndex){
   { const camp=((AssetBank.manifest&&AssetBank.manifest.campaigns)||[]).find(x=>x.id===raw.campaign);
     $("#introZaak").textContent=raw.levelNumber
       ?((camp?camp.short+" · ":"")+"Zaak "+raw.levelNumber)
-      :(raw.demo?"Voorbeeldzaak":""); }
+      :(raw.demo?"Voorbeeldzaak":"");
+    /* Het beeld van de campagne boven de zaak; zonder campagne een warm vlak. */
+    const hero=$("#introHero");
+    if(hero) hero.style.backgroundImage=(camp&&camp.hero)?"url('../assets/"+camp.hero+"')":""; }
   $("#introTitel").textContent=c.title||"Naamloos niveau";
   { const kt=$("#kopTitel"); if(kt) kt.innerHTML='<b>'+esc(c.title||"Naamloos niveau")+'</b>'
       +(raw.levelNumber?'<span>Zaak '+raw.levelNumber+'</span>':(raw.demo?'<span>Voorbeeldzaak</span>':''))
@@ -10736,6 +10805,15 @@ function zetDesktop(){
   setTimeout(fitBoard,0);
 }
 DESKTOP_MQ.addEventListener("change",zetDesktop);
+/* Controleer staat op desktop onder het regelpaneel en op de telefoon in de
+   kop: hetzelfde element, het verhuist alleen. */
+function plaatsCheck(){
+  const knop=$("#btnCheck"); if(!knop) return;
+  const doel=DESKTOP_MQ.matches ? $("#checkRij") : $(".kop-midden");
+  if(doel && knop.parentNode!==doel) doel.appendChild(knop);
+}
+DESKTOP_MQ.addEventListener("change",plaatsCheck);
+plaatsCheck();
 if(typeof ResizeObserver!=="undefined"){
   new ResizeObserver(()=>{ if(M && document.body.classList.contains("in-game")) fitBoard(); }).observe($("#boardViewport"));
 }
@@ -10745,6 +10823,17 @@ window.addEventListener("resize",zetDesktop);
 zetDesktop();
 
 $("#btnSettings").addEventListener("click",()=>toggleSheet("modalSettings"));
+/* Het meer-menu in de kop: open op de knop, dicht bij een klik erbuiten of
+   op een keuze. */
+$("#btnKopMeer").addEventListener("click",e=>{
+  e.stopPropagation();
+  const open=$("#kopMeer").classList.toggle("open");
+  $("#btnKopMeer").setAttribute("aria-expanded",open?"true":"false");
+});
+$("#kopMeerMenu").addEventListener("click",()=>{ $("#kopMeer").classList.remove("open"); $("#btnKopMeer").setAttribute("aria-expanded","false"); });
+document.addEventListener("click",e=>{
+  if(!e.target.closest("#kopMeer")){ $("#kopMeer").classList.remove("open"); $("#btnKopMeer").setAttribute("aria-expanded","false"); }
+});
 $("#btnLegend").addEventListener("click",()=>toggleSheet("modalLegend"));
 /* Legenda op desktop: klein vel boven de knop rechtsonder. */
 function toonLegendaPop(aan){
