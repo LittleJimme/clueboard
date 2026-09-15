@@ -227,10 +227,10 @@ main{
    naam en niet als een zin. De Nederlandse regel eronder is de stem van
    het spel zelf en staat duidelijk apart, groter en in schuine inkt. */
 .titelblok{flex:0 0 auto;text-align:left;padding:6px 0 22px}
-.beeldmerk{width:34px;height:34px;display:block;margin:0;object-fit:contain}
+.beeldmerk{width:46px;height:46px;display:block;margin:0;object-fit:contain}
 /* De oude .woordmerk-tekstregel staat verderop en zet zelf een display; deze
    selectors wegen zwaarder zodat er altijd precies één woordmerk staat. */
-img.woordmerk{display:block;height:36px;width:auto;max-width:60vw;margin:0;font-size:0;letter-spacing:0}
+img.woordmerk{display:block;height:clamp(44px,12vw,56px);width:auto;max-width:62vw;margin:0;font-size:0;letter-spacing:0}
 img.woordmerk.woordmerk-licht{display:none}
 html[data-thema="licht"] img.woordmerk.woordmerk-licht{display:block}
 html[data-thema="licht"] img.woordmerk.woordmerk-donker{display:none}
@@ -254,7 +254,7 @@ body.proefstand .proef-merk{display:block}
   opacity:.7;
 }
 .titelblok h1{
-  font-size:19px;font-weight:600;line-height:1.2;letter-spacing:-.01em;margin:10px 0 0;
+  font-size:21px;font-weight:600;line-height:1.2;letter-spacing:-.01em;margin:12px 0 0;
 }
 .titelblok h1 em{
   font-style:italic;color:var(--zaak-rood);position:relative;white-space:nowrap;
@@ -278,7 +278,7 @@ html[data-thema="licht"] .titelblok h1 em::after{
 /* ---------- filterregel boven de lijst ---------- */
 .filter-plak{
   position:relative;z-index:2;
-  flex:0 0 auto;padding:6px 0 0;display:flex;align-items:flex-end;gap:22px;
+  flex:0 0 auto;padding:6px 0 0;display:flex;align-items:flex-end;justify-content:flex-end;gap:22px;
   border-bottom:1px solid var(--lijn);
 }
 .filter-woord{
@@ -288,14 +288,14 @@ html[data-thema="licht"] .titelblok h1 em::after{
   transition:color .15s,border-color .15s;
 }
 .filter-woord:hover{color:var(--inkt)}
-.filter-woord.aan{color:var(--inkt);border-bottom-color:var(--inkt)}
+.filter-woord.aan{color:var(--inkt);border-bottom-color:var(--accent-vlak)}
 .filter-woord[hidden]{display:none}
 .filter-woord svg{width:13px;height:13px;transition:transform .16s}
 .drop.open .filter-woord svg{transform:rotate(180deg)}
-.lijst-teller{margin-left:auto;min-width:0;color:var(--dof);font:700 12px var(--font-ui);
+.lijst-teller{margin-right:auto;min-width:0;color:var(--dof);font:700 12px var(--font-ui);
   letter-spacing:.02em;text-transform:none;padding-bottom:10px;white-space:nowrap}
 @media (max-width:640px){
-  .filter-plak{gap:16px;overflow-x:auto;scrollbar-width:none}
+  .filter-plak{gap:16px;justify-content:flex-start;overflow-x:auto;scrollbar-width:none}
   .filter-plak::-webkit-scrollbar{display:none}
   .lijst-teller{display:none}
   .drop-menu{right:auto;left:0;min-width:min(72vw,200px)}
@@ -423,7 +423,7 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .level-rij .onder{margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .niveau-rij{display:flex;align-items:center;gap:3px}
 .niveau-rij i{width:6px;height:6px;border-radius:50%;background:var(--lijn);font-style:normal}
-.niveau-rij i.aan{background:var(--inkt-2)}
+.niveau-rij i.aan{background:var(--accent)}
 /* ---------- campagnes: eerst de reeksen, daarachter de zaken ----------
    Het menu opent op de campagnes. Een campagne aantikken opent een pagina met
    alleen haar zaken, met de filters erbij; het titelblok maakt dan plaats voor
@@ -491,7 +491,7 @@ body.op-campagne .campagne-balk{display:block}
 .ck-beeld::after{content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(42,33,24,0) 40%,rgba(42,33,24,.22) 62%,rgba(42,33,24,.78) 100%)}
 .ck-beeld .ck-naam{position:absolute;left:var(--kp,20px);right:var(--kp,20px);bottom:14px;z-index:2;margin:0;height:auto;
-  font:700 26px/1.1 var(--font-display);color:#FBF4EA;letter-spacing:-.015em;
+  font:600 26px/1.1 var(--font-display);color:#FBF4EA;letter-spacing:-.015em;
   text-shadow:0 1px 2px rgba(42,33,24,.5),0 6px 24px rgba(42,33,24,.45)}
 .ck-beeld .stijl-tag{position:absolute;right:12px;top:12px;z-index:2;box-shadow:0 1px 4px rgba(42,33,24,.25)}
 .campagne-kaart .ck-label{display:none}
@@ -859,7 +859,7 @@ a.keuze-boek{text-decoration:none}
            de uitleg en de voorbeeldzaak. Zo blijft de bovenrand rustig. -->
       <div class="drop meer-drop" id="meerDrop">
         <button class="vraag-knop meer-knop" id="btnMeer" type="button" aria-haspopup="true" aria-expanded="false" title="Meer" aria-label="Meer">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4.5 7h15M4.5 12h15M4.5 17h15"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 8h14M5 12h14M5 16h14"/></svg>
         </button>
         <div class="drop-menu meer-menu" id="meerMenu">
           <button type="button" id="btnUitleg">Zo speel je</button>
