@@ -3953,7 +3953,14 @@ body.in-game #cluesList .txt.meer .regel{padding-left:14px;margin:0;border:0}
 body.in-game #cluesList .txt.meer .regel+.regel{margin-top:4px;padding-top:0;border-top:0}
 body.in-game #cluesList .txt.meer .regel::before{content:"";position:absolute;left:0;top:.68em;width:7px;height:2px;border-radius:2px;background:var(--pc,var(--dof));opacity:.9}
 /* Rechts: op de telefoon de twee knopjes (uitleg, openen), gestapeld. */
-body.in-game #cluesList .kaart-knoppen{grid-column:3;grid-row:1/3;display:flex;flex-direction:column;gap:6px;align-self:center}
+body.in-game #cluesList .kaart-knoppen{grid-column:3;grid-row:1/3;position:static;width:auto;display:flex;flex-direction:column;gap:6px;
+  align-self:center;background:none;border-radius:0;overflow:visible}
+body.in-game #cluesList .kaart-knoppen .info{flex:0 0 auto;width:32px;height:32px;border-radius:999px;
+  border:1.5px solid var(--inkt-rand);background:var(--kaart);color:var(--inkt-2)}
+body.in-game #cluesList .kaart-knoppen .info+.info{border-top:1.5px solid var(--inkt-rand)}
+body.in-game #cluesList .kaart-knoppen .info svg{width:15px;height:15px}
+body.in-game #cluesList .kaart-knoppen .info.uitleg svg{width:17px;height:17px}
+body.in-game #cluesList .clue-card.board{padding-right:12px}
 body.desktop.in-game #cluesList .kaart-knoppen{display:none}
 /* Merkjes: het vinkje van 'staat op het bord' en het memo-teken rechtsboven,
    naast elkaar. */
