@@ -192,7 +192,7 @@ main,.balk{position:relative;z-index:1}
    in inkt gezet met papieren letters. */
 .knop{
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  border:2px solid var(--inkt-rand);border-radius:999px;background:var(--kaart);
+  border:1.5px solid var(--inkt-rand);border-radius:999px;background:var(--kaart);
   padding:8px 16px;font:600 14px var(--font-display);color:var(--inkt);letter-spacing:.005em;
   box-shadow:none;text-decoration:none;white-space:nowrap;
   transition:border-color .15s,background .15s,transform .12s,color .15s;
@@ -207,7 +207,7 @@ main,.balk{position:relative;z-index:1}
    schuine schreefletter in dezelfde rode inkt. */
 .vraag-knop{
   width:38px;height:38px;padding:0;border-radius:999px;
-  border:2px solid var(--inkt-rand);background:var(--kaart);box-shadow:none;
+  border:1.5px solid var(--inkt-rand);background:var(--kaart);box-shadow:none;
   font-family:var(--font-display);font-style:italic;font-weight:600;font-size:21px;
   line-height:1;color:var(--inkt);
   display:inline-flex;align-items:center;justify-content:center;
@@ -226,11 +226,11 @@ main{
    woordmerk-regel, klein en gespatieerd: zo leest hij als onderdeel van de
    naam en niet als een zin. De Nederlandse regel eronder is de stem van
    het spel zelf en staat duidelijk apart, groter en in schuine inkt. */
-.titelblok{flex:0 0 auto;text-align:center;padding:2px 0 30px}
-.beeldmerk{width:38px;height:38px;display:block;margin:0 auto 8px;object-fit:contain}
+.titelblok{flex:0 0 auto;text-align:left;padding:6px 0 22px}
+.beeldmerk{width:34px;height:34px;display:block;margin:0;object-fit:contain}
 /* De oude .woordmerk-tekstregel staat verderop en zet zelf een display; deze
    selectors wegen zwaarder zodat er altijd precies één woordmerk staat. */
-img.woordmerk{display:block;height:clamp(46px,15vw,68px);width:auto;max-width:82%;margin:0 auto;font-size:0;letter-spacing:0}
+img.woordmerk{display:block;height:36px;width:auto;max-width:60vw;margin:0;font-size:0;letter-spacing:0}
 img.woordmerk.woordmerk-licht{display:none}
 html[data-thema="licht"] img.woordmerk.woordmerk-licht{display:block}
 html[data-thema="licht"] img.woordmerk.woordmerk-donker{display:none}
@@ -241,20 +241,20 @@ html[data-thema="licht"] img.woordmerk.woordmerk-donker{display:none}
 .woordmerk .w1{color:var(--accent)}
 /* Het merk als tikvlak. Geen knopuiterlijk: wie er niets van weet mag er
    niets van merken. */
-.merk{position:relative;-webkit-tap-highlight-color:transparent;user-select:none}
+.merk{position:relative;-webkit-tap-highlight-color:transparent;user-select:none;display:flex;align-items:center;gap:12px}
 .proef-merk{display:none;position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);
   padding:2px 9px;border-radius:999px;background:var(--accent);color:#fff;
   font:700 10.5px var(--font-ui);letter-spacing:.02em;text-transform:none;
   box-shadow:0 2px 6px rgba(0,0,0,.28)}
 body.proefstand .proef-merk{display:block}
 /* haarlijntje dat het merkblok van de zaakregel scheidt */
-.titelblok .scheiding{
+.titelblok .scheiding{display:none;
   width:56px;height:1px;margin:11px auto 12px;
   background:linear-gradient(90deg,rgba(0,0,0,0),var(--accent),rgba(0,0,0,0));
   opacity:.7;
 }
 .titelblok h1{
-  font-size:25px;font-weight:600;line-height:1.2;letter-spacing:-.01em;
+  font-size:19px;font-weight:600;line-height:1.2;letter-spacing:-.01em;margin:10px 0 0;
 }
 .titelblok h1 em{
   font-style:italic;color:var(--zaak-rood);position:relative;white-space:nowrap;
@@ -271,53 +271,50 @@ html[data-thema="licht"] .titelblok h1 em::after{
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'><path d='M1.5 7.8 C 16 5.6, 40 4.2, 66 3.9 C 86 3.65, 104 4.0, 118.5 4.8 C 118.9 5.3, 118.7 5.9, 118 6.2 C 103 5.9, 86 5.9, 68 6.2 C 46 6.55, 24 7.5, 3.2 9.1 C 2.1 9.0, 1.4 8.5, 1.5 7.8 Z' fill='%23A3402F' opacity='.7'/></svg>");
 }
 @media (max-height:720px){
-  .titelblok{padding:6px 0 14px}
-  .beeldmerk{width:32px;height:32px;margin-bottom:6px}
-  img.woordmerk{height:clamp(38px,12vw,50px)}
-  .titelblok .scheiding{margin:9px auto 9px}
-  .titelblok h1{font-size:22px}
+  .titelblok{padding:4px 0 14px}
+  .titelblok h1{font-size:17px}
 }
 
 /* ---------- filterregel boven de lijst ---------- */
 .filter-plak{
   position:relative;z-index:2;
-  flex:0 0 auto;padding:2px 0 0;display:flex;align-items:center;gap:9px;
+  flex:0 0 auto;padding:6px 0 0;display:flex;align-items:flex-end;gap:22px;
+  border-bottom:1px solid var(--lijn);
 }
-.lijst-teller{flex:1;min-width:0;color:var(--dof);font:700 12px var(--font-ui);
-  letter-spacing:.02em;text-transform:none}
-/* Op een telefoon het aantal (alleen als je filtert) op een eigen regel en
-   de filterknoppen eronder over de volle breedte. */
+.filter-woord{
+  display:inline-flex;align-items:center;gap:5px;padding:8px 0 10px;margin-bottom:-1px;
+  border:0;border-bottom:2px solid transparent;background:none;border-radius:0;
+  font:700 14px var(--font-ui);color:var(--dof);white-space:nowrap;
+  transition:color .15s,border-color .15s;
+}
+.filter-woord:hover{color:var(--inkt)}
+.filter-woord.aan{color:var(--inkt);border-bottom-color:var(--inkt)}
+.filter-woord[hidden]{display:none}
+.filter-woord svg{width:13px;height:13px;transition:transform .16s}
+.drop.open .filter-woord svg{transform:rotate(180deg)}
+.lijst-teller{margin-left:auto;min-width:0;color:var(--dof);font:700 12px var(--font-ui);
+  letter-spacing:.02em;text-transform:none;padding-bottom:10px;white-space:nowrap}
 @media (max-width:640px){
-  .filter-plak{flex-wrap:wrap;gap:7px;row-gap:9px}
-  .lijst-teller{order:1;flex:1 0 100%;font-size:10.5px;letter-spacing:.1em}
-  .lijst-teller:empty{display:none}
-  .drop{order:2}
-  #openKnop{order:3}
-  #bezigKnop{order:4}
-  .drop,.mini-knop{flex:1 1 0;min-width:0}
-  .mini-knop{justify-content:center;height:34px;padding:0 8px;width:100%}
-  .mini-knop span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  /* Uitklappen onder de sterknop zelf, niet tegen de rechterrand van de rij. */
+  .filter-plak{gap:16px;overflow-x:auto;scrollbar-width:none}
+  .filter-plak::-webkit-scrollbar{display:none}
+  .lijst-teller{display:none}
   .drop-menu{right:auto;left:0;min-width:min(72vw,200px)}
 }
 
 /* niveaufilter: één sterknopje met een kleine uitklaplijst eronder */
 .drop{position:relative;flex:0 0 auto}
-.mini-knop{
-  display:inline-flex;align-items:center;gap:5px;height:32px;padding:0 12px;
-  border:1.5px solid var(--inkt-rand);border-radius:999px;background:var(--kaart);
-  color:var(--inkt-2);font:600 13px var(--font-display);box-shadow:none;
-  transition:all .15s;
-}
-.mini-knop svg{width:13px;height:13px}
-.mini-knop[hidden]{display:none}
-.mini-knop:hover{border-color:var(--accent-lijn);color:var(--inkt-2)}
-.mini-knop.aan{background:var(--inkt);border-color:var(--inkt);color:var(--grond)}
 .drop-menu{
   position:absolute;top:calc(100% + 7px);right:0;z-index:50;min-width:158px;
-  background:var(--kaart);border:1px solid var(--lijn);border-radius:13px;
-  padding:5px;box-shadow:var(--sch2);display:none;
+  background:var(--kaart);border:1.5px solid var(--inkt-rand);border-radius:12px;
+  padding:5px;box-shadow:0 10px 28px rgba(42,33,24,.16);display:none;
 }
+/* Het 'meer'-menu: links uitgelijnd onder de knop, met een link erin die
+   eruitziet als de knoppen. */
+.meer-menu{left:auto;right:0;min-width:230px}
+.meer-menu a{display:flex;align-items:center;gap:8px;width:100%;text-align:left;
+  border-radius:9px;padding:8px 10px;font:700 12.5px var(--font-ui);color:var(--inkt-2);text-decoration:none}
+.meer-menu a:hover{background:var(--kaart-2);color:var(--inkt)}
+.filter-plak .drop-menu{left:0;right:auto}
 .drop.open .drop-menu{display:block;animation:dropIn .16s ease both}
 @keyframes dropIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .drop-menu button{
@@ -359,9 +356,8 @@ html[data-thema="licht"] .titelblok h1 em::after{
   main{max-width:1120px}
   body.op-campagne .cb-hero{--rand:max(20px,calc(50vw - 540px));height:clamp(240px,36vh,380px)}
   /* Op een groot scherm mag de tekst van de zaken wat groter. */
-  .level-rij h3{font-size:21px}
-  .level-rij .onder{font-size:13.5px}
-  .zaak-nr{width:44px;height:44px;font-size:17px}
+  .level-rij h3{font-size:22px}
+  .zaak-nr{width:46px;height:46px;font-size:17px}
   /* De balk hoort dezelfde breedte te houden als de lijst eronder, anders
      staan het vraagteken en de knoppen links ergens midden in het scherm in
      plaats van in lijn met de uiterste zaken. */
@@ -398,62 +394,36 @@ html[data-thema="licht"] .level-rij.demo{background:#FFFFFF}
 .level-rij.demo h3{color:var(--inkt)}
 .level-rij.demo .zaak-nr{background:var(--accent-vlak);border-color:var(--accent-diep);color:var(--accent-op)}
 .zaak-nr.demo-teken svg{width:21px;height:21px;display:block}
-.level-rij.demo .grid-tag{background:transparent}
 .demo-tag{
-  font:700 10.5px var(--font-ui);letter-spacing:.02em;text-transform:none;
-  color:var(--accent);
+  font:700 12.5px var(--font-ui);letter-spacing:.02em;text-transform:none;
+  color:var(--dof);
 }
-/* Het formaat staat rechts naast de pijl. */
-.rij-tags{flex:0 0 auto;display:flex;flex-direction:column;align-items:stretch;gap:5px}
-.rij-tags .grid-tag{text-align:center}
-/* Afgerond: het woord staat op de plek van de bolletjes, met je tijd erachter,
-   en de kaart zelf zakt een toon terug. Zo komen de open zaken naar voren en
-   hoeft er rechts niets meer bij. */
-.afgerond{display:inline-flex;align-items:center;gap:7px;color:var(--accent)}
-.afgerond svg{width:13px;height:13px;flex:0 0 auto}
-.afgerond b{font:700 11px var(--font-ui);letter-spacing:.02em;text-transform:none}
-.afgerond span{font:700 12px var(--font-ui);font-variant-numeric:tabular-nums;color:var(--inkt-2)}
-.level-rij.voltooid{background:color-mix(in srgb,var(--kaart) 50%,var(--grond) 50%);box-shadow:none}
-.level-rij.voltooid h3{color:var(--inkt-2)}
-.level-rij.voltooid .zaak-nr{background:var(--accent);border-color:var(--accent);color:#fff}
+/* De stand van een zaak is een klein teken op de kaart; de kaart zelf
+   blijft papier, zodat de lijst één rustig ritme houdt. Afgerond: het nummer
+   wordt een inktschijf met een vinkje, en de tijd staat erbij. Mee bezig:
+   een zandloper met de tijd tot nu toe. */
+.afgerond,.mee-bezig{display:inline-flex;align-items:center;gap:6px;color:var(--inkt-2)}
+.afgerond svg,.mee-bezig svg{width:13px;height:13px;flex:0 0 auto}
+.afgerond b,.mee-bezig b{font:700 12.5px var(--font-ui);letter-spacing:.02em;text-transform:none;color:var(--inkt)}
+.afgerond span,.mee-bezig span{font:700 12.5px var(--font-ui);font-variant-numeric:tabular-nums;color:var(--dof)}
+.level-rij.voltooid .zaak-nr{background:var(--inkt);border-color:var(--inkt);color:var(--grond)}
 .level-rij.voltooid .zaak-nr svg{width:22px;height:22px;display:block}
-.level-rij.voltooid .grid-tag{background:transparent}
-/* Mee bezig: de kaart in zijn geheel in het accent, met witte letters. De
-   afgeronde kaart zakt juist een toon terug; samen wijst dat de weg -- wat
-   klaar is treedt terug, waar je middenin zit komt naar voren. */
-.level-rij.bezig{background:var(--accent-vlak);border-color:var(--accent-vlak);
-  box-shadow:0 6px 18px color-mix(in srgb,var(--accent-vlak) 38%,transparent)}
-.level-rij.bezig h3,.level-rij.bezig .zaak-nr{color:#fff}
-.level-rij.bezig .zaak-nr{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.14)}
-.level-rij.bezig .grid-tag,.level-rij.bezig .demo-tag{background:rgba(255,255,255,.16);color:#fff;border-color:transparent}
-.mee-bezig{display:inline-flex;align-items:center;gap:7px;color:#fff}
-.mee-bezig svg{width:13px;height:13px;flex:0 0 auto}
-.mee-bezig b{font:700 11px var(--font-ui);letter-spacing:.02em;text-transform:none}
-.mee-bezig span{font:700 12px var(--font-ui);font-variant-numeric:tabular-nums;color:rgba(255,255,255,.82)}
-.zaak-nr{border-color:var(--accent);color:var(--accent)}
+.level-rij.voltooid h3{color:var(--inkt-2)}
 /* Op een smal scherm is het vinkje met de tijd genoeg; het woord zou de
    titel te veel ruimte kosten. */
 .zaak-nr{
-  flex:0 0 auto;width:40px;height:40px;border-radius:999px;
+  flex:0 0 auto;width:42px;height:42px;border-radius:999px;
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-display);font-weight:600;font-size:16px;color:var(--inkt);
+  font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--inkt);
   background:var(--kaart-2);border:1px solid var(--lijn);
   font-variant-numeric:tabular-nums;
 }
 .level-rij .midden{flex:1;min-width:0}
-.level-rij h3{font-size:18px;font-weight:600;color:var(--inkt);line-height:1.25;overflow-wrap:anywhere}
+.level-rij h3{font-size:20px;font-weight:700;color:var(--inkt);line-height:1.2;letter-spacing:-.01em;overflow-wrap:anywhere}
 .level-rij .onder{margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .niveau-rij{display:flex;align-items:center;gap:3px}
 .niveau-rij i{width:6px;height:6px;border-radius:50%;background:var(--lijn);font-style:normal}
-.niveau-rij i.aan{background:var(--accent)}
-.grid-tag{
-  flex:0 0 auto;font:700 12px var(--font-ui);letter-spacing:.02em;color:var(--inkt-2);
-  background:var(--kaart-2);border:1px solid var(--lijn);border-radius:8px;padding:5px 9px;
-  font-variant-numeric:tabular-nums;white-space:nowrap;
-}
-.level-rij .pijl{flex:0 0 auto;color:var(--dof);display:flex}
-.level-rij .pijl svg{width:15px;height:15px}
-.level-rij:hover .pijl{color:var(--accent)}
+.niveau-rij i.aan{background:var(--inkt-2)}
 /* ---------- campagnes: eerst de reeksen, daarachter de zaken ----------
    Het menu opent op de campagnes. Een campagne aantikken opent een pagina met
    alleen haar zaken, met de filters erbij; het titelblok maakt dan plaats voor
@@ -516,26 +486,27 @@ body.op-campagne .campagne-balk{display:block}
 .campagne-kaart:active{transform:none;box-shadow:var(--sch1)}
 /* Het campagnebeeld bovenin de kaart, met een inktlijn eronder; daaronder
    begint de tekst op dezelfde plek als voorheen. */
-.ck-beeld{display:block;height:128px;margin:0 calc(-1 * var(--kp,20px)) 16px;background:var(--kaart-2) center/cover no-repeat}
+.ck-beeld{position:relative;display:block;height:168px;margin:0 calc(-1 * var(--kp,20px)) 14px;
+  background:linear-gradient(160deg,#3A2A1E,#8A5F16) center/cover no-repeat}
+.ck-beeld::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(42,33,24,0) 40%,rgba(42,33,24,.22) 62%,rgba(42,33,24,.78) 100%)}
+.ck-beeld .ck-naam{position:absolute;left:var(--kp,20px);right:var(--kp,20px);bottom:14px;z-index:2;margin:0;height:auto;
+  font:700 26px/1.1 var(--font-display);color:#FBF4EA;letter-spacing:-.015em;
+  text-shadow:0 1px 2px rgba(42,33,24,.5),0 6px 24px rgba(42,33,24,.45)}
+.ck-beeld .stijl-tag{position:absolute;right:12px;top:12px;z-index:2;box-shadow:0 1px 4px rgba(42,33,24,.25)}
 .campagne-kaart .ck-label{display:none}
-.campagne-kaart .stijl-tag{top:12px;box-shadow:0 1px 4px rgba(42,33,24,.25)}
-.ck-naam{--rh:1.15em;display:flex;align-items:flex-start;height:calc(2 * var(--rh));margin:0;padding-right:8px;
-  font:600 24px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em}
-/* Altijd twee regels, elk op één regel: zie campagneRegels(). */
-.ck-naam span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ck-naam{flex-direction:column;align-items:stretch;justify-content:flex-start}
+.ck-naam span{display:block}
 /* De stijl van een campagne: een klein etiket in de hoek, in dezelfde vorm
    als het bordformaat op een zaak (vlakje, haarlijn, ronde hoek). */
 .stijl-tag{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;
   font:700 11px var(--font-ui);letter-spacing:.02em;color:var(--inkt-2);white-space:nowrap;
   background:var(--kaart-2);border:1px solid var(--lijn);border-radius:8px;padding:4px 8px 4px 7px}
 .stijl-tag svg{width:12px;height:12px;color:var(--accent);flex:0 0 auto}
-.campagne-kaart .stijl-tag{position:absolute;right:12px}
 .campagne-kaart:hover .stijl-tag{border-color:var(--accent-lijn)}
 .cb-label-rij{display:flex;align-items:center;gap:8px}
 /* De reeks: altijd één rij van dezelfde hoogte. Past het niet, dan krimpen de
    vakjes; bij veel zaken vervallen de cijfers en blijft een streepjesbalk. */
-.ck-nummers{display:flex;flex-wrap:nowrap;gap:5px;height:26px;margin:16px 0 14px;overflow:hidden}
+.ck-nummers{display:flex;flex-wrap:nowrap;gap:5px;height:26px;margin:2px 0 12px;overflow:hidden}
 .ck-nummers i{flex:0 1 26px;min-width:10px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
   font:600 11.5px var(--font-display);font-style:normal;font-variant-numeric:tabular-nums;
   color:var(--accent);background:var(--accent-zacht);border:1px solid var(--accent-lijn);box-sizing:border-box}
@@ -558,7 +529,8 @@ body.op-campagne .campagne-balk{display:block}
   .cb-hero .ck-balk{margin-left:0}
   /* Bovenin geen ruimte: daar staat het beeld, tegen de rand van de kaart. */
   .campagne-kaart{--kp:16px;padding:0 16px 14px}
-  .ck-naam{font-size:21px}
+  .ck-beeld{height:150px}
+  .ck-beeld .ck-naam{font-size:23px}
   .ck-balk{width:64px}
 }
 .leeg-melding{color:var(--dof);font-size:13.5px;text-align:center;padding:26px 10px;
@@ -575,18 +547,18 @@ body.op-campagne .campagne-balk{display:block}
    bovenkant leek afgesneden. Procenten van het venster kloppen altijd. */
 .vel{
   position:relative;width:100%;max-width:430px;max-height:100%;overflow:auto;overscroll-behavior:contain;
-  background:var(--kaart);border:1px solid var(--lijn);border-radius:20px;
-  padding:22px;box-shadow:0 24px 60px rgba(38,36,25,.28);
+  background:var(--kaart);border:1.5px solid var(--inkt-rand);border-radius:14px;
+  padding:22px;box-shadow:0 12px 34px rgba(38,36,25,.16);
   animation:velIn .3s cubic-bezier(.2,1.05,.3,1) both;
 }
 @keyframes velIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
 .vel .sluit{
-  position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:10px;
-  border:1px solid var(--lijn);background:var(--kaart-2);
+  position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:999px;
+  border:1.5px solid var(--inkt-rand);background:var(--kaart);
   display:flex;align-items:center;justify-content:center;font:600 15px/1 var(--font-ui);color:var(--dof);
 }
 .vel .sluit:hover{color:var(--inkt)}
-.vel-kop{font-family:var(--font-display);font-weight:600;font-size:29px;line-height:1.15;margin-bottom:12px;padding-right:40px}
+.vel-kop{font-family:var(--font-display);font-weight:700;font-size:30px;line-height:1.15;margin-bottom:12px;padding-right:40px}
 
 /* ---------- uitleg-stappen ---------- */
 /* Het uitlegvenster houdt één vast formaat, ongeacht de stap: het beeldvak
@@ -796,7 +768,7 @@ a.keuze-boek{text-decoration:none}
    niet bij het kiezen van een zaak. */
 .thema-knop{
   width:38px;height:38px;padding:0;border-radius:999px;
-  border:1px solid var(--lijn);background:var(--kaart);box-shadow:var(--sch1);
+  border:1.5px solid var(--inkt-rand);background:var(--kaart);box-shadow:none;
   display:inline-flex;align-items:center;justify-content:center;
   transition:border-color .15s;
 }
@@ -855,11 +827,9 @@ a.keuze-boek{text-decoration:none}
   .level-rij{display:grid;grid-template-columns:auto minmax(0,1fr);
     grid-template-rows:auto auto;gap:9px 11px;align-items:start;padding:14px}
   .level-rij .zaak-nr{grid-column:1;grid-row:1;width:36px;height:36px;border-radius:10px;font-size:14px}
-  .level-rij .rij-tags{grid-column:2;grid-row:1;justify-self:end;align-self:center;flex-direction:row}
   .level-rij .midden{grid-column:1/-1;grid-row:2}
   .level-rij h3{font-size:16.5px;line-height:1.25}
   .level-rij .onder{margin-top:5px}
-  .level-rij .pijl{display:none}
 }
 /* Schuifbalken in de stijl van het spel: een smalle inktstreep, geen grijze
    systeembalk. Op een aanraakscherm of een klein scherm geen balk. */
@@ -883,13 +853,22 @@ a.keuze-boek{text-decoration:none}
       <button class="thema-knop volledig-knop" id="btnVolledig" type="button" title="Volledig scherm" aria-label="Volledig scherm" hidden>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5.6A1.6 1.6 0 0 1 5.6 4H9M15 4h3.4A1.6 1.6 0 0 1 20 5.6V9M20 15v3.4a1.6 1.6 0 0 1-1.6 1.6H15M9 20H5.6A1.6 1.6 0 0 1 4 18.4V15"/></svg>
       </button>
-      <button class="vraag-knop plus-knop" id="btnZelf" type="button" title="Eigen level spelen of bouwen" aria-label="Eigen level spelen of bouwen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-      </button>
     </div>
     <div class="balk-rechts">
-      <button class="vraag-knop boek-knop" id="btnRegelboekBalk" type="button" title="Alle regels" aria-label="Alle regels"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 6.6h10.4M9.2 12h10.4M9.2 17.4h10.4"/><circle cx="4.9" cy="6.6" r="1.35" fill="currentColor" stroke="none"/><circle cx="4.9" cy="12" r="1.35" fill="currentColor" stroke="none"/><circle cx="4.9" cy="17.4" r="1.35" fill="currentColor" stroke="none"/></svg></button>
-      <button class="vraag-knop" id="btnUitleg" title="Speluitleg" aria-label="Speluitleg">?</button>
+      <!-- Eén knop voor alles wat niet dagelijks is: eigen level, alle regels,
+           de uitleg en de voorbeeldzaak. Zo blijft de bovenrand rustig. -->
+      <div class="drop meer-drop" id="meerDrop">
+        <button class="vraag-knop meer-knop" id="btnMeer" type="button" aria-haspopup="true" aria-expanded="false" title="Meer" aria-label="Meer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4.5 7h15M4.5 12h15M4.5 17h15"/></svg>
+        </button>
+        <div class="drop-menu meer-menu" id="meerMenu">
+          <button type="button" id="btnUitleg">Zo speel je</button>
+          <button type="button" id="btnRegelboekBalk">Alle regels</button>
+          <a id="btnVoorbeeldBalk" href="#">Speel de voorbeeldzaak</a>
+          <div class="drop-streep"></div>
+          <button type="button" id="btnZelf">Eigen level spelen of bouwen</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -921,25 +900,20 @@ a.keuze-boek{text-decoration:none}
     </div>
   </div>
 
+  <!-- Filteren als één regel tekst boven de lijst: geen knoppen maar
+       woorden, het gekozene onderstreept in inkt. -->
   <div class="filter-plak">
-    <div class="lijst-teller" id="levelTeller"></div>
+    <button class="filter-woord" id="alleKnop" type="button">Alle zaken</button>
+    <button class="filter-woord" id="openKnop" type="button" title="Alleen zaken die nog open staan">Open</button>
+    <button class="filter-woord" id="bezigKnop" type="button" title="Alleen zaken waar je middenin zit" hidden>Mee bezig</button>
     <div class="drop" id="filterDrop">
-      <button class="mini-knop" id="filterKnop" type="button" aria-haspopup="true" aria-expanded="false" title="Filter op niveau">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75L12 16.9l-5.2 2.7 1-5.75-4.2-4.1 5.8-.85z"/></svg>
-        <span id="filterLabel">Filter</span>
+      <button class="filter-woord" id="filterKnop" type="button" aria-haspopup="true" aria-expanded="false" title="Filter op niveau">
+        <span id="filterLabel">Niveau</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
       <div class="drop-menu" id="filterMenu"></div>
     </div>
-    <button class="mini-knop" id="openKnop" type="button" aria-pressed="false" title="Alleen zaken die nog open staan" hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/></svg>
-      <span>Open</span>
-    </button>
-    <!-- Alleen te zien zodra er iets is om te hervatten: een filter dat altijd
-         niets oplevert is een dode knop. -->
-    <button class="mini-knop" id="bezigKnop" type="button" aria-pressed="false" title="Alleen zaken waar je middenin zit" hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10M7 21h10M8 3v3.2a4 4 0 0 0 1.4 3L12 12l-2.6 2.8A4 4 0 0 0 8 17.8V21M16 3v3.2a4 4 0 0 1-1.4 3L12 12l2.6 2.8a4 4 0 0 1 1.4 3V21"/></svg>
-      <span>Mee bezig</span>
-    </button>
+    <div class="lijst-teller" id="levelTeller"></div>
   </div>
 
   <div class="level-list" id="levelList"><p class="leeg-melding">Zaken laden…</p></div>
@@ -959,7 +933,7 @@ a.keuze-boek{text-decoration:none}
         <button type="button" data-set="spelen" class="aan">Zo speel je</button>
         <button type="button" data-set="regels">Basis spelregels</button>
       </div>
-      <button class="keuze-boek" id="btnRegelboek" type="button" title="Alle regelsoorten op een rij"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 6.6h10.4M9.2 12h10.4M9.2 17.4h10.4"/><circle cx="4.9" cy="6.6" r="1.35" fill="currentColor" stroke="none"/><circle cx="4.9" cy="12" r="1.35" fill="currentColor" stroke="none"/><circle cx="4.9" cy="17.4" r="1.35" fill="currentColor" stroke="none"/></svg><span class="lbl">Alle regels</span></button>
+      <button class="keuze-boek" id="btnRegelboek" type="button" title="Alle regelsoorten op een rij"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 6.6h10.4M9.2 12h10.4M9.2 17.4h10.4"/><circle cx="4.9" cy="6.6" r="1.35" fill="currentColor" stroke="none"/><circle cx="4.9" cy="12" r="1.35" fill="currentColor" stroke="none"/><circle cx="4.9" cy="17.4" r="1.35" fill="currentColor" stroke="none"/></svg><span class="lbl">Alle regels</span></button>
       <a class="keuze-boek voorbeeld" id="btnVoorbeeld" href="#" title="Speel de voorbeeldzaak"></a>
     </div>
     <div class="stap-teller" id="stapTeller"></div>
@@ -998,7 +972,7 @@ a.keuze-boek{text-decoration:none}
     <button class="sluit" data-sluit aria-label="Sluiten">✕</button>
     <div class="vel-kop">Zelf aan de slag</div>
     <label class="upload-zone" id="uploadZone" for="uploadInput">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 16V4M12 4l-4.5 4.5M12 4l4.5 4.5"/><path d="M4 16v2.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V16"/>
       </svg>
       <b>Speel een eigen level</b>
@@ -1008,7 +982,7 @@ a.keuze-boek{text-decoration:none}
     <div class="upload-fout" id="uploadFout" hidden></div>
     <div class="of-lijn">of</div>
     <a class="bouw-rij" href="../builder/index.html">
-      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
         <path d="M4 20h16"/><path d="M6.5 16.5 15.7 7.3a2.1 2.1 0 0 1 3 3l-9.2 9.2L5 20z"/>
       </svg></span>
       <span class="tekst"><b>Bouw een level</b><span>Teken een bord, schrijf aanwijzingen en exporteer je eigen zaak.</span></span>
@@ -1423,6 +1397,7 @@ function tekenUitleg(){
   $("#stapVerder").textContent=!volgende ? "Sluiten" : volgende.titel ? volgende.titel+" →" : "Volgende →";
   $("#btnVoorbeeld").href=voorbeeldHref();
   $("#btnVoorbeeldLos").href=voorbeeldHref();
+  $("#btnVoorbeeldBalk").href=voorbeeldHref();
   $("#stapVerder").disabled=false;
 }
 /* ── Het regelboek ──────────────────────────────────────
@@ -1724,17 +1699,9 @@ function maakLevelRij(entry){
   /* De stijl staat niet op elke zaak: die hoort bij de campagne en staat
      daar, op de kaart en in de kop van de campagnepagina. */
 
-  const tags=document.createElement("span"); tags.className="rij-tags";
-
-  const grid=raw.puzzle.grid;
-  const tag=document.createElement("span"); tag.className="grid-tag";
-  tag.textContent=grid.columns+"×"+grid.rows;
-  tags.appendChild(tag);
-  a.appendChild(tags);
-
-  const pijl=document.createElement("span"); pijl.className="pijl";
-  pijl.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5.6l6.4 6.4L9 18.4"/></svg>';
-  a.appendChild(pijl);
+  /* Geen bordformaat en geen pijl: dat is informatie voor de bouwer, niet
+     voor wie een zaak kiest. De kaart is een klikvlak, dat zie je aan de
+     schaduw. */
   return a;
 }
 /* Het niveaufilter zit achter één sterknopje; de lijst eronder toont
@@ -1754,6 +1721,7 @@ function tekenFilter(){
   /* Altijd zichtbaar: als je hem pas krijgt zodra er iets is afgerond, mis je
      hem juist op het moment dat je hem zoekt. */
   if(ok){ ok.hidden=false; ok.classList.toggle("aan",alleenOpen); ok.setAttribute("aria-pressed",alleenOpen?"true":"false"); }
+  $("#alleKnop").classList.toggle("aan",!alleenOpen && !alleenBezig);
   /* Mee bezig verschijnt pas als er iets te hervatten valt; anders zou de knop
      altijd een lege lijst opleveren. Staat hij aan terwijl de laatste zaak net
      is afgerond, dan gaat hij vanzelf weer uit. */
@@ -1765,7 +1733,7 @@ function tekenFilter(){
       bk.classList.toggle("aan",alleenBezig);
       bk.setAttribute("aria-pressed",alleenBezig?"true":"false");
     } }
-  [{n:0,l:"Alle niveaus"}].concat(aanwezig.map(n=>({n,l:"Niveau "+n}))).forEach(c=>{
+  [{n:0,l:"Alle niveaus"}].concat(aanwezig.map(n=>({n,l:GRAAD_WOORD[n]||("Niveau "+n)}))).forEach(c=>{
     const b=document.createElement("button");
     b.type="button"; b.className=(actieveFilter===c.n?"aan":"");
     const vink=document.createElement("span"); vink.className="vink";
@@ -1787,10 +1755,12 @@ function tekenFilter(){
     menu.appendChild(b);
   });
   knop.classList.toggle("aan", !!actieveFilter);
-  label.textContent = actieveFilter ? ("Niveau "+actieveFilter) : "Niveau";
+  label.textContent = actieveFilter ? (GRAAD_WOORD[actieveFilter]||("Niveau "+actieveFilter)) : "Niveau";
 }
-$("#openKnop").addEventListener("click",()=>{ alleenOpen=!alleenOpen; bewaarFilters(); tekenFilter(); tekenLijst(); });
-$("#bezigKnop").addEventListener("click",()=>{ alleenBezig=!alleenBezig; bewaarFilters(); tekenFilter(); tekenLijst(); });
+/* Alle, Open en Mee bezig sluiten elkaar uit: één van de drie staat aan. */
+$("#alleKnop").addEventListener("click",()=>{ alleenOpen=false; alleenBezig=false; bewaarFilters(); tekenFilter(); tekenLijst(); });
+$("#openKnop").addEventListener("click",()=>{ alleenOpen=true; alleenBezig=false; bewaarFilters(); tekenFilter(); tekenLijst(); });
+$("#bezigKnop").addEventListener("click",()=>{ alleenBezig=true; alleenOpen=false; bewaarFilters(); tekenFilter(); tekenLijst(); });
 $("#filterKnop").addEventListener("click",e=>{
   e.stopPropagation();
   const drop=$("#filterDrop");
@@ -1802,6 +1772,15 @@ document.addEventListener("click",e=>{
     $("#filterDrop").classList.remove("open");
     $("#filterKnop").setAttribute("aria-expanded","false");
   }
+  if(!e.target.closest("#btnMeer")){
+    $("#meerDrop").classList.remove("open");
+    $("#btnMeer").setAttribute("aria-expanded","false");
+  }
+});
+$("#btnMeer").addEventListener("click",e=>{
+  e.stopPropagation();
+  const open=$("#meerDrop").classList.toggle("open");
+  $("#btnMeer").setAttribute("aria-expanded",open?"true":"false");
 });
 /* ── Campagnes ────────────────────────────────────────────
    Het menu heeft twee pagina's: de campagnes, en daarachter de zaken van één
@@ -1857,7 +1836,6 @@ function zetCampagneNaam(el,c,heel){
     const sp=document.createElement("span"); sp.textContent=r||" "; el.appendChild(sp);
   });
 }
-function campagneLabel(c){ return "Campagne"; }
 const SCHILD_ICOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2l7 2.6v5.4c0 4.5-2.9 7.3-7 9-4.1-1.7-7-4.5-7-9V5.8z"/></svg>';
 /* Het etiket met de stijl; leeg als de campagne geen bekende stijl heeft. */
 function stijlTag(c){
@@ -1876,16 +1854,15 @@ function maakCampagneKaart(g){
   const bezig=zaken.filter(e=>!voltooidVan(e.raw) && bezigVan(e.raw)).length;
   const a=document.createElement("a"); a.className="campagne-kaart";
   a.href="#c="+encodeURIComponent(c.id||"_");
-  /* Het beeld van de campagne bovenin; zonder beeld een leeg vlak van
-     dezelfde maat, zodat alle kaarten gelijk blijven. */
+  /* Het beeld draagt de naam en het etiket, net als de kop van de
+     campagnepagina; eronder alleen de reeks en de stand. */
   const beeld=document.createElement("span"); beeld.className="ck-beeld";
   const u=campagneBeeld(c); if(u) beeld.style.backgroundImage="url('"+u+"')";
-  a.appendChild(beeld);
-  /* De naam in een vak van vaste hoogte: een korte naam laat alles eronder
-     op dezelfde plek staan. */
   const h=document.createElement("h3"); h.className="ck-naam";
-  zetCampagneNaam(h,c);
-  a.appendChild(h);
+  zetCampagneNaam(h,c,true);
+  beeld.appendChild(h);
+  const tag=stijlTag(c); if(tag) beeld.appendChild(tag);
+  a.appendChild(beeld);
   /* De reeks zelf: één vakje per zaak, gevuld als hij af is. */
   const rij=document.createElement("div"); rij.className="ck-nummers"+(zaken.length>10?" dicht":"");
   zaken.forEach(e=>{
@@ -1905,7 +1882,6 @@ function maakCampagneKaart(g){
   const stand=document.createElement("span"); stand.className="ck-stand"; stand.innerHTML=standHtml(af,zaken.length);
   voet.appendChild(stand);
   a.appendChild(voet);
-  const tag=stijlTag(c); if(tag) a.appendChild(tag);
   return a;
 }
 function tekenCampagnes(){
