@@ -4020,7 +4020,11 @@ body.in-game #cluesList .clue-card.board .tick{display:none}
 body.in-game #cluesList .clue-card.board.geselecteerd{transform:translateY(-2px);
   background:color-mix(in srgb,var(--inkt-2) 30%,var(--kaart));border-color:var(--inkt-2)}
 /* Het slachtoffer: hetzelfde affiche in zijn eigen rood, met zijn regel. */
-body.in-game #cluesList .clue-row.victim{--pc:#EF6F3C;order:49}
+body.in-game #cluesList .clue-row.victim{--pc:#EF6F3C;order:49;grid-column:auto}
+/* Telefoon: het lint houdt rechts ruimte voor de twee knopjes, en een lange
+   naam mag iets buiten zijn affiche steken. */
+body.in-game:not(.desktop) #cluesList .clue-card.board{padding-right:78px}
+body.in-game:not(.desktop) #cluesList .clue-card .lijf .name,body.in-game:not(.desktop) #cluesList .clue-row.victim .who b{font-size:14px;max-width:112%;padding:3px 10px}
 body.in-game #cluesList .clue-row.victim .body{align-items:center}
 /* Geplaatst: portret en plaatje, vier naast elkaar, een toon terug. */
 body.in-game #cluesList .list-sep{grid-column:1/-1;order:50;margin:4px 2px -8px;font:700 12px var(--font-ui);color:var(--dof);letter-spacing:.02em;text-transform:none}
