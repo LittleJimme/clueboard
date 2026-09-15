@@ -3908,48 +3908,61 @@ body.in-game .clue-card.done::before{background:var(--goud)}
   *::-webkit-scrollbar{display:none;width:0;height:0}
 }
 
-/* ══════════ Het dossier: elke persoon een eigen tegel ══════════
-   Een raster van tegels, twee naast elkaar. Het portret staat groot bovenop
-   de tegel en steekt er bovenuit, als een foto die op het dossier ligt; de
-   naam eronder, dan de regel in een smalle tekstkolom. De kleur van de
-   persoon zit in een lichte waas en de rand; gekozen is een diepere waas met
-   donkere tekst. Wie geplaatst is, wordt een klein tegeltje zonder tekst.
-   Past het niet in de kolom, dan zet pasDossierKolommen dossier-dicht: drie
-   tegels naast elkaar en alles een maat kleiner. Dit blok staat achteraan en
-   draagt #cluesList in elke regel, zodat het wint van de oudere opmaak. */
+/* ══════════ Het dossier, zoals in het boek ══════════
+   Per persoon een affiche: een groot portret, daaronder een naamplaatje dat
+   over de onderrand van het portret valt, en daaronder het tekstvel in de
+   kleur van de persoon, achter het portret gestoken. Geen kader om het
+   geheel: de lagen zijn het kader. Drie affiches naast elkaar. Wie geplaatst
+   is, houdt alleen portret en naamplaatje. Past het niet, dan zet
+   pasDossierKolommen dossier-dicht: alles een maat kleiner. Dit blok staat
+   achteraan en draagt #cluesList in elke regel, zodat het wint van de oudere
+   opmaak. */
 body.in-game #cluesList,body.desktop.in-game #cluesList{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 8px;padding:22px 12px 12px;align-content:start;align-items:start}
-body.desktop.in-game.dossier-dicht #cluesList{gap:13px 8px;padding:18px 10px 8px}
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 8px;padding:12px 12px 12px;align-content:start;align-items:start}
 body.in-game #cluesList .clue-card,body.in-game #cluesList .clue-row.victim{
   position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;
-  padding:0 8px 9px;margin:0;min-height:auto;order:initial;overflow:visible;gap:0;
-  background:color-mix(in srgb,var(--pc,var(--lijn)) 9%,var(--kaart));
-  border:1px solid color-mix(in srgb,var(--pc,var(--lijn)) 28%,var(--lijn));border-radius:12px;
-  box-shadow:none;opacity:1;cursor:pointer;
-  transition:background .18s,border-color .18s,transform .16s cubic-bezier(.2,.8,.3,1),box-shadow .2s}
+  padding:0;margin:0;min-height:auto;order:initial;overflow:visible;gap:0;
+  background:none;border:0;border-radius:0;box-shadow:none;opacity:1;cursor:pointer;
+  transition:transform .16s cubic-bezier(.2,.8,.3,1)}
 body.in-game #cluesList .clue-card::before{display:none}
-body.in-game #cluesList .clue-card:hover,body.in-game #cluesList .clue-row.victim:hover{transform:translateY(-1px);box-shadow:0 8px 18px -8px rgba(42,33,24,.3)}
+body.in-game #cluesList .clue-card:hover,body.in-game #cluesList .clue-row.victim:hover{transform:translateY(-2px);box-shadow:none}
 body.in-game #cluesList .clue-card:active,body.in-game #cluesList .clue-row.victim:active{transform:none}
-/* Het portret: groter dan de tegel, steekt er bovenuit. */
+/* Het portret bovenop, met een schaduw op het vel eronder. */
 body.in-game #cluesList .clue-card .kop,body.in-game #cluesList .clue-row.victim .av{
-  display:flex;justify-content:center;margin:-16px 0 -4px;padding:0;width:auto;height:auto;
-  border:0;background:none;box-shadow:none;border-radius:0;filter:drop-shadow(0 3px 5px rgba(42,33,24,.22))}
+  position:relative;z-index:1;display:flex;justify-content:center;margin:0;padding:0;width:auto;height:auto;
+  border:0;background:none;box-shadow:none;border-radius:0;filter:drop-shadow(0 4px 6px rgba(42,33,24,.28))}
+/* Het tekstvel: in de kleur van de persoon, achter het portret gestoken. */
 body.in-game #cluesList .clue-card .lijf,body.in-game #cluesList .clue-row.victim .body{
-  display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;min-width:0;padding:0;text-align:center}
-body.in-game #cluesList .clue-row.victim .who{display:flex;flex-direction:column;align-items:center;gap:3px}
+  /* Geen z-index: het vel mag geen eigen stapel vormen, anders zakt het
+     naamplaatje mee onder het portret. */
+  position:relative;z-index:auto;display:flex;flex-direction:column;align-items:center;gap:3px;
+  width:100%;min-width:0;margin-top:-24px;padding:24px 8px 9px;text-align:center;
+  background:color-mix(in srgb,var(--pc,var(--lijn)) 26%,var(--kaart));
+  border:1px solid color-mix(in srgb,var(--pc,var(--lijn)) 40%,var(--lijn));border-radius:10px;
+  box-shadow:0 6px 14px -8px rgba(42,33,24,.35);transition:background .18s,border-color .18s}
+body.in-game #cluesList .clue-row.victim .who{display:contents}
+/* Het naamplaatje: over de onderrand van het portret heen. */
 body.in-game #cluesList .clue-card .lijf .name,body.in-game #cluesList .clue-row.victim .who b{
-  font:600 15.5px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em;
-  padding:0;border:0;background:none;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-body.in-game #cluesList .clue-card .lijf .kaart-merken{display:flex;flex-wrap:wrap;gap:4px;margin:0;justify-content:center}
-body.in-game #cluesList .clue-card .lijf .tag{margin:0}
-/* De regel: een smalle tekstkolom onder de naam, links uitgelijnd. */
+  position:absolute;left:50%;top:-14px;transform:translateX(-50%);z-index:3;max-width:96%;
+  padding:3px 11px;border-radius:7px;background:var(--kaart);border:1.5px solid var(--inkt-rand);
+  box-shadow:0 2px 5px rgba(42,33,24,.2);
+  font:600 15px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Stand zegt de vorm al; alleen slachtoffer en getuige krijgen een woord. */
+body.in-game #cluesList .clue-card .lijf .kaart-merken{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 0;justify-content:center}
+body.in-game #cluesList .clue-card .lijf .kaart-merken:empty{display:none}
+body.in-game #cluesList .clue-card .lijf .tag{margin:0;display:none}
+body.in-game #cluesList .clue-card .lijf .tag.victim,body.in-game #cluesList .clue-card .lijf .tag.getuige{display:inline-flex}
+body.in-game #cluesList .clue-row.victim .who .badge{margin:2px 0 0}
+/* De regel: gecentreerd op het vel, zoals in het boek. */
 body.in-game #cluesList .clue-card .txt,body.in-game #cluesList .clue-row.victim .txt{
-  width:100%;margin:5px 0 0;padding:0 2px;text-align:left;
-  font:600 12.5px/1.36 var(--font-ui);color:var(--inkt-2)}
+  width:100%;margin:2px 0 0;padding:0;text-align:center;
+  font:600 12.5px/1.36 var(--font-ui);color:var(--inkt)}
+body.in-game #cluesList .clue-card .txt b,body.in-game #cluesList .clue-row.victim .txt b{color:var(--inkt)}
 body.in-game #cluesList .txt .regel{display:block;position:relative}
-body.in-game #cluesList .txt.meer .regel{padding-left:12px;margin:0;border:0}
-body.in-game #cluesList .txt.meer .regel+.regel{margin-top:4px;padding-top:0;border-top:0}
-body.in-game #cluesList .txt.meer .regel::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:2px;border-radius:2px;background:var(--pc,var(--dof));opacity:.9}
+body.in-game #cluesList .txt.meer .regel{padding:0;margin:0;border:0}
+body.in-game #cluesList .txt.meer .regel+.regel{margin-top:5px;padding-top:5px;border-top:1px solid color-mix(in srgb,var(--pc,var(--lijn)) 45%,transparent)}
+body.in-game #cluesList .txt.meer .regel::before{display:none}
 /* Telefoon: uitleg en openen als twee knopjes onder de tekst. */
 body.in-game #cluesList .kaart-knoppen{position:static;width:auto;display:flex;flex-direction:row;gap:6px;margin-top:7px;
   background:none;border-radius:0;overflow:visible}
@@ -3959,55 +3972,60 @@ body.in-game #cluesList .kaart-knoppen .info{flex:0 0 auto;width:28px;height:28p
 body.in-game #cluesList .kaart-knoppen .info+.info{border-top:1.5px solid var(--inkt-rand)}
 body.in-game #cluesList .kaart-knoppen .info svg{width:14px;height:14px}
 body.in-game #cluesList .kaart-knoppen .info.uitleg svg{width:16px;height:16px}
-/* Merkjes in de hoeken van de tegel. */
-body.in-game #cluesList .clue-card .tick,body.in-game #cluesList .clue-row.victim .tick{position:absolute;top:6px;right:6px;left:auto;bottom:auto;width:18px;height:18px}
-body.in-game #cluesList .clue-card .memo-merk,body.in-game #cluesList .clue-card .notitie-merk{position:absolute;top:6px;left:6px;right:auto;bottom:auto}
-/* Gekozen (desktop): diepere waas, de tekst blijft donker. */
-body.in-game #cluesList .clue-card.geselecteerd,body.in-game #cluesList .clue-row.victim.geselecteerd,
-html[data-thema="licht"] body.in-game #cluesList .clue-card.geselecteerd{
-  background:color-mix(in srgb,var(--pc,var(--goud)) 24%,var(--kaart));
-  border-color:color-mix(in srgb,var(--pc,var(--goud)) 60%,var(--lijn));
-  box-shadow:0 0 0 1px color-mix(in srgb,var(--pc,var(--goud)) 40%,transparent)}
-body.in-game #cluesList .clue-card.geselecteerd .name,body.in-game #cluesList .clue-card.geselecteerd .txt b,
-body.in-game #cluesList .clue-card.geselecteerd .txt span,body.in-game #cluesList .clue-card.geselecteerd .txt .regel,
-body.in-game #cluesList .clue-card.geselecteerd small,body.in-game #cluesList .clue-row.victim.geselecteerd .who b,
+/* Merkjes in de hoeken van het vel. */
+body.in-game #cluesList .clue-card .tick,body.in-game #cluesList .clue-row.victim .tick{position:absolute;top:auto;bottom:6px;right:6px;left:auto;width:17px;height:17px;z-index:3}
+body.in-game #cluesList .clue-card .memo-merk,body.in-game #cluesList .clue-card .notitie-merk{position:absolute;top:auto;bottom:6px;left:6px;right:auto;z-index:3}
+/* Gekozen (desktop): het vel loopt dieper vol en het plaatje kleurt mee. */
+body.in-game #cluesList .clue-card.geselecteerd .lijf,body.in-game #cluesList .clue-row.victim.geselecteerd .body,
+html[data-thema="licht"] body.in-game #cluesList .clue-card.geselecteerd .lijf{
+  background:color-mix(in srgb,var(--pc,var(--goud)) 46%,var(--kaart));
+  border-color:color-mix(in srgb,var(--pc,var(--goud)) 70%,var(--inkt));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--pc,var(--goud)) 45%,transparent),0 8px 18px -8px rgba(42,33,24,.4)}
+body.in-game #cluesList .clue-card.geselecteerd .lijf .name,body.in-game #cluesList .clue-row.victim.geselecteerd .who b{border-color:color-mix(in srgb,var(--pc,var(--goud)) 70%,var(--inkt))}
+body.in-game #cluesList .clue-card.geselecteerd .name,body.in-game #cluesList .clue-card.geselecteerd .txt,
+body.in-game #cluesList .clue-card.geselecteerd .txt b,body.in-game #cluesList .clue-card.geselecteerd .txt span,
+body.in-game #cluesList .clue-card.geselecteerd .txt .regel,body.in-game #cluesList .clue-card.geselecteerd small,
+body.in-game #cluesList .clue-row.victim.geselecteerd .who b,body.in-game #cluesList .clue-row.victim.geselecteerd .txt,
 body.in-game #cluesList .clue-row.victim.geselecteerd .txt b{color:var(--inkt)}
-body.in-game #cluesList .clue-card.geselecteerd .txt,body.in-game #cluesList .clue-row.victim.geselecteerd .txt{color:var(--inkt-2)}
-/* Bordregels: bovenaan over de volle breedte, als rij in inkt. */
-body.in-game #cluesList .clue-card.board{grid-column:1/-1;align-items:flex-start;text-align:left;padding:7px 10px 8px;
-  background:var(--kaart-2);border-color:var(--lijn);border-left:4px solid var(--inkt-2)}
+/* Bordregels: een lint over de volle breedte, bovenaan. */
+body.in-game #cluesList .clue-card.board{grid-column:1/-1;order:0;align-items:flex-start;text-align:left;padding:7px 12px 8px;margin:0 0 4px;
+  background:color-mix(in srgb,var(--inkt-2) 14%,var(--kaart));border:1px solid color-mix(in srgb,var(--inkt-2) 30%,var(--lijn));border-radius:8px}
 body.in-game #cluesList .clue-card.board .kop{display:none}
-body.in-game #cluesList .clue-card.board .name{display:flex;align-items:center;gap:6px;font:700 12px var(--font-ui);letter-spacing:.02em;color:var(--dof);background:none;border:0;padding:0}
+body.in-game #cluesList .clue-card.board .lijf{display:contents}
+body.in-game #cluesList .clue-card.board .name{position:static;transform:none;display:flex;align-items:center;gap:6px;max-width:none;
+  font:700 12px var(--font-ui);letter-spacing:.02em;color:var(--dof);background:none;border:0;box-shadow:none;padding:0}
 body.in-game #cluesList .clue-card.board .name .ic{display:none}
-body.in-game #cluesList .clue-card.board .txt{margin-top:3px;font-size:13px}
+body.in-game #cluesList .clue-card.board .txt{margin-top:3px;font-size:13px;text-align:left;padding:0}
+body.in-game #cluesList .clue-card.board .txt.meer .regel+.regel{margin-top:4px;padding-top:0;border-top:0}
 body.in-game #cluesList .clue-card.board .kaart-knoppen{position:absolute;right:8px;top:6px;margin:0}
-body.in-game #cluesList .clue-card.board.geselecteerd{background:color-mix(in srgb,var(--inkt) 10%,var(--kaart));border-left-color:var(--inkt)}
-/* Het slachtoffer: een lage rij over de volle breedte onderaan -- zijn regel
-   is altijd dezelfde en hoeft geen tegel. De rode ring zit al om het portret. */
-body.in-game #cluesList .clue-row.victim{--pc:#EF6F3C;grid-column:1/-1;flex-direction:row;align-items:center;text-align:left;
-  padding:6px 10px 6px 8px;gap:10px;margin-top:2px}
-body.in-game #cluesList .clue-row.victim .av{margin:-9px 0 -9px 0;flex:0 0 auto}
-body.in-game #cluesList .clue-row.victim .body{align-items:flex-start;text-align:left;gap:1px}
-body.in-game #cluesList .clue-row.victim .who{flex-direction:row;align-items:center;gap:7px}
-body.in-game #cluesList .clue-row.victim .txt{margin-top:1px;font-size:12.5px}
-body.in-game #cluesList .clue-row.victim .kaart-knoppen{margin:0 0 0 auto;flex-direction:column;align-self:center}
-/* Geplaatst: kleine tegeltjes zonder tekst, drie naast elkaar. */
-body.in-game #cluesList .list-sep{grid-column:1/-1;margin:0 2px -8px;font:700 12px var(--font-ui);color:var(--dof);letter-spacing:.02em;text-transform:none}
+body.in-game #cluesList .clue-card.board .tick{display:none}
+body.in-game #cluesList .clue-card.board.geselecteerd{background:color-mix(in srgb,var(--inkt) 16%,var(--kaart));border-color:var(--inkt-2)}
+/* Het slachtoffer: een klein affiche in zijn eigen rood, achteraan -- zijn
+   regel is altijd dezelfde en staat in de rechterkolom zodra je hem kiest. */
+body.in-game #cluesList .clue-row.victim{--pc:#EF6F3C;order:98;opacity:1}
+body.in-game #cluesList .clue-row.victim .body{margin-top:-14px;padding:14px 4px 5px}
+body.in-game #cluesList .clue-row.victim .who b{top:-12px;font-size:12.5px;padding:2px 8px;
+  background:color-mix(in srgb,#EF6F3C 18%,var(--kaart));border-color:color-mix(in srgb,#EF6F3C 55%,var(--inkt-rand))}
+body.in-game #cluesList .clue-row.victim .who .badge,body.in-game #cluesList .clue-row.victim .txt,body.in-game #cluesList .clue-row.victim .kaart-knoppen{display:none}
+body.in-game #cluesList .clue-row.victim .av{filter:drop-shadow(0 2px 4px rgba(42,33,24,.22))}
+/* Geplaatst: alleen portret en naamplaatje, drie naast elkaar. */
+body.in-game #cluesList .list-sep{grid-column:1/-1;order:50;margin:2px 2px -6px;font:700 12px var(--font-ui);color:var(--dof);letter-spacing:.02em;text-transform:none}
 body.desktop.in-game #cluesList .list-sep{display:block}
-body.in-game #cluesList .geplaatst-rij{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 6px;padding-top:6px}
-body.in-game #cluesList .geplaatst-rij .clue-card{padding:0 6px 6px;min-height:0;opacity:.75;background:var(--kaart-2);border-color:var(--lijn)}
-body.in-game #cluesList .geplaatst-rij .clue-card .kop{margin:-12px 0 -3px;filter:none;opacity:.85}
+body.in-game #cluesList .geplaatst-rij{grid-column:1/-1;order:51;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 6px;padding-top:2px}
+body.in-game #cluesList .geplaatst-rij .clue-card{opacity:.8}
+body.in-game #cluesList .geplaatst-rij .clue-card .kop{filter:drop-shadow(0 2px 4px rgba(42,33,24,.22))}
+body.in-game #cluesList .geplaatst-rij .clue-card .lijf{margin-top:-14px;padding:12px 4px 4px;background:var(--kaart-2);border-color:var(--lijn);box-shadow:none}
+body.in-game #cluesList .geplaatst-rij .clue-card .lijf .name{top:-12px;font-size:12.5px;padding:2px 8px}
 body.in-game #cluesList .geplaatst-rij .clue-card .txt,body.in-game #cluesList .geplaatst-rij .clue-card .kaart-merken,body.in-game #cluesList .geplaatst-rij .clue-card .kaart-knoppen{display:none}
-body.in-game #cluesList .geplaatst-rij .clue-card .lijf .name{font-size:13px}
-body.in-game #cluesList .geplaatst-rij .clue-card .tick{top:4px;right:4px;width:15px;height:15px}
-/* Dichter: dezelfde twee kolommen, alles een maat kleiner. */
-body.desktop.in-game.dossier-dicht #cluesList .clue-card,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim{padding:0 6px 7px}
-body.desktop.in-game.dossier-dicht #cluesList .clue-card .kop,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .av{margin:-14px 0 -14px;transform:scale(.8);transform-origin:50% 60%}
-body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf .name,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .who b{font-size:13.5px}
-body.desktop.in-game.dossier-dicht #cluesList .clue-card .txt,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .txt{font-size:11.5px;line-height:1.3;margin-top:3px}
+body.in-game #cluesList .geplaatst-rij .clue-card .tick{bottom:auto;top:-6px;right:-4px;width:15px;height:15px}
+/* Dichter: alles een maat kleiner. */
+body.desktop.in-game.dossier-dicht #cluesList{gap:12px 6px;padding:10px 10px 8px}
+body.desktop.in-game.dossier-dicht #cluesList .clue-card .kop,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .av{transform:scale(.82);transform-origin:50% 100%;margin-top:-16px}
+body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .body{margin-top:-20px;padding:20px 6px 7px}
+body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf .name,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .who b{font-size:13px;top:-12px;padding:2px 8px}
+body.desktop.in-game.dossier-dicht #cluesList .clue-card .txt,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .txt{font-size:11.5px;line-height:1.3}
 body.desktop.in-game.dossier-dicht #cluesList .clue-card.board .txt{font-size:12px}
-body.desktop.in-game.dossier-dicht #cluesList .geplaatst-rij{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 6px}
-body.desktop.in-game.dossier-dicht #cluesList .clue-card.board{padding:5px 9px 6px}
+body.desktop.in-game.dossier-dicht #cluesList .geplaatst-rij{grid-template-columns:repeat(5,minmax(0,1fr))}
 </style>
 </head>
 <body class="hide-objsurf laden vloer-v3">
@@ -8517,7 +8535,7 @@ function personCard(clues,p,done){
      het introscherm, zodat je een persoon overal op dezelfde manier herkent. */
   const kop=document.createElement("div");
   kop.className="kop";
-  kop.appendChild(personPortrait(p,{size:done?40:(isDesktop()?56:54)}));
+  kop.appendChild(personPortrait(p,{size:done?42:(isDesktop()?78:70)}));
   card.appendChild(kop);
 
   /* Naam, rol en regel staan in één tekstkolom naast het portret; niets
@@ -8676,7 +8694,7 @@ function renderClues(){
     row.className="clue-row victim";
     const av=document.createElement("div");
     av.className="av";
-    av.appendChild(personPortrait(victimBoven,{size:isDesktop()?56:54}));
+    av.appendChild(personPortrait(victimBoven,{size:42}));
     row.appendChild(av);
     const body=document.createElement("div");
     body.className="body";
@@ -9351,7 +9369,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.194";
+const PLAYER_APP_VERSION="0.9.195";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
