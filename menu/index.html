@@ -226,7 +226,19 @@ main{
    woordmerk-regel, klein en gespatieerd: zo leest hij als onderdeel van de
    naam en niet als een zin. De Nederlandse regel eronder is de stem van
    het spel zelf en staat duidelijk apart, groter en in schuine inkt. */
-.titelblok{flex:0 0 auto;text-align:left;padding:6px 0 22px}
+.titelblok{flex:0 0 auto;text-align:left;padding:6px 0 22px;animation:opkomen .4s cubic-bezier(.2,.8,.3,1) both}
+@media (max-width:640px){
+  .titelblok{text-align:center;padding:2px 0 18px}
+  .merk{flex-direction:column;justify-content:center;gap:8px}
+}
+/* Overgangen: wat op een pagina verschijnt komt kort op, de kaarten na
+   elkaar; het campagnebeeld zoomt een haar uit terwijl het opkomt. */
+@keyframes opkomen{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes beeldIn{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:none}}
+.level-list > *{animation:opkomen .42s cubic-bezier(.2,.8,.3,1) both;animation-delay:calc(var(--i,0) * 45ms)}
+.filter-plak{animation:opkomen .4s cubic-bezier(.2,.8,.3,1) both}
+.cb-hero{animation:beeldIn .55s ease both}
+@media (prefers-reduced-motion:reduce){.level-list > *,.filter-plak,.titelblok,.cb-hero{animation:none}}
 .beeldmerk{width:46px;height:46px;display:block;margin:0;object-fit:contain}
 /* De oude .woordmerk-tekstregel staat verderop en zet zelf een display; deze
    selectors wegen zwaarder zodat er altijd precies één woordmerk staat. */
@@ -449,9 +461,7 @@ body.op-campagne .campagne-balk{display:block}
 .cb-hero::after{content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(42,33,24,.10) 0%,rgba(42,33,24,0) 30%,rgba(42,33,24,.20) 55%,rgba(42,33,24,.78) 100%)}
 .cb-hero > *{position:absolute;z-index:2}
-/* Linksboven eerst de terugknop, daarnaast de dag/nachtknop. */
 .cb-hero .vraag-knop{left:var(--rand);top:calc(14px + env(safe-area-inset-top))}
-.cb-hero .cb-thema{left:calc(var(--rand) + 48px);top:calc(14px + env(safe-area-inset-top))}
 .cb-hero .cb-tag{display:inline-flex;margin-bottom:10px}
 .cb-hero .cb-tag .stijl-tag{box-shadow:0 1px 4px rgba(42,33,24,.25)}
 .cb-hero .cb-tekst{left:var(--rand);right:calc(var(--rand) + 200px);bottom:22px;display:flex;flex-direction:column;align-items:flex-start}
@@ -766,6 +776,9 @@ a.keuze-boek{text-decoration:none}
 }
 /* De kleurschakelaar staat links in dezelfde voet: hij hoort bij de app,
    niet bij het kiezen van een zaak. */
+.hoek-knoppen{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:45;
+  display:flex;flex-direction:column;gap:8px}
+.hoek-knoppen .thema-knop{box-shadow:0 4px 14px rgba(42,33,24,.18)}
 .thema-knop{
   width:38px;height:38px;padding:0;border-radius:999px;
   border:1.5px solid var(--inkt-rand);background:var(--kaart);box-shadow:none;
@@ -848,18 +861,13 @@ a.keuze-boek{text-decoration:none}
 
 <div class="balk">
   <div class="balk-in">
-    <div class="balk-links">
-      <button class="thema-knop" id="btnThema" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
-      <button class="thema-knop volledig-knop" id="btnVolledig" type="button" title="Volledig scherm" aria-label="Volledig scherm" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5.6A1.6 1.6 0 0 1 5.6 4H9M15 4h3.4A1.6 1.6 0 0 1 20 5.6V9M20 15v3.4a1.6 1.6 0 0 1-1.6 1.6H15M9 20H5.6A1.6 1.6 0 0 1 4 18.4V15"/></svg>
-      </button>
-    </div>
+    <div class="balk-links"></div>
     <div class="balk-rechts">
       <!-- Eén knop voor alles wat niet dagelijks is: eigen level, alle regels,
            de uitleg en de voorbeeldzaak. Zo blijft de bovenrand rustig. -->
       <div class="drop meer-drop" id="meerDrop">
         <button class="vraag-knop meer-knop" id="btnMeer" type="button" aria-haspopup="true" aria-expanded="false" title="Meer" aria-label="Meer">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 8h14M5 12h14M5 16h14"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"><path d="M7 8.5h10M7 12h10M7 15.5h10"/></svg>
         </button>
         <div class="drop-menu meer-menu" id="meerMenu">
           <button type="button" id="btnUitleg">Zo speel je</button>
@@ -871,6 +879,15 @@ a.keuze-boek{text-decoration:none}
       </div>
     </div>
   </div>
+</div>
+
+<!-- Dag/nacht en volledig scherm staan los van de balk, rechtsonder in het
+     scherm, zodat ze op elke pagina op dezelfde plek zitten. -->
+<div class="hoek-knoppen">
+  <button class="thema-knop volledig-knop" id="btnVolledig" type="button" title="Volledig scherm" aria-label="Volledig scherm" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5.6A1.6 1.6 0 0 1 5.6 4H9M15 4h3.4A1.6 1.6 0 0 1 20 5.6V9M20 15v3.4a1.6 1.6 0 0 1-1.6 1.6H15M9 20H5.6A1.6 1.6 0 0 1 4 18.4V15"/></svg>
+  </button>
+  <button class="thema-knop" id="btnThema" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
 </div>
 
 <main>
@@ -885,8 +902,6 @@ a.keuze-boek{text-decoration:none}
       <img class="woordmerk woordmerk-licht" src="../assets/brand/logo.png" alt="ClueBoard">
       <span class="proef-merk">Proefstand</span>
     </div>
-    <div class="scheiding"></div>
-    <h1>De waarheid zit in de <em>details</em></h1>
   </header>
 
   <div class="campagne-balk" id="campagneBalk">
@@ -894,7 +909,6 @@ a.keuze-boek{text-decoration:none}
       <button class="vraag-knop" id="btnCampagnes" type="button" title="Terug naar de campagnes" aria-label="Terug naar de campagnes">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.6 5.6L8.2 12l6.4 6.4"/></svg>
       </button>
-      <button class="thema-knop cb-thema" id="btnThemaHero" type="button" title="Wissel tussen licht en donker" aria-label="Wissel tussen licht en donker"><i></i></button>
       <div class="cb-tekst"><span class="cb-tag" id="cbStijl"></span><h2 id="cbNaam"></h2></div>
       <div class="ck-stand" id="cbStand"></div>
     </div>
@@ -1039,8 +1053,7 @@ function zetThema(naam){
 $("#btnThema").addEventListener("click",()=>{
   zetThema(document.documentElement.dataset.thema === "licht" ? "donker" : "licht");
 });
-/* Dezelfde knop, maar dan op het campagnebeeld. */
-$("#btnThemaHero").addEventListener("click",()=>$("#btnThema").click());
+
 
 /* ---------- modals ---------- */
 function openModal(id){ $(id).classList.add("open"); }
@@ -1884,11 +1897,16 @@ function maakCampagneKaart(g){
   a.appendChild(voet);
   return a;
 }
+/* Elk kind een eigen vertraging, zodat de lijst na elkaar opkomt. */
+function trapsgewijs(lijst){
+  [...lijst.children].forEach((el,i)=>el.style.setProperty("--i",Math.min(i,14)));
+}
 function tekenCampagnes(){
   const lijst=$("#levelList");
   lijst.classList.add("campagnes");
   lijst.innerHTML="";
   campagneGroepen(alleLevels.filter(e=>e.raw.demo!==true)).forEach(g=>lijst.appendChild(maakCampagneKaart(g)));
+  trapsgewijs(lijst);
   $("#levelTeller").textContent="";
 }
 function tekenCampagneBalk(){
@@ -1970,6 +1988,7 @@ function tekenLijst(){
   const n=zichtbaar.length, tot=inLijst.length;
   /* Alleen als je filtert telt deze regel mee. */
   $("#levelTeller").textContent = (!tot || n===tot) ? "" : n+" van "+tot+" zaken";
+  trapsgewijs(lijst);
 }
 /* Het overzicht: van elke zaak alleen wat er op de kaart komt te staan --
    titel, zwaarte, bordmaat, nummer. Eén klein bestand voor alle zaken samen,
