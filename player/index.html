@@ -2632,7 +2632,7 @@ body.desktop.in-game .tabbar .view-switch,body.desktop.in-game .voet-links{displ
    je toch al deed. Op de telefoon blijft hij, want daar is hij de enige weg. */
 /* Op desktop hoort de kop juist compact: daar staat de voet niet vol knoppen. */
 body.desktop.in-game .kop-knop{width:40px;height:40px;min-width:40px}
-body.desktop.in-game #checkRij{flex:0 0 auto;padding:12px 14px 14px;border-top:1px solid var(--lijn-zacht)}
+body.desktop.in-game #checkRij{display:none}
 body.desktop.in-game #checkRij #btnCheck{
   width:100%;height:50px;justify-content:center;border-radius:999px;
   background:var(--inkt);color:var(--grond);border:1.5px solid var(--inkt);
@@ -3942,14 +3942,17 @@ body.in-game #cluesList .clue-card .kop,body.in-game #cluesList .clue-row.victim
    papier van in plaats van een vlak. */
 body.in-game #cluesList .clue-card .lijf,body.in-game #cluesList .clue-row.victim .body{
   position:relative;z-index:auto;display:flex;flex-direction:column;align-items:center;gap:4px;
-  width:100%;min-width:0;margin-top:-34px;padding:38px 10px 12px;text-align:center;
-  border:0;border-radius:12px;box-shadow:none;
+  /* Het vel reikt tot ver achter het portret: onzichtbaar zolang het niet
+     gekozen is, en bij kiezen klapt de kleur van boven naar beneden uit,
+     tot achter het hoofd. */
+  width:100%;min-width:0;margin-top:-62px;padding:66px 10px 12px;text-align:center;
+  border:0;border-radius:14px;box-shadow:none;
   /* De kleur van de persoon zit klaar als achtergrond, maar op hoogte nul;
      bij kiezen klapt hij van boven naar beneden uit. */
   background-color:transparent;
   background-image:linear-gradient(color-mix(in srgb,var(--pc,var(--lijn)) 72%,#2A2118),color-mix(in srgb,var(--pc,var(--lijn)) 72%,#2A2118));
   background-repeat:no-repeat;background-position:0 0;background-size:100% 0%;
-  transition:background-size .3s cubic-bezier(.2,.8,.3,1),box-shadow .2s,color .2s}
+  transition:background-size .42s cubic-bezier(.2,.8,.2,1),box-shadow .2s,color .2s}
 body.in-game #cluesList .clue-row.victim .who{display:contents}
 /* De naam: gewoon in het gekleurde vel, onder het portret. */
 body.in-game #cluesList .clue-card .lijf .name,body.in-game #cluesList .clue-row.victim .who b{
@@ -4047,7 +4050,7 @@ body.in-game #cluesList .clue-card .tick,body.in-game #cluesList .clue-row.victi
 /* Dichter: vier affiches naast elkaar, alles een maat kleiner. */
 body.desktop.in-game.dossier-dicht #cluesList{gap:12px 5px;padding:12px 8px 10px}
 body.desktop.in-game.dossier-dicht #cluesList .clue-card .kop,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .av{transform:scale(.86);transform-origin:50% 100%;margin-top:-22px}
-body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .body{margin-top:-32px;padding:34px 8px 10px}
+body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .body{margin-top:-56px;padding:58px 8px 10px}
 body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf .name,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .who b{font-size:15px}
 
 body.desktop.in-game.dossier-dicht #cluesList .clue-card .txt,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .txt{font-size:12.5px;line-height:1.36}
@@ -4058,7 +4061,7 @@ body.desktop.in-game.dossier-dicht #cluesList .geplaatst-rij .clue-card .kop{tra
 /* Zeer dicht: grote bezetting op een laag scherm. */
 body.desktop.in-game.dossier-zeer-dicht #cluesList{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 4px;padding:10px 8px 8px}
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .kop,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .av{transform:scale(.74);margin-top:-32px}
-body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .body{margin-top:-28px;padding:30px 6px 8px}
+body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .body{margin-top:-48px;padding:50px 6px 8px}
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf .name,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .who b{font-size:13px}
 
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .txt,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .txt{font-size:11.5px;line-height:1.3}
@@ -4092,6 +4095,13 @@ body.in-end #screen-end .uitslag-voet .btn{background:var(--inkt);color:var(--gr
 body.in-end #screen-end .uitslag-voet .btn:hover{background:var(--inkt-2);border-color:var(--inkt-2)}
 body.in-end #screen-end .uitslag-voet .btn.ghost{background:var(--kaart);color:var(--inkt);border-color:var(--inkt-rand)}
 body.in-end #screen-end .uitslag-voet .btn.ghost:hover{background:var(--kaart-2);border-color:var(--inkt)}
+/* Controleer in de kop: papier met inktrand zolang er nog iemand mist, en
+   inkt zodra iedereen staat -- geen goud, dat is voor edelen en voortgang. */
+body.in-game #btnCheck.klaar,body.in-game:not(.desktop) #btnCheck.klaar{background:var(--inkt);color:var(--grond);border:1.5px solid var(--inkt);box-shadow:none;animation:none}
+body.in-game #btnCheck.klaar .ic,body.in-game #btnCheck.klaar .teller{color:inherit}
+body.in-game #btnCheck.klaar .teller{background:rgba(255,255,255,.18)}
+body.in-game #btnCheck[disabled]{opacity:.55;color:var(--inkt-2)}
+body.desktop.in-game #btnCheck{height:40px;padding:0 18px 0 14px;font-size:16px}
 </style>
 </head>
 <body class="hide-objsurf laden vloer-v3">
@@ -9450,7 +9460,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.201";
+const PLAYER_APP_VERSION="0.9.203";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -10981,8 +10991,10 @@ DESKTOP_MQ.addEventListener("change",zetDesktop);
 /* Controleer staat op desktop onder het regelpaneel en op de telefoon in de
    kop: hetzelfde element, het verhuist alleen. */
 function plaatsCheck(){
+  /* Controleer staat op elk scherm midden in de kop: onder het regelpaneel
+     kwam hij gelijk te staan met de hintknop, en dat paste niet. */
   const knop=$("#btnCheck"); if(!knop) return;
-  const doel=DESKTOP_MQ.matches ? $("#checkRij") : $(".kop-midden");
+  const doel=$(".kop-midden");
   if(doel && knop.parentNode!==doel) doel.appendChild(knop);
 }
 DESKTOP_MQ.addEventListener("change",plaatsCheck);
