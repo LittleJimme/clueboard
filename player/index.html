@@ -4007,25 +4007,23 @@ body.in-game #cluesList .clue-card.geselecteerd .txt.meer .regel+.regel{border-t
 body.in-game #cluesList .clue-card.geselecteerd .lijf .tag,body.in-game #cluesList .clue-row.victim.geselecteerd .who .badge{
   background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);color:#FBF6EA}
 /* Bordregels: een lint over de volle breedte met hetzelfde plaatje, in inkt. */
-body.in-game #cluesList .clue-card.board{grid-column:1/-1;order:0;position:relative;flex-direction:row;align-items:flex-start;gap:12px;text-align:left;
-  margin:0 0 4px;padding:2px 6px 12px;cursor:pointer;
-  background:none;border:0;border-bottom:1px solid var(--lijn);border-radius:0;box-shadow:none}
+body.in-game #cluesList .clue-card.board{grid-column:1/-1;order:99;position:relative;flex-direction:row;align-items:center;gap:12px;text-align:left;
+  margin:6px 0 0;padding:8px 10px;cursor:pointer;
+  background:var(--kaart-2);border:1px solid var(--lijn);border-radius:12px;box-shadow:none}
 body.in-game #cluesList .clue-card.board .kop{display:flex;flex:0 0 auto;margin:0;filter:none}
 body.in-game #cluesList .clue-card.board .bord-schild{width:44px;height:44px;border-radius:999px;border:1.5px solid var(--inkt-rand);
   background:var(--kaart);color:var(--inkt-2);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:none}
 body.in-game #cluesList .clue-card.board .bord-schild svg{width:22px;height:22px;display:block}
 /* Geen .lijf in deze kaart: naam en tekst staan naast de schijf. */
-body.in-game #cluesList .clue-card.board .name{display:block;position:static;flex:0 0 auto;margin:0;padding:6px 2px 0 0;
-  font:600 15px/1.15 var(--font-display);color:var(--inkt);background:none;border:0;box-shadow:none}
-body.in-game #cluesList .clue-card.board .txt{flex:1;min-width:0;margin:0;padding:5px 0 0;font-size:13.5px;text-align:left;width:auto}
+body.in-game #cluesList .clue-card.board .name{display:none}
+body.in-game #cluesList .clue-card.board .txt{flex:1;min-width:0;margin:0;padding:0;font-size:13.5px;text-align:left;width:auto}
 body.in-game #cluesList .clue-card.board .txt.meer .regel{padding-left:13px}
 body.in-game #cluesList .clue-card.board .txt.meer .regel+.regel{margin-top:4px;padding-top:0;border-top:0}
 body.in-game #cluesList .clue-card.board .txt.meer .regel::before{display:block;content:"";position:absolute;left:0;top:.66em;width:7px;height:2px;border-radius:2px;background:var(--inkt-2)}
 body.in-game #cluesList .clue-card.board .kaart-knoppen{position:static;flex-direction:column;margin:0;align-self:center}
 body.in-game #cluesList .clue-card.board .tick{display:none}
 /* Gekozen: het bord kleurt in inkt, net als een persoon in zijn kleur. */
-body.in-game #cluesList .clue-card.board.geselecteerd{transform:none;background:color-mix(in srgb,var(--inkt-2) 82%,#2A2118);
-  border-radius:12px;border-bottom-color:transparent;padding:8px 10px 10px}
+body.in-game #cluesList .clue-card.board.geselecteerd{transform:none;background:color-mix(in srgb,var(--inkt-2) 82%,#2A2118);border-color:transparent}
 body.in-game #cluesList .clue-card.board.geselecteerd .name,body.in-game #cluesList .clue-card.board.geselecteerd .txt,
 body.in-game #cluesList .clue-card.board.geselecteerd .txt b,body.in-game #cluesList .clue-card.board.geselecteerd .txt span{color:#FBF6EA}
 body.in-game #cluesList .clue-card.board.geselecteerd .txt.meer .regel::before{background:#FBF6EA}
@@ -4102,6 +4100,12 @@ body.in-game #btnCheck.klaar .ic,body.in-game #btnCheck.klaar .teller{color:inhe
 body.in-game #btnCheck.klaar .teller{background:rgba(255,255,255,.18)}
 body.in-game #btnCheck[disabled]{opacity:.55;color:var(--inkt-2)}
 body.desktop.in-game #btnCheck{height:40px;padding:0 18px 0 14px;font-size:16px}
+/* Geplaatst (desktop): het affiche blijft staan, gedempt, met een notitie. */
+body.desktop.in-game #cluesList .clue-card.done{opacity:.55}
+body.desktop.in-game #cluesList .clue-card.done:hover,body.desktop.in-game #cluesList .clue-card.done.geselecteerd{opacity:.9}
+body.desktop.in-game #cluesList .clue-card.done .lijf::after{content:"staat op het bord";display:block;margin-top:5px;
+  font:700 11px var(--font-ui);letter-spacing:.02em;color:var(--dof)}
+body.desktop.in-game #cluesList .clue-card.done.geselecteerd .lijf::after{color:#FBF6EA;opacity:.8}
 </style>
 </head>
 <body class="hide-objsurf laden vloer-v3">
@@ -8751,8 +8755,13 @@ function renderClues(){
   /* Op naam, niet in de volgorde waarin de bouwer de regels invoerde. */
   const opNaam=(a,b)=>String(a.p.name).localeCompare(String(b.p.name),"nl");
   open.sort(opNaam); done.sort(opNaam);
-  open.forEach(x=>list.appendChild(personCard(x.cs,x.p,false)));
-  if(done.length){
+  /* Op desktop blijft iedereen op zijn plek in het dossier; wie staat wordt
+     gedempt en krijgt een notitie. Op de telefoon schuiven ze naar onderen,
+     onder 'Geplaatst', zodat wat nog moet bovenaan blijft. */
+  if(isDesktop()){
+    open.concat(done).sort(opNaam).forEach(x=>list.appendChild(personCard(x.cs,x.p,!!placed.get(x.p.id))));
+  } else open.forEach(x=>list.appendChild(personCard(x.cs,x.p,false)));
+  if(done.length && !isDesktop()){
     const sep=document.createElement("div");
     sep.className="list-sep"; sep.textContent="Geplaatst";
     list.appendChild(sep);
@@ -9460,7 +9469,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.203";
+const PLAYER_APP_VERSION="0.9.204";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
