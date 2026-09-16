@@ -1907,9 +1907,9 @@ body.desktop.in-game #detailBody .pd-hint{order:4;margin-top:0}
    anders raakt een hoofd de roltag van de rij erboven. */
 div.deelnemers{grid-template-columns:repeat(6,1fr)}
 div.deelnemers.breed{grid-template-columns:repeat(12,1fr);max-width:820px}
-div.deelnemers .dl-in{margin-top:-6px}
-div.deelnemers.breed .dl-in{margin-top:-10px}
-div.deelnemer{gap:2px}
+div.deelnemers .dl-in{margin-top:0}
+div.deelnemers.breed .dl-in{margin-top:-4px}
+div.deelnemer{gap:6px}
 div.deelnemer .portret-podium{--s:calc(var(--dl,88px) / 370)}
 .dl-merken{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:2px}
 /* Het deelnemersvak stond op desktop vast op 400 px, terwijl zijn kolom er 586
@@ -2949,7 +2949,7 @@ body.desktop.in-game #modalIntro .bordregel.algemeen{font-size:14px;padding:9px 
    van de bak, en dan drijven ze uit elkaar. Met een bovengrens staan ze als
    groep bij elkaar, met de kolom eromheen als lucht. */
 body.desktop.in-game #modalIntro .deelnemers{grid-column:2;grid-row:1/6;align-self:center;justify-self:center;max-width:min(100%,620px);width:100%;padding:0;margin:0;gap:18px 0}
-body.desktop.in-game #modalIntro .deelnemer{grid-template-rows:calc(var(--dl,78px)*1.22) auto;gap:4px}
+body.desktop.in-game #modalIntro .deelnemer{grid-template-rows:calc(var(--dl,78px)*1.22) auto;gap:8px}
 body.desktop.in-game #modalIntro .dl-tekst .naam{font-size:22px}
 body.desktop.in-game #modalIntro .deelnemer.lang .dl-tekst .naam{font-size:19px}
 body.desktop.in-game #modalIntro .deelnemer.zeerlang .dl-tekst .naam{font-size:16px}
@@ -3951,7 +3951,7 @@ body.in-game #cluesList .clue-card .lijf,body.in-game #cluesList .clue-row.victi
   /* Het vel reikt tot ver achter het portret: onzichtbaar zolang het niet
      gekozen is, en bij kiezen klapt de kleur van boven naar beneden uit,
      tot achter het hoofd. */
-  width:100%;min-width:0;margin-top:-62px;padding:66px 10px 12px;text-align:center;
+  width:100%;min-width:0;margin-top:-62px;padding:56px 10px 12px;text-align:center;
   border:0;border-radius:14px;box-shadow:none;
   /* De kleur van de persoon zit klaar als achtergrond, maar op hoogte nul;
      bij kiezen klapt hij van boven naar beneden uit. */
@@ -4054,7 +4054,7 @@ body.in-game #cluesList .clue-card .tick,body.in-game #cluesList .clue-row.victi
 /* Dichter: vier affiches naast elkaar, alles een maat kleiner. */
 body.desktop.in-game.dossier-dicht #cluesList{gap:12px 5px;padding:12px 8px 10px}
 body.desktop.in-game.dossier-dicht #cluesList .clue-card .kop,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .av{transform:scale(.86);transform-origin:50% 100%;margin-top:-22px}
-body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .body{margin-top:-56px;padding:58px 8px 10px}
+body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .body{margin-top:-56px;padding:48px 8px 10px}
 body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf .name,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .who b{font-size:15px}
 
 body.desktop.in-game.dossier-dicht #cluesList .clue-card .txt,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .txt{font-size:12.5px;line-height:1.36}
@@ -4065,7 +4065,7 @@ body.desktop.in-game.dossier-dicht #cluesList .geplaatst-rij .clue-card .kop{tra
 /* Zeer dicht: grote bezetting op een laag scherm. */
 body.desktop.in-game.dossier-zeer-dicht #cluesList{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 4px;padding:10px 8px 8px}
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .kop,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .av{transform:scale(.74);margin-top:-32px}
-body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .body{margin-top:-48px;padding:50px 6px 8px}
+body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .body{margin-top:-48px;padding:40px 6px 8px}
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf .name,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .who b{font-size:13px}
 
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .txt,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .txt{font-size:11.5px;line-height:1.3}
@@ -4109,9 +4109,6 @@ body.desktop.in-game #btnCheck{height:40px;padding:0 18px 0 14px;font-size:16px}
 /* Geplaatst (desktop): het affiche blijft staan, gedempt, met een notitie. */
 body.desktop.in-game #cluesList .clue-card.done{opacity:.55}
 body.desktop.in-game #cluesList .clue-card.done:hover,body.desktop.in-game #cluesList .clue-card.done.geselecteerd{opacity:.9}
-body.desktop.in-game #cluesList .clue-card.done .lijf::after{content:"staat op het bord";display:block;margin-top:5px;
-  font:700 11px var(--font-ui);letter-spacing:.02em;color:var(--dof)}
-body.desktop.in-game #cluesList .clue-card.done.geselecteerd .lijf::after{color:#FBF6EA;opacity:.8}
 </style>
 </head>
 <body class="hide-objsurf laden vloer-v3">
@@ -9475,7 +9472,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.205";
+const PLAYER_APP_VERSION="0.9.206";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -9952,7 +9949,6 @@ function showLevelDetail(levelIndex){
       +'<span class="dl-merken">'
       +(isV?'<span class="badge tag victim">Slachtoffer</span>':'')
       +(pe.dier?'<span class="badge tag getuige">Getuige</span>':'')
-      +(rolLabel(pe)?'<span class="badge tag '+esc(pe.standing||"")+'">'+esc(rolLabel(pe))+'</span>':'')
       +'</span>';
     rij.appendChild(tekst);
     host.appendChild(rij);
