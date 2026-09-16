@@ -1930,9 +1930,15 @@ body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;
 .pawn.personage .portret-podium{--s:calc(var(--cell) / 376);position:absolute;left:50%;bottom:-12.1%;transform:translateX(-50%)}
 /* De twee fiches onderaan: het object links, de letter rechts. Een dunne
    rand in een donkere toon van de eigen kleur, geen zwarte streep. */
-.pawn.personage .obj-merk{left:0;bottom:-5%;width:calc(var(--cell)*.56);height:calc(var(--cell)*.56);
-  background:var(--pc);border:max(1px,calc(var(--cell)*.018)) solid color-mix(in srgb,var(--pc,#2A2118) 62%,#2A2118);box-shadow:0 1px 3px rgba(21,26,51,.28)}
-.pawn.personage .obj-merk img{left:10%;top:10%;width:80%;height:80%}
+/* Even groot als het letterfiche; het beeld erin groter, en de schijf licht:
+   vooral wit met een zweem van de persoonskleur, zodat het plaatje leesbaar
+   blijft en toch bij hem hoort. */
+.pawn.personage .obj-merk{left:0;bottom:-5%;width:calc(var(--cell)*.52);height:calc(var(--cell)*.52);
+  background:color-mix(in srgb,var(--pc,#FBF7EE) 22%,#FFFFFF);border:max(1px,calc(var(--cell)*.018)) solid color-mix(in srgb,var(--pc,#2A2118) 62%,#2A2118);box-shadow:0 1px 3px rgba(21,26,51,.28)}
+/* De tekeningen hebben veel lucht om zich heen; het beeld groter dan de
+   schijf, zodat het ding zelf de schijf vult en de lucht wegvalt. */
+.pawn.personage .obj-merk img{left:-22%;top:-22%;width:144%;height:144%}
+.pawn.personage .obj-merk svg{width:82%;height:82%}
 .pawn.personage .init{position:absolute;right:0;bottom:-5%;z-index:3;
   width:calc(var(--cell)*.52);height:calc(var(--cell)*.52);border-radius:999px;
   display:flex;align-items:center;justify-content:center;
@@ -9469,7 +9475,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.204";
+const PLAYER_APP_VERSION="0.9.205";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
