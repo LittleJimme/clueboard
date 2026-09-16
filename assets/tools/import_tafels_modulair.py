@@ -36,7 +36,7 @@ def schrijf(pad, beeld):
 # Het hout van de kit is oranjer en feller dan dat van het bed (tint 30 tegen
 # 38 graden, verzadiging .79 tegen .48). De bladdelen en de poot worden bij het
 # inladen in HSV bijgekleurd, zodat tafel, bed en stoel hetzelfde hout lijken.
-TINT_GRADEN, VERZADIGING, HELDERHEID = 8.0, 0.66, 0.88
+TINT_GRADEN, VERZADIGING, HELDERHEID = 4.0, 0.76, 0.9
 
 def kleur_bij(im):
     import colorsys
