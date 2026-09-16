@@ -643,6 +643,9 @@ html[data-thema="licht"] #modalUitleg .vel.titelkaart .uitleg-merk-licht{display
 }
 /* De ingang naar het boek: naast de twee tabbladen, en in de balk. */
 .uitleg-kies-rij{flex:0 0 auto;display:flex;align-items:center;gap:8px;margin:0 42px 12px 0}
+/* In de uitleg alleen de twee sets; alle regels en de voorbeeldzaak zitten
+   in het meer-menu. */
+.uitleg-kies-rij .keuze-boek,.voorbeeld-los{display:none!important}
 .keuze-boek{flex:0 0 auto;display:flex;align-items:center;gap:6px;height:38px;padding:0 12px;border-radius:999px;
   border:1px solid var(--lijn);background:var(--kaart-2);color:var(--inkt);font:700 12px var(--font-ui);cursor:pointer}
 .keuze-boek:hover{border-color:var(--accent-lijn)}

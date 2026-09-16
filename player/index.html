@@ -1928,12 +1928,15 @@ body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;
    voet van het personage (y 512) staat daarmee 53/376 vak boven de onderkant
    van het vak -- vandaar -12.1%, voor elke stand gelijk. */
 .pawn.personage .portret-podium{--s:calc(var(--cell) / 376);position:absolute;left:50%;bottom:-12.1%;transform:translateX(-50%)}
-.pawn.personage .obj-merk{left:-4%;bottom:-3%;width:calc(var(--cell)*.43);height:calc(var(--cell)*.43)}
-.pawn.personage .init{position:absolute;right:-4%;bottom:-3%;z-index:3;
-  width:calc(var(--cell)*.43);height:calc(var(--cell)*.43);border-radius:999px;
+/* De twee fiches onderaan: het object links, de letter rechts. Een dunne
+   rand in een donkere toon van de eigen kleur, geen zwarte streep. */
+.pawn.personage .obj-merk{left:2%;bottom:-4%;width:calc(var(--cell)*.48);height:calc(var(--cell)*.48);
+  border:max(1px,calc(var(--cell)*.018)) solid color-mix(in srgb,var(--pc,#2A2118) 62%,#2A2118);box-shadow:0 1px 3px rgba(21,26,51,.28)}
+.pawn.personage .init{position:absolute;right:2%;bottom:-4%;z-index:3;
+  width:calc(var(--cell)*.48);height:calc(var(--cell)*.48);border-radius:999px;
   display:flex;align-items:center;justify-content:center;
-  background:var(--pc);border:max(1.5px,calc(var(--cell)*.035)) solid var(--board-ink);
-  font:800 calc(var(--cell)*.23)/1 var(--font-ui);box-shadow:0 2px 5px rgba(21,26,51,.34)}
+  background:var(--pc);border:max(1px,calc(var(--cell)*.018)) solid color-mix(in srgb,var(--pc,#2A2118) 62%,#2A2118);
+  font:800 calc(var(--cell)*.25)/1 var(--font-ui);box-shadow:0 1px 3px rgba(21,26,51,.28)}
 /* Het laadschermpje bij het openen van een level. */
 /* Het laadscherm neemt de achtergrond van de pagina zelf (--grond), dus in
    donkere modus is het donker. Tekst in het sierlettertype, en wat groter:
@@ -3415,6 +3418,7 @@ button.pd-regel:hover{border-color:var(--goud)}
 }
 /* De ingang naar het boek staat naast de twee tabbladen van de uitleg. */
 .help-kies-rij{flex:0 0 auto;display:flex;align-items:center;gap:8px;margin:0 42px 12px 0}
+.help-kies-rij .keuze-boek{display:none}
 .keuze-boek{flex:0 0 auto;display:flex;align-items:center;gap:6px;height:38px;padding:0 12px;border-radius:999px;
   border:1px solid var(--lijn);background:var(--kaart-2);color:var(--inkt-2);font:800 12px var(--font-ui);cursor:pointer}
 .keuze-boek:hover{border-color:var(--goud);color:var(--inkt)}
@@ -3937,19 +3941,17 @@ body.in-game #cluesList .clue-card .kop,body.in-game #cluesList .clue-row.victim
    papier van in plaats van een vlak. */
 body.in-game #cluesList .clue-card .lijf,body.in-game #cluesList .clue-row.victim .body{
   position:relative;z-index:auto;display:flex;flex-direction:column;align-items:center;gap:4px;
-  width:100%;min-width:0;margin-top:-42px;padding:34px 10px 12px;text-align:center;
+  width:100%;min-width:0;margin-top:-34px;padding:38px 10px 12px;text-align:center;
   background:color-mix(in srgb,var(--pc,var(--lijn)) 40%,var(--kaart));
   border:1px solid color-mix(in srgb,var(--pc,var(--lijn)) 62%,var(--lijn));border-radius:12px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 14px 14px -14px rgba(42,33,24,.22),0 10px 18px -12px rgba(42,33,24,.45);
-  transition:background .18s,border-color .18s,box-shadow .18s}
+  box-shadow:none;
+  transition:background .18s,border-color .18s,color .18s}
 body.in-game #cluesList .clue-row.victim .who{display:contents}
-/* Laag 3: het naamplaatje, over de onderrand van het portret, met een
-   dubbele rand zoals een bordje. */
+/* De naam: gewoon in het gekleurde vel, onder het portret. */
 body.in-game #cluesList .clue-card .lijf .name,body.in-game #cluesList .clue-row.victim .who b{
-  position:absolute;left:50%;top:-15px;transform:translateX(-50%);z-index:3;max-width:94%;
-  padding:4px 13px;border-radius:8px;background:var(--kaart);border:1.5px solid var(--inkt-rand);
-  box-shadow:inset 0 0 0 3px var(--kaart),inset 0 0 0 4px color-mix(in srgb,var(--pc,var(--lijn)) 45%,var(--lijn)),0 3px 6px rgba(42,33,24,.22);
-  font:600 16px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em;
+  position:static;transform:none;z-index:auto;max-width:100%;margin:0 0 1px;
+  padding:0;border-radius:0;background:none;border:0;box-shadow:none;
+  font:600 17px/1.15 var(--font-display);color:var(--inkt);letter-spacing:-.01em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* De stand zegt de vorm al; alleen slachtoffer en getuige krijgen een woord,
    als klein etiket boven de tekst. */
@@ -3986,75 +3988,104 @@ body.in-game #cluesList .clue-card .memo-merk,body.in-game #cluesList .clue-card
 body.in-game #cluesList .clue-card.geselecteerd,body.in-game #cluesList .clue-row.victim.geselecteerd{transform:translateY(-3px)}
 body.in-game #cluesList .clue-card.geselecteerd .lijf,body.in-game #cluesList .clue-row.victim.geselecteerd .body,
 html[data-thema="licht"] body.in-game #cluesList .clue-card.geselecteerd .lijf{
-  background:color-mix(in srgb,var(--pc,var(--goud)) 60%,var(--kaart));
-  border-color:color-mix(in srgb,var(--pc,var(--goud)) 75%,var(--inkt));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 0 0 2px color-mix(in srgb,var(--pc,var(--goud)) 45%,transparent),0 14px 22px -12px rgba(42,33,24,.5)}
-body.in-game #cluesList .clue-card.geselecteerd .lijf .name,body.in-game #cluesList .clue-row.victim.geselecteerd .who b{
-  border-color:color-mix(in srgb,var(--pc,var(--goud)) 75%,var(--inkt));
-  box-shadow:inset 0 0 0 3px var(--kaart),inset 0 0 0 4px color-mix(in srgb,var(--pc,var(--goud)) 75%,var(--inkt)),0 3px 6px rgba(42,33,24,.22)}
+  background:color-mix(in srgb,var(--pc,var(--goud)) 74%,#2A2118);
+  border-color:color-mix(in srgb,var(--pc,var(--goud)) 55%,#2A2118);
+  box-shadow:none}
 body.in-game #cluesList .clue-card.geselecteerd .name,body.in-game #cluesList .clue-card.geselecteerd .txt,
 body.in-game #cluesList .clue-card.geselecteerd .txt b,body.in-game #cluesList .clue-card.geselecteerd .txt span,
 body.in-game #cluesList .clue-card.geselecteerd .txt .regel,body.in-game #cluesList .clue-card.geselecteerd small,
 body.in-game #cluesList .clue-row.victim.geselecteerd .who b,body.in-game #cluesList .clue-row.victim.geselecteerd .txt,
-body.in-game #cluesList .clue-row.victim.geselecteerd .txt b{color:var(--inkt)}
+body.in-game #cluesList .clue-row.victim.geselecteerd .txt b{color:#FBF6EA}
+body.in-game #cluesList .clue-card.geselecteerd .txt b,body.in-game #cluesList .clue-row.victim.geselecteerd .txt b{
+  background:linear-gradient(180deg,rgba(0,0,0,0) 64%,rgba(255,255,255,.22) 64%)}
+body.in-game #cluesList .clue-card.geselecteerd .txt.meer .regel+.regel{border-top-color:rgba(255,255,255,.3)}
+body.in-game #cluesList .clue-card.geselecteerd .lijf .tag,body.in-game #cluesList .clue-row.victim.geselecteerd .who .badge{
+  background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);color:#FBF6EA}
 /* Bordregels: een lint over de volle breedte met hetzelfde plaatje, in inkt. */
 body.in-game #cluesList .clue-card.board{grid-column:1/-1;order:0;position:relative;align-items:flex-start;text-align:left;
-  margin:8px 0 2px;padding:16px 14px 11px;cursor:pointer;
+  margin:0 0 2px;padding:10px 14px 10px;cursor:pointer;
   background:color-mix(in srgb,var(--inkt-2) 18%,var(--kaart));
   border:1px solid color-mix(in srgb,var(--inkt-2) 45%,var(--lijn));border-radius:12px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 10px 18px -12px rgba(42,33,24,.4)}
+  box-shadow:none}
 body.in-game #cluesList .clue-card.board .kop{display:none}
 body.in-game #cluesList .clue-card.board .lijf{display:contents}
-body.in-game #cluesList .clue-card.board .name{position:absolute;left:12px;top:-12px;transform:none;z-index:3;
-  display:inline-flex;align-items:center;gap:6px;max-width:none;padding:3px 11px;border-radius:8px;
-  background:var(--kaart);border:1.5px solid var(--inkt-rand);
-  box-shadow:inset 0 0 0 3px var(--kaart),inset 0 0 0 4px color-mix(in srgb,var(--inkt-2) 50%,var(--lijn)),0 3px 6px rgba(42,33,24,.22);
-  font:600 13.5px/1.15 var(--font-display);color:var(--inkt);letter-spacing:0;overflow:visible;white-space:nowrap}
+body.in-game #cluesList .clue-card.board .name{display:none}
 body.in-game #cluesList .clue-card.board .name .ic{display:none}
-body.in-game #cluesList .clue-card.board .txt{margin-top:2px;font-size:13.5px;text-align:left;padding:0;width:100%}
+body.in-game #cluesList .clue-card.board .txt{margin-top:0;font-size:13.5px;text-align:left;padding:0;width:100%}
 body.in-game #cluesList .clue-card.board .txt.meer .regel{padding-left:13px}
 body.in-game #cluesList .clue-card.board .txt.meer .regel+.regel{margin-top:4px;padding-top:0;border-top:0}
 body.in-game #cluesList .clue-card.board .txt.meer .regel::before{display:block;content:"";position:absolute;left:0;top:.66em;width:7px;height:2px;border-radius:2px;background:var(--inkt-2)}
 body.in-game #cluesList .clue-card.board .kaart-knoppen{position:absolute;right:8px;top:6px;margin:0}
 body.in-game #cluesList .clue-card.board .tick{display:none}
 body.in-game #cluesList .clue-card.board.geselecteerd{transform:translateY(-2px);
-  background:color-mix(in srgb,var(--inkt-2) 30%,var(--kaart));border-color:var(--inkt-2)}
+  background:color-mix(in srgb,var(--inkt-2) 80%,#2A2118);border-color:var(--inkt-2)}
+body.in-game #cluesList .clue-card.board.geselecteerd .txt,body.in-game #cluesList .clue-card.board.geselecteerd .txt b,
+body.in-game #cluesList .clue-card.board.geselecteerd .txt span{color:#FBF6EA}
+body.in-game #cluesList .clue-card.board.geselecteerd .txt.meer .regel::before{background:#FBF6EA}
 /* Het slachtoffer: hetzelfde affiche in zijn eigen rood, met zijn regel. */
 body.in-game #cluesList .clue-row.victim{--pc:#EF6F3C;order:49;grid-column:auto}
 /* Telefoon: het lint houdt rechts ruimte voor de twee knopjes, en een lange
    naam mag iets buiten zijn affiche steken. */
 body.in-game:not(.desktop) #cluesList .clue-card.board{padding-right:78px}
-body.in-game:not(.desktop) #cluesList .clue-card .lijf .name,body.in-game:not(.desktop) #cluesList .clue-row.victim .who b{font-size:14px;max-width:112%;padding:3px 10px}
+body.in-game:not(.desktop) #cluesList .clue-card .lijf .name,body.in-game:not(.desktop) #cluesList .clue-row.victim .who b{font-size:15px}
 body.in-game #cluesList .clue-row.victim .body{align-items:center}
-/* Geplaatst: portret en plaatje, vier naast elkaar, een toon terug. */
-body.in-game #cluesList .list-sep{grid-column:1/-1;order:50;margin:4px 2px -8px;font:700 12px var(--font-ui);color:var(--dof);letter-spacing:.02em;text-transform:none}
+/* Geplaatst: dezelfde affiches, met hun regel, in een eigen vak onder de
+   kop 'Geplaatst'. Dat vak zegt al dat ze staan; een vinkje is dubbel. */
+body.in-game #cluesList .list-sep{grid-column:1/-1;order:50;margin:2px 2px -12px;font:700 12px var(--font-ui);color:var(--dof);letter-spacing:.02em;text-transform:none}
 body.desktop.in-game #cluesList .list-sep{display:block}
-body.in-game #cluesList .geplaatst-rij{grid-column:1/-1;order:51;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 8px;padding-top:2px}
-body.in-game #cluesList .geplaatst-rij .clue-card{opacity:.82}
-body.in-game #cluesList .geplaatst-rij .clue-card .kop{filter:drop-shadow(0 3px 5px rgba(42,33,24,.24))}
-body.in-game #cluesList .geplaatst-rij .clue-card .lijf{margin-top:-18px;padding:16px 4px 5px;
-  background:color-mix(in srgb,var(--pc,var(--lijn)) 18%,var(--kaart-2));border-color:color-mix(in srgb,var(--pc,var(--lijn)) 35%,var(--lijn));box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 12px -10px rgba(42,33,24,.4)}
-body.in-game #cluesList .geplaatst-rij .clue-card .lijf .name{top:-12px;font-size:13px;padding:2px 9px}
-body.in-game #cluesList .geplaatst-rij .clue-card .txt,body.in-game #cluesList .geplaatst-rij .clue-card .kaart-merken,body.in-game #cluesList .geplaatst-rij .clue-card .kaart-knoppen{display:none}
-body.in-game #cluesList .geplaatst-rij .clue-card .tick{bottom:auto;top:-8px;right:-2px;width:16px;height:16px}
+/* display:contents: de geplaatste affiches vullen gewoon het raster verder,
+   na de kop 'Geplaatst', in plaats van een eigen rij te beginnen. */
+body.in-game #cluesList .geplaatst-rij{display:contents}
+body.in-game #cluesList .geplaatst-rij .clue-card{order:51;opacity:.88}
+body.in-game #cluesList .geplaatst-rij .clue-card .lijf{background:color-mix(in srgb,var(--pc,var(--lijn)) 24%,var(--kaart-2))}
+body.in-game #cluesList .clue-card .tick,body.in-game #cluesList .clue-row.victim .tick{display:none}
 /* Dichter: vier affiches naast elkaar, alles een maat kleiner. */
 body.desktop.in-game.dossier-dicht #cluesList{gap:20px 8px;padding:12px 10px 10px}
 body.desktop.in-game.dossier-dicht #cluesList .clue-card .kop,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .av{transform:scale(.86);transform-origin:50% 100%;margin-top:-22px}
-body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .body{margin-top:-40px;padding:30px 8px 10px}
-body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf .name,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .who b{font-size:14px;top:-13px;padding:2px 9px}
+body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .body{margin-top:-32px;padding:34px 8px 10px}
+body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf .name,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .who b{font-size:15px}
+
 body.desktop.in-game.dossier-dicht #cluesList .clue-card .txt,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .txt{font-size:12.5px;line-height:1.36}
 body.desktop.in-game.dossier-dicht #cluesList .clue-card.board .txt{font-size:12px}
-body.desktop.in-game.dossier-dicht #cluesList .clue-card.board{padding:14px 12px 9px}
+body.desktop.in-game.dossier-dicht #cluesList .clue-card.board{padding:8px 12px 8px}
 body.desktop.in-game.dossier-dicht #cluesList .geplaatst-rij{grid-template-columns:repeat(5,minmax(0,1fr))}
 body.desktop.in-game.dossier-dicht #cluesList .geplaatst-rij .clue-card .kop{transform:none;margin-top:0}
 /* Zeer dicht: grote bezetting op een laag scherm. */
 body.desktop.in-game.dossier-zeer-dicht #cluesList{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 6px;padding:10px 8px 8px}
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .kop,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .av{transform:scale(.74);margin-top:-32px}
-body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .body{margin-top:-34px;padding:24px 6px 8px}
-body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf .name,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .who b{font-size:12px;padding:2px 7px;top:-11px;max-width:112%}
+body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .body{margin-top:-28px;padding:30px 6px 8px}
+body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf .name,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .who b{font-size:13px}
+
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .txt,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .txt{font-size:11.5px;line-height:1.3}
-body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card.board{padding:12px 10px 8px;margin-top:6px}
+body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card.board{padding:7px 10px 7px}
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card.board .txt{font-size:11.5px}
+
+/* ── De uitslag als papieren vel ──
+   Een vel met een dunne inktrand en een sluitknop rechtsboven (terug naar
+   het bord); de knoppen onderin in dezelfde stijl als de rest. */
+body.in-end #screen-end{padding:18px;justify-content:center;align-items:center;background:none}
+body.in-end #screen-end .uitslag{position:relative;flex:0 1 auto;max-height:100%;background:var(--kaart);border:1.5px solid var(--inkt-rand);
+  border-radius:16px;padding:26px 24px 8px;box-shadow:0 12px 34px rgba(38,36,25,.16)}
+body.in-end #screen-end .uitslag-sluit{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:999px;
+  border:1.5px solid var(--inkt-rand);background:var(--kaart);color:var(--inkt-2);display:flex;align-items:center;justify-content:center;
+  padding:0;cursor:pointer;z-index:2}
+body.in-end #screen-end .uitslag-sluit:hover{color:var(--inkt);border-color:var(--inkt)}
+body.in-end #screen-end .uitslag-sluit svg{width:16px;height:16px}
+body.in-end #screen-end .uitslag-voet{max-width:520px;margin:0 auto;border-top:0;background:none;padding:8px 22px calc(22px + env(safe-area-inset-bottom));
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+body.in-end #screen-end .uitslag-voet .btn{flex:1 1 180px;height:48px;font-size:16px}
+body.in-end #screen-end .uitslag-voet #btnEndAccuse{flex:1 1 100%}
+body.desktop.in-end #screen-end .uitslag{max-width:1040px;padding:34px 40px 18px}
+body.desktop.in-end #screen-end .uitslag-voet{max-width:none;width:100%;margin:8px 0 0;padding:14px 0 0;grid-column:1;justify-content:flex-start}
+body.desktop.in-end #screen-end .uitslag-voet .btn{flex:0 1 auto;min-width:170px}
+body.desktop.in-end #screen-end .uitslag-voet #btnEndAccuse{flex:0 1 auto}
+/* De knoppen van de uitslag in de stijl van de rest: inkt, en papier voor
+   de tweede weg. Achteraan, zodat de oude gouden regels niet meer winnen. */
+body.in-end #screen-end .uitslag-voet .btn{background:var(--inkt);color:var(--grond);border:1.5px solid var(--inkt);box-shadow:none;
+  font:600 16px var(--font-display);border-radius:999px}
+body.in-end #screen-end .uitslag-voet .btn:hover{background:var(--inkt-2);border-color:var(--inkt-2)}
+body.in-end #screen-end .uitslag-voet .btn.ghost{background:var(--kaart);color:var(--inkt);border-color:var(--inkt-rand)}
+body.in-end #screen-end .uitslag-voet .btn.ghost:hover{background:var(--kaart-2);border-color:var(--inkt)}
 </style>
 </head>
 <body class="hide-objsurf laden vloer-v3">
@@ -4180,6 +4211,7 @@ body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card.board .txt{font-si
   <!-- ============ EINDE ============ -->
   <section id="screen-end" class="screen">
     <div class="uitslag">
+      <button class="uitslag-sluit" id="btnEndSluit" type="button" aria-label="Terug naar het bord" title="Terug naar het bord"><span data-icon="cross"></span></button>
       <div class="uitslag-beeld" id="endBeeld"></div>
       <h2 id="endTitle">—</h2>
       <p class="uitslag-sub" id="endSub"></p>
@@ -4193,7 +4225,7 @@ body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card.board .txt{font-si
          plek waar je merkt dat het nog moet. Klopt alles, dan mag je door naar
          het menu; anders is er verder maar een weg: terug naar het bord om
          verder te puzzelen. -->
-    <div class="uitslag-voet"><button class="btn ghost" id="btnEndAccuse">Wijs de dader aan</button><button class="btn ghost" id="btnEndMenu" hidden>Naar het menu</button><button class="btn" id="btnEndBack">Terug naar het bord</button></div>
+    <div class="uitslag-voet"><button class="btn" id="btnEndBack">Terug naar het bord</button><button class="btn" id="btnEndMenu" hidden>Naar het menu</button><button class="btn ghost" id="btnEndAccuse">Andere dader aanwijzen</button></div>
   </section>
 </div>
 
@@ -7472,7 +7504,13 @@ function tekenKopStand(){
      controleren valt. */
   const knop=$("#btnCheck");
   const alles=placed.size===M.people.length && M.people.length>0;
-  if(knop) knop.classList.toggle("klaar",alles);
+  if(knop){
+    knop.classList.toggle("klaar",alles);
+    /* Pas als iedereen staat valt er iets te controleren; eerder zou de knop
+       een manier zijn om tussendoor te peilen wie al goed staat. */
+    knop.disabled=!alles;
+    knop.title=alles?"Controleer je oplossing":"Zet eerst iedereen op het bord";
+  }
   /* Staat de laatste pion net, dan hoeft niemand meer op Controleer te
      drukken: de vraag wie de dader is komt vanzelf. Alleen na een echte zet
      (justPlaced), niet bij hervatten of stap-terug, en de vraag laat zich
@@ -8564,7 +8602,7 @@ function personCard(clues,p,done){
      het introscherm, zodat je een persoon overal op dezelfde manier herkent. */
   const kop=document.createElement("div");
   kop.className="kop";
-  kop.appendChild(personPortrait(p,{size:done?50:(isDesktop()?92:78)}));
+  kop.appendChild(personPortrait(p,{size:isDesktop()?92:78}));
   card.appendChild(kop);
 
   /* Naam, rol en regel staan in één tekstkolom naast het portret; niets
@@ -9127,7 +9165,7 @@ function stopTimer(){ if(timerId){clearInterval(timerId);timerId=null;} }
 function updateActionState(){
   /* Controleer mag altijd: wie te vroeg drukt ziet gewoon wat er nog fout
      of leeg staat. */
-  $("#btnCheck").disabled=false;
+  tekenKopStand();
   if(tab==="clues"||isDesktop()) renderClues();
 }
 function allCorrectlyPlaced(){
@@ -9140,8 +9178,9 @@ function allCorrectlyPlaced(){
    de uitslag; pas als alles klopt mag je de dader aanwijzen, en dat resultaat
    verschijnt dan meteen op hetzelfde eindscherm. */
 function onCheckClick(){
-  if(allCorrectlyPlaced()) openAccuse();
-  else checkSolution();
+  if(!M || placed.size!==M.people.length) return;
+  /* Controleren is: de dader aanwijzen. De uitslag komt daarna, in één keer. */
+  openAccuse();
 }
 
 /* Wat je hebt uitgespeeld onthoudt de browser van deze telefoon; het menu
@@ -9228,12 +9267,14 @@ function checkSolution(){
     if(ab){
       ab.hidden = perfect && accusedResult===true;
       ab.textContent = accused ? "Andere dader aanwijzen" : "Wijs de dader aan";
+      /* Is de zaak rond, dan is Terug naar het bord geen hoofdweg meer. */
+      const tb=$("#btnEndBack"); if(tb) tb.classList.toggle("ghost",perfect);
     } }
   const card=document.querySelector("#screen-end .uitslag");
   if(card){ card.classList.toggle("win",perfect); card.classList.toggle("lose",!perfect); }
   haptic(perfect?[16,60,26,60,40]:[46,70,46]);
   $("#endTitle").textContent=perfect?"Goed gedaan!":"Niet helemaal…";
-  $("#endSub").textContent=perfect?"Alle personen staan op de juiste plek.":"Sommige personen staan nog verkeerd.";
+  $("#endSub").textContent=perfect?"Alle personen staan op de juiste plek.":"Nog niet iedereen staat op de juiste plek. Kijk nog eens goed naar de regels.";
   $("#endScore").textContent=correct+"/"+total;
   /* Een ring die zich vult tot het aandeel dat klopt; het vinkje of kruis erin. */
   const R=44, OMTREK=2*Math.PI*R, deel=total?correct/total:0;
@@ -9249,7 +9290,10 @@ function checkSolution(){
   $("#endTime").textContent=fmtTime(elapsed);
 
   let html="";
-  details.forEach((d,i)=>{
+  /* Klopt het nog niet, dan blijft wie er goed of fout staat verborgen:
+     anders is de uitslag een manier om per persoon te peilen. Het aantal
+     en het oordeel over de dader zeggen genoeg. */
+  (perfect?details:[]).forEach((d,i)=>{
     html+='<div class="uitslag-rij '+(d.ok?"goed":"fout")+'" style="animation-delay:'+(120+i*70)+'ms">'
       +'<span class="av">'+personPortrait(d.p,{size:72}).outerHTML+'</span>'
       +'<span class="wie"><b>'+esc(d.p.name)+'</b><small>'+esc(d.mine?tileLabel(d.mine):"niet geplaatst")+'</small></span>'
@@ -9402,7 +9446,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.196";
+const PLAYER_APP_VERSION="0.9.197";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -11252,6 +11296,7 @@ $("#btnAccuseConfirm").addEventListener("click",e=>{
    om verder te puzzelen (of om je oplossing nog eens te bekijken). Naar het
    menu ga je met de pijl in de kop. */
 $("#btnEndBack").addEventListener("click",terugNaarBord);
+$("#btnEndSluit").addEventListener("click",terugNaarBord);
 $("#btnEndMenu").addEventListener("click",toMenu);
 
 /* Een klik op de sluier sluit de kring -- behalve vlak na het openen: dat is
