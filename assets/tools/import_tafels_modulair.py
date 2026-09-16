@@ -33,6 +33,26 @@ def schrijf(pad, beeld):
             time.sleep(0.5)
     raise SystemExit("Kon niet schrijven: " + pad)
 
+# Het hout van de kit is oranjer en feller dan dat van het bed (tint 30 tegen
+# 38 graden, verzadiging .79 tegen .48). De bladdelen en de poot worden bij het
+# inladen in HSV bijgekleurd, zodat tafel, bed en stoel hetzelfde hout lijken.
+TINT_GRADEN, VERZADIGING, HELDERHEID = 8.0, 0.66, 0.88
+
+def kleur_bij(im):
+    import colorsys
+    px = im.load(); w, h = im.size
+    for y in range(h):
+        for x in range(w):
+            r, g, b, a = px[x, y]
+            if a == 0:
+                continue
+            hh, ss, vv = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+            hh = (hh + TINT_GRADEN / 360) % 1.0
+            ss = min(1.0, ss * VERZADIGING); vv = min(1.0, vv * HELDERHEID)
+            r2, g2, b2 = colorsys.hsv_to_rgb(hh, ss, vv)
+            px[x, y] = (round(r2 * 255), round(g2 * 255), round(b2 * 255), a)
+    return im
+
 def main():
     if not os.path.isdir(BRON):
         raise SystemExit("Bron niet gevonden: " + BRON)
@@ -44,11 +64,11 @@ def main():
         im = Image.open(os.path.join(BRON, "modules", naam)).convert("RGBA")
         if im.size != (256, 256):
             raise SystemExit("Onverwachte maat %s: %s" % (naam, im.size))
-        schrijf(os.path.join(DOEL, naam[:-4] + ".webp"), im); n += 1
+        schrijf(os.path.join(DOEL, naam[:-4] + ".webp"), kleur_bij(im)); n += 1
     poot = Image.open(os.path.join(BRON, "supports", "leg-day.png")).convert("RGBA")
     if poot.size != (48, 72):
         raise SystemExit("Onverwachte pootmaat: %s" % (poot.size,))
-    schrijf(os.path.join(DOEL, "leg-day.webp"), poot); n += 1
+    schrijf(os.path.join(DOEL, "leg-day.webp"), kleur_bij(poot)); n += 1
     print("geschreven:", n, "bestanden in", DOEL)
     # De oude vaste tafels vervallen.
     weg = 0

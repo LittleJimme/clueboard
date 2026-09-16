@@ -4114,9 +4114,9 @@ body.desktop.in-game #cluesList .clue-card.done:hover,body.desktop.in-game #clue
    linksboven; geen kader, geen schaal, precies de vakjes. */
 .objart.tafel-modulair{position:absolute!important;inset:auto!important;left:0!important;top:0!important;
   transform:none!important;margin:0;padding:0;pointer-events:none;z-index:3}
-/* Het hout van de kit is oranjer en feller dan dat van het bed (tint 30 vs
-   38, verzadiging .79 vs .48); de tafel schuift ernaartoe. */
-.objart.tafel-modulair canvas{display:block;width:100%;height:100%;filter:hue-rotate(8deg) saturate(.64) brightness(.9)}
+/* De houtkleur is bij het inladen al op het bed afgestemd
+   (import_tafels_modulair.py), dus hier geen filter meer. */
+.objart.tafel-modulair canvas{display:block;width:100%;height:100%}
 /* 's Nachts is er (nog) geen eigen tekening: het daglicht wordt gedempt. */
 html:not([data-thema="licht"]) .objart.tafel-modulair{filter:brightness(.6) saturate(.85)}
 /* Bordregels: een licht goud vlak zodat ze eruit springen; gekozen wordt
@@ -9608,7 +9608,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.211";
+const PLAYER_APP_VERSION="0.9.212";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
