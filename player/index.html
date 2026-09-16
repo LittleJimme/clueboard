@@ -4113,14 +4113,7 @@ body.desktop.in-game #cluesList .clue-card.done:hover,body.desktop.in-game #clue
 /* Modulaire tafel: het canvas ligt over de hele tafel, vanaf het vakje
    linksboven; geen kader, geen schaal, precies de vakjes. */
 .objart.tafel-modulair{position:absolute!important;inset:auto!important;left:0!important;top:0!important;
-  transform:scale(var(--tafel-schaal,1))!important;transform-origin:50% 50%;margin:0;padding:0;pointer-events:none;z-index:3}
-/* Tijdelijke schuif om de maat van de tafels te kiezen. */
-#tafelSchaler{position:fixed;left:14px;bottom:14px;z-index:95;display:none;align-items:center;gap:8px;padding:8px 12px;
-  background:var(--kaart);border:1.5px solid var(--inkt-rand);border-radius:999px;box-shadow:0 4px 14px rgba(42,33,24,.18);
-  font:700 12px var(--font-ui);color:var(--inkt-2)}
-body.in-game #tafelSchaler{display:flex}
-#tafelSchaler input{width:140px;accent-color:var(--inkt)}
-#tafelSchaler b{min-width:34px;text-align:right;font-variant-numeric:tabular-nums;color:var(--inkt)}
+  transform:none!important;margin:0;padding:0;pointer-events:none;z-index:3}
 .objart.tafel-modulair canvas{display:block;width:100%;height:100%}
 /* 's Nachts is er (nog) geen eigen tekening: het daglicht wordt gedempt. */
 html:not([data-thema="licht"]) .objart.tafel-modulair{filter:brightness(.6) saturate(.85)}
@@ -4209,8 +4202,6 @@ html:not([data-thema="licht"]) body.in-game #cluesList .clue-card.board.geselect
     <!-- De hint zweeft boven de legenda, los van de balk: zo verschuift er
          niets als hij verschijnt of verdwijnt. -->
     <button class="hint-knop" id="btnHint" title="Hint" aria-label="Hint"><span class="ic" data-icon="sparkle"></span></button>
-    <!-- Tijdelijk: de maat van de modulaire tafels kiezen. -->
-    <div id="tafelSchaler"><span>Tafels</span><input type="range" min="0.5" max="1.2" step="0.02" value="1" id="tafelSchaalIn"><b id="tafelSchaalUit">1.00</b></div>
 
     <!-- Bord -->
     <div class="pane active" id="pane-board">
@@ -6562,6 +6553,12 @@ const MEERVAKS_SCHADUW = ["bed-1x2","boat-1x2","catapult-1x2","watermill-1x2",
    per tafel getekend op 256 px per vakje en met CSS op het bord geschaald.
    ------------------------------------------------------------ */
 const TAFEL_VAK=256, TAFEL_RAND=24, TAFEL_POOT={w:48,h:72};
+/* Het blad wordt kleiner dan zijn vakjes getekend (de gebruiker koos 0,7):
+   iets breder dan hoog, want de vakjes hebben opzij meer lucht dan boven en
+   onder. De poten worden niet mee verkleind: ze staan onder de verkleinde
+   bladrand, tot vlak boven de onderrand van het vakje, en blijven binnen het
+   blad. Zo zie je ze ook op een klein vakje. */
+const TAFEL_KX=0.74, TAFEL_KY=0.70, TAFEL_POOTSCHAAL=0.82;
 const TAFEL_BEELDEN=new Map();
 function tafelBeeld(naam){
   if(!TAFEL_BEELDEN.has(naam)){
@@ -6591,24 +6588,30 @@ function tafelPlan(cells){
   /* Poten onder elke zichtbare onderrand: aan de uiteinden van elke
      aaneengesloten strook, en bij lange stroken tussendoor. Binnen het blad:
      de buitenste poot staat een pootbreedte binnen de bladrand. */
+  /* Het blad in canvaspixels: geschaald rond het midden van de hele tafel. */
+  const W=cols*TAFEL_VAK, H=rows*TAFEL_VAK;
+  const ox=(1-TAFEL_KX)/2*W, oy=(1-TAFEL_KY)/2*H;
+  const pw=Math.round(TAFEL_POOT.w*TAFEL_POOTSCHAAL), ph=Math.round(TAFEL_POOT.h*TAFEL_POOTSCHAAL);
   const poten=[];
   for(let rij=0;rij<rows;rij++){
     const xs=cells.filter(([x,y])=>y===rij && !has(x,y+1)).map(c=>c[0]).sort((a,b)=>a-b);
     for(let i=0;i<xs.length;){
       const start=xs[i]; let end=start;
       while(i+1<xs.length && xs[i+1]===end+1){ i++; end++; } i++;
-      const a=start*TAFEL_VAK+TAFEL_RAND+10, b=(end+1)*TAFEL_VAK-TAFEL_RAND-10-TAFEL_POOT.w;
-      const stukken=Math.max(1,Math.ceil((b-a)/(2.2*TAFEL_VAK)));
+      /* De zichtbare onderrand van deze strook, in canvaspixels. */
+      const a=ox+TAFEL_KX*(start*TAFEL_VAK+TAFEL_RAND+8), b=ox+TAFEL_KX*((end+1)*TAFEL_VAK-TAFEL_RAND-8)-pw;
+      const bladOnder=oy+TAFEL_KY*((rij+1)*TAFEL_VAK-TAFEL_RAND);
+      const stukken=Math.max(1,Math.ceil((b-a)/(1.6*TAFEL_VAK)));
       for(let j=0;j<=stukken;j++){
         const x=Math.round(a+(b-a)*j/stukken);
-        /* De voet van de poot op de onderrand van het vakje: onder het
-           blad uit, maar niet buiten het vakje. */
-        const y=(rij+1)*TAFEL_VAK-TAFEL_POOT.h;
-        if(!poten.some(q=>Math.abs(q.x-x)<TAFEL_POOT.w && q.y===y)) poten.push({x,y});
+        /* De kop van de poot zit onder het blad, de voet blijft boven de
+           onderrand van het vakje. */
+        const y=Math.min(Math.round(bladOnder-ph*0.42),(rij+1)*TAFEL_VAK-ph-6);
+        if(!poten.some(q=>Math.abs(q.x-x)<pw && q.y===y)) poten.push({x,y,w:pw,h:ph});
       }
     }
   }
-  return {cols,rows,delen,poten};
+  return {cols,rows,delen,poten,ox,oy,W,H};
 }
 async function tekenTafel(canvas,plan){
   const namen=[...new Set(plan.delen.map(d=>d.naam))].concat(["leg-day"]);
@@ -6622,8 +6625,9 @@ async function tekenTafel(canvas,plan){
   const lijf=document.createElement("canvas"); lijf.width=canvas.width; lijf.height=canvas.height;
   const l=lijf.getContext("2d");
   const poot=beelden.get("leg-day");
-  if(poot) plan.poten.forEach(q=>l.drawImage(poot,q.x,q.y,TAFEL_POOT.w,TAFEL_POOT.h));
-  plan.delen.forEach(d=>{ const im=beelden.get(d.naam); if(im) l.drawImage(im,d.x,d.y,TAFEL_VAK,TAFEL_VAK); });
+  if(poot) plan.poten.forEach(q=>l.drawImage(poot,q.x,q.y,q.w,q.h));
+  plan.delen.forEach(d=>{ const im=beelden.get(d.naam); if(im)
+    l.drawImage(im,plan.ox+d.x*TAFEL_KX,plan.oy+d.y*TAFEL_KY,TAFEL_VAK*TAFEL_KX,TAFEL_VAK*TAFEL_KY); });
   ctx.save(); ctx.shadowColor="rgba(53,32,13,.26)"; ctx.shadowBlur=10; ctx.shadowOffsetY=6;
   ctx.drawImage(lijf,0,0); ctx.restore();
 }
@@ -9601,7 +9605,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.208";
+const PLAYER_APP_VERSION="0.9.209";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
@@ -11433,13 +11437,6 @@ $("#btnRestart").addEventListener("click",()=>{
 });
 
 $("#btnCheck").addEventListener("click",onCheckClick);
-/* Tijdelijke tafelschuif: de schaal staat als --tafel-schaal op de pagina en
-   blijft op dit apparaat bewaard. */
-{ const inp=$("#tafelSchaalIn"), uit=$("#tafelSchaalUit");
-  const zet=w=>{ document.documentElement.style.setProperty("--tafel-schaal",String(w)); if(uit) uit.textContent=Number(w).toFixed(2); };
-  let w=1; try{ w=parseFloat(localStorage.getItem("clueboard:tafelSchaal")||"1")||1; }catch(e){}
-  if(inp){ inp.value=String(w); inp.addEventListener("input",()=>{ zet(inp.value); try{ localStorage.setItem("clueboard:tafelSchaal",inp.value); }catch(e){} }); }
-  zet(w); }
 $("#btnEndAccuse").addEventListener("click",openAccuse);
 $("#btnAccuseConfirm").addEventListener("click",e=>{
   const pid=e.currentTarget.dataset.person; if(!pid) return;
