@@ -1930,13 +1930,14 @@ body .pawn.personage,body[data-skin="medieval"] .pawn.personage{background:none;
 .pawn.personage .portret-podium{--s:calc(var(--cell) / 376);position:absolute;left:50%;bottom:-12.1%;transform:translateX(-50%)}
 /* De twee fiches onderaan: het object links, de letter rechts. Een dunne
    rand in een donkere toon van de eigen kleur, geen zwarte streep. */
-.pawn.personage .obj-merk{left:2%;bottom:-4%;width:calc(var(--cell)*.48);height:calc(var(--cell)*.48);
-  border:max(1px,calc(var(--cell)*.018)) solid color-mix(in srgb,var(--pc,#2A2118) 62%,#2A2118);box-shadow:0 1px 3px rgba(21,26,51,.28)}
-.pawn.personage .init{position:absolute;right:2%;bottom:-4%;z-index:3;
-  width:calc(var(--cell)*.48);height:calc(var(--cell)*.48);border-radius:999px;
+.pawn.personage .obj-merk{left:0;bottom:-5%;width:calc(var(--cell)*.56);height:calc(var(--cell)*.56);
+  background:var(--pc);border:max(1px,calc(var(--cell)*.018)) solid color-mix(in srgb,var(--pc,#2A2118) 62%,#2A2118);box-shadow:0 1px 3px rgba(21,26,51,.28)}
+.pawn.personage .obj-merk img{left:10%;top:10%;width:80%;height:80%}
+.pawn.personage .init{position:absolute;right:0;bottom:-5%;z-index:3;
+  width:calc(var(--cell)*.52);height:calc(var(--cell)*.52);border-radius:999px;
   display:flex;align-items:center;justify-content:center;
   background:var(--pc);border:max(1px,calc(var(--cell)*.018)) solid color-mix(in srgb,var(--pc,#2A2118) 62%,#2A2118);
-  font:800 calc(var(--cell)*.25)/1 var(--font-ui);box-shadow:0 1px 3px rgba(21,26,51,.28)}
+  font:600 calc(var(--cell)*.3)/1 var(--font-display);box-shadow:0 1px 3px rgba(21,26,51,.28)}
 /* Het laadschermpje bij het openen van een level. */
 /* Het laadscherm neemt de achtergrond van de pagina zelf (--grond), dus in
    donkere modus is het donker. Tekst in het sierlettertype, en wat groter:
@@ -4003,28 +4004,34 @@ body.in-game #cluesList .clue-card.geselecteerd .txt.meer .regel+.regel{border-t
 body.in-game #cluesList .clue-card.geselecteerd .lijf .tag,body.in-game #cluesList .clue-row.victim.geselecteerd .who .badge{
   background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);color:#FBF6EA}
 /* Bordregels: een lint over de volle breedte met hetzelfde plaatje, in inkt. */
-body.in-game #cluesList .clue-card.board{grid-column:1/-1;order:0;position:relative;align-items:flex-start;text-align:left;
-  margin:0 0 2px;padding:10px 14px 10px;cursor:pointer;
-  background:var(--kaart-2);
-  border:1px solid var(--lijn);border-radius:12px;
-  box-shadow:none}
-body.in-game #cluesList .clue-card.board .kop{display:none}
-body.in-game #cluesList .clue-card.board .lijf{display:contents}
-body.in-game #cluesList .clue-card.board .name{display:none}
-body.in-game #cluesList .clue-card.board .name .ic{display:none}
-body.in-game #cluesList .clue-card.board .txt{margin-top:0;font-size:13.5px;text-align:left;padding:0;width:100%}
+body.in-game #cluesList .clue-card.board{grid-column:1/-1;order:0;position:relative;flex-direction:row;align-items:flex-start;gap:12px;text-align:left;
+  margin:0 0 4px;padding:2px 6px 12px;cursor:pointer;
+  background:none;border:0;border-bottom:1px solid var(--lijn);border-radius:0;box-shadow:none}
+body.in-game #cluesList .clue-card.board .kop{display:flex;flex:0 0 auto;margin:0;filter:none}
+body.in-game #cluesList .clue-card.board .bord-schild{width:44px;height:44px;border-radius:999px;border:1.5px solid var(--inkt-rand);
+  background:var(--kaart);color:var(--inkt-2);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:none}
+body.in-game #cluesList .clue-card.board .bord-schild svg{width:22px;height:22px;display:block}
+/* Geen .lijf in deze kaart: naam en tekst staan naast de schijf. */
+body.in-game #cluesList .clue-card.board .name{display:block;position:static;flex:0 0 auto;margin:0;padding:6px 2px 0 0;
+  font:600 15px/1.15 var(--font-display);color:var(--inkt);background:none;border:0;box-shadow:none}
+body.in-game #cluesList .clue-card.board .txt{flex:1;min-width:0;margin:0;padding:5px 0 0;font-size:13.5px;text-align:left;width:auto}
 body.in-game #cluesList .clue-card.board .txt.meer .regel{padding-left:13px}
 body.in-game #cluesList .clue-card.board .txt.meer .regel+.regel{margin-top:4px;padding-top:0;border-top:0}
 body.in-game #cluesList .clue-card.board .txt.meer .regel::before{display:block;content:"";position:absolute;left:0;top:.66em;width:7px;height:2px;border-radius:2px;background:var(--inkt-2)}
-body.in-game #cluesList .clue-card.board .kaart-knoppen{position:absolute;right:8px;top:6px;margin:0}
+body.in-game #cluesList .clue-card.board .kaart-knoppen{position:static;flex-direction:column;margin:0;align-self:center}
 body.in-game #cluesList .clue-card.board .tick{display:none}
-body.in-game #cluesList .clue-card.board.geselecteerd{transform:translateY(-2px);
-  background:color-mix(in srgb,var(--inkt-2) 16%,var(--kaart));border-color:var(--inkt-2)}
+/* Gekozen: het bord kleurt in inkt, net als een persoon in zijn kleur. */
+body.in-game #cluesList .clue-card.board.geselecteerd{transform:none;background:color-mix(in srgb,var(--inkt-2) 82%,#2A2118);
+  border-radius:12px;border-bottom-color:transparent;padding:8px 10px 10px}
+body.in-game #cluesList .clue-card.board.geselecteerd .name,body.in-game #cluesList .clue-card.board.geselecteerd .txt,
+body.in-game #cluesList .clue-card.board.geselecteerd .txt b,body.in-game #cluesList .clue-card.board.geselecteerd .txt span{color:#FBF6EA}
+body.in-game #cluesList .clue-card.board.geselecteerd .txt.meer .regel::before{background:#FBF6EA}
+body.in-game #cluesList .clue-card.board.geselecteerd .bord-schild{background:var(--inkt);color:var(--grond);border-color:var(--inkt)}
 /* Het slachtoffer: hetzelfde affiche in zijn eigen rood, met zijn regel. */
 body.in-game #cluesList .clue-row.victim{--pc:#EF6F3C;order:49;grid-column:auto}
 /* Telefoon: het lint houdt rechts ruimte voor de twee knopjes, en een lange
    naam mag iets buiten zijn affiche steken. */
-body.in-game:not(.desktop) #cluesList .clue-card.board{padding-right:78px}
+body.in-game:not(.desktop) #cluesList .clue-card.board{padding-right:4px}
 body.in-game:not(.desktop) #cluesList .clue-card .lijf .name,body.in-game:not(.desktop) #cluesList .clue-row.victim .who b{font-size:15px}
 body.in-game #cluesList .clue-row.victim .body{align-items:center}
 /* Geplaatst: dezelfde affiches, met hun regel, in een eigen vak onder de
@@ -4045,7 +4052,7 @@ body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf .name,body.deskto
 
 body.desktop.in-game.dossier-dicht #cluesList .clue-card .txt,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .txt{font-size:12.5px;line-height:1.36}
 body.desktop.in-game.dossier-dicht #cluesList .clue-card.board .txt{font-size:12px}
-body.desktop.in-game.dossier-dicht #cluesList .clue-card.board{padding:8px 12px 8px}
+body.desktop.in-game.dossier-dicht #cluesList .clue-card.board{padding:0 4px 10px}
 body.desktop.in-game.dossier-dicht #cluesList .geplaatst-rij{grid-template-columns:repeat(5,minmax(0,1fr))}
 body.desktop.in-game.dossier-dicht #cluesList .geplaatst-rij .clue-card .kop{transform:none;margin-top:0}
 /* Zeer dicht: grote bezetting op een laag scherm. */
@@ -4055,7 +4062,8 @@ body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf,body.desktop
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .lijf .name,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .who b{font-size:13px}
 
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card .txt,body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-row.victim .txt{font-size:11.5px;line-height:1.3}
-body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card.board{padding:7px 10px 7px}
+body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card.board{padding:0 2px 8px}
+body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card.board .bord-schild{width:38px;height:38px}
 body.desktop.in-game.dossier-zeer-dicht #cluesList .clue-card.board .txt{font-size:11.5px}
 
 /* ── De uitslag als papieren vel ──
@@ -8695,13 +8703,11 @@ function renderClues(){
   if(M.boardClues.length){
     const card=document.createElement("div");
     card.className="clue-card board";
-    card.innerHTML='<div class="kop"><div class="bord-schild">'
-      +'<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#F1EEFE"/>'
-      +'<g fill="none" stroke="#5B4BE8" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">'
-      +'<path d="M24 8l14 6v10.4c0 9.2-5.8 14.8-14 17.6-8.2-2.8-14-8.4-14-17.6V14z"/>'
-      +'<path d="M18.4 24.2l4 4 7.2-7.8"/></g></svg>'
-      +'</div></div>'
-      +'<div class="name"><span class="ic">'+AssetBank.ui("badge")+'</span>'+(M.boardClues.length===1?'Bordregel':'Bordregels')+'</div>'
+    /* Dezelfde opbouw als een affiche, maar liggend: een schijf met het
+       rasterteken op de plek van het portret, "Het bord" op de plek van de
+       naam, en de regels ernaast. */
+    card.innerHTML='<div class="kop"><div class="bord-schild">'+AssetBank.ui("grid")+'</div></div>'
+      +'<div class="name">Het bord</div>'
       +'<div class="txt'+(M.boardClues.length>1?' meer':'')+'"></div>';
     card.querySelector(".txt").innerHTML=M.boardClues.slice()
       .sort((a,b)=>(isAlgemeneRegel(a.text)?1:0)-(isAlgemeneRegel(b.text)?1:0))
@@ -9444,7 +9450,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.199";
+const PLAYER_APP_VERSION="0.9.201";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
