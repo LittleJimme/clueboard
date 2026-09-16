@@ -4114,7 +4114,9 @@ body.desktop.in-game #cluesList .clue-card.done:hover,body.desktop.in-game #clue
    linksboven; geen kader, geen schaal, precies de vakjes. */
 .objart.tafel-modulair{position:absolute!important;inset:auto!important;left:0!important;top:0!important;
   transform:none!important;margin:0;padding:0;pointer-events:none;z-index:3}
-.objart.tafel-modulair canvas{display:block;width:100%;height:100%}
+/* Het hout van de kit is oranjer en feller dan dat van het bed (tint 30 vs
+   38, verzadiging .79 vs .48); de tafel schuift ernaartoe. */
+.objart.tafel-modulair canvas{display:block;width:100%;height:100%;filter:hue-rotate(8deg) saturate(.64) brightness(.9)}
 /* 's Nachts is er (nog) geen eigen tekening: het daglicht wordt gedempt. */
 html:not([data-thema="licht"]) .objart.tafel-modulair{filter:brightness(.6) saturate(.85)}
 /* Bordregels: een licht goud vlak zodat ze eruit springen; gekozen wordt
@@ -6558,7 +6560,7 @@ const TAFEL_VAK=256, TAFEL_RAND=24, TAFEL_POOT={w:48,h:72};
    onder. De poten worden niet mee verkleind: ze staan onder de verkleinde
    bladrand, tot vlak boven de onderrand van het vakje, en blijven binnen het
    blad. Zo zie je ze ook op een klein vakje. */
-const TAFEL_KX=0.74, TAFEL_KY=0.70, TAFEL_POOTSCHAAL=0.82;
+const TAFEL_KX=0.74, TAFEL_KY=0.70, TAFEL_POOTSCHAAL=0.82, TAFEL_POOTBREEDTE=0.62;
 const TAFEL_BEELDEN=new Map();
 function tafelBeeld(naam){
   if(!TAFEL_BEELDEN.has(naam)){
@@ -6591,7 +6593,8 @@ function tafelPlan(cells){
   /* Het blad in canvaspixels: geschaald rond het midden van de hele tafel. */
   const W=cols*TAFEL_VAK, H=rows*TAFEL_VAK;
   const ox=(1-TAFEL_KX)/2*W, oy=(1-TAFEL_KY)/2*H;
-  const pw=Math.round(TAFEL_POOT.w*TAFEL_POOTSCHAAL), ph=Math.round(TAFEL_POOT.h*TAFEL_POOTSCHAAL);
+  /* Smaller dan de kit ze tekent: de breedte krijgt een eigen factor. */
+  const pw=Math.round(TAFEL_POOT.w*TAFEL_POOTSCHAAL*TAFEL_POOTBREEDTE), ph=Math.round(TAFEL_POOT.h*TAFEL_POOTSCHAAL);
   const poten=[];
   for(let rij=0;rij<rows;rij++){
     const xs=cells.filter(([x,y])=>y===rij && !has(x,y+1)).map(c=>c[0]).sort((a,b)=>a-b);
@@ -9605,7 +9608,7 @@ const LEVELS_DIR="Levels/";
    eigen lijst. */
 const HUB_URL="../menu/index.html";
 let vanuitMenu=false;
-const PLAYER_APP_VERSION="0.9.209";
+const PLAYER_APP_VERSION="0.9.211";
 
 /* Alle geladen niveaus (demo + Levels-map + handmatig ge\u00efmporteerde
    bestanden), op volgorde van hun kaart in de lijst. showLevelDetail() en
