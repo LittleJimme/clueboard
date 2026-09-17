@@ -1378,6 +1378,20 @@ function voorbeeldHref(){
   const d=(typeof alleLevels!=="undefined"?alleLevels:[]).find(e=>e.raw && e.raw.demo===true);
   return levelHref(d?d.source:VOORBEELD_BESTAND);
 }
+/* De drie knoppen naar de voorbeeldzaak (in het meer-menu, in de uitleg en
+   onder de uitleg) krijgen hun adres hier, en niet pas als de uitleg getekend
+   wordt. Wie de uitleg al eens gezien had, kreeg anders in het meer-menu een
+   knop met "#" als adres: de eerste klik deed niets, en pas na het openen van
+   de uitleg werkte hij. Bij de klik zelf wordt het adres nog een keer
+   ververst, zodat hij ook klopt als de lijst met zaken later binnenkomt. */
+const VOORBEELD_KNOPPEN=["#btnVoorbeeld","#btnVoorbeeldLos","#btnVoorbeeldBalk"];
+function zetVoorbeeldLinks(){
+  VOORBEELD_KNOPPEN.forEach(k=>{ const a=$(k); if(a) a.href=voorbeeldHref(); });
+}
+VOORBEELD_KNOPPEN.forEach(k=>{
+  const a=$(k); if(!a) return;
+  a.addEventListener("click",()=>{ a.href=voorbeeldHref(); });
+});
 const SPEEL_ICOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.6c-2.3-1.6-5-1.9-8.2-.9v12.6c3.2-1 5.9-.7 8.2.9 2.3-1.6 5-1.9 8.2-.9V5.7c-3.2-1-5.9-.7-8.2.9z"/><path d="M12 6.6v12.6"/></svg>';
 $("#btnVoorbeeld").innerHTML=SPEEL_ICOON+'<span class="lbl">Voorbeeldzaak</span>';
 $("#btnVoorbeeldLos").innerHTML=SPEEL_ICOON+'Speel de voorbeeldzaak';
@@ -1411,9 +1425,7 @@ function tekenUitleg(){
   $("#stapTerug").disabled=uitlegStap===0;
   const volgende=UITLEG_STAPPEN[uitlegStap+1];
   $("#stapVerder").textContent=!volgende ? "Sluiten" : volgende.titel ? volgende.titel+" →" : "Volgende →";
-  $("#btnVoorbeeld").href=voorbeeldHref();
-  $("#btnVoorbeeldLos").href=voorbeeldHref();
-  $("#btnVoorbeeldBalk").href=voorbeeldHref();
+  zetVoorbeeldLinks();
   $("#stapVerder").disabled=false;
 }
 /* ── Het regelboek ──────────────────────────────────────
@@ -2052,6 +2064,9 @@ async function laadLevels(){
     const tb=(((b.raw.content||{}).title)||"").toLowerCase();
     return ta.localeCompare(tb,"nl");
   });
+  /* Nu de lijst er is, wijzen de knoppen naar de voorbeeldzaak naar het
+     bestand dat werkelijk als voorbeeld gevonden is. */
+  zetVoorbeeldLinks();
   /* De voorbeeldzaak telt niet mee in de nummering. Een nummer telt binnen
      zijn campagne: elke campagne begint bij 1. */
   const teller={};
@@ -2164,6 +2179,9 @@ function initZelf(){
 initZelf();
 /* Eerst terughalen hoe de lijst stond, dan pas tekenen. */
 leesFilters();
+/* De knoppen naar de voorbeeldzaak werken meteen, ook voor wie de uitleg
+   nooit meer opent; zodra de lijst er is worden ze nog eens bijgezet. */
+zetVoorbeeldLinks();
 laadLevels();
 /* Wie het spel voor het eerst opent, krijgt de uitleg vanzelf; daarna nooit
    meer ongevraagd. */

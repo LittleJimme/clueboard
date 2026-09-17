@@ -2632,10 +2632,11 @@ body.desktop.in-game .tabbar{
   border-top:0;padding:8px 24px 16px;gap:16px;
 }
 body.desktop.in-game .tabbar .view-switch,body.desktop.in-game .voet-links{display:none}
-/* Geen schakelaar Notitie/Plaats op desktop. Met een muis wissel je niet van
-   stand: klikken zet een notitie, rechtsklikken plaatst, en N/P doet hetzelfde
-   vanaf het toetsenbord. De schakelaar was daarmee een knop die vertelde wat
-   je toch al deed. Op de telefoon blijft hij, want daar is hij de enige weg. */
+/* De schakelaar Notitie/Plaats staat op desktop net als op de tablet onderin,
+   in de voet onder het bord: rechts de schuif, links de tip met de muis- en
+   toetsknoppen. Hij was hier een tijd verborgen omdat de rechtermuisknop en
+   N/P hetzelfde doen, maar dan mist wie met een muis speelt de knop Plaats en
+   ziet hij nergens in welke stand hij staat. */
 /* Op desktop hoort de kop juist compact: daar staat de voet niet vol knoppen. */
 body.desktop.in-game .kop-knop{width:40px;height:40px;min-width:40px}
 body.desktop.in-game #checkRij{display:none}
@@ -2649,13 +2650,15 @@ body.desktop.in-game #checkRij #btnCheck .teller{background:rgba(255,255,255,.18
 body.desktop.in-game #checkRij #btnCheck.klaar{background:var(--inkt);color:var(--grond);border-color:var(--inkt);box-shadow:none}
 body.desktop.in-game #checkRij #btnCheck.klaar .ic{color:inherit}
 body.desktop.in-game .kop-midden{display:flex;align-items:center;justify-content:center;gap:10px}
-body.desktop.in-game .mode-bar{display:none}
+body.desktop.in-game .mode-bar{display:flex;grid-column:2;grid-row:1;justify-content:flex-end;align-self:center}
 body.desktop.in-game .mode-switch{flex:0 0 auto;width:auto;padding:3px}
 body.desktop.in-game .mode-switch .ms-thumb{top:3px;bottom:3px}
 body.desktop.in-game .mode-switch button .lbl{display:inline}
 body.desktop.in-game .mode-switch button{padding:0 16px;min-width:0;gap:7px;height:30px;font-size:11.5px}
 body.desktop.in-game .mode-switch button svg{width:16px;height:16px}
-body.desktop.in-game .bord-tip{display:block;grid-column:1;font:600 12.5px var(--font-ui);color:var(--dof);line-height:1.4;padding-right:8px;text-align:left}
+/* Tip en schuif op één rij: zonder vaste rij zette het raster de tip (kolom 1,
+   maar later in de HTML dan de schuif in kolom 2) op een rij eronder. */
+body.desktop.in-game .bord-tip{display:block;grid-column:1;grid-row:1;font:600 12.5px var(--font-ui);color:var(--dof);line-height:1.4;padding-right:8px;text-align:left}
 body.desktop.in-game .bord-tip b{color:var(--inkt-2);font-weight:800}
 /* ══ Een maatje kleiner op desktop ══════════════════════
    Op een dertieninch laptop voelde de spelkant ingezoomd: brede kolommen aan
@@ -2685,6 +2688,14 @@ body.desktop.in-game #detailBody .ru-tekst{font-size:12.5px}
 @media (max-width:1360px){
   body.desktop.in-game .bord-tip{font-size:11px;line-height:1.35}
   body.desktop.in-game .clue-card .lijf .name,body.desktop.in-game .clue-row .who b{font-size:16.5px}
+}
+/* Nog smaller: naast de schuif blijft voor de tip een smalle strook over die
+   zes regels hoog wordt. Dan liever de schuif in het midden en de tip in één
+   brede regel eronder. */
+@media (max-width:1200px){
+  body.desktop.in-game .tabbar{grid-template-columns:minmax(0,1fr);row-gap:6px}
+  body.desktop.in-game .mode-bar{grid-column:1;grid-row:1;justify-content:center}
+  body.desktop.in-game .bord-tip{grid-column:1;grid-row:2;text-align:center;padding-right:0}
 }
 /* De hintknop staat in de werkbalk, niet zwevend over het bord. */
 /* De hintknop hoort bij het bord, dus links onderin die kolom; hij staat er
@@ -11109,14 +11120,12 @@ function zetDesktop(){
   const aan=DESKTOP_MQ.matches;
   const was=isDesktop();
   document.body.classList.toggle("desktop",aan);
-  /* Op desktop staat de schakelaar Notitie/Plaats in de kop, links van
-     Controleer; op de telefoon onderin de voet. Het is hetzelfde element,
-     het verhuist alleen. */
-  { const mb=$("#modeBar");
-    if(mb){
-      if(aan){ const km=$(".kop-midden"); if(km && mb.parentNode!==km) km.insertBefore(mb,km.firstChild); }
-      else { const tb=$(".tabbar"); if(tb && mb.parentNode!==tb) tb.insertBefore(mb,$("#bordTip")); }
-    } }
+  /* De schakelaar Notitie/Plaats staat op elk scherm onderin de voet, naast
+     de tip; hij verhuisde vroeger op desktop naar de kop, maar stond daar
+     verborgen. Mocht hij door een oudere stand nog in de kop staan, dan gaat
+     hij terug naar zijn plek in de voet. */
+  { const mb=$("#modeBar"), tb=$(".tabbar");
+    if(mb && tb && mb.parentNode!==tb) tb.insertBefore(mb,$("#bordTip")); }
   /* De knop van de uitslag hoort op desktop in de linkerkolom, onder de
      cijfers; op de telefoon blijft hij de vaste voet onder de lijst. */
   { const vt=$(".uitslag-voet"), uit=$("#screen-end .uitslag"), scherm=$("#screen-end");
