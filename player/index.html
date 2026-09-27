@@ -2656,6 +2656,8 @@ body.desktop.in-game .mode-switch button svg{width:16px;height:16px}
    maar later in de HTML dan de schuif in kolom 2) op een rij eronder. */
 body.desktop.in-game .bord-tip{display:block;grid-column:1;grid-row:1;font:600 12.5px var(--font-ui);color:var(--dof);line-height:1.4;padding-right:8px;text-align:left}
 body.desktop.in-game .bord-tip b{color:var(--inkt-2);font-weight:800}
+/* Een persoon gekozen: een klik op een vakje zet meteen iets (zie snelZet). */
+body.desktop.in-game.snel-zet #grid .tile:not(.blocked){cursor:cell}
 /* ══ Een maatje kleiner op desktop ══════════════════════
    Op een dertieninch laptop voelde de spelkant ingezoomd: brede kolommen aan
    weerszijden en grote letters. Dit blok zet het chroom ongeveer acht procent
@@ -7936,6 +7938,8 @@ function attachTileInput(el,tileId){
       if(o) toast((o.kindLabel||o.kind||"Dit vak")+" — hier kan niemand staan");
       return;
     }
+    /* Desktop met een persoon gekozen: meteen zetten, zonder kring. */
+    if(snelZet(tileId,el,mode)) return;
     openTileMenu(tileId,el);
   };
   el.addEventListener("pointerdown",e=>{
@@ -8030,9 +8034,79 @@ function attachTileInput(el,tileId){
       if(o) toast((o.kindLabel||o.kind||"Dit vak")+" — hier kan niemand staan");
       return;
     }
-    radialOverride=(mode==="note")?"place":"note";
+    const ander=(mode==="note")?"place":"note";
+    if(snelZet(tileId,el,ander)) return;
+    radialOverride=ander;
     openTileMenu(tileId,el);
   });
+}
+/* ── Snel zetten op desktop ─────────────────────────────
+   Staat er rechts een persoon open (je klikte op zijn kaart), dan hoeft een
+   zet niet door de kring: een klik op een vakje zet meteen zijn letter, een
+   rechterklik zet hem daar neer. Welke knop wat doet volgt de schuif
+   Notitie/Plaats, net als zonder keuze: in Notitie (de standaard) is links de
+   letter en rechts de pion, in Plaats andersom. Sluit je de persoon, dan
+   opent een klik weer de kring. Een getuige plaats je niet, dus die telt niet;
+   de vergelijking op het object zelf houdt een keuze uit een vorig level
+   buiten de deur. */
+function snelPersoon(){
+  if(!isDesktop()||revealed||!M||!detailSel||!detailSel.p) return null;
+  return M.people.indexOf(detailSel.p)>=0 ? detailSel.p : null;
+}
+/* Geeft true als de klik hiermee is afgehandeld. */
+function snelZet(tileId,el,stand){
+  const p=snelPersoon(); if(!p) return false;
+  if(!M.tiles.get(tileId)) return true;
+  const wie=personOnTile(tileId);
+  if(stand==="note"){
+    /* Een pion dekt de letters af; daar valt niets te noteren. */
+    if(wie){
+      shakeTile(el);
+      const w=M.peopleById.get(wie);
+      toast((w?w.name:"Iemand")+" staat hier — onder een pion noteer je niets");
+      return true;
+    }
+    onthoudStap();
+    const n=noteFor(tileId);
+    if(n.marks.get(p.id)) n.marks.delete(p.id);
+    else { n.marks.set(p.id,1); n.cross=false; }
+    haptic(8);
+    paintBoard();
+    return true;
+  }
+  /* Plaatsen. Staat hij hier al, dan haalt nog eens klikken hem weg -- net
+     als in de kring. Staat er een ander, dan neemt hij diens plek in. */
+  if(placed.get(p.id)===tileId){ verwijderVanVakje(tileId); paintBoard(); return true; }
+  if(easyMode && M.solution.get(p.id)!==tileId){
+    haptic([40,60,40]);
+    meld("Niet de juiste plek",
+      p.name+" hoort ergens anders. Kijk nog eens naar de aanwijzingen en probeer een andere tegel.");
+    return true;
+  }
+  placePerson(p.id,tileId);
+  easyKruisjes(tileId);
+  paintBoard();
+  return true;
+}
+/* De regel onder het bord zegt wat een klik doet, en met een gekozen persoon
+   dus ook voor wie. Het bord krijgt dan een ander pijltje: een klik doet hier
+   meteen iets. */
+function tekenBordTip(){
+  const tip=$("#bordTip");
+  const p=snelPersoon();
+  document.body.classList.toggle("snel-zet",!!p);
+  if(!tip) return;
+  if(p){
+    const naam='<b style="color:'+leesbaar(p.color)+'">'+esc(p.name)+'</b>';
+    const letter='zet de letter van '+naam, pion='plaatst '+naam;
+    tip.innerHTML='<b>Klik</b> '+(mode==="note"?letter:pion)
+      +' · <b>rechtermuisknop</b> '+(mode==="note"?pion:letter)
+      +' · <b>shift-klik</b> zet een kruisje · sluit '+esc(p.name)+' voor het menu';
+    return;
+  }
+  tip.innerHTML = mode==="note"
+    ? '<b>Klik</b> op een vak zet een notitie · <b>rechtermuisknop</b> plaatst · <b>shift-klik</b> zet een kruisje · <b>N</b>/<b>P</b> wisselt de stand'
+    : '<b>Klik</b> op een vak plaatst iemand · <b>rechtermuisknop</b> zet een notitie · <b>shift-klik</b> zet een kruisje · <b>N</b>/<b>P</b> wisselt de stand';
 }
 /* De stand waarin de kring open staat: meestal de gewone stand, na een
    rechtermuisklik tijdelijk de andere. */
@@ -9089,6 +9163,7 @@ function toonDetail(cs,p){
   renderClues();
 }
 function tekenDetail(){
+  tekenBordTip();
   const box=$("#detailBody");
   if(!box||!M) return;
   /* Tijdens het typen niet onder iemands vingers vandaan hertekenen. */
@@ -9108,7 +9183,8 @@ function tekenDetail(){
   box.innerHTML='<div class="detail-wacht">'
     +'<span class="ic">'+AssetBank.ui("badge")+'</span>'
     +'<b>Nog niemand gekozen</b>'
-    +'<small>Klik links op een kaartje om te zien wat je van die persoon weet, waar hij staat en wat jij erover hebt genoteerd.</small>'
+    +'<small>Klik links op een kaartje om te zien wat je van die persoon weet, waar hij staat en wat jij erover hebt genoteerd. '
+    +'Zolang hij gekozen is, zet een klik op het bord meteen zijn letter en een rechterklik de pion.</small>'
     +'</div>';
 }
 
@@ -9245,10 +9321,7 @@ function setMode(m){
   $("#btnModePlace").classList.toggle("active",m==="place");
   $("#btnModePlace").setAttribute("aria-pressed",m==="place");
   $("#modeSwitch").classList.toggle("place",m==="place");
-  const tip=$("#bordTip");
-  if(tip) tip.innerHTML = m==="note"
-    ? '<b>Klik</b> op een vak zet een notitie · <b>rechtermuisknop</b> plaatst · <b>shift-klik</b> zet een kruisje · <b>N</b>/<b>P</b> wisselt de stand'
-    : '<b>Klik</b> op een vak plaatst iemand · <b>rechtermuisknop</b> zet een notitie · <b>shift-klik</b> zet een kruisje · <b>N</b>/<b>P</b> wisselt de stand';
+  tekenBordTip();
   closeRadial();
   paintBoard();
 }
@@ -10086,7 +10159,7 @@ function showLevelDetail(levelIndex){
   { const kt=$("#kopTitel"); if(kt) kt.innerHTML='<b>'+esc(c.title||"Naamloos niveau")+'</b>'
       +(raw.levelNumber?'<span>Zaak '+raw.levelNumber+'</span>':(raw.demo?'<span>Voorbeeldzaak</span>':''))
       +(gr?'<span class="kop-graad"><i class="stippen">'+[1,2,3,4,5].map(n=>'<b class="'+(n<=gr.graad?"aan":"")+'"></b>').join("")+'</i>'+esc(GRAAD_WOORD[gr.graad]||"")+'</span>':''); }
-  detailSel=null;
+  detailSel=null; tekenBordTip();
   $("#introGraad").innerHTML=gr
     ? '<span class="stippen">'+[1,2,3,4,5].map(n=>'<i class="'+(n<=gr.graad?"aan":"")+'"></i>').join("")+'</span>'
       +'<span class="woord">'+esc(GRAAD_WOORD[gr.graad]||("Niveau "+gr.graad))+'</span>'
