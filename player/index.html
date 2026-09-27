@@ -3052,6 +3052,11 @@ body.in-game .set-duo .schuif i{width:15px;height:15px}
 /* De basisregel verschuift het bolletje met left; hier alleen die waarde
    bijstellen, niet er nog een transform overheen leggen. */
 body.in-game .set-duo .set-row[aria-pressed="true"] .schuif i{left:15px;transform:none}
+/* Desktop of mobiel: de gekozen opzet staat in goud. */
+body.in-game .weergave-duo{margin-bottom:8px}
+body.in-game .weergave-duo .set-row{justify-content:center}
+body.in-game .weergave-duo .set-row[aria-pressed="true"]{background:var(--goud-zacht);border-color:var(--goud-lijn);color:var(--inkt)}
+body.in-game .weergave-duo .set-row[aria-pressed="true"] .ic{color:var(--goud)}
 body.in-game .set-acties{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
 /* Wissen: een kaartje per actie, met het plaatje van wat weggaat en hoeveel
    er nu van op het bord staat. Niets te wissen? Dan ligt het kaartje gedoofd. */
@@ -4347,6 +4352,16 @@ html:not([data-thema="licht"]) body.in-game #cluesList .clue-card.board.geselect
       </div>
     </div>
     <div class="set-kop weergave-kop">Weergave</div>
+    <!-- Desktop of mobiel: zelf te kiezen, bijvoorbeeld op een tablet.
+         Zonder keuze beslist de schermmaat. -->
+    <div class="set-duo weergave-duo" id="weergaveKeuze">
+      <button class="set-row" type="button" data-weergave="desktop" aria-pressed="false">
+        <span class="ic" data-icon="grid"></span><span class="set-tekst"><b>Desktop</b></span>
+      </button>
+      <button class="set-row" type="button" data-weergave="mobiel" aria-pressed="false">
+        <span class="ic" data-icon="list"></span><span class="set-tekst"><b>Mobiel</b></span>
+      </button>
+    </div>
     <div class="vis-raster">
       <button class="vis-row" id="visNotes" aria-pressed="true"><span class="set-mini" data-mini="letters"></span><span class="vis-naam">Letters</span><span class="oog"></span></button>
       <button class="vis-row" id="visCrosses" aria-pressed="true"><span class="set-mini" data-mini="kruisjes"></span><span class="vis-naam">Kruisjes</span><span class="oog"></span></button>
@@ -5799,7 +5814,7 @@ function loadVisibility(){
        telefoon uit -- daar is een vakje te klein voor een tekening. Alleen wie
        de keuze zelf heeft omgezet, houdt hem. */
     if(!localStorage.getItem("clueboard:personagesGekozen"))
-      visibility.personages=!!(typeof DESKTOP_MQ!=="undefined" && DESKTOP_MQ.matches);
+      visibility.personages=!!(typeof DESKTOP_MQ!=="undefined" && wilDesktop());
   }catch(e){}
 }
 function saveVisibility(){
@@ -11262,9 +11277,27 @@ $("#viewSwitch").addEventListener("click",()=>{ haptic(7); setTab(tab==="board"?
    tekst op weinig ruimte. Wisselt het venster van maat, dan wisselt de
    indeling mee en past het bord zich opnieuw. */
 const DESKTOP_MQ=window.matchMedia("(min-width:1100px) and (min-height:600px)");
+/* In de instellingen kies je zelf de opzet (Weergave: desktop of mobiel),
+   bijvoorbeeld om op een tablet de desktop te krijgen. Zonder keuze beslist
+   DESKTOP_MQ zoals altijd. */
+const WEERGAVE_SLEUTEL="clueboard:weergave";
+function weergaveKeuze(){
+  try{ const v=localStorage.getItem(WEERGAVE_SLEUTEL); if(v==="desktop"||v==="mobiel") return v; }catch(e){}
+  return "";
+}
+function wilDesktop(){
+  const k=weergaveKeuze();
+  return k ? k==="desktop" : DESKTOP_MQ.matches;
+}
 function isDesktop(){ return document.body.classList.contains("desktop"); }
+function tekenWeergave(){
+  const blok=$("#weergaveKeuze"); if(!blok) return;
+  const nu=isDesktop()?"desktop":"mobiel";
+  $$("#weergaveKeuze [data-weergave]").forEach(b=>
+    b.setAttribute("aria-pressed",b.dataset.weergave===nu?"true":"false"));
+}
 function zetDesktop(){
-  const aan=DESKTOP_MQ.matches;
+  const aan=wilDesktop();
   const was=isDesktop();
   document.body.classList.toggle("desktop",aan);
   /* De schakelaar Notitie/Plaats staat op elk scherm onderin de voet, naast
@@ -11281,6 +11314,7 @@ function zetDesktop(){
       else { if(vt.parentNode!==scherm) scherm.appendChild(vt); }
     } }
   if(!aan){ const lp=$("#legendaPop"); if(lp) lp.hidden=true; }
+  tekenWeergave();
   if(!M) return;
   if(aan){
     closeRadial();
@@ -11309,6 +11343,15 @@ if(typeof ResizeObserver!=="undefined"){
    van een venster; de gewone resize-gebeurtenis vangt dat op. */
 window.addEventListener("resize",zetDesktop);
 zetDesktop();
+/* De keuze geldt meteen. Het instellingenvel gaat eerst dicht: het staat op
+   desktop als lade links en op de telefoon als vel van boven, dus het hoort
+   bij de opzet waarin je het opende. */
+$$("#weergaveKeuze [data-weergave]").forEach(b=>b.addEventListener("click",()=>{
+  try{ localStorage.setItem(WEERGAVE_SLEUTEL,b.dataset.weergave); }catch(e){}
+  haptic(7);
+  $$(".sheet-modal.open").forEach(closeModal);
+  zetDesktop();
+}));
 
 $("#btnSettings").addEventListener("click",()=>toggleSheet("modalSettings"));
 $("#btnStandExport").addEventListener("click",()=>exporteerPlaatsing());
