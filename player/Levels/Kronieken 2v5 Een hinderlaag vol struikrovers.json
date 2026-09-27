@@ -1315,8 +1315,8 @@
           "roleLabel": "verdachte",
           "standing": "knight",
           "standingLabel": "Ridder",
-          "gender": "male",
-          "genderLabel": "Man",
+          "gender": "female",
+          "genderLabel": "Vrouw",
           "roomAccess": {
             "allowedStandings": null,
             "allowedStandingsLabel": null,
@@ -1335,8 +1335,8 @@
           "roleLabel": "verdachte",
           "standing": "noble",
           "standingLabel": "Edele",
-          "gender": "male",
-          "genderLabel": "Man",
+          "gender": "female",
+          "genderLabel": "Vrouw",
           "roomAccess": {
             "allowedStandings": [
               "noble",
@@ -1443,28 +1443,28 @@
         "name": "Dorothy",
         "role": "knight",
         "description": "",
-        "gender": "male",
-        "genderAuto": true,
-        "hairStyle": "wavy-crop",
+        "gender": "female",
+        "genderAuto": false,
+        "hairStyle": "half-up",
         "hairColor": "warm-brown",
         "skinTone": "medium",
         "hairAuto": false,
         "attributes": {},
         "clothing": "hooded-mantle",
-        "beard": "small-simple-beard"
+        "beard": "none"
       },
       "p5": {
         "name": "Eleanor",
         "role": "noble",
         "description": "",
-        "gender": "male",
-        "genderAuto": true,
-        "hairStyle": "buzz-cut",
+        "gender": "female",
+        "genderAuto": false,
+        "hairStyle": "long-wavy",
         "hairColor": "deep-brown",
         "skinTone": "tan",
         "hairAuto": false,
         "attributes": {},
-        "clothing": "scholar-folded-collar-robe",
+        "clothing": "noble-surcoat-mantle-gown",
         "beard": "none"
       },
       "p6": {

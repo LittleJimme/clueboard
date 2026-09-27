@@ -1433,6 +1433,10 @@
       {
         "gender": "female",
         "name": "Dymphna"
+      },
+      {
+        "gender": "female",
+        "name": "Dorothy"
       }
     ],
     "E": [
@@ -1511,6 +1515,10 @@
       {
         "gender": "female",
         "name": "Eva"
+      },
+      {
+        "gender": "female",
+        "name": "Eleanor"
       }
     ],
     "F": [

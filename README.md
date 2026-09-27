@@ -24,6 +24,19 @@ menu lezen eerst `player/Levels/index.json` — een lijst met bestandsnamen.
 > webserver bestaat er geen map-listing om op terug te vallen, dus een level dat
 > niet in `index.json` staat, verschijnt niet in de lijst.
 
+## Een plaatsing delen (bugmelding)
+
+In de speler staat onder **Instellingen → Plaatsing delen** de knop
+*Exporteren*: het level plus wat er op het bord staat (pionnen, letters,
+kruisjes en de klok) als één JSON-bestand, ook halverwege een zaak. Dat
+bestand is gewoon een level met een extra blok `playerState`:
+
+- *Inladen* in dezelfde instellingen (of uploaden via het menu) zet de stand
+  terug, zodat je verder gaat waar de ander was.
+- Importeren in de builder opent meteen **Controle van een plaatsing**: per
+  persoon het vakje, per aanwijzing of hij klopt, de bordregels en het
+  verschil met de oplossing, met dezelfde rekenaar als de oplossingenzoeker.
+
 ## Lokaal draaien
 
 De apps lezen de levels met `fetch`, wat op `file://` geblokkeerd wordt. Start
