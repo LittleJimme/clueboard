@@ -4124,6 +4124,41 @@ html:not([data-thema="licht"]) body.in-game #cluesList .clue-card.board.geselect
 html:not([data-thema="licht"]) body.in-game #cluesList .clue-card.board.geselecteerd .txt span{color:#231819}
 html:not([data-thema="licht"]) body.in-game #cluesList .clue-card.board.geselecteerd .txt.meer .regel::before{background:#231819}
 html:not([data-thema="licht"]) body.in-game #cluesList .clue-card.board.geselecteerd .bord-schild{background:#231819;color:var(--goud-vlak);border-color:#231819}
+/* ══ Klein desktopscherm: een oude iPad (1024 x 768) of een klein venster ══
+   De drie kolommen vroegen samen minstens 1086 px; op 1024 px viel de
+   rechterkolom daardoor buiten beeld zodra je iemand koos, en de klok in de
+   kop ook. Hier krijgen ze kleinere minima, de affiches een kleiner portret
+   en minder wit, en de kop verliest de ondertitel. De portretmaat staat als
+   --s op het podium (inline, zie personPortrait), vandaar !important. Dit
+   blok staat als laatste, zodat het wint van alle desktopregels hierboven. */
+@media (max-width:1180px){
+  body.desktop.in-game #screen-game,body.desktop.in-game.dossier-breed #screen-game{
+    grid-template-columns:minmax(330px,.95fr) minmax(300px,1.4fr) minmax(200px,224px)}
+  body.desktop.in-game .game-head{padding:8px 0 6px}
+  body.desktop.in-game .kop-links{padding-left:12px;gap:8px}
+  body.desktop.in-game .kop-rechts{padding-right:12px;gap:4px}
+  body.desktop.in-game .kop-titel b{font-size:17px}
+  body.desktop.in-game .kop-titel span{display:none}
+  body.desktop.in-game .kop-knop{width:34px;height:34px;min-width:34px}
+  body.desktop.in-game #pane-board{padding:10px 18px 4px}
+  body.desktop.in-game #detailBody{padding:10px 12px 18px 10px}
+  /* Affiches: kop van 66 in plaats van 92 px, het vel schuift mee omhoog. */
+  body.desktop.in-game #cluesList{gap:8px 4px;padding:8px 6px 8px}
+  body.desktop.in-game #cluesList .clue-card .kop .portret-podium,
+  body.desktop.in-game #cluesList .clue-row.victim .av .portret-podium{--s:0.17838px!important}
+  body.desktop.in-game #cluesList .clue-card .lijf,body.desktop.in-game #cluesList .clue-row.victim .body{margin-top:-44px;padding:40px 6px 9px}
+  body.desktop.in-game #cluesList .clue-card .lijf .name,body.desktop.in-game #cluesList .clue-row.victim .who b{font-size:14.5px}
+  body.desktop.in-game #cluesList .clue-card .txt,body.desktop.in-game #cluesList .clue-row.victim .txt{font-size:12px;line-height:1.32}
+  body.desktop.in-game #cluesList .clue-card.board{padding:0 4px 8px}
+  body.desktop.in-game #cluesList .clue-card.board .txt{font-size:11.5px}
+  /* Dichter gepakt gaat de kop niet nóg eens kleiner: 66 px is klein genoeg. */
+  body.desktop.in-game.dossier-dicht #cluesList .clue-card .kop,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .av{transform:none;margin-top:-6px}
+  body.desktop.in-game.dossier-dicht #cluesList .clue-card .lijf,body.desktop.in-game.dossier-dicht #cluesList .clue-row.victim .body{margin-top:-40px;padding:36px 5px 8px}
+  /* Rechts: het portret van de gekozen persoon een maat kleiner (104 px). */
+  body.desktop.in-game #detailBody .pd-portret .portret-podium{--s:0.28108px!important}
+  body.desktop.in-game #detailBody .pd-naam{font-size:22px}
+  body.desktop.in-game .bord-tip{font-size:10.5px}
+}
 </style>
 </head>
 <body class="hide-objsurf laden vloer-v3">

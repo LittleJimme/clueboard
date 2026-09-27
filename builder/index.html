@@ -2059,6 +2059,36 @@ body.poort-aan{overflow:hidden}
   background:#C9932F;color:#231819;font:700 14px var(--ui,system-ui);
   box-shadow:0 10px 22px -12px rgba(201,147,47,.9);
 }
+/* ── Kleine laptop (tot 1440 breed of tot 820 hoog): alles een maat kleiner ──
+   Op een dertieninch scherm was het chroom te groot: hoge titelbalk, breed
+   bouwmenu, ruime panelen -- en het bord hield weinig over. Hier gaan de
+   balk, de zijkolommen, de koppen en de knoppen zo'n tien procent terug en
+   krijgt het bord de hoogte die daarmee vrijkomt. Staat achteraan, zodat het
+   wint van de laptopregels hierboven. */
+@media (max-width:1440px),(max-height:820px){
+  .titlebar{height:52px;padding:0 12px;gap:8px}
+  .board-title{font-size:19px;padding:4px 7px}
+  .app{height:calc(100vh - 52px);padding:8px;gap:8px;grid-template-columns:244px minmax(0,1fr) 262px}
+  .panel-left{min-width:244px}
+  .panel-right,.panel-rechts{min-width:262px}
+  .panel-header{padding:9px 12px}
+  .panel-body{padding:12px}
+  h2{font-size:16px}
+  .hint{font-size:13px;line-height:1.5;margin:0 0 12px}
+  .btn{padding:8px 14px;font-size:13px}
+  .build-menu{gap:6px;padding:6px 10px 7px}
+  .build-menu-tools{min-height:44px;gap:8px}
+  .stap-dok .mode-switch button{padding:7px 10px;font-size:12px}
+  /* Onderin de stage staan Zichtbaarheid en Controle; die ruimte blijft
+     vrij, zodat een groter bord er niet onder schuift. */
+  .stage{padding:12px 12px 66px}
+  /* De vaste aftrek in de bordmaat is de hoogte van al het chroom erboven en
+     eronder; met de kleinere balk en marges blijft daar minder van over. */
+  .board{width:min(100%, calc((100vh - 264px) * var(--cols) / var(--rows)))}
+  body.spelweergave .board{
+    width:min(calc(100% * var(--cols) / (var(--cols) + var(--lucht-x,.4))),
+              calc((100vh - 264px) * var(--cols) / (var(--rows) + var(--lucht-y,.6))))}
+}
 </style>
 <style>.v9 label{display:block;margin:10px 0 5px;font:700 12px var(--ui);color:var(--muted)}.v9 input,.v9 textarea,.v9 select{width:100%;box-sizing:border-box;padding:9px;border:1px solid var(--edge);border-radius:10px;font:600 13px var(--read)}.v9 textarea{min-height:60px}.modes{display:flex;gap:5px;margin:15px 0}.modes button{flex:1;padding:9px;border-radius:9px;background:var(--tint);font-weight:700}.modes button.on{background:var(--accent-vlak);color:var(--accent-op)}.inspect{padding:12px;border-radius:14px;background:var(--tint);min-height:120px}.clueitem{padding:9px 2px;border-bottom:1px solid var(--edge-soft);font:600 12px var(--read)}.clueitem button{float:right;color:var(--crimson);font-size:18px}</style>
 <style id="donkerSkin">
